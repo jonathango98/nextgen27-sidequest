@@ -1,0 +1,43 @@
+# Secrets (ENG-056): only .env.example is tracked
+.env
+.env.*
+!.env.example
+
+# Real event data and databases (ARCH-007, ENG-061)
+*.db
+*.sqlite
+*.sqlite3
+*.sqlite-*
+*-wal
+*-shm
+data/
+exports/
+backups/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Caddy local state
+caddy_data/
+caddy_config/
+
+# Claude Code personal files (shared .claude/settings.json stays tracked)
+.claude/settings.local.json
+.claude/HANDOFF.md
+
+# Editors and OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
