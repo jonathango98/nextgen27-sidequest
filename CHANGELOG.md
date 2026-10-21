@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: One page should show what works, what is being built, and what is next, so two people don't build the same thing.
 - Rule IDs: ENG-080, ENG-100 to ENG-104, AI-012, AI-070 to AI-073, DEC-022
 - Status: Started
-- PR: draft
+- PR: #4
 
 ## 2026-10-19 · chore/add-task-observer-skill · No AI record / @jonathango98
 

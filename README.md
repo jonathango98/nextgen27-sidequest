@@ -48,7 +48,7 @@ Has an open branch. Add your row in the first commit on your branch, push, and o
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| Change log and project status rules | `docs/agent-changelog-status` | draft | 2026-10-20 | Claude Opus 5.5 / @jonathango98 |
+| Change log and project status rules | `docs/agent-changelog-status` | #4 | 2026-10-20 | Claude Opus 5.5 / @jonathango98 |
 
 ### Planned
 
