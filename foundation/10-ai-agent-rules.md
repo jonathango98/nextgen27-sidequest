@@ -2,8 +2,8 @@
 
 - Status: LOCKED
 - Owner: Jonathan (@jonathango98)
-- Version: 1.0.0
-- Last updated: 2026-10-19
+- Version: 1.1.0
+- Last updated: 2026-10-20
 
 > Protected file. AI agents: read only. To propose a change, open a Foundation Change Request issue.
 
@@ -43,7 +43,7 @@ The people using these agents are volunteers who are still learning. Agents shou
   - delete branches you did not create
   - run `git add -A` or `git add .` without reviewing the file list first
 - **AI-037** [LOCKED] Never approve or merge any PR, including your own.
-- **AI-038** [LOCKED] Resolve merge conflicts only in files your PR changed. If a conflict touches someone else's work or a protected path, stop and ask.
+- **AI-038** [LOCKED] Resolve merge conflicts only in files your PR changed. If a conflict touches someone else's work or a protected path, stop and ask. One exception: conflicts in `CHANGELOG.md` and the README Project status section follow AI-073.
 
 ## 4. Code quality
 
@@ -86,3 +86,10 @@ Impact: (which docs, config keys, code, and tests would change)
 ## 8. How the guardrails treat agents
 
 - **AI-060** [LOCKED] Some tools block edits to protected paths automatically (see `15-repo-setup-checklist.md`). A block is not an error to work around. When blocked, do not try another way to write the file (another tool, a shell command, a script). Draft a Foundation Change Request instead (AI-051).
+
+## 9. Project status and change log
+
+- **AI-070** [LOCKED] Follow ENG-100 to ENG-104 on every task. Root `README.md` is not protected, but edit only its Project status section. The rest of it changes through a Foundation Change Request (AI-051).
+- **AI-071** [LOCKED] Sign with your own exact model name, for example `Claude Opus 5.5`. If you do not know it, write `Unknown model` rather than guessing. Get the human's GitHub handle with `gh api user -q .login`, or ask. Never invent a handle.
+- **AI-072** [LOCKED] Do the claim check in ENG-101 before you plan. If an open branch or PR already covers the task, stop and tell the human who has it. Do not start a second copy.
+- **AI-073** [LOCKED] When `CHANGELOG.md` or the README Project status section conflicts during a rebase, keep both sides. Put your entry above the newer entries from `main`. Never delete or reword someone else's entry or row.

@@ -31,6 +31,8 @@ Closes #
 - [ ] Formatter, linter, and tests pass locally.
 - [ ] Tests added or updated, named with rule IDs.
 - [ ] Works at 360px wide, no browser console errors (UI changes).
+- [ ] `CHANGELOG.md` entry added at the top, signed `<Model name> / @handle` or `Human / @handle` (ENG-102, ENG-104).
+- [ ] README Project status updated: row in the right table, "Status last updated" line refreshed (ENG-100, ENG-103).
 - [ ] No protected paths changed (or this PR is from @jonathango98).
 - [ ] No secrets, real attendee data, or DB files in this PR.
 - [ ] `safety-review` label added if this touches sign-up, PIN or login, roles, admin controls, or minors' data.
