@@ -21,7 +21,7 @@ The app is built by a small volunteer team. It is not built yet. This repo curre
 
 ## Project status
 
-Status last updated: 2026-10-20 by Claude Opus 5.5 / @jonathango98
+Status last updated: 2026-10-21 by Claude Opus 5.5 / @jonathango98
 
 **Before you start anything**, check that nobody else is on it. A branch only shows up here after it merges, so also run:
 
@@ -41,6 +41,7 @@ Merged to `main` and works end to end.
 | Agent rules | `AGENTS.md`, `CLAUDE.md`, `foundation/10-ai-agent-rules.md` | 2026-10-19 | @jonathango98 |
 | `.gitignore` | ENG-056, ARCH-007 | 2026-10-19 | @jonathango98 |
 | Shared task-observer skill | `.claude/skills/task-observer/` | 2026-10-19 | @jonathango98 |
+| Change log and project status rules | ENG-100 to ENG-104, AI-070 to AI-073 | 2026-10-21 | Claude Opus 5.5 / @jonathango98 |
 
 ### In progress
 
@@ -48,7 +49,7 @@ Has an open branch. Add your row in the first commit on your branch, push, and o
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| Change log and project status rules | `docs/agent-changelog-status` | #4 | 2026-10-20 | Claude Opus 5.5 / @jonathango98 |
+| None on `main` yet. Run the check commands above to see unmerged claims. | | | | |
 
 ### Planned
 

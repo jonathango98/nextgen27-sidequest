@@ -22,10 +22,10 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-10-20 · docs/agent-changelog-status · Claude Opus 5.5 / @jonathango98
 
-- What: Added this change log and a Project status section in `README.md`. Removed `README.md` from the protected paths. Added ENG-100 to ENG-104 and AI-070 to AI-073, and recorded DEC-022.
+- What: Added this change log and a Project status section in `README.md`. Removed `README.md` from the protected paths. Added ENG-100 to ENG-104 and AI-070 to AI-073, recorded DEC-022, and pointed `CONTRIBUTING.md` to the new rules.
 - Why: One page should show what works, what is being built, and what is next, so two people don't build the same thing.
 - Rule IDs: ENG-080, ENG-100 to ENG-104, AI-012, AI-070 to AI-073, DEC-022
-- Status: Started
+- Status: Done
 - PR: #4
 
 ## 2026-10-19 · chore/add-task-observer-skill · No AI record / @jonathango98
