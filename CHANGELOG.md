@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-22 · chore/browser-check-skill · Claude Opus 5.5 / @jonathango98
+
+- What: Claimed. Adding a Playwright browser check skill for Claude Code and a rule to run checks before every commit.
+- Why: Contributors should have Claude check their changes in a real browser at 360px before committing.
+- Rule IDs: AI-033, ENG-012, ENG-045, ARCH-002
+- Status: Started
+- PR: draft
+
 ## 2026-10-20 · docs/agent-changelog-status · Claude Opus 5.5 / @jonathango98
 
 - What: Added this change log and a Project status section in `README.md`. Removed `README.md` from the protected paths. Added ENG-100 to ENG-104 and AI-070 to AI-073, recorded DEC-022, and pointed `CONTRIBUTING.md` to the new rules.

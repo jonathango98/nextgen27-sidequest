@@ -21,7 +21,7 @@ The app is built by a small volunteer team. It is not built yet. This repo curre
 
 ## Project status
 
-Status last updated: 2026-10-21 by Claude Opus 5.5 / @jonathango98
+Status last updated: 2026-10-22 by Claude Opus 5.5 / @jonathango98
 
 **Before you start anything**, check that nobody else is on it. A branch only shows up here after it merges, so also run:
 
@@ -49,7 +49,7 @@ Has an open branch. Add your row in the first commit on your branch, push, and o
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| None on `main` yet. Run the check commands above to see unmerged claims. | | | | |
+| Browser check skill and check-before-commit rule | `chore/browser-check-skill` | draft | 2026-10-22 | Claude Opus 5.5 / @jonathango98 |
 
 ### Planned
 
