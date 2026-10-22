@@ -42,6 +42,7 @@ Merged to `main` and works end to end.
 | `.gitignore` | ENG-056, ARCH-007 | 2026-10-19 | @jonathango98 |
 | Shared task-observer skill | `.claude/skills/task-observer/` | 2026-10-19 | @jonathango98 |
 | Change log and project status rules | ENG-100 to ENG-104, AI-070 to AI-073 | 2026-10-21 | Claude Opus 5.5 / @jonathango98 |
+| Browser check skill and check-before-commit rule | `.claude/skills/browser-check/`, AI-033, AI-044 | 2026-10-22 | Claude Opus 5.5 / @jonathango98 |
 
 ### In progress
 
@@ -49,7 +50,7 @@ Has an open branch. Add your row in the first commit on your branch, push, and o
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| Browser check skill and check-before-commit rule | `chore/browser-check-skill` | draft | 2026-10-22 | Claude Opus 5.5 / @jonathango98 |
+| None on `main` yet. Run the check commands above to see unmerged claims. | | | | |
 
 ### Planned
 
