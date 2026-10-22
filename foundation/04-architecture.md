@@ -2,8 +2,8 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.0.0
-- Last updated: 2026-10-19
+- Version: 1.1.0
+- Last updated: 2026-10-22
 
 > Protected file. AI agents: read only. To propose a change, open a Foundation Change Request issue.
 
@@ -31,6 +31,7 @@ Allowed stack (v1):
 | Database | SQLite, WAL mode | PROPOSED |
 | Web server and TLS | Caddy | PROPOSED |
 | Tests | pytest | PROPOSED |
+| Browser tests | Playwright for Python, through pytest-playwright (Chromium and WebKit). Dev and test only, never on the server (DEC-023) | PROPOSED |
 | Lint and format | ruff | PROPOSED |
 | Hosting | One production VM, one staging VM | PROPOSED |
 

@@ -2,8 +2,8 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.1.0
-- Last updated: 2026-10-20
+- Version: 1.2.0
+- Last updated: 2026-10-22
 
 > Protected file. AI agents: read only. To propose a change, open a Foundation Change Request issue.
 
@@ -42,6 +42,7 @@ Sources, in order of precedence:
 | DEC-020 | 2026-10-19 | `CLAUDE.md` imports `AGENTS.md` and `foundation/README.md`. The schema and routes live in `05-data-model.md` and `06-api-and-screens.md`, not in `CLAUDE.md` | One source of truth. The brief said `CLAUDE.md` would hold the schema, routes, and rules | Jonathan |
 | DEC-021 | 2026-10-19 | Phone numbers and email addresses are not collected (SAFE-003) | Conflict C3 | Jonathan |
 | DEC-022 | 2026-10-20 | Root `README.md` gets a Project status section (Working, In progress, Planned) that every PR updates, and `CHANGELOG.md` gets one signed, dated entry per PR. `README.md` comes off the protected list. In progress means "has an open branch" (ENG-080, ENG-100 to ENG-104, AI-070 to AI-073) | One page shows where the project is, and claiming work early stops two people building the same thing | Jonathan |
+| DEC-023 | 2026-10-22 | Playwright for Python (pytest-playwright) joins the stack as PROPOSED, for dev and test only. Checks run before every commit, not only before push, and page changes also get the `browser-check` skill at 360px (ARCH-002, ENG-012, ENG-049, AI-033, AI-044). Versions are pinned in `pyproject.toml` at kickoff (ENG-057). Enforced by the rules only, with no git hook | Contributors have Claude check their changes in a real browser before committing. A hook was left out to keep commits fast and setup simple | Jonathan |
 
 ## 2. Resolved conflicts
 
