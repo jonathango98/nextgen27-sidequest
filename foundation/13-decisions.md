@@ -2,7 +2,7 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.6.0
+- Version: 1.7.0
 - Last updated: 2026-10-23
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -48,6 +48,7 @@ Sources, in order of precedence:
 | DEC-026 | 2026-10-23 | Move `CONTRIBUTING.md` and `SECURITY.md` from the root into `.github/`, and `CLAUDE.md` into `.claude/`. They stay protected under `.github/**` and `.claude/**`. `AGENTS.md` stays at the root because Codex and other agents only look for it there. `SECURITY.md` links to SAFE-030 to SAFE-037 instead of repeating them (ENG-080) | Fewer root files and one copy of each rule. GitHub still finds both files in `.github/` | Jonathan |
 | DEC-027 | 2026-10-23 | Kickoff stack, all PROPOSED: Python 3.14, locked with pip-tools from `pyproject.toml` (ARCH-003). PyYAML with `safe_load` only, segno for QR images, and `barcode-detector` for the in-app scanner, served from our own server (ARCH-004). Migrations are numbered plain SQL files with a small built-in runner (DATA-040, ENG-050). The Wrapped image stays OPEN (WRAP-033) | Unblocks the app skeleton and every Core build feature. Python 3.14 has a year of library support, while 3.15 came out on 2026-10-09. pip-tools keeps plain `requirements.txt` files, which volunteers and the host already understand. `barcode-detector` works in Safari and Chromium, matching the browser tests (DEC-023). Plain SQL needs no extra library | Jonathan |
 | DEC-028 | 2026-10-23 | Host on Railway only, in US West, with one production and one staging environment (ARCH-014). Railway replaces the two VMs and Caddy: it terminates HTTPS, the app serves its own static files, and SQLite sits on a Railway volume as a single replica (ARCH-001, ARCH-010, ARCH-011, ENG-055). No production deploys during live game hours (ARCH-016). ARCH-053 stays OPEN | Less to run than VMs plus Caddy, for a volunteer team. Pages are server-rendered, so no separate static host is needed. US West adds only a small delay for a Houston venue, and the load test (ARCH-071) checks it | Jonathan (issue #13) |
+| DEC-029 | 2026-10-23 | Add `GET /health` to `06-api-and-screens.md` in a new System section. It returns 200 with plain text `ok`, with no database check and no version or environment details (API-001) | The app skeleton needs one route to prove the app starts, and Railway can use it as a health check (ARCH-010). Leaving out version and environment details gives attackers nothing to read | Jonathan (issue #19) |
 
 ## 2. Resolved conflicts
 

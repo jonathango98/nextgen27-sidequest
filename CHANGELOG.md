@@ -25,8 +25,8 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - What: Adds `GET /health` to `06-api-and-screens.md` in a new System section, and logs the decision in `13-decisions.md`.
 - Why: Issue #19, approved by Jonathan. The app skeleton (#18) needs one route to prove the app starts, and Railway can use it as a health check.
 - Rule IDs: API-001, ARCH-010, ENG-087, ENG-088
-- Status: Started
-- PR: draft
+- Status: Done
+- PR: #20
 
 ## 2026-10-23 · docs/simplify-working-status · Claude Opus 5.5 / @jonathango98
 
