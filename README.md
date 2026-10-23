@@ -37,6 +37,7 @@ Done and live. Newest first: add your row at the top, in plain words. Who built 
 
 | What | Done |
 |---|---|
+| App foundation: the app starts, reads the game settings, and every player page shares one look (score on top; My Code, Scan, and Quests buttons at the bottom) | 2026-10-23 |
 | Health check added to the route list, so the host can tell the app is running | 2026-10-23 |
 | Project setup: game rules and plans written, hosting chosen, repo safety checks, and AI helper tools for volunteers | 2026-10-23 |
 
@@ -46,7 +47,6 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| App skeleton, design tokens, and page frame | `feat/app-skeleton` | #18 | 2026-10-23 | Claude Opus 5.5 / @jonathango98 |
 
 ### Planned
 
