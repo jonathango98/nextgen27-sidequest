@@ -86,7 +86,7 @@ Example: you want to add the join form.
 
 ## 4. Working with Claude Code or Codex
 
-AI agents read `AGENTS.md` automatically (Claude Code through `CLAUDE.md`). Good prompts name the issue, the rules, and the limits. Ask the agent to plan first and explain what it did.
+AI agents read `AGENTS.md` automatically (Claude Code through `.claude/CLAUDE.md`). Good prompts name the issue, the rules, and the limits. Ask the agent to plan first and explain what it did.
 
 **Example 1: a feature**
 

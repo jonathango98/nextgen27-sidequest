@@ -126,8 +126,8 @@ Tests in `tests/` follow the area of the code they test.
 
 - **ENG-080** [LOCKED] Changes to these paths merge only with Jonathan's approval (code owner review). Anyone, human or agent, may propose one in a PR. Such a PR is called a Foundation Change Request:
   - `foundation/**`
-  - root `AGENTS.md`, `CLAUDE.md`, `LICENSE`
-  - `.claude/**`
+  - root `AGENTS.md`, `LICENSE`
+  - `.claude/**` (includes `CLAUDE.md`, DEC-026)
   - `.codex/**`
   - `.github/**` (includes `CONTRIBUTING.md` and `SECURITY.md`, DEC-026)
   - `.gitignore`, `.editorconfig`, `.env.example`
