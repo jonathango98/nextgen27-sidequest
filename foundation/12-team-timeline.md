@@ -2,10 +2,10 @@
 
 - Status: Active (dates are approximate until the event date is confirmed, PRD-022)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.0.0
-- Last updated: 2026-10-19
+- Version: 1.1.0
+- Last updated: 2026-10-23
 
-> Protected file. AI agents: read only. To propose a change, open a Foundation Change Request issue.
+> Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
 This file lists the roles, which folders each role owns, the milestones, and what is frozen when. It names roles, not people.
 
@@ -27,7 +27,7 @@ This file lists the roles, which folders each role owns, the milestones, and wha
 
 ## 2. Folder ownership
 
-- **PRD-051** [PROPOSED] Each developer role owns the folders for its area label (ENG-041). Changes outside your area need the issue to say so (AI-011).
+- **PRD-051** [PROPOSED] Each developer role owns the folders for its area label (ENG-041). Changes in other areas are fine (DEC-025).
 
 | Role | Area label | Folders (PROPOSED layout, ARCH-008) |
 |---|---|---|

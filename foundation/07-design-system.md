@@ -2,10 +2,10 @@
 
 - Status: PROPOSED (everything here may change until the designer signs off)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.0.0
-- Last updated: 2026-10-19
+- Version: 1.0.1
+- Last updated: 2026-10-23
 
-> Protected file. AI agents: read only. To propose a change, open a Foundation Change Request issue.
+> Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
 This file says how Side Quest looks, sounds, and feels. The sticker and UI designer owns the final look. Until they sign off, build with the tokens below, so a change later only edits one CSS file.
 

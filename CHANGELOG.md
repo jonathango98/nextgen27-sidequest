@@ -22,9 +22,9 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-10-23 · chore/7-repo-guardrails · Claude Opus 5.5 / @jonathango98
 
-- What: Claimed the repo guardrails task. Dropped the local guard layers (Claude Code deny rules, hook, Codex rules, `foundation-guard` workflow), so protection is agent instructions, CODEOWNERS, and the ruleset on `main`. Logged DEC-024.
-- Why: Issue #7. Volunteers should explore AI coding without fear. Code owner review on `main` is the real gate.
-- Rule IDs: ENG-048, ENG-081, ENG-090, ENG-091, ENG-101, AI-060, DEC-018, DEC-024
+- What: Claimed the repo guardrails task. Dropped the local guard layers (Claude Code deny rules, hook, Codex rules, `foundation-guard` workflow), so protection is agent instructions, CODEOWNERS, and the ruleset on `main` (DEC-024). Cut process rules Jonathan picked in review: area folders, issue before every branch, commit message format, the Foundation Change Request issue (a protected file now changes in a PR he approves), stale approval dismissal, approval issues for new libraries, and the long PR template (DEC-025).
+- Why: Issue #7. Volunteers should explore AI coding without fear or paperwork. Review before `main` still catches problems.
+- Rule IDs: AI-002, AI-010, AI-011, AI-012, AI-021, AI-031, AI-032, AI-034, AI-051, AI-060, ARCH-002, ARCH-004, ENG-002, ENG-004, ENG-010, ENG-020, ENG-021, ENG-048, ENG-057, ENG-080, ENG-081, ENG-085 to ENG-087, ENG-090, ENG-091, PRD-051, DEC-024, DEC-025
 - Status: In progress
 - PR: #8
 

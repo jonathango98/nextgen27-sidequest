@@ -5,32 +5,30 @@
 - Version: 1.3.0
 - Last updated: 2026-10-23
 
-> Protected file. AI agents: read only. To propose a change, open a Foundation Change Request issue.
+> Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
 This file says how we use Git and GitHub, how work gets reviewed, and when a change is done. It applies to humans and AI agents. The agent version is in `10-ai-agent-rules.md`.
 
 ## 1. Branches
 
 - **ENG-001** [LOCKED] Nobody commits or pushes to `main` directly. Every change goes through a pull request (PR). The only exception was the first commit that created this foundation (decision DEC-005).
-- **ENG-002** [LOCKED] One issue, one branch, one PR.
+- **ENG-002** [LOCKED] One task, one branch, one PR. An issue is optional.
 - **ENG-003** [LOCKED] Start every task from an up-to-date `main`:
 
 ```bash
 git switch main
 git pull --ff-only
-git switch -c feat/42-join-form
+git switch -c feat/join-form
 ```
 
-- **ENG-004** [LOCKED] Branch names are `<type>/<issue-number>-<short-slug>`. Types: `feat`, `fix`, `chore`, `docs`, `test`, `refactor`. Example: `fix/57-pin-lockout-count`.
+- **ENG-004** [LOCKED] Branch names are `<type>/<short-slug>`. Put the issue number in front of the slug when there is one. Types: `feat`, `fix`, `chore`, `docs`, `test`, `refactor`. Examples: `feat/join-form`, `fix/57-pin-lockout-count`.
 
 ## 2. Commits
 
-- **ENG-010** [LOCKED] Commit messages follow Conventional Commits, in the imperative mood ("add", not "added"), and reference the issue. Cite rule IDs when the change implements a rule.
+- **ENG-010** [LOCKED] Commit messages just need to be clear. A PR is squashed into one commit when it merges, so the PR title is what lands on `main`. The PR title follows Conventional Commits, in the imperative mood ("add", not "added"):
 
 ```
-feat(auth): lock account after 5 wrong PINs (#57)
-
-Implements SAFE-022. Counts wrong tries per player and sets locked_at.
+feat(auth): lock account after 5 wrong PINs
 ```
 
 - **ENG-011** [LOCKED] Keep commits small. Each commit should pass the tests on its own.
@@ -39,14 +37,13 @@ Implements SAFE-022. Counts wrong tries per player and sets locked_at.
 
 ## 3. Pull requests
 
-- **ENG-020** [LOCKED] Open a draft PR early. Keep PRs small: aim for under 400 changed lines. Fill in the PR template fully: `Closes #N`, rule IDs, how to test, and screenshots at 360px wide for UI changes (fake data only, SAFE-036).
+- **ENG-020** [LOCKED] Open a draft PR early. Keep PRs small: aim for under 400 changed lines. Fill in the short PR template: what and why (with rule IDs), how to test, and a 360px screenshot for screen changes (fake data only, SAFE-036).
 - **ENG-021** [LOCKED] Merging to `main` needs:
   - 1 approving review
   - a code owner review where CODEOWNERS applies
-  - all conversations resolved
   - required checks passing (once CI exists, ENG-048)
 
-  Approvals are dismissed when new commits are pushed. Merges are squash merges only, which keeps history linear.
+  Merges are squash merges only, which keeps history linear.
 - **ENG-022** [LOCKED] Nobody approves their own PR. AI agents never approve or merge any PR.
 - **ENG-023** [LOCKED] A PR that touches sign-up, PIN or login, roles, admin controls, or minors' data gets the `safety-review` label and a second-person review before merge (SAFE-016).
 - **ENG-024** [LOCKED] Stay current by rebasing your branch on `main`. After a rebase, `git push --force-with-lease` is allowed on your own branch only. Plain `git push --force` is never allowed.
@@ -65,7 +62,6 @@ Implements SAFE-022. Counts wrong tries per player and sets locked_at.
 | Label | Meaning |
 |---|---|
 | `safety-review` | Needs a second-person safety review before merge (SAFE-016) |
-| `foundation-change-request` | A proposed change to a protected file. Only Jonathan acts on it |
 | `needs-decision` | Blocked on an OPEN decision (see `13-decisions.md`) |
 | `blocked` | Cannot move for another reason. Say why in a comment |
 | `good-first-issue` | Small, clear, good for a new contributor |
@@ -89,7 +85,7 @@ Tests in `tests/` follow the area of the code they test.
 
 - **ENG-045** [LOCKED] Definition of Done. A change is done only when all of these are true:
   - tests pass
-  - rule IDs are cited in the PR and commits
+  - rule IDs are cited in the PR
   - the PR template is complete
   - every changed screen works at 360px wide
   - there are no browser console errors
@@ -111,7 +107,7 @@ Tests in `tests/` follow the area of the code they test.
 
 - **ENG-055** [PROPOSED] Three environments: local (your laptop, fake data), staging VM, production VM.
 - **ENG-056** [LOCKED] Secrets come only from environment variables on the server (SAFE-032). The repo may hold a `.env.example` with placeholder values only. Never put a real value in it.
-- **ENG-057** [LOCKED] A new dependency needs an issue that explicitly approves it (ARCH-002). Pin versions.
+- **ENG-057** [LOCKED] Pin the version of every dependency. A new library needs no approval issue (DEC-025). A new service or piece of infrastructure still does (ARCH-002).
 - **ENG-058** [PROPOSED] Dependabot opens PRs for GitHub Actions updates. The config file is planned for the guardrails phase.
 
 ## 9. Public repo
@@ -128,7 +124,7 @@ Tests in `tests/` follow the area of the code they test.
 
 ## 11. Protected paths
 
-- **ENG-080** [LOCKED] Only Jonathan changes these paths. Everyone else, human or agent, opens a Foundation Change Request issue:
+- **ENG-080** [LOCKED] Changes to these paths merge only with Jonathan's approval (code owner review). Anyone, human or agent, may propose one in a PR. Such a PR is called a Foundation Change Request:
   - `foundation/**`
   - root `AGENTS.md`, `CLAUDE.md`, `CONTRIBUTING.md`, `SECURITY.md`, `LICENSE`
   - `.claude/**`

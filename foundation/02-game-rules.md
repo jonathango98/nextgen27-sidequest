@@ -2,10 +2,10 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.0.0
-- Last updated: 2026-10-19
+- Version: 1.0.1
+- Last updated: 2026-10-23
 
-> Protected file. AI agents: read only. To propose a change, open a Foundation Change Request issue.
+> Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
 This file says how the game works: every quest, every number, every limit, and what happens in edge cases. Every number here also lives in `foundation/game-config.yaml`. The config file is the source of truth. Code reads numbers from config, never from this file and never from a hardcoded value.
 

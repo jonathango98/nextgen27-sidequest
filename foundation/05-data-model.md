@@ -2,10 +2,10 @@
 
 - Status: PROPOSED (developers confirm at kickoff; constraints marked LOCKED are required whatever the final schema looks like)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.0.0
-- Last updated: 2026-10-19
+- Version: 1.0.1
+- Last updated: 2026-10-23
 
-> Protected file. AI agents: read only. To propose a change, open a Foundation Change Request issue.
+> Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
 This file lists the tables, their fields, and the database constraints that enforce game rules. The database is SQLite (ARCH-001). Table and field names are PROPOSED. Any schema change needs an issue and safety review when it touches player data (SAFE-016). Stop and ask before changing the schema (AI-050).
 

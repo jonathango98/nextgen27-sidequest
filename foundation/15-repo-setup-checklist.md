@@ -5,7 +5,7 @@
 - Version: 1.1.0
 - Last updated: 2026-10-23
 
-> Protected file. AI agents: read only. To propose a change, open a Foundation Change Request issue.
+> Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
 This file is for Jonathan, the repo owner. It lists the GitHub settings to apply by hand, the `gh` commands to apply them, and the honest limits of each protection layer. Only Jonathan can apply these. Collaborators cannot change repo settings.
 
@@ -19,7 +19,7 @@ The guardrails stay light on purpose (DEC-024). Volunteers should feel free to t
 
 | Layer | What it does | Status | Limits |
 |---|---|---|---|
-| 1. Instructions | `AGENTS.md`, `CLAUDE.md`, and `10-ai-agent-rules.md` tell agents that protected paths are read only | Written | Agents can ignore instructions. Humans can ignore them too |
+| 1. Instructions | `AGENTS.md`, `CLAUDE.md`, and `10-ai-agent-rules.md` tell agents how protected paths change | Written | Agents can ignore instructions. Humans can ignore them too |
 | 2. CODEOWNERS | Code owner review on protected paths | Planned (guardrails phase) | Only works with the ruleset in layer 3 |
 | 3. Repo settings | Ruleset on `main`, Actions settings, security features | Not applied (this file) | The settings depend on GitHub features working as documented. Test them (section 4) |
 
@@ -97,7 +97,6 @@ gh api -X PUT repos/jonathango98/nextgen27-sidequest/private-vulnerability-repor
 ```bash
 R=jonathango98/nextgen27-sidequest
 gh label create safety-review --repo $R --color B42318 --description "Needs second-person safety review (SAFE-016)"
-gh label create foundation-change-request --repo $R --color 5319E7 --description "Proposed change to a protected file"
 gh label create needs-decision --repo $R --color FBCA04 --description "Blocked on an OPEN decision"
 gh label create blocked --repo $R --color 000000 --description "Cannot move, see comment"
 gh label create good-first-issue --repo $R --color 7057FF --description "Small and clear, good for a new contributor"
@@ -120,7 +119,7 @@ Create it in the UI first, because the ID for the "Repository admin" role is not
 | Restrict deletions | On |
 | Block force pushes | On |
 | Require linear history | On |
-| Require a pull request before merging | On, 1 approval, dismiss stale approvals, require review from Code Owners, require conversation resolution, allowed merge method: squash |
+| Require a pull request before merging | On, 1 approval, require review from Code Owners, allowed merge method: squash |
 | Require status checks to pass | Add `ci` after that workflow exists and has run once |
 
 Then read it back to see the IDs GitHub used:
@@ -148,10 +147,10 @@ gh api -X POST repos/jonathango98/nextgen27-sidequest/rulesets --input - <<'EOF'
     {"type": "required_linear_history"},
     {"type": "pull_request", "parameters": {
       "required_approving_review_count": 1,
-      "dismiss_stale_reviews_on_push": true,
+      "dismiss_stale_reviews_on_push": false,
       "require_code_owner_review": true,
       "require_last_push_approval": false,
-      "required_review_thread_resolution": true,
+      "required_review_thread_resolution": false,
       "allowed_merge_methods": ["squash"]
     }}
   ]
