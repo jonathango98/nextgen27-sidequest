@@ -2,7 +2,7 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.3.1
+- Version: 1.3.2
 - Last updated: 2026-10-23
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -11,9 +11,9 @@ Welcome! This guide is for volunteers on the Side Quest team. You don't need to 
 
 ## 1. Before you start
 
-1. Read [foundation/README.md](foundation/README.md), then the docs listed for your role in its "Reading order" table.
-2. Read [AGENTS.md](AGENTS.md). Those rules apply to you too, not just to AI agents.
-3. Skim [foundation/14-glossary.md](foundation/14-glossary.md) so words like "My Code" and "check-in" mean the same thing to everyone.
+1. Read [foundation/README.md](../foundation/README.md), then the docs listed for your role in its "Reading order" table.
+2. Read [AGENTS.md](../AGENTS.md). Those rules apply to you too, not just to AI agents.
+3. Skim [foundation/14-glossary.md](../foundation/14-glossary.md) so words like "My Code" and "check-in" mean the same thing to everyone.
 
 ## 2. Setup
 
@@ -86,7 +86,7 @@ Example: you want to add the join form.
 
 ## 4. Working with Claude Code or Codex
 
-AI agents read `AGENTS.md` automatically (Claude Code through `CLAUDE.md`). Good prompts name the issue, the rules, and the limits. Ask the agent to plan first and explain what it did.
+AI agents read `AGENTS.md` automatically (Claude Code through `.claude/CLAUDE.md`). Good prompts name the issue, the rules, and the limits. Ask the agent to plan first and explain what it did.
 
 **Example 1: a feature**
 

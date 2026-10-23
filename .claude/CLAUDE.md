@@ -2,13 +2,13 @@
 
 - Status: LOCKED
 - Owner: Jonathan (@jonathango98)
-- Version: 1.0.1
+- Version: 1.0.2
 - Last updated: 2026-10-23
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
-@AGENTS.md
-@foundation/README.md
+@../AGENTS.md
+@../foundation/README.md
 
 ## Claude Code notes
 
