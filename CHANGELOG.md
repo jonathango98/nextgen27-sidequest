@@ -22,8 +22,8 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-10-23 · docs/status-guardrails-done · Claude Opus 5.5 / @jonathango98
 
-- What: Moved "Repo guardrails" from In progress to Working in the README Project status.
-- Why: PR #8 merged on 2026-10-23, but the status page still showed it as In progress.
+- What: Moved "Repo guardrails" from In progress to Working in the README Project status. Sorted the Working table newest first and noted that new Working and In progress rows go at the top. Planned keeps its timeline order.
+- Why: PR #8 merged on 2026-10-23, but the status page still showed it as In progress. Newest first matches `CHANGELOG.md` and shows recent work without scrolling.
 - Rule IDs: ENG-100, ENG-102, ENG-103
 - Status: Done
 - PR: #10
