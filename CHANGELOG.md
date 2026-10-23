@@ -22,10 +22,10 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-10-23 · feat/app-skeleton · Claude Opus 5.5 / @jonathango98
 
-- What: Claimed the app skeleton (`app/main.py`, `app/config.py`, the ARCH-008 layout), design tokens in `tokens.css`, and the shared player page frame.
-- Why: There is no `app/` folder yet, and every Core build feature needs it. DEC-027 unblocked the stack.
-- Rule IDs: ARCH-008, UI-001, UI-030, DEC-027, ENG-101
-- Status: Started
+- What: Claimed the app skeleton, design tokens in `tokens.css`, and the shared player page frame. Part 1 added: `pyproject.toml` with pinned FastAPI, Uvicorn, and PyYAML, pip-tools lock files, `app/config.py` (loads `game-config.yaml` with `safe_load`, checks `config_version`), and `app/main.py` (app factory, `GET /health`, FastAPI's built-in docs routes off). httpx is a new dev-only library, needed by FastAPI's test client.
+- Why: There is no `app/` folder yet, and every Core build feature needs it. DEC-027 unblocked the stack. DEC-029 approved `/health`.
+- Rule IDs: ARCH-003, ARCH-004, ARCH-008, ENG-030, ENG-031, ENG-057, API-001, DEC-027, DEC-029, UI-001, UI-030, ENG-101
+- Status: In progress
 - PR: #18
 
 ## 2026-10-23 · docs/health-route · Claude Opus 5.5 / @jonathango98
