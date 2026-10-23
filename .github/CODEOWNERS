@@ -1,0 +1,24 @@
+# Code owners for protected paths (ENG-080, ENG-081 layer 2).
+# The ruleset on main requires a code owner review, so these paths merge only with Jonathan's approval.
+# Root README.md and CHANGELOG.md are not protected, so every PR can update them (ENG-100, DEC-022).
+
+/foundation/        @jonathango98
+/AGENTS.md          @jonathango98
+/CLAUDE.md          @jonathango98
+/CONTRIBUTING.md    @jonathango98
+/SECURITY.md        @jonathango98
+/LICENSE            @jonathango98
+/.claude/           @jonathango98
+/.codex/            @jonathango98
+/.github/           @jonathango98
+/.gitignore         @jonathango98
+/.editorconfig      @jonathango98
+/.env.example       @jonathango98
+
+# Safety reviewer (SAFE-016). Until one is named, Jonathan reviews safety-review PRs.
+# When named, replace SAFETY_REVIEWER with their handle and uncomment (15-repo-setup-checklist.md step 9).
+# Paths follow the PROPOSED app layout (ARCH-008).
+# /app/auth/          @jonathango98 @SAFETY_REVIEWER
+# /app/models/        @jonathango98 @SAFETY_REVIEWER
+# /app/routes/admin/  @jonathango98 @SAFETY_REVIEWER
+# /migrations/        @jonathango98 @SAFETY_REVIEWER
