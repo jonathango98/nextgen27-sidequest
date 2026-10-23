@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-23 · docs/status-guardrails-done · Claude Opus 5.5 / @jonathango98
+
+- What: Finished the repo guardrails that PR #8 started. Added `.github/CODEOWNERS` for the protected paths, with a commented safety reviewer placeholder. Jonathan applied checklist steps 2 to 6 (squash-only merges, auto-delete branches, fork PR approval, Dependabot, private vulnerability reporting, labels, and the `main-protection` ruleset with an admin bypass for pull requests only). Marked layers 2 and 3 in `15-repo-setup-checklist.md`. Sorted the Working table newest first, with new Working and In progress rows added at the top.
+- Why: Issue #7. PR #8 only dropped the local guard layers, and closed #7 by accident. Without CODEOWNERS and the ruleset, `main` had no review gate.
+- Rule IDs: ENG-080, ENG-081, ENG-021, ENG-087, SAFE-016, DEC-024, ENG-100, ENG-102, ENG-103
+- Status: In progress (protection tests in `15-repo-setup-checklist.md` section 4 not run yet)
+- PR: #10
+
 ## 2026-10-23 · chore/pick-task-skill · Claude Opus 5.5 / @jonathango98
 
 - What: Added the `/pick-task` Claude Code skill. It reads the Project status, open branches, PRs, and issues, asks two quick questions, offers 3 unclaimed options in plain words, and calls dibs on the pick. `CONTRIBUTING.md` points to it.
