@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: PR #8 merged on 2026-10-23, but the status page still showed it as In progress.
 - Rule IDs: ENG-100, ENG-102, ENG-103
 - Status: Done
-- PR: draft
+- PR: #10
 
 ## 2026-10-23 · chore/pick-task-skill · Claude Opus 5.5 / @jonathango98
 
