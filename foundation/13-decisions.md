@@ -2,7 +2,7 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.4.0
+- Version: 1.5.0
 - Last updated: 2026-10-23
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -46,6 +46,7 @@ Sources, in order of precedence:
 | DEC-024 | 2026-10-23 | Drop the local guard layers: Claude Code deny rules, the Claude Code hook, the Codex rules (replaces that part of DEC-018), and the `foundation-guard` workflow. Protection is agent instructions, CODEOWNERS, and the ruleset on `main`. ENG-090 and ENG-091 are removed (ENG-081, AI-060) | Volunteers should explore AI coding without fear. A branch cannot hurt `main`, and code owner review was already the real gate. The local layers blocked Jonathan too and could be bypassed anyway | Jonathan |
 | DEC-025 | 2026-10-23 | Fewer process rules. Removed: stay in your area folders (AI-011), an issue before every branch (ENG-002, ENG-004), the commit message format and rule IDs in commits (ENG-010, AI-032, AI-002), the Foundation Change Request issue (ENG-086, AI-051; a protected file now changes in a PR that Jonathan approves), dismissing stale approvals and requiring resolved conversations (ENG-021), approval issues for new libraries (ARCH-002, ENG-057, AI-021; services and infrastructure still need one), and the long PR template (ENG-020, AI-034). Kept: checks before every commit (DEC-023) and stop and ask (AI-050) | Volunteers should explore AI coding without fear or paperwork. Review before `main` still catches problems | Jonathan |
 | DEC-026 | 2026-10-23 | Move `CONTRIBUTING.md` and `SECURITY.md` from the root into `.github/`, and `CLAUDE.md` into `.claude/`. They stay protected under `.github/**` and `.claude/**`. `AGENTS.md` stays at the root because Codex and other agents only look for it there. `SECURITY.md` links to SAFE-030 to SAFE-037 instead of repeating them (ENG-080) | Fewer root files and one copy of each rule. GitHub still finds both files in `.github/` | Jonathan |
+| DEC-027 | 2026-10-23 | Kickoff stack, all PROPOSED: Python 3.14, locked with pip-tools from `pyproject.toml` (ARCH-003). PyYAML with `safe_load` only, segno for QR images, and `barcode-detector` for the in-app scanner, served from our own server (ARCH-004). Migrations are numbered plain SQL files with a small built-in runner (DATA-040, ENG-050). The Wrapped image stays OPEN (WRAP-033) | Unblocks the app skeleton and every Core build feature. Python 3.14 has a year of library support, while 3.15 came out on 2026-10-09. pip-tools keeps plain `requirements.txt` files, which volunteers and the host already understand. `barcode-detector` works in Safari and Chromium, matching the browser tests (DEC-023). Plain SQL needs no extra library | Jonathan |
 
 ## 2. Resolved conflicts
 
@@ -99,8 +100,6 @@ Every OPEN rule in the foundation. Until an item is decided, do not build behavi
 | GAME-122 | Players without a phone | Usher-created account, usher-only participation, or not supported | Game director, safety reviewer | Before Playtest 1 |
 | SAFE-014 | Data retention after the event | A number of days, at least until Wrapped closes | Leadership | Before Playtest 2 |
 | SAFE-027 | Game off overnight and outside set hours | Same as GAME-106 | Leadership | Before Playtest 1 |
-| ARCH-003 | Python version and lock tool | | Developers | Kickoff |
-| ARCH-004 | Extra libraries: YAML loader, QR image, JS QR decoder, Wrapped image | Picked at kickoff, versions pinned | Developers, Jonathan | Kickoff |
 | ARCH-014 | Hosting provider, VM size, region | | Developers, Jonathan | Kickoff |
 | ARCH-031 | Login and sign-up rate limits per IP | Numbers per time window | Developers, safety reviewer | Before core build ends |
 | ARCH-033 | Same full name in the same church | For example, ask for a middle initial at sign-up | Developers, safety reviewer | Kickoff |
@@ -108,8 +107,6 @@ Every OPEN rule in the foundation. Until an item is decided, do not build behavi
 | ARCH-072 | Load test profile | Sign-ups per second, duration | Developers | Before Playtest 2 |
 | API-031 | Main screen refresh interval | Seconds | Developers | Before Playtest 1 |
 | DATA-010 | Where church region data comes from | Added to the church list by an admin | Jonathan, game director | Before Wrapped build |
-| DATA-040 | Migration tool and format | Numbered SQL files (proposed) or a tool | Developers | Kickoff |
-| ENG-050 | Migration files (same decision as DATA-040) | Numbered SQL files (proposed) | Developers | Kickoff |
 | WRAP-011 | Regions on card 2 | Depends on DATA-010 | Jonathan | Before Wrapped build |
 | WRAP-012 | Card 3 counts and verse matching | Depends on GAME-015 and GAME-019 | Game director, developers | Before Wrapped build |
 | WRAP-017 | Play style tie-break | A fixed order, or show both | Game director | Before Wrapped build |

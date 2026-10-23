@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-23 · docs/kickoff-stack-decisions · Claude Opus 5.5 / @jonathango98
+
+- What: Recorded the kickoff stack as PROPOSED in DEC-027: Python 3.14 locked with pip-tools from `pyproject.toml`, PyYAML (`safe_load` only), segno for QR images, `barcode-detector` for the scanner (Safari and Chromium, served from our own server), and numbered plain SQL migrations. Removed those rows from the OPEN table. The Wrapped image stays OPEN (WRAP-033).
+- Why: Every Core build feature needs the app skeleton, and the skeleton was blocked on these OPEN items.
+- Rule IDs: ARCH-003, ARCH-004, DATA-040, ENG-050, ENG-057, ENG-087, ENG-088, DEC-027
+- Status: Done
+- PR: #12
+
 ## 2026-10-23 · chore/repo-docs-cleanup · Claude Opus 5.5 / @jonathango98
 
 - What: Moved `CONTRIBUTING.md` and `SECURITY.md` into `.github/`, and `CLAUDE.md` into `.claude/` (imports now `@../`), and updated every reference. `AGENTS.md` stays at the root so Codex and other agents still find it. `SECURITY.md` now links to SAFE-030 to SAFE-037 instead of repeating them. Fixed the `AGENTS.md` line that listed `README.md` as protected. Removed the three now-covered CODEOWNERS lines. Ignored `.serena/`. Recorded DEC-026.
