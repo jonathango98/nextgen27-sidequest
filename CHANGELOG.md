@@ -22,7 +22,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-10-23 · chore/railway-config · Claude Opus 5.5 / @jonathango98
 
-- What: Railway setup. Adds `.python-version` (3.14), ARCH-017 in `04-architecture.md`, and DEC-030 in `13-decisions.md`: staging auto-deploys `main`, production is deployed by hand, and each PR gets a preview environment. Service settings (start command, `/health` check, US West, 1 replica) are set in Railway and recorded in DEC-030, because `railway.json` stops working on 2026-12-01. Created the Railway project `nextgen27-sidequest` with `production` and `staging` environments.
+- What: Railway setup. Adds `.python-version` (3.14), ARCH-017 in `04-architecture.md`, and DEC-030 in `13-decisions.md`: staging auto-deploys `main`, production is deployed by hand, and each PR gets a preview environment. Service settings (start command, `/health` check, US West, 1 replica) are set in Railway and recorded in DEC-030, because `railway.json` stops working on 2026-12-01. Created the Railway project `nextgen27-sidequest` with `production` and `staging` environments, a `web` service in staging (Python 3.14.9, `pip install -r requirements.txt`, `/health` returns `ok` over HTTPS), and PR environments based on staging (bot PRs off). Staging tracks this branch until it merges, then `main`. Production has no service yet.
 - Why: Jonathan wants to check every PR and `main` on Railway before production (ARCH-011).
 - Rule IDs: ARCH-010, ARCH-011, ARCH-014, ARCH-017, DEC-028, DEC-029, DEC-030, ENG-087, ENG-101
 - Status: In progress
