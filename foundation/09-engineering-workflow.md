@@ -2,7 +2,7 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.4.0
+- Version: 1.5.0
 - Last updated: 2026-10-23
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -99,7 +99,7 @@ Tests in `tests/` follow the area of the code they test.
 
 ## 7. Database migrations
 
-- **ENG-050** [OPEN] Migrations are numbered plain SQL files, for example `migrations/0001_create_players.sql`. This is the PROPOSED default. Developers confirm the tool and format at kickoff (DATA-040).
+- **ENG-050** [PROPOSED] Migrations are numbered plain SQL files, for example `migrations/0001_create_players.sql`, run in order by a small runner in the app (DATA-040, DEC-027).
 - **ENG-051** [PROPOSED] Never edit a migration that is already merged. Add a new one.
 - **ENG-052** [LOCKED] A migration that touches player, takeaway, or connection tables needs safety review (SAFE-016).
 

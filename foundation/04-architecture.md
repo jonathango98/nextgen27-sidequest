@@ -2,7 +2,7 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.2.0
+- Version: 1.3.0
 - Last updated: 2026-10-23
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -13,18 +13,18 @@ This file says how Side Quest is built and run. The stack is PROPOSED and the de
 
 - **ARCH-001** [PROPOSED] The stack is: Python, FastAPI, Jinja2 templates, HTMX, SQLite in WAL mode, Caddy as the web server, all on one VM. Pages are rendered on the server. JavaScript is kept to a minimum.
 - **ARCH-002** [LOCKED] Use the allowed stack below. A new library is fine: ask your human first (AI-050), say why in the PR, and pin the version (ENG-057). A new service or piece of infrastructure needs an issue that explicitly approves it (AI-021).
-- **ARCH-003** [OPEN] The exact Python version and the dependency lock tool. Decided at kickoff.
-- **ARCH-004** [OPEN] Libraries not yet chosen but likely needed. Picked at kickoff:
-  - a YAML loader for `game-config.yaml` (for example PyYAML)
-  - a server-side QR image generator
-  - a JavaScript QR decoder for the in-app scanner (iPhone Safari does not support the browser's built-in barcode detector)
-  - a way to make the Wrapped "Save as image" file (in the browser or on the server)
+- **ARCH-003** [PROPOSED] Python 3.14. Dependencies are listed in `pyproject.toml` and locked with pip-tools (`pip-compile`) into pinned `requirements*.txt` files (DEC-027).
+- **ARCH-004** [PROPOSED] Extra libraries (DEC-027). Pin each version (ENG-057):
+  - YAML loader for `game-config.yaml`: PyYAML, with `yaml.safe_load` only
+  - server-side QR image generator: segno (no dependencies, SVG output)
+  - JavaScript QR decoder for the in-app scanner: `barcode-detector`. It uses the browser's built-in barcode detector where Chromium has one, and ZXing WebAssembly elsewhere, including iPhone Safari. It must work in Safari and Chromium. The script and `.wasm` file are served from our own server, not a CDN
+  - the Wrapped "Save as image" file: still OPEN (WRAP-033)
 
 Allowed stack (v1):
 
 | Part | Allowed | Status |
 |---|---|---|
-| Language | Python 3 (version per ARCH-003) | PROPOSED |
+| Language | Python 3.14 (ARCH-003) | PROPOSED |
 | Web framework | FastAPI, with Uvicorn as the app server | PROPOSED |
 | Templates | Jinja2, with autoescape on | PROPOSED |
 | Front end | HTMX, plain CSS, small plain JavaScript files | PROPOSED |

@@ -2,7 +2,7 @@
 
 - Status: PROPOSED (developers confirm at kickoff; constraints marked LOCKED are required whatever the final schema looks like)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.0.1
+- Version: 1.1.0
 - Last updated: 2026-10-23
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -199,4 +199,4 @@ Rules that a unique constraint cannot express are checked by the points service 
 ## 5. Open items
 
 - **DATA-010** [OPEN] Where region data for churches comes from. Sign-up collects only name, church, and the under-18 answer, so region must come from the church list. Needed for the "## regions" number in Wrapped (WRAP-011).
-- **DATA-040** [OPEN] The migration tool and file format. The PROPOSED default is numbered plain SQL files (ENG-050).
+- **DATA-040** [PROPOSED] Migrations are numbered plain SQL files, run in order by a small runner in the app. No migration library (ENG-050, DEC-027).

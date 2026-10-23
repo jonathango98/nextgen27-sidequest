@@ -22,10 +22,10 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-10-23 · docs/kickoff-stack-decisions · Claude Opus 5.5 / @jonathango98
 
-- What: Claimed the kickoff stack decisions: Python version and lock tool, YAML loader, QR image generator, JS QR decoder, and migration format.
-- Why: Every Core build feature needs the app skeleton, and the skeleton is blocked on these OPEN items.
-- Rule IDs: ARCH-003, ARCH-004, DATA-040, ENG-050, ENG-088, ENG-101, ENG-102
-- Status: Started
+- What: Recorded the kickoff stack as PROPOSED in DEC-027: Python 3.14 locked with pip-tools from `pyproject.toml`, PyYAML (`safe_load` only), segno for QR images, `barcode-detector` for the scanner (Safari and Chromium, served from our own server), and numbered plain SQL migrations. Removed those rows from the OPEN table. The Wrapped image stays OPEN (WRAP-033).
+- Why: Every Core build feature needs the app skeleton, and the skeleton was blocked on these OPEN items.
+- Rule IDs: ARCH-003, ARCH-004, DATA-040, ENG-050, ENG-057, ENG-087, ENG-088, DEC-027
+- Status: Done
 - PR: #12
 
 ## 2026-10-23 · chore/repo-docs-cleanup · Claude Opus 5.5 / @jonathango98
