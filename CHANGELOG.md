@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: There is no `app/` folder yet, and every Core build feature needs it. DEC-027 unblocked the stack.
 - Rule IDs: ARCH-008, UI-001, UI-030, DEC-027, ENG-101
 - Status: Started
-- PR: draft
+- PR: #18
 
 ## 2026-10-23 · docs/health-route · Claude Opus 5.5 / @jonathango98
 
