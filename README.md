@@ -47,7 +47,7 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| Railway staging, production, and PR previews | `chore/railway-config` | draft | 2026-10-23 | Claude Opus 5.5 / @jonathango98 |
+| Railway staging, production, and PR previews | `chore/railway-config` | #21 | 2026-10-23 | Claude Opus 5.5 / @jonathango98 |
 
 ### Planned
 

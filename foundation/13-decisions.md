@@ -2,7 +2,7 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.7.0
+- Version: 1.8.0
 - Last updated: 2026-10-23
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -49,6 +49,7 @@ Sources, in order of precedence:
 | DEC-027 | 2026-10-23 | Kickoff stack, all PROPOSED: Python 3.14, locked with pip-tools from `pyproject.toml` (ARCH-003). PyYAML with `safe_load` only, segno for QR images, and `barcode-detector` for the in-app scanner, served from our own server (ARCH-004). Migrations are numbered plain SQL files with a small built-in runner (DATA-040, ENG-050). The Wrapped image stays OPEN (WRAP-033) | Unblocks the app skeleton and every Core build feature. Python 3.14 has a year of library support, while 3.15 came out on 2026-10-09. pip-tools keeps plain `requirements.txt` files, which volunteers and the host already understand. `barcode-detector` works in Safari and Chromium, matching the browser tests (DEC-023). Plain SQL needs no extra library | Jonathan |
 | DEC-028 | 2026-10-23 | Host on Railway only, in US West, with one production and one staging environment (ARCH-014). Railway replaces the two VMs and Caddy: it terminates HTTPS, the app serves its own static files, and SQLite sits on a Railway volume as a single replica (ARCH-001, ARCH-010, ARCH-011, ENG-055). No production deploys during live game hours (ARCH-016). ARCH-053 stays OPEN | Less to run than VMs plus Caddy, for a volunteer team. Pages are server-rendered, so no separate static host is needed. US West adds only a small delay for a Houston venue, and the load test (ARCH-071) checks it | Jonathan (issue #13) |
 | DEC-029 | 2026-10-23 | Add `GET /health` to `06-api-and-screens.md` in a new System section. It returns 200 with plain text `ok`, with no database check and no version or environment details (API-001) | The app skeleton needs one route to prove the app starts, and Railway can use it as a health check (ARCH-010). Leaving out version and environment details gives attackers nothing to read | Jonathan (issue #19) |
+| DEC-030 | 2026-10-23 | Staging auto-deploys `main`, production is deployed by hand, and every PR gets a temporary Railway preview environment copied from staging (ARCH-017). Service settings live in Railway, not in a config file: start command `uvicorn app.main:app --host 0.0.0.0 --port $PORT`, health check `/health` (DEC-029), region US West (`us-west2`), 1 replica (ARCH-010). `.python-version` pins Python 3.14 for the build | Lets the team check each PR and `main` on a real HTTPS URL before production. Railway's `railway.json` stops being read on 2026-12-01, and its replacement (`.railway/railway.ts`) needs Node in a Python repo, so the settings are set once in Railway and recorded here. Railway's builder defaults to Python 3.13, so the version file is needed. Railway skips PRs from people outside the workspace, which keeps the public repo safe | Jonathan |
 
 ## 2. Resolved conflicts
 

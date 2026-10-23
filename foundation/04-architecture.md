@@ -2,7 +2,7 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.4.0
+- Version: 1.5.0
 - Last updated: 2026-10-23
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -74,6 +74,7 @@ Allowed stack (v1):
 - **ARCH-014** [PROPOSED] Railway is the only host, in the US West region (DEC-028). No separate static host. Costs are not written in this repo.
 - **ARCH-015** [LOCKED] The server stores all times in UTC. "Per day" limits use the venue timezone (GAME-105).
 - **ARCH-016** [PROPOSED] Railway does not run two deployments on one volume, so every production deploy has a short gap. No production deploys during live game hours.
+- **ARCH-017** [PROPOSED] Staging auto-deploys every merge to `main`. Production is deployed by hand, only after the change works on staging (ARCH-011, ARCH-016). Each PR gets a temporary Railway preview environment copied from staging, with fake data only (SAFE-031). Railway only deploys PRs from people in the Railway workspace or invited to the project, so a stranger's PR on this public repo never runs on our account (DEC-030).
 
 ```
 Phone browser ──HTTPS──> Railway edge (TLS) ──> FastAPI app (Uvicorn, static files) ──> SQLite file (WAL, Railway volume)
