@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-23 · docs/railway-status · Claude Opus 5.5 / @jonathango98
+
+- What: Moved the Railway setup from In progress to Working. After #21 merged, staging was switched to deploy `main`, and commit `2830f7d` deployed with `/health` returning `ok` over HTTPS.
+- Why: #21 merged with its row still under In progress (ENG-103). This PR also checks that PR preview environments work.
+- Rule IDs: ENG-102, ENG-103, ARCH-017, DEC-030
+- Status: Done
+- PR: #22
+
 ## 2026-10-23 · chore/railway-config · Claude Opus 5.5 / @jonathango98
 
 - What: Railway setup. Adds `.python-version` (3.14), ARCH-017 in `04-architecture.md`, and DEC-030 in `13-decisions.md`: staging auto-deploys `main`, production is deployed by hand, and each PR gets a preview environment. Service settings (start command, `/health` check, US West, 1 replica) are set in Railway and recorded in DEC-030, because `railway.json` stops working on 2026-12-01. Created the Railway project `nextgen27-sidequest` with `production` and `staging` environments, a `web` service in staging (Python 3.14.9, `pip install -r requirements.txt`, `/health` returns `ok` over HTTPS), and PR environments based on staging (bot PRs off). Staging tracks this branch until it merges, then `main`. Production has no service yet.
