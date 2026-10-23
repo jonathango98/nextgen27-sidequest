@@ -2,8 +2,8 @@
 
 - Status: LOCKED
 - Owner: Jonathan (@jonathango98)
-- Version: 1.1.0
-- Last updated: 2026-10-20
+- Version: 1.2.0
+- Last updated: 2026-10-22
 
 > Protected file. AI agents: read only. To propose a change, open a Foundation Change Request issue.
 
@@ -33,7 +33,7 @@ The people using these agents are volunteers who are still learning. Agents shou
 - **AI-030** [LOCKED] Never commit or push to `main`.
 - **AI-031** [LOCKED] Start every task from an updated `main`: `git switch main`, `git pull --ff-only`, `git switch -c <type>/<issue-number>-<short-slug>`. Types: `feat`, `fix`, `chore`, `docs`, `test`, `refactor` (ENG-004).
 - **AI-032** [LOCKED] Use Conventional Commits, in the imperative mood. Keep commits small, and make each one pass the tests. Reference the issue number (ENG-010).
-- **AI-033** [LOCKED] Before every push, run the formatter, the linter, and the tests. Then check `git status` and `git diff --staged` for forbidden files. All must pass.
+- **AI-033** [LOCKED] Before every commit, run the formatter, the linter, and the tests, plus the browser check when the change can affect a page (AI-044). Then check `git status` and `git diff --staged` for forbidden files. All must pass.
 - **AI-034** [LOCKED] Keep PRs small (aim for under 400 changed lines). Open a draft PR early. Fill in the PR template fully: `Closes #N`, rule IDs, how to test, and screenshots at 360px wide for UI changes (fake data only).
 - **AI-035** [LOCKED] Stay current by rebasing your branch on `main`. `--force-with-lease` is allowed only on your own branch, after a rebase. Plain `--force` is never allowed.
 - **AI-036** [LOCKED] Never do these:
@@ -51,6 +51,7 @@ The people using these agents are volunteers who are still learning. Agents shou
 - **AI-041** [LOCKED] Every point award goes through the one points service. That service checks pause state, caps, and duplicates, and writes an audit row (ARCH-040).
 - **AI-042** [LOCKED] Every implemented rule has tests named with its rule ID, including the edge cases in `02-game-rules.md` section 12 (ENG-046).
 - **AI-043** [LOCKED] Anything touching sign-up, PIN or login, admin controls, or minors' data gets the `safety-review` label and a second-person review before merge (SAFE-016).
+- **AI-044** [LOCKED] Before committing a change that can affect a page (routes, templates, CSS, JavaScript), run the `browser-check` skill in `.claude/skills/browser-check/`. Every changed screen opens at 360px wide with no console errors, and you look at each screenshot (ENG-045). Report what you checked. If the check cannot run (no app yet, Playwright not installed), say so plainly. Never report a check you did not run.
 
 ## 5. Teaching mode
 

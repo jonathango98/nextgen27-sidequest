@@ -2,8 +2,8 @@
 
 - Status: LOCKED
 - Owner: Jonathan (@jonathango98)
-- Version: 1.1.0
-- Last updated: 2026-10-20
+- Version: 1.2.0
+- Last updated: 2026-10-22
 
 > Protected file. AI agents: read only. To propose a change, open a Foundation Change Request issue.
 
@@ -90,7 +90,7 @@ git switch -c <type>/<issue-number>-<short-slug>   # types: feat fix chore docs 
 ```
 
 - Conventional Commits, imperative mood, small commits that each pass tests, and the issue number referenced. (AI-032)
-- Before every push, run the formatter, the linter, and the tests. Then check `git status` and `git diff --staged` for forbidden files. (AI-033)
+- Before every commit, run the formatter, the linter, and the tests, plus the browser check for page changes (AI-044). Then check `git status` and `git diff --staged` for forbidden files. (AI-033)
 - Small PRs (aim under 400 changed lines). Open a draft early. Fill in the template: `Closes #N`, rule IDs, how to test, 360px screenshots with fake data. (AI-034)
 - Rebase on `main` to stay current. `--force-with-lease` only on your own branch after a rebase. Never plain `--force`. (AI-035)
 - Never:
@@ -110,6 +110,7 @@ git switch -c <type>/<issue-number>-<short-slug>   # types: feat fix chore docs 
 - Every point award goes through the one points service. It checks pause, caps, and duplicates, and writes an audit row. (AI-041)
 - Every implemented rule has tests named with its rule ID, for example `test_game_013_same_pair_counts_once`. (AI-042)
 - Sign-up, PIN or login, admin controls, and minors' data need the `safety-review` label and a second-person review. (AI-043)
+- Before committing a change to routes, templates, CSS, or JavaScript, run the `browser-check` skill: every changed screen at 360px, no console errors, screenshots looked at. Report what you checked, and never claim a check you did not run. (AI-044)
 
 ## Teaching mode
 

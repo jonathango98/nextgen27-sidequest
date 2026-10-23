@@ -2,8 +2,8 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.1.0
-- Last updated: 2026-10-21
+- Version: 1.2.0
+- Last updated: 2026-10-22
 
 > Protected file. AI agents: read only. To propose a change, open a Foundation Change Request issue.
 
@@ -61,13 +61,12 @@ Example: issue #42 asks you to add the join form.
    ```
 
    Never commit `.env` files, `.db` files, or anything with real people's data.
-6. **Commit with a clear message:**
+6. **Run the checks before you commit** (ENG-012): the formatter, linter, and tests (commands added after kickoff). If you changed a page, ask Claude Code to run the browser check: type `/browser-check`, or say "run the browser check on the screens I changed". Everything must pass.
+7. **Commit with a clear message:**
 
    ```bash
    git commit -m "feat(player): add join form fields (#42)" -m "Implements SAFE-002."
    ```
-
-7. **Run the formatter, linter, and tests** (commands added after kickoff). Everything must pass.
 8. **Push and open a draft PR:**
 
    ```bash

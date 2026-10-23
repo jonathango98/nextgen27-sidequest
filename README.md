@@ -21,7 +21,7 @@ The app is built by a small volunteer team. It is not built yet. This repo curre
 
 ## Project status
 
-Status last updated: 2026-10-21 by Claude Opus 5.5 / @jonathango98
+Status last updated: 2026-10-22 by Claude Opus 5.5 / @jonathango98
 
 **Before you start anything**, check that nobody else is on it. A branch only shows up here after it merges, so also run:
 
@@ -42,6 +42,7 @@ Merged to `main` and works end to end.
 | `.gitignore` | ENG-056, ARCH-007 | 2026-10-19 | @jonathango98 |
 | Shared task-observer skill | `.claude/skills/task-observer/` | 2026-10-19 | @jonathango98 |
 | Change log and project status rules | ENG-100 to ENG-104, AI-070 to AI-073 | 2026-10-21 | Claude Opus 5.5 / @jonathango98 |
+| Browser check skill and check-before-commit rule | `.claude/skills/browser-check/`, AI-033, AI-044 | 2026-10-22 | Claude Opus 5.5 / @jonathango98 |
 
 ### In progress
 

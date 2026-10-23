@@ -2,8 +2,8 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.1.0
-- Last updated: 2026-10-20
+- Version: 1.2.0
+- Last updated: 2026-10-22
 
 > Protected file. AI agents: read only. To propose a change, open a Foundation Change Request issue.
 
@@ -34,7 +34,7 @@ Implements SAFE-022. Counts wrong tries per player and sets locked_at.
 ```
 
 - **ENG-011** [LOCKED] Keep commits small. Each commit should pass the tests on its own.
-- **ENG-012** [LOCKED] Before every push: run the formatter, the linter, and the tests. Then check `git status` and `git diff --staged` for anything that must not be committed (SAFE-030). All must pass.
+- **ENG-012** [LOCKED] Before every commit: run the formatter, the linter, and the tests. If the change can affect a page, also run the browser check: ask Claude Code to run the `browser-check` skill (AI-044). Then check `git status` and `git diff --staged` for anything that must not be committed (SAFE-030). All must pass.
 - **ENG-013** [LOCKED] Never run `git add -A` or `git add .` without first reading the list of files it will add. Prefer `git add <file>`.
 
 ## 3. Pull requests
@@ -99,7 +99,7 @@ Tests in `tests/` follow the area of the code they test.
 - **ENG-046** [LOCKED] Every implemented rule has tests, and test names include the rule ID, including the worked examples in `02-game-rules.md` section 12. Example: `test_game_013_same_pair_counts_once`.
 - **ENG-047** [LOCKED] Test and seed data is obviously fake (SAFE-031).
 - **ENG-048** [PROPOSED] CI runs on every PR. The required checks will be named `ci` and `foundation-guard`. CI is planned for the guardrails phase and does not exist yet.
-- **ENG-049** [PROPOSED] Tests use pytest and lint uses ruff (ARCH-001).
+- **ENG-049** [PROPOSED] Tests use pytest, browser tests use Playwright for Python through pytest-playwright, and lint uses ruff (ARCH-001, DEC-023).
 
 ## 7. Database migrations
 
