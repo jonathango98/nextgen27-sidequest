@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Issue #7. Protected paths need guards before app code starts.
 - Rule IDs: ENG-090, ENG-091, ENG-101, DEC-018, AI-060
 - Status: Started
-- PR: draft
+- PR: #8
 
 ## 2026-10-22 · chore/browser-check-skill · Claude Opus 5.5 / @jonathango98
 
