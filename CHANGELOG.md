@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-22 · chore/browser-check-skill · Claude Opus 5.5 / @jonathango98
+
+- What: Added the `browser-check` skill (Playwright for Python, adapted from anthropics/skills webapp-testing). Checks now run before every commit instead of before push, and page changes also get the browser check. Playwright joins the stack as PROPOSED (DEC-023).
+- Why: Contributors should have Claude check their changes in a real browser at 360px before committing.
+- Rule IDs: AI-033, AI-044, ENG-012, ENG-045, ENG-049, ARCH-002, DEC-023
+- Status: Done
+- PR: #5
+
 ## 2026-10-20 · docs/agent-changelog-status · Claude Opus 5.5 / @jonathango98
 
 - What: Added this change log and a Project status section in `README.md`. Removed `README.md` from the protected paths. Added ENG-100 to ENG-104 and AI-070 to AI-073, recorded DEC-022, and pointed `CONTRIBUTING.md` to the new rules.
