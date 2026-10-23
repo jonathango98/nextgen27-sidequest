@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: PR #10 merged and the ruleset and secret scanning are live. In progress means an open branch (DEC-022), and #10's branch is gone.
 - Rule IDs: ENG-080, ENG-081, ENG-087, ENG-102, ENG-103
 - Status: Done
-- PR: draft
+- PR: #16
 
 ## 2026-10-23 · docs/railway-hosting · Claude Opus 5.5 / @jonathango98
 
