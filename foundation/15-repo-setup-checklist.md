@@ -1,8 +1,8 @@
 # 15 Repo Setup Checklist
 
-- Status: Active (steps 1 to 6 applied 2026-10-23; protection tests in section 4 not run yet)
+- Status: Active (steps 1 to 6 applied 2026-10-23; section 4 tests 3 and 4 passed, tests 1, 2, and 5 tracked in issue #15)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.1.1
+- Version: 1.1.2
 - Last updated: 2026-10-23
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -185,11 +185,11 @@ When a safety reviewer is named, invite them as a collaborator, then replace the
 
 Do these after steps 1 to 6.
 
-- [ ] From a collaborator's account, try `git push origin main`. It must be refused.
-- [ ] From a collaborator's account, open a PR that edits `foundation/README.md`. It must require Jonathan's review.
-- [ ] Open your own small PR to a protected path. Check that you can merge it without a second approval, and that a direct push to `main` is still refused.
-- [ ] Settings, Advanced Security shows secret scanning and push protection as on.
-- [ ] A test PR from a fork waits for your approval before its workflows run (once workflows exist).
+- [ ] From a collaborator's account, try `git push origin main`. It must be refused. (Issue #15: needs a second account.)
+- [ ] From a collaborator's account, open a PR that edits `foundation/README.md`. It must require Jonathan's review. (Issue #15: needs a second account.)
+- [x] Open your own small PR to a protected path. Check that you can merge it without a second approval, and that a direct push to `main` is still refused. (2026-10-23: PR #12 merged with the admin bypass. The bypass is pull request only, checked in the ruleset config, not by a live push.)
+- [x] Settings, Advanced Security shows secret scanning and push protection as on. (2026-10-23, checked through the GitHub API.)
+- [ ] A test PR from a fork waits for your approval before its workflows run (once workflows exist). (Issue #15.)
 
 ## 5. Docs used during setup (2026-10-19)
 

@@ -37,6 +37,7 @@ Merged to `main` and works end to end. Newest first: add your row at the top.
 
 | Feature | Spec | Done | By |
 |---|---|---|---|
+| Repo guardrails (CODEOWNERS, ruleset on `main`; remaining protection tests in #15) | ENG-080, ENG-081, DEC-024, `15-repo-setup-checklist.md` | 2026-10-23 | Claude Opus 5.5 / @jonathango98 |
 | Railway hosting, US West (replaces the VMs and Caddy) | ARCH-010, ARCH-011, ARCH-014, ARCH-016, DEC-028 | 2026-10-23 | Claude Opus 5.5 / @jonathango98 |
 | Kickoff stack decisions (Python 3.14, pip-tools, PyYAML, segno, `barcode-detector`, plain SQL migrations) | ARCH-003, ARCH-004, DATA-040, ENG-050, DEC-027 | 2026-10-23 | Claude Opus 5.5 / @jonathango98 |
 | Repo docs cleanup (CONTRIBUTING and SECURITY in `.github/`, CLAUDE.md in `.claude/`, `.serena/` ignored) | ENG-080, DEC-026 | 2026-10-23 | Claude Opus 5.5 / @jonathango98 |
@@ -54,7 +55,6 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| Repo guardrails (CODEOWNERS, ruleset on `main`) | `docs/status-guardrails-done` | #10 | 2026-10-23 | Claude Opus 5.5 / @jonathango98 |
 
 ### Planned
 
