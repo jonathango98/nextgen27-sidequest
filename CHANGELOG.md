@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: #21 merged with its row still under In progress (ENG-103). This PR also checks that PR preview environments work.
 - Rule IDs: ENG-102, ENG-103, ARCH-017, DEC-030
 - Status: Done
-- PR: draft
+- PR: #22
 
 ## 2026-10-23 · chore/railway-config · Claude Opus 5.5 / @jonathango98
 
