@@ -1,0 +1,122 @@
+/* Player page frame (UI-030). Uses tokens.css only (UI-001). */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-family);
+  font-size: var(--font-size-body);
+  line-height: 1.5;
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+a {
+  color: var(--color-primary);
+}
+
+:focus-visible {
+  outline: var(--space-1) solid var(--color-primary);
+  outline-offset: var(--space-1);
+}
+
+/* Top bar: score */
+.top-bar {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface);
+}
+
+.score {
+  font-size: var(--font-size-score);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.score-label {
+  font-size: var(--font-size-small);
+  color: var(--color-text-muted);
+}
+
+/* Content */
+.content {
+  flex: 1;
+  width: 100%;
+  padding: var(--space-4);
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+  margin: 0 0 var(--space-4);
+}
+
+/* Bottom bar: My Code, Scan, Quests (UI-003: in the lower half, big tap targets) */
+.bottom-bar {
+  position: sticky;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-2) calc(var(--space-2) + env(safe-area-inset-bottom));
+  background: var(--color-surface);
+}
+
+.bottom-bar a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--tap-min);
+  min-height: var(--tap-min);
+  padding: var(--space-2);
+  border-radius: var(--radius);
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  color: var(--color-bg);
+  background: var(--color-primary);
+}
+
+/* Components (07 section 3) */
+.button {
+  display: block;
+  width: 100%;
+  min-height: var(--tap-min);
+  padding: var(--space-3) var(--space-4);
+  border: medium solid var(--color-primary);
+  border-radius: var(--radius);
+  font: inherit;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  color: var(--color-bg);
+  background: var(--color-primary);
+}
+
+.button-secondary {
+  color: var(--color-primary);
+  background: var(--color-bg);
+}
+
+.card {
+  padding: var(--space-4);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
