@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-23 · chore/7-repo-guardrails · Claude Opus 5.5 / @jonathango98
+
+- What: Claimed the repo guardrails task: deny rules, hook, Codex rules, CODEOWNERS, CI guard, and repo settings.
+- Why: Issue #7. Protected paths need guards before app code starts.
+- Rule IDs: ENG-090, ENG-091, ENG-101, DEC-018, AI-060
+- Status: Started
+- PR: draft
+
 ## 2026-10-22 · chore/browser-check-skill · Claude Opus 5.5 / @jonathango98
 
 - What: Added the `browser-check` skill (Playwright for Python, adapted from anthropics/skills webapp-testing). Checks now run before every commit instead of before push, and page changes also get the browser check. Playwright joins the stack as PROPOSED (DEC-023).
