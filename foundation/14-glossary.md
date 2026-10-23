@@ -2,10 +2,10 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.0.0
-- Last updated: 2026-10-19
+- Version: 1.1.0
+- Last updated: 2026-10-23
 
-> Protected file. AI agents: read only. To propose a change, open a Foundation Change Request issue.
+> Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
 Use these words the same way in code, copy, issues, and PRs.
 
@@ -26,7 +26,7 @@ Use these words the same way in code, copy, issues, and PRs.
 | Connection | Two players scanning to meet. Each pair counts once | GAME-013 |
 | Feature complete | Late January gate. Nothing new after it | ENG-070 |
 | Foundation | The `foundation/` folder and the other protected files. The source of truth | ENG-080 |
-| Foundation Change Request (FCR) | An issue that proposes a change to a protected file. Only Jonathan acts on it | AI-051 |
+| Foundation Change Request (FCR) | A PR that changes a protected file. It merges only with Jonathan's approval | ENG-080 |
 | Game booth | The booth where ushers take hidden items and hand out sticker packs | GAME-043, GAME-073 |
 | Game director | The person who owns rules, point values, icebreaker questions, prizes, and playtests | 12-team-timeline.md |
 | Game state | On, paused, or off | GAME-100 |

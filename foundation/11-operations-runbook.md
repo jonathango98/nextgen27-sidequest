@@ -2,10 +2,10 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.0.0
-- Last updated: 2026-10-19
+- Version: 1.0.1
+- Last updated: 2026-10-23
 
-> Protected file. AI agents: read only. To propose a change, open a Foundation Change Request issue.
+> Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
 This file is for game day and the weeks before it: who does what, what to do when something breaks, and the checklists. It holds no names, contact details, room numbers, or item locations. Those live with the real event data (section 6).
 

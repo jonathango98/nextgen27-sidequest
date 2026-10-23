@@ -2,10 +2,10 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.2.0
-- Last updated: 2026-10-22
+- Version: 1.3.0
+- Last updated: 2026-10-23
 
-> Protected file. AI agents: read only. To propose a change, open a Foundation Change Request issue.
+> Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
 This file has three parts: the decision log (what was decided and why), the resolved conflicts between source documents, and the table of every OPEN item. Every rule marked OPEN anywhere in the foundation appears in section 3.
 
@@ -43,6 +43,8 @@ Sources, in order of precedence:
 | DEC-021 | 2026-10-19 | Phone numbers and email addresses are not collected (SAFE-003) | Conflict C3 | Jonathan |
 | DEC-022 | 2026-10-20 | Root `README.md` gets a Project status section (Working, In progress, Planned) that every PR updates, and `CHANGELOG.md` gets one signed, dated entry per PR. `README.md` comes off the protected list. In progress means "has an open branch" (ENG-080, ENG-100 to ENG-104, AI-070 to AI-073) | One page shows where the project is, and claiming work early stops two people building the same thing | Jonathan |
 | DEC-023 | 2026-10-22 | Playwright for Python (pytest-playwright) joins the stack as PROPOSED, for dev and test only. Checks run before every commit, not only before push, and page changes also get the `browser-check` skill at 360px (ARCH-002, ENG-012, ENG-049, AI-033, AI-044). Versions are pinned in `pyproject.toml` at kickoff (ENG-057). Enforced by the rules only, with no git hook | Contributors have Claude check their changes in a real browser before committing. A hook was left out to keep commits fast and setup simple | Jonathan |
+| DEC-024 | 2026-10-23 | Drop the local guard layers: Claude Code deny rules, the Claude Code hook, the Codex rules (replaces that part of DEC-018), and the `foundation-guard` workflow. Protection is agent instructions, CODEOWNERS, and the ruleset on `main`. ENG-090 and ENG-091 are removed (ENG-081, AI-060) | Volunteers should explore AI coding without fear. A branch cannot hurt `main`, and code owner review was already the real gate. The local layers blocked Jonathan too and could be bypassed anyway | Jonathan |
+| DEC-025 | 2026-10-23 | Fewer process rules. Removed: stay in your area folders (AI-011), an issue before every branch (ENG-002, ENG-004), the commit message format and rule IDs in commits (ENG-010, AI-032, AI-002), the Foundation Change Request issue (ENG-086, AI-051; a protected file now changes in a PR that Jonathan approves), dismissing stale approvals and requiring resolved conversations (ENG-021), approval issues for new libraries (ARCH-002, ENG-057, AI-021; services and infrastructure still need one), and the long PR template (ENG-020, AI-034). Kept: checks before every commit (DEC-023) and stop and ask (AI-050) | Volunteers should explore AI coding without fear or paperwork. Review before `main` still catches problems | Jonathan |
 
 ## 2. Resolved conflicts
 
@@ -97,7 +99,7 @@ Every OPEN rule in the foundation. Until an item is decided, do not build behavi
 | SAFE-014 | Data retention after the event | A number of days, at least until Wrapped closes | Leadership | Before Playtest 2 |
 | SAFE-027 | Game off overnight and outside set hours | Same as GAME-106 | Leadership | Before Playtest 1 |
 | ARCH-003 | Python version and lock tool | | Developers | Kickoff |
-| ARCH-004 | Extra libraries: YAML loader, QR image, JS QR decoder, Wrapped image | Each needs an approval issue | Developers, Jonathan | Kickoff |
+| ARCH-004 | Extra libraries: YAML loader, QR image, JS QR decoder, Wrapped image | Picked at kickoff, versions pinned | Developers, Jonathan | Kickoff |
 | ARCH-014 | Hosting provider, VM size, region | | Developers, Jonathan | Kickoff |
 | ARCH-031 | Login and sign-up rate limits per IP | Numbers per time window | Developers, safety reviewer | Before core build ends |
 | ARCH-033 | Same full name in the same church | For example, ask for a middle initial at sign-up | Developers, safety reviewer | Kickoff |
@@ -113,7 +115,6 @@ Every OPEN rule in the foundation. Until an item is decided, do not build behavi
 | WRAP-030 | Church recap for youth pastors | Build with a new login, or skip | Jonathan, leadership | Before feature complete |
 | WRAP-033 | How the Wrapped image is made | In the browser or on the server | Developers | Before Wrapped build |
 | OPS-040 | Where real event data lives | A private Google Drive folder (planned default) or another place | Jonathan | Before any real data exists |
-| ENG-090 | How Jonathan edits protected files with Claude Code when deny rules block everyone | See `15-repo-setup-checklist.md` | Jonathan | Guardrails phase |
 
 ## 4. PROPOSED values to review after Playtest 1
 

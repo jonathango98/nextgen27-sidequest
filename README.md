@@ -21,7 +21,7 @@ The app is built by a small volunteer team. It is not built yet. This repo curre
 
 ## Project status
 
-Status last updated: 2026-10-22 by Claude Opus 5.5 / @jonathango98
+Status last updated: 2026-10-23 by Claude Opus 5.5 / @jonathango98
 
 **Before you start anything**, check that nobody else is on it. A branch only shows up here after it merges, so also run:
 
@@ -50,7 +50,7 @@ Has an open branch. Add your row in the first commit on your branch, push, and o
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| None on `main` yet. Run the check commands above to see unmerged claims. | | | | |
+| Repo guardrails (CODEOWNERS, repo settings) | `chore/7-repo-guardrails` | #8 | 2026-10-23 | Claude Opus 5.5 / @jonathango98 |
 
 ### Planned
 
@@ -58,7 +58,6 @@ In the foundation, no branch yet. Order follows `foundation/12-team-timeline.md`
 
 | Feature | Spec | Milestone |
 |---|---|---|
-| Repo guardrails (deny rules, hook, CODEOWNERS, CI guard, repo settings) | `foundation/15-repo-setup-checklist.md` | Kickoff |
 | Join, PIN set, and log in | SAFE-002, SAFE-021, ARCH-032 | Core build |
 | My Code (rotating QR) | GAME-001 | Core build |
 | Scanner and connections, with icebreaker | ARCH-025, GAME-017 | Core build |

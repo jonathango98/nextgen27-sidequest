@@ -2,10 +2,10 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.0.0
-- Last updated: 2026-10-19
+- Version: 1.1.0
+- Last updated: 2026-10-23
 
-> Protected file. AI agents: read only. To propose a change, open a Foundation Change Request issue.
+> Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
 This folder is the single source of truth for Side Quest: the product, the game rules, safety, architecture, design, and how we work. If code and the foundation disagree, the foundation wins until a Foundation Change Request changes it.
 
@@ -61,7 +61,7 @@ If it is still unclear, the item is marked OPEN. Nobody invents numbers, names, 
 - IDs are never reused or renumbered. A removed rule keeps its ID, marked as removed.
 - Gaps in numbering are on purpose. They leave room to add rules next to related ones.
 - A rule is defined once, in bold: `**GAME-013** [LOCKED] ...`. Everywhere else it is mentioned in plain text: `GAME-013`.
-- Issues, PRs, commits, code comments, and test names cite rule IDs. Example test name: `test_game_013_same_pair_counts_once`.
+- Issues, PRs, code comments, and test names cite rule IDs. Example test name: `test_game_013_same_pair_counts_once`.
 
 ## 5. Status words
 
@@ -75,7 +75,7 @@ Each file also has a status at the top. A file marked "Active" mixes statuses. R
 
 ## 6. How the foundation changes
 
-- **ENG-085** [LOCKED] Only Jonathan edits the foundation and the other protected paths (ENG-080).
-- **ENG-086** [LOCKED] Anyone else, human or agent, proposes a change by opening a Foundation Change Request issue. It contains: the rule ID, the current text, the proposed text, why, and the impact (AI-051).
-- **ENG-087** [LOCKED] When Jonathan accepts a change, Jonathan edits the file, raises the file's version (patch for wording, minor for a changed rule, major for a changed structure), updates "Last updated", and logs a decision in `13-decisions.md` if a rule changed.
+- **ENG-085** [LOCKED] Anyone may propose a change to the foundation or another protected path in a PR. It merges only with Jonathan's approval (ENG-080).
+- **ENG-086** [REMOVED] Was: propose a change through a Foundation Change Request issue first. A PR is enough now (DEC-025).
+- **ENG-087** [LOCKED] A PR that changes a protected file raises the file's version (patch for wording, minor for a changed rule, major for a changed structure), updates "Last updated", and logs a decision in `13-decisions.md` if a rule changed.
 - **ENG-088** [LOCKED] An OPEN item becomes LOCKED or PROPOSED only through a decision in `13-decisions.md`.

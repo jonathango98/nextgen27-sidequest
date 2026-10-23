@@ -2,19 +2,19 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.1.0
-- Last updated: 2026-10-22
+- Version: 1.2.0
+- Last updated: 2026-10-23
 
-> Protected file. AI agents: read only. To propose a change, open a Foundation Change Request issue.
+> Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
 This file says how Side Quest is built and run. The stack is PROPOSED and the developers confirm it at kickoff (mid-November). The security rules are LOCKED no matter which stack is chosen.
 
 ## 1. Stack
 
 - **ARCH-001** [PROPOSED] The stack is: Python, FastAPI, Jinja2 templates, HTMX, SQLite in WAL mode, Caddy as the web server, all on one VM. Pages are rendered on the server. JavaScript is kept to a minimum.
-- **ARCH-002** [LOCKED] Only the allowed stack below may be used. Any new dependency, service, or piece of infrastructure needs an issue that explicitly approves it (AI-021).
+- **ARCH-002** [LOCKED] Use the allowed stack below. A new library is fine: ask your human first (AI-050), say why in the PR, and pin the version (ENG-057). A new service or piece of infrastructure needs an issue that explicitly approves it (AI-021).
 - **ARCH-003** [OPEN] The exact Python version and the dependency lock tool. Decided at kickoff.
-- **ARCH-004** [OPEN] Libraries not yet approved but likely needed. Each needs its own approval issue:
+- **ARCH-004** [OPEN] Libraries not yet chosen but likely needed. Picked at kickoff:
   - a YAML loader for `game-config.yaml` (for example PyYAML)
   - a server-side QR image generator
   - a JavaScript QR decoder for the in-app scanner (iPhone Safari does not support the browser's built-in barcode detector)

@@ -2,10 +2,10 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.0.0
-- Last updated: 2026-10-19
+- Version: 1.0.1
+- Last updated: 2026-10-23
 
-> Protected file. AI agents: read only. To propose a change, open a Foundation Change Request issue.
+> Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
 Wrapped is a personal recap of the weekend, like a year-end music recap: short cards you swipe through. It unlocks on Sunday right after results. It only reads data the game already has. It collects nothing new.
 

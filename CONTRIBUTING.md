@@ -2,10 +2,10 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.2.0
-- Last updated: 2026-10-22
+- Version: 1.3.0
+- Last updated: 2026-10-23
 
-> Protected file. AI agents: read only. To propose a change, open a Foundation Change Request issue.
+> Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
 Welcome! This guide is for volunteers on the Side Quest team. You don't need to be an expert. You need to read the rules, work in small steps, and ask when unsure.
 
@@ -39,19 +39,19 @@ Tip: GitHub can give you a private "noreply" email so your real email is not in 
 
 ## 3. Your first PR, step by step
 
-Example: issue #42 asks you to add the join form.
+Example: you want to add the join form.
 
-1. **Get assigned.** Comment on the issue so nobody else picks it up. Make sure it has an area label (for example `area:player-app`). Check the README Project status, `git branch -r`, and `gh pr list --state open` first. Every PR also adds a signed entry to `CHANGELOG.md` and keeps the README Project status accurate (ENG-100 to ENG-104).
+1. **Call dibs.** If there's an issue for it, comment on it. Check the README Project status, `git branch -r`, and `gh pr list --state open` first. Every PR also adds a signed entry to `CHANGELOG.md` and keeps the README Project status accurate (ENG-100 to ENG-104).
 2. **Start from an updated main:**
 
    ```bash
    git switch main
    git pull --ff-only
-   git switch -c feat/42-join-form
+   git switch -c feat/join-form
    ```
 
 3. **Read the rules for the task.** For a join form: SAFE-002 (exactly which fields), GAME-040 (join points), and the Join screen in `foundation/06-api-and-screens.md`.
-4. **Make a small change.** Touch only the files the issue needs.
+4. **Make a small change.** Touch only the files the task needs.
 5. **Check before you commit:**
 
    ```bash
@@ -62,19 +62,19 @@ Example: issue #42 asks you to add the join form.
 
    Never commit `.env` files, `.db` files, or anything with real people's data.
 6. **Run the checks before you commit** (ENG-012): the formatter, linter, and tests (commands added after kickoff). If you changed a page, ask Claude Code to run the browser check: type `/browser-check`, or say "run the browser check on the screens I changed". Everything must pass.
-7. **Commit with a clear message:**
+7. **Commit with a clear message.** Any style works. Your commits get squashed into one when the PR merges.
 
    ```bash
-   git commit -m "feat(player): add join form fields (#42)" -m "Implements SAFE-002."
+   git commit -m "add join form fields"
    ```
 8. **Push and open a draft PR:**
 
    ```bash
-   git push -u origin feat/42-join-form
+   git push -u origin feat/join-form
    gh pr create --draft --fill
    ```
 
-9. **Fill in the PR template fully:** `Closes #42`, rule IDs, how to test, and a screenshot at 360px wide using fake data.
+9. **Fill in the short PR template:** what and why (with rule IDs), how to test, and a screenshot at 360px wide if you changed a screen (fake data only). Give the PR a title like `feat(player): add join form`.
 10. **Mark it ready for review** when it's done. Someone else reviews and merges. You never merge your own PR.
 11. **If `main` moved on,** rebase and push safely:
 
@@ -114,13 +114,13 @@ GAME-102) as if I'm new to FastAPI. Don't change any files. Then suggest
 3 test cases with names that include the rule IDs.
 ```
 
-If the agent says a file is protected, that's expected. Ask it to draft a Foundation Change Request and open the issue yourself.
+If the agent says a file is protected, that's expected. It can still change it in a PR if you ask, but Jonathan has to approve that PR.
 
 ## 5. How to ask for help
 
 - **Stuck on code:** comment on your issue or PR with what you tried and the exact error. Tag a teammate or @jonathango98.
 - **The rules are unclear or OPEN:** add the `needs-decision` label to the issue and say what is unclear. Don't guess.
-- **You think a rule should change:** open a "Foundation Change Request" issue.
+- **You think a rule should change:** open a PR with the change and say why. Jonathan reviews it.
 - **Something might be a security or safety problem:** don't post it publicly. See [SECURITY.md](SECURITY.md).
 
 There are no silly questions. Asking early saves everyone time.
