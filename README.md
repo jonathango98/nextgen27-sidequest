@@ -50,7 +50,7 @@ Has an open branch. Add your row in the first commit on your branch, push, and o
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| Repo guardrails (deny rules, hook, CODEOWNERS, CI guard, repo settings) | `chore/7-repo-guardrails` | #8 | 2026-10-23 | Claude Opus 5.5 / @jonathango98 |
+| Repo guardrails (CODEOWNERS, repo settings) | `chore/7-repo-guardrails` | #8 | 2026-10-23 | Claude Opus 5.5 / @jonathango98 |
 
 ### Planned
 

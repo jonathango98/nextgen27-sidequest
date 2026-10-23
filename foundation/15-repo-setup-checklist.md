@@ -2,8 +2,8 @@
 
 - Status: Active (manual steps for Jonathan; not yet applied)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.0.0
-- Last updated: 2026-10-19
+- Version: 1.1.0
+- Last updated: 2026-10-23
 
 > Protected file. AI agents: read only. To propose a change, open a Foundation Change Request issue.
 
@@ -15,23 +15,19 @@ Commands marked "verify" use API details that were not confirmed in the docs dur
 
 ## 1. Protection layers and their status
 
+The guardrails stay light on purpose (DEC-024). Volunteers should feel free to try things with AI on their own branch. Nothing on a branch can hurt `main`, because `main` only changes through a reviewed PR. There are no local blocks on anyone's laptop.
+
 | Layer | What it does | Status | Limits |
 |---|---|---|---|
 | 1. Instructions | `AGENTS.md`, `CLAUDE.md`, and `10-ai-agent-rules.md` tell agents that protected paths are read only | Written | Agents can ignore instructions. Humans can ignore them too |
-| 2. Claude Code deny rules | `.claude/settings.json` denies `Edit(...)` on protected paths | Planned (guardrails phase) | Claude Code only. Covers its file tools and the Bash commands it recognizes (redirects such as `>`, `tee`, `sed`). Does not cover scripts that open files themselves (for example a Python one-liner). Also blocks Jonathan (ENG-090) |
-| 3. Claude Code hook | A PreToolUse hook blocks file tools and mutating shell commands that target protected paths | Planned (guardrails phase) | Claude Code only. Pattern matching on shell commands can be fooled by unusual commands. Fails closed on errors |
-| 3b. Codex rules | Experimental `.codex/rules/` that forbid writing to protected paths (DEC-018) | Planned (guardrails phase) | Codex loads project rules only after the user marks the project as trusted. A project cannot set Codex's sandbox or approval mode. Do not rely on it |
-| 4. CODEOWNERS and CI guard | Code owner review on protected paths. A `foundation-guard` workflow fails PRs from anyone but Jonathan that touch protected paths | Planned (guardrails phase) | The guard workflow runs the PR's own copy of the workflow file, so a PR can edit the guard to pass. Code owner review is the real gate |
-| 5. Repo settings | Ruleset on `main`, Actions settings, security features | Not applied (this file) | The settings depend on GitHub features working as documented. Test them (section 4) |
+| 2. CODEOWNERS | Code owner review on protected paths | Planned (guardrails phase) | Only works with the ruleset in layer 3 |
+| 3. Repo settings | Ruleset on `main`, Actions settings, security features | Not applied (this file) | The settings depend on GitHub features working as documented. Test them (section 4) |
 
-- **ENG-090** [OPEN] How Jonathan edits protected files with Claude Code. A deny rule in any settings scope beats an allow rule in every other scope, so the env var below cannot lift layer 2. Options:
-  - Option A: keep the deny rules, and start Claude Code for foundation work with `SQ_FOUNDATION_OWNER=1 claude --setting-sources user,local`. This skips the project's `.claude/settings.json`, so it skips both the deny rules and the hook.
-  - Option B: drop the deny rules and rely on the hook, which honors the env var.
+- **ENG-090** [REMOVED] Was: how Jonathan edits protected files past the Claude Code deny rules. The deny rules were dropped (DEC-024), so nothing blocks him.
 
-## 2. Owner bypass (for Jonathan only)
+## 2. Owner bypass
 
-- **ENG-091** [PROPOSED] The hook (layer 3) allows edits when the environment variable `SQ_FOUNDATION_OWNER=1` is set in the shell that started Claude Code. Set it only in your own shell, only for foundation work.
-- This is a convenience, not a security boundary. This repo is public, so anyone can read this paragraph. The hook reads the environment of the Claude Code process, so an agent cannot switch it on by putting the variable in a shell command. The GitHub layers (4 and 5) are what actually stop other people.
+- **ENG-091** [REMOVED] Was: an env var that let Jonathan pass the Claude Code hook. The hook was dropped (DEC-024).
 
 ## 3. Steps
 
@@ -125,7 +121,7 @@ Create it in the UI first, because the ID for the "Repository admin" role is not
 | Block force pushes | On |
 | Require linear history | On |
 | Require a pull request before merging | On, 1 approval, dismiss stale approvals, require review from Code Owners, require conversation resolution, allowed merge method: squash |
-| Require status checks to pass | Add `ci` and `foundation-guard` after those workflows exist and have run once |
+| Require status checks to pass | Add `ci` after that workflow exists and has run once |
 
 Then read it back to see the IDs GitHub used:
 

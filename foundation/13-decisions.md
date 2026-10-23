@@ -2,8 +2,8 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.2.0
-- Last updated: 2026-10-22
+- Version: 1.3.0
+- Last updated: 2026-10-23
 
 > Protected file. AI agents: read only. To propose a change, open a Foundation Change Request issue.
 
@@ -43,6 +43,7 @@ Sources, in order of precedence:
 | DEC-021 | 2026-10-19 | Phone numbers and email addresses are not collected (SAFE-003) | Conflict C3 | Jonathan |
 | DEC-022 | 2026-10-20 | Root `README.md` gets a Project status section (Working, In progress, Planned) that every PR updates, and `CHANGELOG.md` gets one signed, dated entry per PR. `README.md` comes off the protected list. In progress means "has an open branch" (ENG-080, ENG-100 to ENG-104, AI-070 to AI-073) | One page shows where the project is, and claiming work early stops two people building the same thing | Jonathan |
 | DEC-023 | 2026-10-22 | Playwright for Python (pytest-playwright) joins the stack as PROPOSED, for dev and test only. Checks run before every commit, not only before push, and page changes also get the `browser-check` skill at 360px (ARCH-002, ENG-012, ENG-049, AI-033, AI-044). Versions are pinned in `pyproject.toml` at kickoff (ENG-057). Enforced by the rules only, with no git hook | Contributors have Claude check their changes in a real browser before committing. A hook was left out to keep commits fast and setup simple | Jonathan |
+| DEC-024 | 2026-10-23 | Drop the local guard layers: Claude Code deny rules, the Claude Code hook, the Codex rules (replaces that part of DEC-018), and the `foundation-guard` workflow. Protection is agent instructions, CODEOWNERS, and the ruleset on `main`. ENG-090 and ENG-091 are removed (ENG-081, AI-060) | Volunteers should explore AI coding without fear. A branch cannot hurt `main`, and code owner review was already the real gate. The local layers blocked Jonathan too and could be bypassed anyway | Jonathan |
 
 ## 2. Resolved conflicts
 
@@ -113,7 +114,6 @@ Every OPEN rule in the foundation. Until an item is decided, do not build behavi
 | WRAP-030 | Church recap for youth pastors | Build with a new login, or skip | Jonathan, leadership | Before feature complete |
 | WRAP-033 | How the Wrapped image is made | In the browser or on the server | Developers | Before Wrapped build |
 | OPS-040 | Where real event data lives | A private Google Drive folder (planned default) or another place | Jonathan | Before any real data exists |
-| ENG-090 | How Jonathan edits protected files with Claude Code when deny rules block everyone | See `15-repo-setup-checklist.md` | Jonathan | Guardrails phase |
 
 ## 4. PROPOSED values to review after Playtest 1
 

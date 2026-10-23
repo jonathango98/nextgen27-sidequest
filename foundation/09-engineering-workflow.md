@@ -2,8 +2,8 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.2.0
-- Last updated: 2026-10-22
+- Version: 1.3.0
+- Last updated: 2026-10-23
 
 > Protected file. AI agents: read only. To propose a change, open a Foundation Change Request issue.
 
@@ -98,7 +98,7 @@ Tests in `tests/` follow the area of the code they test.
   - safety review is done when it applies (ENG-023)
 - **ENG-046** [LOCKED] Every implemented rule has tests, and test names include the rule ID, including the worked examples in `02-game-rules.md` section 12. Example: `test_game_013_same_pair_counts_once`.
 - **ENG-047** [LOCKED] Test and seed data is obviously fake (SAFE-031).
-- **ENG-048** [PROPOSED] CI runs on every PR. The required checks will be named `ci` and `foundation-guard`. CI is planned for the guardrails phase and does not exist yet.
+- **ENG-048** [PROPOSED] CI runs on every PR. The required check will be named `ci`. CI is planned for the guardrails phase and does not exist yet.
 - **ENG-049** [PROPOSED] Tests use pytest, browser tests use Playwright for Python through pytest-playwright, and lint uses ruff (ARCH-001, DEC-023).
 
 ## 7. Database migrations
@@ -137,12 +137,10 @@ Tests in `tests/` follow the area of the code they test.
   - `.gitignore`, `.editorconfig`, `.env.example`
 
   Root `README.md` is not protected, so every PR can update its Project status section (ENG-100, DEC-022). The rest of `README.md` still changes only through a Foundation Change Request.
-- **ENG-081** [LOCKED] Protection has five layers. The status of each layer is in `15-repo-setup-checklist.md`.
+- **ENG-081** [LOCKED] Protection has three layers, kept light on purpose (DEC-024). The status of each layer is in `15-repo-setup-checklist.md`.
   1. Agent instructions
-  2. Claude Code deny rules
-  3. A Claude Code hook
-  4. CODEOWNERS and a CI guard
-  5. GitHub repository settings
+  2. CODEOWNERS
+  3. GitHub repository settings
 
   No layer is perfect on its own. Code owner review on GitHub is the gate that counts.
 

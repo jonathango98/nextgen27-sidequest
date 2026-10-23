@@ -22,10 +22,10 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-10-23 · chore/7-repo-guardrails · Claude Opus 5.5 / @jonathango98
 
-- What: Claimed the repo guardrails task: deny rules, hook, Codex rules, CODEOWNERS, CI guard, and repo settings.
-- Why: Issue #7. Protected paths need guards before app code starts.
-- Rule IDs: ENG-090, ENG-091, ENG-101, DEC-018, AI-060
-- Status: Started
+- What: Claimed the repo guardrails task. Dropped the local guard layers (Claude Code deny rules, hook, Codex rules, `foundation-guard` workflow), so protection is agent instructions, CODEOWNERS, and the ruleset on `main`. Logged DEC-024.
+- Why: Issue #7. Volunteers should explore AI coding without fear. Code owner review on `main` is the real gate.
+- Rule IDs: ENG-048, ENG-081, ENG-090, ENG-091, ENG-101, AI-060, DEC-018, DEC-024
+- Status: In progress
 - PR: #8
 
 ## 2026-10-22 · chore/browser-check-skill · Claude Opus 5.5 / @jonathango98

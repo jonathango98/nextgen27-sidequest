@@ -2,8 +2,8 @@
 
 - Status: LOCKED
 - Owner: Jonathan (@jonathango98)
-- Version: 1.2.0
-- Last updated: 2026-10-22
+- Version: 1.2.1
+- Last updated: 2026-10-23
 
 > Protected file. AI agents: read only. To propose a change, open a Foundation Change Request issue.
 
@@ -86,7 +86,7 @@ Impact: (which docs, config keys, code, and tests would change)
 
 ## 8. How the guardrails treat agents
 
-- **AI-060** [LOCKED] Some tools block edits to protected paths automatically (see `15-repo-setup-checklist.md`). A block is not an error to work around. When blocked, do not try another way to write the file (another tool, a shell command, a script). Draft a Foundation Change Request instead (AI-051).
+- **AI-060** [LOCKED] If a tool or a permission prompt blocks an edit, the block is not an error to work around. When blocked, do not try another way to write the file (another tool, a shell command, a script). Draft a Foundation Change Request instead (AI-051).
 
 ## 9. Project status and change log
 
