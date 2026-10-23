@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: The Project status is for non-technical stakeholders to see where the project is. Technical readers use this file.
 - Rule IDs: ENG-100, ENG-103, AI-070
 - Status: Done
-- PR: draft
+- PR: #17
 
 ## 2026-10-23 · docs/guardrails-tests-status · Claude Opus 5.5 / @jonathango98
 
