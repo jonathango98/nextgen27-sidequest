@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-23 · docs/simplify-working-status · Claude Opus 5.5 / @jonathango98
+
+- What: Simplified the README Working table to two columns (What, Done) in plain words, and merged the 11 setup rows into one "Project setup" row. Planned and In progress are unchanged. The details of the merged rows stay in the entries below.
+- Why: The Project status is for non-technical stakeholders to see where the project is. Technical readers use this file.
+- Rule IDs: ENG-100, ENG-103, AI-070
+- Status: Done
+- PR: draft
+
 ## 2026-10-23 · docs/guardrails-tests-status · Claude Opus 5.5 / @jonathango98
 
 - What: Ticked protection tests 3 and 4 in `15-repo-setup-checklist.md` section 4 and moved Repo guardrails to Working. Tests 1, 2, and 5 need a second account or a workflow, so they moved to issue #15.

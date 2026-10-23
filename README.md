@@ -33,21 +33,11 @@ gh pr list --state open    # every open PR, including drafts
 
 ### Working
 
-Merged to `main` and works end to end. Newest first: add your row at the top.
+Done and live. Newest first: add your row at the top, in plain words. Who built it, the rule IDs, and the details go in [CHANGELOG.md](CHANGELOG.md).
 
-| Feature | Spec | Done | By |
-|---|---|---|---|
-| Repo guardrails (CODEOWNERS, ruleset on `main`; remaining protection tests in #15) | ENG-080, ENG-081, DEC-024, `15-repo-setup-checklist.md` | 2026-10-23 | Claude Opus 5.5 / @jonathango98 |
-| Railway hosting, US West (replaces the VMs and Caddy) | ARCH-010, ARCH-011, ARCH-014, ARCH-016, DEC-028 | 2026-10-23 | Claude Opus 5.5 / @jonathango98 |
-| Kickoff stack decisions (Python 3.14, pip-tools, PyYAML, segno, `barcode-detector`, plain SQL migrations) | ARCH-003, ARCH-004, DATA-040, ENG-050, DEC-027 | 2026-10-23 | Claude Opus 5.5 / @jonathango98 |
-| Repo docs cleanup (CONTRIBUTING and SECURITY in `.github/`, CLAUDE.md in `.claude/`, `.serena/` ignored) | ENG-080, DEC-026 | 2026-10-23 | Claude Opus 5.5 / @jonathango98 |
-| `/pick-task` skill (choose a task and call dibs) | `.claude/skills/pick-task/`, ENG-101, AI-072 | 2026-10-23 | Claude Opus 5.5 / @jonathango98 |
-| Browser check skill and check-before-commit rule | `.claude/skills/browser-check/`, AI-033, AI-044 | 2026-10-22 | Claude Opus 5.5 / @jonathango98 |
-| Change log and project status rules | ENG-100 to ENG-104, AI-070 to AI-073 | 2026-10-21 | Claude Opus 5.5 / @jonathango98 |
-| Shared task-observer skill | `.claude/skills/task-observer/` | 2026-10-19 | @jonathango98 |
-| `.gitignore` | ENG-056, ARCH-007 | 2026-10-19 | @jonathango98 |
-| Agent rules | `AGENTS.md`, `CLAUDE.md`, `foundation/10-ai-agent-rules.md` | 2026-10-19 | @jonathango98 |
-| Foundation docs v1 | `foundation/` | 2026-10-19 | @jonathango98 |
+| What | Done |
+|---|---|
+| Project setup: game rules and plans written, hosting chosen, repo safety checks, and AI helper tools for volunteers | 2026-10-23 |
 
 ### In progress
 
