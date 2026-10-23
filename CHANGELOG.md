@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-23 · feat/app-skeleton · Claude Opus 5.5 / @jonathango98
+
+- What: Claimed the app skeleton (`app/main.py`, `app/config.py`, the ARCH-008 layout), design tokens in `tokens.css`, and the shared player page frame.
+- Why: There is no `app/` folder yet, and every Core build feature needs it. DEC-027 unblocked the stack.
+- Rule IDs: ARCH-008, UI-001, UI-030, DEC-027, ENG-101
+- Status: Started
+- PR: draft
+
 ## 2026-10-23 · docs/health-route · Claude Opus 5.5 / @jonathango98
 
 - What: Adds `GET /health` to `06-api-and-screens.md` in a new System section, and logs the decision in `13-decisions.md`.
