@@ -28,10 +28,6 @@ dist/
 .coverage
 htmlcov/
 
-# Caddy local state
-caddy_data/
-caddy_config/
-
 # Serena MCP local state
 .serena/
 
