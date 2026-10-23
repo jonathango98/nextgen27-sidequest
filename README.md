@@ -37,6 +37,7 @@ Done and live. Newest first: add your row at the top, in plain words. Who built 
 
 | What | Done |
 |---|---|
+| Health check added to the route list, so the host can tell the app is running | 2026-10-23 |
 | Project setup: game rules and plans written, hosting chosen, repo safety checks, and AI helper tools for volunteers | 2026-10-23 |
 
 ### In progress

@@ -2,7 +2,7 @@
 
 - Status: PROPOSED (developers confirm at kickoff)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.0.1
+- Version: 1.1.0
 - Last updated: 2026-10-23
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -93,6 +93,12 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 | GET | `/screen/takeaways` | Partial: takeaway wall | SAFE-018 |
 | GET | `/screen/checkin/{session_id}` | Rotating session check-in QR for the hall screen | GAME-020 |
 | GET | `/screen/recap` | Conference recap on Sunday | WRAP-020 |
+
+### System
+
+| Method | Path | What it does | Rules |
+|---|---|---|---|
+| GET | `/health` | Health check: 200 with plain text `ok`. No database check, and no version or environment details | ARCH-010, DEC-029 |
 
 ## 3. Error codes
 
