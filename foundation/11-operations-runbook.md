@@ -2,7 +2,7 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.0.1
+- Version: 1.1.0
 - Last updated: 2026-10-23
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -72,7 +72,7 @@ This file is for game day and the weeks before it: who does what, what to do whe
 
 ### Pre-event (two weeks before, after code freeze)
 
-- [ ] Production VM is up, HTTPS works, and staging matches production (ARCH-010, ARCH-011)
+- [ ] Production on Railway is up, HTTPS works, and staging matches production (ARCH-010, ARCH-011)
 - [ ] Secrets are set as environment variables on the server, not in any file in the repo (SAFE-032)
 - [ ] Backups run and a restore was tested (ARCH-053)
 - [ ] Church list loaded. Booths loaded. Hidden item numbers loaded (no locations in the app, SAFE-010)

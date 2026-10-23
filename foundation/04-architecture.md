@@ -2,7 +2,7 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.3.0
+- Version: 1.4.0
 - Last updated: 2026-10-23
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -11,7 +11,7 @@ This file says how Side Quest is built and run. The stack is PROPOSED and the de
 
 ## 1. Stack
 
-- **ARCH-001** [PROPOSED] The stack is: Python, FastAPI, Jinja2 templates, HTMX, SQLite in WAL mode, Caddy as the web server, all on one VM. Pages are rendered on the server. JavaScript is kept to a minimum.
+- **ARCH-001** [PROPOSED] The stack is: Python, FastAPI, Jinja2 templates, HTMX, SQLite in WAL mode, all in one Railway service (ARCH-010). Pages are rendered on the server. JavaScript is kept to a minimum.
 - **ARCH-002** [LOCKED] Use the allowed stack below. A new library is fine: ask your human first (AI-050), say why in the PR, and pin the version (ENG-057). A new service or piece of infrastructure needs an issue that explicitly approves it (AI-021).
 - **ARCH-003** [PROPOSED] Python 3.14. Dependencies are listed in `pyproject.toml` and locked with pip-tools (`pip-compile`) into pinned `requirements*.txt` files (DEC-027).
 - **ARCH-004** [PROPOSED] Extra libraries (DEC-027). Pin each version (ENG-057):
@@ -29,11 +29,11 @@ Allowed stack (v1):
 | Templates | Jinja2, with autoescape on | PROPOSED |
 | Front end | HTMX, plain CSS, small plain JavaScript files | PROPOSED |
 | Database | SQLite, WAL mode | PROPOSED |
-| Web server and TLS | Caddy | PROPOSED |
+| Web server and TLS | Railway (HTTPS at its edge). The app serves its own static files | PROPOSED |
 | Tests | pytest | PROPOSED |
 | Browser tests | Playwright for Python, through pytest-playwright (Chromium and WebKit). Dev and test only, never on the server (DEC-023) | PROPOSED |
 | Lint and format | ruff | PROPOSED |
-| Hosting | One production VM, one staging VM | PROPOSED |
+| Hosting | Railway, US West: one production and one staging environment (ARCH-014) | PROPOSED |
 
 ## 2. One repo (LOCKED)
 
@@ -67,15 +67,16 @@ Allowed stack (v1):
 
 ## 3. Deployment
 
-- **ARCH-010** [PROPOSED] Production is one VM. Caddy terminates HTTPS, serves static files, and forwards other requests to the app server. The SQLite database file sits on the VM's local disk.
-- **ARCH-011** [PROPOSED] A staging VM matches production. Every change is tested on staging before production.
+- **ARCH-010** [PROPOSED] Production is one Railway service running the app with Uvicorn, as a single replica. Railway terminates HTTPS and forwards requests to the app, which also serves the static files (CSS, JS, the scanner `.wasm`). The SQLite database file sits on a Railway volume mounted to that service. A service with a volume cannot run more than one replica.
+- **ARCH-011** [PROPOSED] A staging environment in the same Railway project matches production, with its own volume and fake data only. Every change is tested on staging before production.
 - **ARCH-012** [LOCKED] Every page is served over HTTPS. The in-app scanner needs camera access, and browsers only allow that on HTTPS.
 - **ARCH-013** [PROPOSED] SQLite allows one writer at a time. Start with a single app process. If a load test (ARCH-071) shows that is too slow, try a small number of workers with a busy timeout. Developers confirm with measurements.
-- **ARCH-014** [OPEN] Hosting provider, VM size, and server region. Costs are not written in this repo.
+- **ARCH-014** [PROPOSED] Railway is the only host, in the US West region (DEC-028). No separate static host. Costs are not written in this repo.
 - **ARCH-015** [LOCKED] The server stores all times in UTC. "Per day" limits use the venue timezone (GAME-105).
+- **ARCH-016** [PROPOSED] Railway does not run two deployments on one volume, so every production deploy has a short gap. No production deploys during live game hours.
 
 ```
-Phone browser ──HTTPS──> Caddy (TLS, static files) ──> FastAPI app (Uvicorn) ──> SQLite file (WAL)
+Phone browser ──HTTPS──> Railway edge (TLS) ──> FastAPI app (Uvicorn, static files) ──> SQLite file (WAL, Railway volume)
 Main screen browser ──HTTPS──┘
 ```
 
@@ -127,14 +128,14 @@ Example payload (fake): `SQ1.P.k3x9q2mf.482913`
 - **ARCH-050** [LOCKED] Every award, revocation, and admin or usher action writes an audit row: who did it, what they did, to which record, the reason (if any), and when.
 - **ARCH-051** [LOCKED] Logs never contain PINs, icebreaker answers, takeaway text, last names, or session cookies. Logs refer to players by internal ID.
 - **ARCH-052** [LOCKED] Logs, database files, and backups stay on the server. They are never committed (SAFE-030). They are deleted on the retention date (SAFE-014).
-- **ARCH-053** [OPEN] Backup frequency and whether an encrypted copy is kept off the VM. Developers propose this before Playtest 2.
+- **ARCH-053** [OPEN] Backup frequency and whether an encrypted copy is kept off Railway. Railway volume backups restore only into the same project and environment, so they do not count as the off-Railway copy. Developers propose this before Playtest 2.
 
 ## 8. Performance and the join moment
 
 - **ARCH-070** [PROPOSED] Target: 95% of requests finish in under 500 ms, measured on the production setup.
 - **ARCH-071** [LOCKED] About 300 phones join at once during the Day 1 stage intro. This moment is load tested on staging before Playtest 2 and on the venue Wi-Fi at the mid-February walkthrough (OPS-030).
 - **ARCH-072** [OPEN] The exact load test profile (how many sign-ups in how many seconds). Developers propose it before the load test.
-- **ARCH-073** [PROPOSED] The sign-up page is as small as possible: server-rendered HTML, no web fonts, no images beyond a logo, and static files cached by Caddy.
+- **ARCH-073** [PROPOSED] The sign-up page is as small as possible: server-rendered HTML, no web fonts, no images beyond a logo, and static files sent with long cache headers.
 - **ARCH-074** [PROPOSED] v1 uses HTMX polling for live updates (My Code refresh, the second phone in a connection, main screen views). No WebSockets. Polling intervals live in config.
 
 ## 9. When the Wi-Fi fails

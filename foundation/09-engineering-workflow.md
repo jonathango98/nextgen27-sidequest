@@ -2,7 +2,7 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.5.0
+- Version: 1.6.0
 - Last updated: 2026-10-23
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -105,7 +105,7 @@ Tests in `tests/` follow the area of the code they test.
 
 ## 8. Environments, secrets, and dependencies
 
-- **ENG-055** [PROPOSED] Three environments: local (your laptop, fake data), staging VM, production VM.
+- **ENG-055** [PROPOSED] Three environments: local (your laptop, fake data), staging and production, both Railway environments (ARCH-010, ARCH-011).
 - **ENG-056** [LOCKED] Secrets come only from environment variables on the server (SAFE-032). The repo may hold a `.env.example` with placeholder values only. Never put a real value in it.
 - **ENG-057** [LOCKED] Pin the version of every dependency. A new library needs no approval issue (DEC-025). A new service or piece of infrastructure still does (ARCH-002).
 - **ENG-058** [PROPOSED] Dependabot opens PRs for GitHub Actions updates. The config file is planned for the guardrails phase.
