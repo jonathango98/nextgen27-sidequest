@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-23 · chore/railway-config · Claude Opus 5.5 / @jonathango98
+
+- What: Claimed the Railway setup: `railway.json` and `.python-version`, a staging environment that auto-deploys `main`, production deployed by hand, and a preview environment for each PR.
+- Why: Jonathan wants to check every PR and `main` on Railway before production (ARCH-011).
+- Rule IDs: ARCH-010, ARCH-011, ARCH-014, DEC-028, DEC-029, ENG-101
+- Status: Started
+- PR: draft
+
 ## 2026-10-23 · feat/app-skeleton · Claude Opus 5.5 / @jonathango98
 
 - What: Claimed the app skeleton, design tokens in `tokens.css`, and the shared player page frame. Part 1 added: `pyproject.toml` with pinned FastAPI, Uvicorn, and PyYAML, pip-tools lock files, `app/config.py` (loads `game-config.yaml` with `safe_load`, checks `config_version`), and `app/main.py` (app factory, `GET /health`, FastAPI's built-in docs routes off). httpx2 is a new dev-only library: FastAPI's test client needs an HTTP client, and Starlette 1.9 deprecates httpx in favor of httpx2. Part 2 added: `tokens.css` with every token from `07` section 2, `player.css`, and `templates/player/base.html` with the score bar and the My Code, Scan, and Quests buttons. `/static` is served by the app. Jinja2 and pytest-playwright are pinned. Browser tests run at the config viewport width in Chromium and WebKit, using a test-only route.
