@@ -2,8 +2,8 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.0.0
-- Last updated: 2026-10-19
+- Version: 1.1.0
+- Last updated: 2026-10-20
 
 > Protected file. AI agents: read only. To propose a change, open a Foundation Change Request issue.
 
@@ -130,11 +130,13 @@ Tests in `tests/` follow the area of the code they test.
 
 - **ENG-080** [LOCKED] Only Jonathan changes these paths. Everyone else, human or agent, opens a Foundation Change Request issue:
   - `foundation/**`
-  - root `README.md`, `AGENTS.md`, `CLAUDE.md`, `CONTRIBUTING.md`, `SECURITY.md`, `LICENSE`
+  - root `AGENTS.md`, `CLAUDE.md`, `CONTRIBUTING.md`, `SECURITY.md`, `LICENSE`
   - `.claude/**`
   - `.codex/**`
   - `.github/**`
   - `.gitignore`, `.editorconfig`, `.env.example`
+
+  Root `README.md` is not protected, so every PR can update its Project status section (ENG-100, DEC-022). The rest of `README.md` still changes only through a Foundation Change Request.
 - **ENG-081** [LOCKED] Protection has five layers. The status of each layer is in `15-repo-setup-checklist.md`.
   1. Agent instructions
   2. Claude Code deny rules
@@ -143,3 +145,16 @@ Tests in `tests/` follow the area of the code they test.
   5. GitHub repository settings
 
   No layer is perfect on its own. Code owner review on GitHub is the gate that counts.
+
+## 12. Project status and change log
+
+These rules apply to every PR, from a human or an AI agent (DEC-022).
+
+- **ENG-100** [LOCKED] The Project status section of root `README.md` is the one page that shows where the project is. It has three tables:
+  - Working: merged to `main` and works end to end.
+  - In progress: has an open branch.
+  - Planned: in the foundation, with no branch yet.
+- **ENG-101** [LOCKED] Claim before you build. Before starting, check the README Project status, `git branch -r` (after `git fetch --prune`), and `gh pr list --state open`. If someone already has the feature, stop and talk to them. If nobody does, the first commit on your branch moves the feature's row from Planned to In progress (branch, PR, start date, signature) and adds a "Started" entry to `CHANGELOG.md`. Push it and open a draft PR right away, so others can see your claim.
+- **ENG-102** [LOCKED] Every PR adds one entry at the top of `CHANGELOG.md`, using the format at the top of that file: date, branch, signature, what, why, rule IDs, status, PR. Update the entry as the PR changes. Keep it to one entry per PR.
+- **ENG-103** [LOCKED] Keep the status true. When a PR finishes a feature, it moves the row to Working in that same PR. When work stops or a PR is closed without merging, remove its In progress row. Update the "Status last updated" line every time you edit the section. Mark a feature Working only when it works end to end and its tests pass.
+- **ENG-104** [LOCKED] Signatures are `<Model name> / @<github-handle>`, for example `Claude Opus 5.5 / @jonathango98`. A human working without an AI agent signs `Human / @<github-handle>`. Dates are `YYYY-MM-DD`. `CHANGELOG.md` is a record of changes, not a runtime log, so SAFE-030 does not forbid it. Secrets and real attendee data never go in it.

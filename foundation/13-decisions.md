@@ -2,8 +2,8 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.0.0
-- Last updated: 2026-10-19
+- Version: 1.1.0
+- Last updated: 2026-10-20
 
 > Protected file. AI agents: read only. To propose a change, open a Foundation Change Request issue.
 
@@ -41,6 +41,7 @@ Sources, in order of precedence:
 | DEC-019 | 2026-10-19 | This phase writes rules and Markdown only (plus `game-config.yaml` and `LICENSE`). Guardrail code, CI, hooks, and GitHub config files come later | Jonathan's instruction | Jonathan |
 | DEC-020 | 2026-10-19 | `CLAUDE.md` imports `AGENTS.md` and `foundation/README.md`. The schema and routes live in `05-data-model.md` and `06-api-and-screens.md`, not in `CLAUDE.md` | One source of truth. The brief said `CLAUDE.md` would hold the schema, routes, and rules | Jonathan |
 | DEC-021 | 2026-10-19 | Phone numbers and email addresses are not collected (SAFE-003) | Conflict C3 | Jonathan |
+| DEC-022 | 2026-10-20 | Root `README.md` gets a Project status section (Working, In progress, Planned) that every PR updates, and `CHANGELOG.md` gets one signed, dated entry per PR. `README.md` comes off the protected list. In progress means "has an open branch" (ENG-080, ENG-100 to ENG-104, AI-070 to AI-073) | One page shows where the project is, and claiming work early stops two people building the same thing | Jonathan |
 
 ## 2. Resolved conflicts
 

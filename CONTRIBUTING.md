@@ -2,8 +2,8 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.0.0
-- Last updated: 2026-10-19
+- Version: 1.1.0
+- Last updated: 2026-10-21
 
 > Protected file. AI agents: read only. To propose a change, open a Foundation Change Request issue.
 
@@ -41,7 +41,7 @@ Tip: GitHub can give you a private "noreply" email so your real email is not in 
 
 Example: issue #42 asks you to add the join form.
 
-1. **Get assigned.** Comment on the issue so nobody else picks it up. Make sure it has an area label (for example `area:player-app`).
+1. **Get assigned.** Comment on the issue so nobody else picks it up. Make sure it has an area label (for example `area:player-app`). Check the README Project status, `git branch -r`, and `gh pr list --state open` first. Every PR also adds a signed entry to `CHANGELOG.md` and keeps the README Project status accurate (ENG-100 to ENG-104).
 2. **Start from an updated main:**
 
    ```bash
