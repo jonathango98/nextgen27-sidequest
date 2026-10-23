@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-23 · docs/railway-hosting · Claude Opus 5.5 / @jonathango98
+
+- What: Claimed the Railway hosting docs change: Railway in US West replaces the two VMs and Caddy.
+- Why: Issue #13. Jonathan chose Railway as the only host.
+- Rule IDs: ARCH-001, ARCH-002, ARCH-010, ARCH-011, ARCH-014, ENG-055, ENG-101, ENG-102
+- Status: Started
+- PR: draft
+
 ## 2026-10-23 · docs/kickoff-stack-decisions · Claude Opus 5.5 / @jonathango98
 
 - What: Recorded the kickoff stack as PROPOSED in DEC-027: Python 3.14 locked with pip-tools from `pyproject.toml`, PyYAML (`safe_load` only), segno for QR images, `barcode-detector` for the scanner (Safari and Chromium, served from our own server), and numbered plain SQL migrations. Removed those rows from the OPEN table. The Wrapped image stays OPEN (WRAP-033).

@@ -53,6 +53,7 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
+| Railway hosting (replaces the VMs and Caddy) | `docs/railway-hosting` | draft | 2026-10-23 | Claude Opus 5.5 / @jonathango98 |
 | Repo guardrails (CODEOWNERS, ruleset on `main`) | `docs/status-guardrails-done` | #10 | 2026-10-23 | Claude Opus 5.5 / @jonathango98 |
 
 ### Planned
