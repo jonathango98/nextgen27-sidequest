@@ -2,7 +2,7 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.3.0
+- Version: 1.3.1
 - Last updated: 2026-10-23
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -122,6 +122,7 @@ If the agent says a file is protected, that's expected. It can still change it i
 - **The rules are unclear or OPEN:** add the `needs-decision` label to the issue and say what is unclear. Don't guess.
 - **You think a rule should change:** open a PR with the change and say why. Jonathan reviews it.
 - **Something might be a security or safety problem:** don't post it publicly. See [SECURITY.md](SECURITY.md).
+- **Not sure what to work on:** type `/pick-task` in Claude Code. It shows 3 free tasks that fit you and calls dibs on the one you pick.
 
 There are no silly questions. Asking early saves everyone time.
 
