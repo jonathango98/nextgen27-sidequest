@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Side Quest{% endblock %}</title>
+  <link rel="stylesheet" href="/static/css/tokens.css">
+  <link rel="stylesheet" href="/static/css/player.css">
+</head>
+<body>
+  {# UI-030: same frame on every player page #}
+  <header class="top-bar">
+    <span class="score">{{ score }}</span>
+    <span class="score-label">points</span>
+  </header>
+
+  <main class="content">
+    {% block content %}{% endblock %}
+  </main>
+
+  <nav class="bottom-bar" aria-label="Main">
+    <a href="/code">My Code</a>
+    <a href="/scan">Scan</a>
+    <a href="/quests">Quests</a>
+  </nav>
+</body>
+</html>

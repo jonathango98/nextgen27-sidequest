@@ -1,0 +1,37 @@
+/* Design tokens (UI-001). Values from foundation/07-design-system.md section 2.
+   Templates and other CSS use these, never raw color or size values. */
+
+:root {
+  /* Color */
+  --color-bg: #ffffff;
+  --color-surface: #f5f6f8;
+  --color-text: #14151a;
+  --color-text-muted: #545a66;
+  --color-primary: #1f4fd1;
+  --color-gold: #f2c14e;
+  --color-gold-line: #a87400; /* lines and large text only, never body text */
+  --color-success: #1e7b3a;
+  --color-error: #b42318;
+  --color-screen-bg: #0e1015;
+  --color-screen-text: #ffffff;
+  --color-screen-muted: #b3b9c4;
+  --color-screen-gold: #f2c14e;
+
+  /* Type */
+  --font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-size-body: 16px;
+  --font-size-small: 14px;
+  --font-size-h1: 28px;
+  --font-size-score: 40px;
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+
+  --radius: 12px;
+  --tap-min: 48px; /* UI-003: must match ui.min_tap_target_px in game-config.yaml */
+}
