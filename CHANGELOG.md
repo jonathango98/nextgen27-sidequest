@@ -22,11 +22,11 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-10-23 · chore/repo-docs-cleanup · Claude Opus 5.5 / @jonathango98
 
-- What: Claimed the repo docs cleanup: move `CONTRIBUTING.md` and `SECURITY.md` into `.github/`, trim `SECURITY.md` where it repeats `foundation/03-safety-privacy.md`, fix the `AGENTS.md` line that calls `README.md` protected, and ignore `.serena/`.
+- What: Moved `CONTRIBUTING.md` and `SECURITY.md` into `.github/` and updated every link to them. `SECURITY.md` now links to SAFE-030 to SAFE-037 instead of repeating them. Fixed the `AGENTS.md` line that listed `README.md` as protected. Removed the two now-covered CODEOWNERS lines. Ignored `.serena/`. Recorded DEC-026.
 - Why: Fewer root files, one copy of each rule, and `AGENTS.md` matching ENG-080 and AI-070.
-- Rule IDs: ENG-080, ENG-087, ENG-101, AI-070, SAFE-030 to SAFE-037
-- Status: Started
-- PR: draft
+- Rule IDs: ENG-080, ENG-087, ENG-101, AI-070, SAFE-030 to SAFE-037, DEC-026
+- Status: Done
+- PR: #11
 
 ## 2026-10-23 · docs/status-guardrails-done · Claude Opus 5.5 / @jonathango98
 

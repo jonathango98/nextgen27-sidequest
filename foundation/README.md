@@ -2,7 +2,7 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.1.0
+- Version: 1.1.1
 - Last updated: 2026-10-23
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -32,7 +32,7 @@ This folder is the single source of truth for Side Quest: the product, the game 
 
 ## 2. Reading order by role
 
-Everyone reads this file, then `AGENTS.md` (or `CONTRIBUTING.md` for humans), then `14-glossary.md`.
+Everyone reads this file, then `AGENTS.md` (or `.github/CONTRIBUTING.md` for humans), then `14-glossary.md`.
 
 | Role | Read these, in order |
 |---|---|

@@ -32,6 +32,9 @@ htmlcov/
 caddy_data/
 caddy_config/
 
+# Serena MCP local state
+.serena/
+
 # Claude Code personal files (shared .claude/settings.json stays tracked)
 .claude/settings.local.json
 .claude/HANDOFF.md

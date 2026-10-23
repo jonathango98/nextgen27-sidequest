@@ -2,7 +2,7 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.3.0
+- Version: 1.4.0
 - Last updated: 2026-10-23
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -126,10 +126,10 @@ Tests in `tests/` follow the area of the code they test.
 
 - **ENG-080** [LOCKED] Changes to these paths merge only with Jonathan's approval (code owner review). Anyone, human or agent, may propose one in a PR. Such a PR is called a Foundation Change Request:
   - `foundation/**`
-  - root `AGENTS.md`, `CLAUDE.md`, `CONTRIBUTING.md`, `SECURITY.md`, `LICENSE`
+  - root `AGENTS.md`, `CLAUDE.md`, `LICENSE`
   - `.claude/**`
   - `.codex/**`
-  - `.github/**`
+  - `.github/**` (includes `CONTRIBUTING.md` and `SECURITY.md`, DEC-026)
   - `.gitignore`, `.editorconfig`, `.env.example`
 
   Root `README.md` is not protected, so every PR can update its Project status section (ENG-100, DEC-022). The rest of `README.md` still changes only through a Foundation Change Request.
