@@ -22,11 +22,11 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-10-23 · chore/pick-task-skill · Claude Opus 5.5 / @jonathango98
 
-- What: Claimed the `/pick-task` Claude Code skill.
+- What: Added the `/pick-task` Claude Code skill. It reads the Project status, open branches, PRs, and issues, asks two quick questions, offers 3 unclaimed options in plain words, and calls dibs on the pick. `CONTRIBUTING.md` points to it.
 - Why: Volunteers asked for a "give me options" way to find work.
-- Rule IDs: ENG-101, AI-072
-- Status: Started
-- PR: draft
+- Rule IDs: ENG-101, ENG-102, ENG-103, AI-003, AI-045, AI-071, AI-072
+- Status: Done
+- PR: #9
 
 ## 2026-10-23 · chore/7-repo-guardrails · Claude Opus 5.5 / @jonathango98
 
