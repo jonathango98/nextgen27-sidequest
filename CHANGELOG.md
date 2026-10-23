@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-23 · docs/guardrails-tests-status · Claude Opus 5.5 / @jonathango98
+
+- What: Ticked protection tests 3 and 4 in `15-repo-setup-checklist.md` section 4 and moved Repo guardrails to Working. Tests 1, 2, and 5 need a second account or a workflow, so they moved to issue #15.
+- Why: PR #10 merged and the ruleset and secret scanning are live. In progress means an open branch (DEC-022), and #10's branch is gone.
+- Rule IDs: ENG-080, ENG-081, ENG-087, ENG-102, ENG-103
+- Status: Done
+- PR: #16
+
 ## 2026-10-23 · docs/railway-hosting · Claude Opus 5.5 / @jonathango98
 
 - What: Recorded Railway in US West as the only host in DEC-028. It replaces the two VMs and Caddy: Railway terminates HTTPS, the app serves its own static files, and SQLite sits on a Railway volume as a single replica. Added ARCH-016 (no production deploys during live game hours). Updated the stack table, diagram, ARCH-073, ENG-055, and the pre-event checklist. Removed the Caddy entries from `.gitignore`. ARCH-053 stays OPEN, now asking for an off-Railway copy.
