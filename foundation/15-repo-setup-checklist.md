@@ -1,8 +1,8 @@
 # 15 Repo Setup Checklist
 
-- Status: Active (manual steps for Jonathan; not yet applied)
+- Status: Active (steps 1 to 6 applied 2026-10-23; protection tests in section 4 not run yet)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.1.0
+- Version: 1.1.1
 - Last updated: 2026-10-23
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -20,8 +20,8 @@ The guardrails stay light on purpose (DEC-024). Volunteers should feel free to t
 | Layer | What it does | Status | Limits |
 |---|---|---|---|
 | 1. Instructions | `AGENTS.md`, `CLAUDE.md`, and `10-ai-agent-rules.md` tell agents how protected paths change | Written | Agents can ignore instructions. Humans can ignore them too |
-| 2. CODEOWNERS | Code owner review on protected paths | Planned (guardrails phase) | Only works with the ruleset in layer 3 |
-| 3. Repo settings | Ruleset on `main`, Actions settings, security features | Not applied (this file) | The settings depend on GitHub features working as documented. Test them (section 4) |
+| 2. CODEOWNERS | Code owner review on protected paths | Written (`.github/CODEOWNERS`) | Only works with the ruleset in layer 3 |
+| 3. Repo settings | Ruleset on `main`, Actions settings, security features | Applied 2026-10-23 (steps 2 to 6). Not tested yet (section 4) | The settings depend on GitHub features working as documented. Test them (section 4) |
 
 - **ENG-090** [REMOVED] Was: how Jonathan edits protected files past the Claude Code deny rules. The deny rules were dropped (DEC-024), so nothing blocks him.
 
@@ -128,6 +128,8 @@ Then read it back to see the IDs GitHub used:
 gh api repos/jonathango98/nextgen27-sidequest/rulesets
 gh api repos/jonathango98/nextgen27-sidequest/rulesets/<id>
 ```
+
+The read-back on 2026-10-23 showed `actor_id` 5 for Repository admin. It also showed `require_extra_approval_for_unattributed_changes: true`, a setting this file does not list. Its exact effect was not confirmed in the docs.
 
 The same ruleset as an API call (verify `actor_id` against the read-back first):
 

@@ -38,7 +38,6 @@ Merged to `main` and works end to end. Newest first: add your row at the top.
 | Feature | Spec | Done | By |
 |---|---|---|---|
 | `/pick-task` skill (choose a task and call dibs) | `.claude/skills/pick-task/`, ENG-101, AI-072 | 2026-10-23 | Claude Opus 5.5 / @jonathango98 |
-| Repo guardrails (CODEOWNERS, repo settings) | DEC-024, DEC-025, ENG-080 | 2026-10-23 | Claude Opus 5.5 / @jonathango98 |
 | Browser check skill and check-before-commit rule | `.claude/skills/browser-check/`, AI-033, AI-044 | 2026-10-22 | Claude Opus 5.5 / @jonathango98 |
 | Change log and project status rules | ENG-100 to ENG-104, AI-070 to AI-073 | 2026-10-21 | Claude Opus 5.5 / @jonathango98 |
 | Shared task-observer skill | `.claude/skills/task-observer/` | 2026-10-19 | @jonathango98 |
@@ -52,6 +51,7 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
+| Repo guardrails (CODEOWNERS, ruleset on `main`) | `docs/status-guardrails-done` | #10 | 2026-10-23 | Claude Opus 5.5 / @jonathango98 |
 
 ### Planned
 
