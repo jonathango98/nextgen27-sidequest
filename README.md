@@ -51,6 +51,7 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
+| Repo docs cleanup (move CONTRIBUTING and SECURITY to `.github/`, trim SECURITY, fix AGENTS.md README line, ignore `.serena/`) | `chore/repo-docs-cleanup` | draft | 2026-10-23 | Claude Opus 5.5 / @jonathango98 |
 | Repo guardrails (CODEOWNERS, ruleset on `main`) | `docs/status-guardrails-done` | #10 | 2026-10-23 | Claude Opus 5.5 / @jonathango98 |
 
 ### Planned

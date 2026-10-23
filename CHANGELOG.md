@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-23 · chore/repo-docs-cleanup · Claude Opus 5.5 / @jonathango98
+
+- What: Claimed the repo docs cleanup: move `CONTRIBUTING.md` and `SECURITY.md` into `.github/`, trim `SECURITY.md` where it repeats `foundation/03-safety-privacy.md`, fix the `AGENTS.md` line that calls `README.md` protected, and ignore `.serena/`.
+- Why: Fewer root files, one copy of each rule, and `AGENTS.md` matching ENG-080 and AI-070.
+- Rule IDs: ENG-080, ENG-087, ENG-101, AI-070, SAFE-030 to SAFE-037
+- Status: Started
+- PR: draft
+
 ## 2026-10-23 · docs/status-guardrails-done · Claude Opus 5.5 / @jonathango98
 
 - What: Finished the repo guardrails that PR #8 started. Added `.github/CODEOWNERS` for the protected paths, with a commented safety reviewer placeholder. Jonathan applied checklist steps 2 to 6 (squash-only merges, auto-delete branches, fork PR approval, Dependabot, private vulnerability reporting, labels, and the `main-protection` ruleset with an admin bypass for pull requests only). Marked layers 2 and 3 in `15-repo-setup-checklist.md`. Sorted the Working table newest first, with new Working and In progress rows added at the top.
