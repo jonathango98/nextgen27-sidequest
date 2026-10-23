@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Every Core build feature needs the app skeleton, and the skeleton is blocked on these OPEN items.
 - Rule IDs: ARCH-003, ARCH-004, DATA-040, ENG-050, ENG-088, ENG-101, ENG-102
 - Status: Started
-- PR: draft
+- PR: #12
 
 ## 2026-10-23 · chore/repo-docs-cleanup · Claude Opus 5.5 / @jonathango98
 
