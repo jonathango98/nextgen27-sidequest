@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Login looks a player up by full name, church, and PIN (ARCH-032), so Join and log in could not be built while this was OPEN. Issue #25.
 - Rule IDs: ARCH-033, ARCH-032, DATA-016, API-021, DEC-033, ENG-087, ENG-088
 - Status: Done
-- PR: draft
+- PR: #26
 
 ## 2026-10-23 · docs/drop-screenshot-and-size-rules · Claude Opus 5.5 / @jonathango98
 
