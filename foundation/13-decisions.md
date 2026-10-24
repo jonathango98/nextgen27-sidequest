@@ -2,7 +2,7 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.9.0
+- Version: 1.10.0
 - Last updated: 2026-10-23
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -51,6 +51,7 @@ Sources, in order of precedence:
 | DEC-029 | 2026-10-23 | Add `GET /health` to `06-api-and-screens.md` in a new System section. It returns 200 with plain text `ok`, with no database check and no version or environment details (API-001) | The app skeleton needs one route to prove the app starts, and Railway can use it as a health check (ARCH-010). Leaving out version and environment details gives attackers nothing to read | Jonathan (issue #19) |
 | DEC-030 | 2026-10-23 | Staging auto-deploys `main`, production is deployed by hand, and every PR gets a temporary Railway preview environment copied from staging (ARCH-017). Service settings live in Railway, not in a config file: start command `uvicorn app.main:app --host 0.0.0.0 --port $PORT`, health check `/health` (DEC-029), region US West (`us-west2`), 1 replica (ARCH-010). `.python-version` pins Python 3.14 for the build | Lets the team check each PR and `main` on a real HTTPS URL before production. Railway's `railway.json` stops being read on 2026-12-01, and its replacement (`.railway/railway.ts`) needs Node in a Python repo, so the settings are set once in Railway and recorded here. Railway's builder defaults to Python 3.13, so the version file is needed. Railway skips PRs from people outside the workspace, which keeps the public repo safe | Jonathan |
 | DEC-032 | 2026-10-23 | Drop the PR size target (under 400 changed lines) and the 360px PR screenshot from AI-034, ENG-020, `CONTRIBUTING.md`, and the PR template. The browser check still runs before commits, including looking at 360px screenshots (AI-044). Any screenshot that is posted still uses fake data only (SAFE-036) | Jonathan's call: the line target and the PR screenshot slowed PRs down without adding much, because the browser check already covers 360px layout | Jonathan |
+| DEC-033 | 2026-10-23 | Two players from the same church cannot share a full name (ARCH-033 LOCKED). Sign-up refuses a repeat with 409 `NAME_TAKEN` and sends the player to an usher (API-021). The database enforces it with a unique index on church and full name, ignoring case (DATA-016) | Login uses full name, church, and PIN (ARCH-032), so each combination must point to one player. Rare enough at one conference to handle in person | Jonathan (issue #25) |
 
 ## 2. Resolved conflicts
 
@@ -105,7 +106,6 @@ Every OPEN rule in the foundation. Until an item is decided, do not build behavi
 | SAFE-014 | Data retention after the event | A number of days, at least until Wrapped closes | Leadership | Before Playtest 2 |
 | SAFE-027 | Game off overnight and outside set hours | Same as GAME-106 | Leadership | Before Playtest 1 |
 | ARCH-031 | Login and sign-up rate limits per IP | Numbers per time window | Developers, safety reviewer | Before core build ends |
-| ARCH-033 | Same full name in the same church | For example, ask for a middle initial at sign-up | Developers, safety reviewer | Kickoff |
 | ARCH-053 | Backup frequency and off-Railway copy | | Developers | Before Playtest 2 |
 | ARCH-072 | Load test profile | Sign-ups per second, duration | Developers | Before Playtest 2 |
 | API-031 | Main screen refresh interval | Seconds | Developers | Before Playtest 1 |

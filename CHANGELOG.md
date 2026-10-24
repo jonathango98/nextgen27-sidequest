@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-23 · docs/arch-033-same-name · Claude Opus 5.5 / @jonathango98
+
+- What: Decided ARCH-033 (now LOCKED): two players from the same church cannot share a full name. Added DATA-016 (unique index on church and full name, ignoring case), the 409 `NAME_TAKEN` error code, and DEC-033. Removed ARCH-033 from the OPEN table. Versions: `04-architecture.md` 1.6.0, `05-data-model.md` 1.2.0, `06-api-and-screens.md` 1.2.0, `13-decisions.md` 1.10.0.
+- Why: Login looks a player up by full name, church, and PIN (ARCH-032), so Join and log in could not be built while this was OPEN. Issue #25.
+- Rule IDs: ARCH-033, ARCH-032, DATA-016, API-021, DEC-033, ENG-087, ENG-088
+- Status: Done
+- PR: draft
+
 ## 2026-10-23 · docs/drop-screenshot-and-size-rules · Claude Opus 5.5 / @jonathango98
 
 - What: Removed the PR size target (under 400 changed lines) and the 360px PR screenshot from AI-034 (`AGENTS.md` 1.4.0, `10-ai-agent-rules.md` 1.4.0), ENG-020 (`09-engineering-workflow.md` 1.7.0), `CONTRIBUTING.md` 1.4.0, and the PR template. Logged DEC-032 (`13-decisions.md` 1.9.0). The browser check (AI-044) and fake-data screenshots (SAFE-036) stay.

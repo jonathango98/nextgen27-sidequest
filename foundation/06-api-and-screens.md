@@ -2,7 +2,7 @@
 
 - Status: PROPOSED (developers confirm at kickoff)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.1.0
+- Version: 1.2.0
 - Last updated: 2026-10-23
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -115,6 +115,7 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 | 409 | `ALREADY_DONE` | Once-only quest already done | "You already checked in to this session." |
 | 409 | `ITEM_CLAIMED` | Hidden item already claimed | "This item was already turned in." |
 | 409 | `LIMIT_REACHED` | A daily or total cap is reached | "That's all the photobooth points for today." |
+| 409 | `NAME_TAKEN` | Sign-up with a full name already used in that church | "Someone from your church already joined with this name. Please find an usher at the game booth." |
 | 409 | `NOTHING_TO_CLAIM` | No claimable stickers | "Keep playing to unlock your next sticker." |
 | 409 | `OUT_OF_STOCK` | No packs left | "All the sticker packs are gone." |
 | 410 | `CODE_EXPIRED` | The rotating code is too old | "That code expired. Ask them to show it again." |
