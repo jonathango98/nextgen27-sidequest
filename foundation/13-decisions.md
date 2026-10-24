@@ -2,7 +2,7 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.10.0
+- Version: 1.11.0
 - Last updated: 2026-10-23
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
