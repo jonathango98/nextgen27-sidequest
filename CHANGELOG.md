@@ -22,11 +22,11 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-10-23 · feat/25-db-foundation · Claude Opus 5.5 / @jonathango98
 
-- What: Started Join, PIN set, and log in. Step 1 of 4: a migration runner and the Church and Player tables. Later steps: church list loader, Join and PIN set, log in.
+- What: Started Join, PIN set, and log in. Step 1 of 4: `app/db.py` connects with foreign keys, WAL, and a busy timeout, and applies numbered `migrations/*.sql` files in order at app start, one transaction each. `0001` creates the `church` and `player` tables (STRICT) with the DATA-016 same-name index. The app refuses to start without `SQ_DB_PATH`. Later steps: church list loader, Join and PIN set, log in.
 - Why: Join and log in need somewhere to store players. Issue #25.
-- Rule IDs: DATA-040, ENG-050, DATA-005, DATA-016, ENG-101
-- Status: Started
-- PR: draft
+- Rule IDs: DATA-002, DATA-003, DATA-004, DATA-005, DATA-011, DATA-016, DATA-040, ENG-050, ARCH-001, ARCH-010, ARCH-013, ENG-101
+- Status: In progress
+- PR: #27
 
 ## 2026-10-23 · docs/drop-screenshot-and-size-rules · Claude Opus 5.5 / @jonathango98
 
