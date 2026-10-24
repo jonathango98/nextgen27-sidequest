@@ -12,7 +12,7 @@ from app.config import load_config
 from app.db import connect, db_path_from_env, migrate
 from app.forms import BadForm
 from app.rendering import APP_DIR, templates
-from app.routes.player import code, join
+from app.routes.player import code, join, login
 
 
 @asynccontextmanager
@@ -35,6 +35,7 @@ def create_app() -> FastAPI:
     app.mount("/static", StaticFiles(directory=APP_DIR / "static"), name="static")
     app.include_router(code.router)
     app.include_router(join.router)
+    app.include_router(login.router)
 
     @app.exception_handler(LoginRequired)
     def login_required(request: Request, exc: LoginRequired):
