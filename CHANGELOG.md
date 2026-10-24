@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-23 · feat/25-db-foundation · Claude Opus 5.5 / @jonathango98
+
+- What: Started Join, PIN set, and log in. Step 1 of 4: a migration runner and the Church and Player tables. Later steps: church list loader, Join and PIN set, log in.
+- Why: Join and log in need somewhere to store players. Issue #25.
+- Rule IDs: DATA-040, ENG-050, DATA-005, DATA-016, ENG-101
+- Status: Started
+- PR: draft
+
 ## 2026-10-23 · docs/drop-screenshot-and-size-rules · Claude Opus 5.5 / @jonathango98
 
 - What: Removed the PR size target (under 400 changed lines) and the 360px PR screenshot from AI-034 (`AGENTS.md` 1.4.0, `10-ai-agent-rules.md` 1.4.0), ENG-020 (`09-engineering-workflow.md` 1.7.0), `CONTRIBUTING.md` 1.4.0, and the PR template. Logged DEC-032 (`13-decisions.md` 1.9.0). The browser check (AI-044) and fake-data screenshots (SAFE-036) stay.
