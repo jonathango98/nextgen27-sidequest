@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Next Core build piece with no OPEN blockers. The Scanner builds on it later.
 - Rule IDs: GAME-001, ARCH-020, ARCH-021, ARCH-022, ARCH-023, API-030, ENG-101
 - Status: Started
-- PR: draft
+- PR: #23
 
 ## 2026-10-23 · docs/drop-screenshot-and-size-rules · Claude Opus 5.5 / @jonathango98
 
