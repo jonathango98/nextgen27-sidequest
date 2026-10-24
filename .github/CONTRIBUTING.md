@@ -2,7 +2,7 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.3.2
+- Version: 1.4.0
 - Last updated: 2026-10-23
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -74,7 +74,7 @@ Example: you want to add the join form.
    gh pr create --draft --fill
    ```
 
-9. **Fill in the short PR template:** what and why (with rule IDs), how to test, and a screenshot at 360px wide if you changed a screen (fake data only). Give the PR a title like `feat(player): add join form`.
+9. **Fill in the short PR template:** what and why (with rule IDs) and how to test. Give the PR a title like `feat(player): add join form`.
 10. **Mark it ready for review** when it's done. Someone else reviews and merges. You never merge your own PR.
 11. **If `main` moved on,** rebase and push safely:
 
