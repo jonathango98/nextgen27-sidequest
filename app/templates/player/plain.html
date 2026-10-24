@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en">
+<head>
+  {% include "player/head.html" %}
+  <title>{% block title %}Side Quest{% endblock %}</title>
+</head>
+{# For pages before login: no score or bottom bar. API-004: HTMX sends the CSRF token in a header. #}
+<body class="plain" hx-headers='{"X-CSRF-Token": "{{ csrf_token }}"}'>
+  <main class="content">
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

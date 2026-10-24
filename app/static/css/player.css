@@ -114,6 +114,90 @@ h1 {
   background: var(--color-surface);
 }
 
+/* Forms: Join and Log in (UI-003 big targets, UI-053 visible labels, UI-051 errors in text) */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.form label,
+.form legend {
+  font-weight: 600;
+}
+
+.form input:not([type="radio"]),
+.form select {
+  width: 100%;
+  min-height: var(--tap-min);
+  padding: var(--space-2) var(--space-3);
+  border: thin solid var(--color-text-muted);
+  border-radius: var(--radius);
+  font: inherit;
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+/* Safari ignores min-height on a native select, so draw it ourselves (UI-003). */
+.form select {
+  appearance: none;
+  padding-right: var(--space-6);
+}
+
+.select {
+  position: relative;
+  display: block;
+}
+
+.select::after {
+  content: "\25BE"; /* small down arrow */
+  position: absolute;
+  top: 50%;
+  right: var(--space-3);
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--color-text-muted);
+}
+
+.form fieldset {
+  margin: var(--space-2) 0;
+  padding: 0;
+  border: 0;
+}
+
+.form .choice {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--tap-min);
+  font-weight: 400;
+}
+
+.form input[type="radio"] {
+  width: var(--space-5);
+  height: var(--space-5);
+  margin: 0;
+}
+
+.form .button {
+  margin-top: var(--space-4);
+}
+
+.hint {
+  margin: 0 0 var(--space-2);
+  font-size: var(--font-size-small);
+  color: var(--color-text-muted);
+}
+
+[role="alert"] {
+  margin: 0 0 var(--space-2);
+  padding: var(--space-3);
+  border-left: var(--space-1) solid var(--color-error);
+  border-radius: var(--radius);
+  color: var(--color-error);
+  background: var(--color-surface);
+}
+
 /* QR panel: white background, large QR, quiet zone kept (GAME-001) */
 .qr-panel {
   width: 100%;

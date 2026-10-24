@@ -1,0 +1,28 @@
+{# Log in on another phone (ARCH-032). The PIN is never sent back, so it always starts empty. #}
+<form class="form" method="post" action="/login" hx-post="/login" hx-target="#login-form">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+  {% if error %}{% include "partials/error.html" %}{% endif %}
+
+  <label for="first_name">First name</label>
+  <input id="first_name" name="first_name" value="{{ form.first_name }}" maxlength="{{ name_max }}" autocomplete="given-name" required>
+
+  <label for="last_name">Last name</label>
+  <input id="last_name" name="last_name" value="{{ form.last_name }}" maxlength="{{ name_max }}" autocomplete="family-name" required>
+
+  <label for="church_id">Church</label>
+  <span class="select">
+  <select id="church_id" name="church_id" required>
+    <option value="">Pick your church</option>
+    {% for church in churches %}
+      <option value="{{ church.id }}" {% if form.church_id == church.id|string %}selected{% endif %}>{{ church.name }}</option>
+    {% endfor %}
+  </select>
+  </span>
+
+  <label for="pin">PIN</label>
+  <input id="pin" name="pin" type="password" inputmode="numeric" pattern="[0-9]{{ '{' }}{{ pin_digits }}{{ '}' }}" maxlength="{{ pin_digits }}" autocomplete="current-password" required>
+
+  <button class="button" type="submit">Log in</button>
+</form>
+<p class="hint">New here? <a href="/join">Join the game</a></p>
+<p class="hint">Forgot your PIN? Find an admin at the game booth.</p>

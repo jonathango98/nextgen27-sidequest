@@ -1,0 +1,32 @@
+{# Join, step 1 (SAFE-002): exactly these fields. UI-032: typed values come back after an error. #}
+<form class="form" method="post" action="/join" hx-post="/join" hx-target="#join-step">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+  <input type="hidden" name="step" value="details">
+  {% if error %}{% include "partials/error.html" %}{% endif %}
+
+  <label for="first_name">First name</label>
+  <input id="first_name" name="first_name" value="{{ form.first_name }}" maxlength="{{ name_max }}" autocomplete="given-name" required>
+
+  <label for="last_name">Last name</label>
+  <input id="last_name" name="last_name" value="{{ form.last_name }}" maxlength="{{ name_max }}" autocomplete="family-name" required>
+  <p class="hint">Other players see only your first name and church.</p>
+
+  <label for="church_id">Church</label>
+  <span class="select">
+  <select id="church_id" name="church_id" required>
+    <option value="">Pick your church</option>
+    {% for church in churches %}
+      <option value="{{ church.id }}" {% if form.church_id == church.id|string %}selected{% endif %}>{{ church.name }}</option>
+    {% endfor %}
+  </select>
+  </span>
+
+  <fieldset>
+    <legend>Are you under 18?</legend>
+    <label class="choice"><input type="radio" name="under_18" value="yes" {% if form.under_18 == "yes" %}checked{% endif %} required> Yes</label>
+    <label class="choice"><input type="radio" name="under_18" value="no" {% if form.under_18 == "no" %}checked{% endif %}> No</label>
+  </fieldset>
+
+  <button class="button" type="submit">Next</button>
+</form>
+<p class="hint">Already joined on another phone? <a href="/login">Log in</a></p>

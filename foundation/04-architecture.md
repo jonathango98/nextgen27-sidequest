@@ -2,7 +2,7 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.5.0
+- Version: 1.6.0
 - Last updated: 2026-10-23
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -110,7 +110,7 @@ Example payload (fake): `SQ1.P.k3x9q2mf.482913`
 - **ARCH-030** [PROPOSED] PINs are stored only as a salted, slow hash. Python's built-in `hashlib.scrypt` is suggested because it needs no new dependency. Developers set the parameters, and the PR goes through safety review (SAFE-016).
 - **ARCH-031** [OPEN] Rate limits on login and sign-up per IP address, on top of the per-account lockout (SAFE-022). A 4-digit PIN has only 10,000 values, so without this an attacker can try one common PIN against every account. Config: `auth.ip_rate_limit`.
 - **ARCH-032** [LOCKED] To log in on another phone, a player enters their full name, picks their church, and enters their PIN.
-- **ARCH-033** [OPEN] What happens when two players from the same church have the same full name (how sign-up and login tell them apart).
+- **ARCH-033** [LOCKED] Two players from the same church cannot have the same full name. Sign-up refuses a repeat with 409 `NAME_TAKEN` and asks the player to find an usher at the game booth. Because full name and church are unique, login finds at most one player (ARCH-032). The database enforces it (DATA-016, DEC-033).
 - **ARCH-034** [PROPOSED] After login, the server sets a signed session cookie: `Secure`, `HttpOnly`, `SameSite=Lax`. The signing key comes from the environment variable `SQ_SESSION_KEY`. The cookie lasts at least until Wrapped closes (WRAP-004), so the recap stays in the browser the person played on.
 - **ARCH-035** [LOCKED] There are four roles: player, usher, admin, and screen. Every usher, admin, and screen route checks the role on the server. Hiding a button is not a security check.
 - **ARCH-036** [PROPOSED] Usher and admin accounts are personal (one per person, no shared logins). An admin creates them. They log in with a password, not a 4-digit PIN. The first admin account is created with a server command that reads its password from an environment variable.

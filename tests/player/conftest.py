@@ -8,6 +8,7 @@ import pytest
 import uvicorn
 from fastapi import Request
 
+from app.auth import session
 from app.auth.current import CurrentPlayer, get_current_player
 from app.config import load_config
 from app.main import create_app, templates
@@ -18,6 +19,7 @@ FAKE_SCORE = 120  # fake data (ENG-047), not a game number
 FAKE_PLAYER = CurrentPlayer(public_id="testpid01", score=FAKE_SCORE)
 # Fake data (ENG-047), never a real key (SAFE-030).
 FAKE_KEY = "test-only-fake-signing-key"
+FAKE_SESSION_KEY = "test-only-fake-session-key"  # never a real key (SAFE-030)
 FAKE_START = 1_800_000_000  # fixed clock, not a game number
 VIEWPORT_HEIGHT = 740
 
@@ -59,6 +61,8 @@ def browser_context_args(browser_context_args):
 def live_server():
     old_key = os.environ.get(qr.KEY_ENV)
     os.environ[qr.KEY_ENV] = FAKE_KEY
+    old_session_key = os.environ.get(session.KEY_ENV)
+    os.environ[session.KEY_ENV] = FAKE_SESSION_KEY
     with socket.socket() as sock:
         sock.bind(("127.0.0.1", 0))
         port = sock.getsockname()[1]
@@ -78,3 +82,7 @@ def live_server():
         del os.environ[qr.KEY_ENV]
     else:
         os.environ[qr.KEY_ENV] = old_key
+    if old_session_key is None:
+        del os.environ[session.KEY_ENV]
+    else:
+        os.environ[session.KEY_ENV] = old_session_key
