@@ -13,10 +13,6 @@ Keep it short. Write "N/A" where something does not apply.
 
 1.
 
-## Screenshot (screen changes only)
-
-<!-- At 360px wide. Fake data only. No real people. -->
-
 ## Before review
 
 - [ ] `CHANGELOG.md` entry added and README Project status updated (ENG-100 to ENG-104).

@@ -2,7 +2,7 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.6.0
+- Version: 1.7.0
 - Last updated: 2026-10-23
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -37,7 +37,7 @@ feat(auth): lock account after 5 wrong PINs
 
 ## 3. Pull requests
 
-- **ENG-020** [LOCKED] Open a draft PR early. Keep PRs small: aim for under 400 changed lines. Fill in the short PR template: what and why (with rule IDs), how to test, and a 360px screenshot for screen changes (fake data only, SAFE-036).
+- **ENG-020** [LOCKED] Open a draft PR early. Fill in the short PR template: what and why (with rule IDs) and how to test. No PR size limit and no PR screenshot (DEC-032).
 - **ENG-021** [LOCKED] Merging to `main` needs:
   - 1 approving review
   - a code owner review where CODEOWNERS applies

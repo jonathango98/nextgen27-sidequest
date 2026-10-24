@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-23 · docs/drop-screenshot-and-size-rules · Claude Opus 5.5 / @jonathango98
+
+- What: Removed the PR size target (under 400 changed lines) and the 360px PR screenshot from AI-034 (`AGENTS.md` 1.4.0, `10-ai-agent-rules.md` 1.4.0), ENG-020 (`09-engineering-workflow.md` 1.7.0), `CONTRIBUTING.md` 1.4.0, and the PR template. Logged DEC-032 (`13-decisions.md` 1.9.0). The browser check (AI-044) and fake-data screenshots (SAFE-036) stay.
+- Why: Jonathan's call. The browser check already covers 360px layout.
+- Rule IDs: AI-034, ENG-020, DEC-032, ENG-085, ENG-087
+- Status: Done
+- PR: draft
+
 ## 2026-10-23 · docs/railway-status · Claude Opus 5.5 / @jonathango98
 
 - What: Moved the Railway setup from In progress to Working. After #21 merged, staging was switched to deploy `main`, and commit `2830f7d` deployed with `/health` returning `ok` over HTTPS.
