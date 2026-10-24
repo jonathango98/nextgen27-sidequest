@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-23 · feat/25-join-login · Claude Opus 5.5 / @jonathango98
+
+- What: Started Join, PIN set, and log in.
+- Why: Next Core build piece. My Code (#23) waits on it. Issue #25.
+- Rule IDs: SAFE-002, SAFE-021, ARCH-032, ENG-101
+- Status: Started
+- PR: draft
+
 ## 2026-10-23 · feat/my-code · Claude Opus 5.5 / @jonathango98
 
 - What: My Code page (`GET /code`) and its QR partial (`GET /code/qr`). `app/services/qr.py` makes `SQ1` payloads with a 6-digit time-based code from a per-player secret derived from `SQ_QR_SIGNING_KEY`, plus `verify()` for the scanner. The QR replaces itself when the 30 s window ends, and retries a failed refresh after `qr.poll_retry_seconds`. Responses are `no-store`. HTMX 2.0.11 is vendored and set to show 4xx error partials. Adds `segno==1.6.6`. Until Join exists, `get_current_player` always returns 401 `LOGIN_REQUIRED`. Protected changes: `qr.poll_retry_seconds: 3` in `game-config.yaml` (1.1.0) and DEC-031 in `13-decisions.md` (1.10.0, after #24's DEC-032).
