@@ -1,0 +1,4 @@
+{# API-030: replaces itself when the code changes. The server picks the delay, so the phone clock does not matter. #}
+<div class="qr-panel" hx-get="/code/qr" hx-trigger="load delay:{{ refresh_seconds }}s" hx-swap="outerHTML">
+  {{ qr_svg }}
+</div>
