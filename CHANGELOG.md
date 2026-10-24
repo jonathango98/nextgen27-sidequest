@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Jonathan's call. The browser check already covers 360px layout.
 - Rule IDs: AI-034, ENG-020, DEC-032, ENG-085, ENG-087
 - Status: Done
-- PR: draft
+- PR: #24
 
 ## 2026-10-23 · docs/railway-status · Claude Opus 5.5 / @jonathango98
 
