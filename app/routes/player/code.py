@@ -39,7 +39,11 @@ def qr_svg(payload: str) -> Markup:
 def _qr_context(request: Request, player: CurrentPlayer, now: float) -> dict:
     cfg = request.app.state.config["qr"]
     payload = qr.payload(qr.PLAYER_KIND, player.public_id, now, cfg)
-    return {"qr_svg": qr_svg(payload), "refresh_seconds": qr.seconds_left(now, cfg)}
+    return {
+        "qr_svg": qr_svg(payload),
+        "refresh_seconds": qr.seconds_left(now, cfg),
+        "retry_seconds": cfg["poll_retry_seconds"],  # DEC-031
+    }
 
 
 @router.get("/code")

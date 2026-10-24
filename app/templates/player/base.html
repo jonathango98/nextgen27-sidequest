@@ -6,6 +6,8 @@
   <title>{% block title %}Side Quest{% endblock %}</title>
   <link rel="stylesheet" href="/static/css/tokens.css">
   <link rel="stylesheet" href="/static/css/player.css">
+  {# API-006 (htmx 2.0.11): swap in 4xx error partials, never 5xx. #}
+  <meta name="htmx-config" content='{"responseHandling": [{"code": "204", "swap": false}, {"code": "[23]..", "swap": true}, {"code": "4..", "swap": true, "error": true}, {"code": "...", "swap": false, "error": true}]}'>
   <script src="/static/js/htmx.min.js" defer></script>
 </head>
 <body>

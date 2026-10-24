@@ -1,4 +1,5 @@
-{# API-030: replaces itself when the code changes. The server picks the delay, so the phone clock does not matter. #}
-<div class="qr-panel" hx-get="/code/qr" hx-trigger="load delay:{{ refresh_seconds }}s" hx-swap="outerHTML">
+{# API-030: replaces itself when the code changes. The server picks the delay, so the phone clock does not matter.
+   DEC-031: if a refresh fails (no connection, server error), try again after retry_seconds. #}
+<div class="qr-panel" hx-get="/code/qr" hx-trigger="load delay:{{ refresh_seconds }}s, htmx:afterRequest[!detail.successful] delay:{{ retry_seconds }}s" hx-swap="outerHTML">
   {{ qr_svg }}
 </div>

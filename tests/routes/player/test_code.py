@@ -70,7 +70,12 @@ def test_api_030_refresh_waits_until_next_window(client, cfg, window_start):
     rotation = cfg["rotation_seconds"]
     client.app.dependency_overrides[code.current_time] = lambda: window_start + 0.5
     html = client.get("/code/qr").text
-    assert f'hx-trigger="load delay:{rotation}s"' in html
+    assert f'hx-trigger="load delay:{rotation}s,' in html
+
+
+def test_dec_031_failed_refresh_retries_after_config_wait(client, cfg):
+    html = client.get("/code/qr").text
+    assert f"[!detail.successful] delay:{cfg['poll_retry_seconds']}s" in html
 
 
 @pytest.mark.parametrize("path", PATHS)

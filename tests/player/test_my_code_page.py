@@ -34,3 +34,39 @@ def test_eng_045_my_code_has_no_console_errors(page: Page, live_server):
     page.goto(f"{live_server}/code")
     page.wait_for_load_state("networkidle")
     assert errors == []
+
+
+def test_dec_031_my_code_retries_after_failed_refresh(page: Page, live_server):
+    failures = []
+
+    def fail_once(route):
+        if not failures:
+            failures.append(route.request.url)
+            route.abort()
+        else:
+            route.continue_()
+
+    page.route("**/code/qr", fail_once)
+    page.goto(f"{live_server}/code")
+    path = page.locator(".qr-panel svg path")
+    first = path.get_attribute("d")
+    retry_ms = load_config()["qr"]["poll_retry_seconds"] * 1000
+    expect(path).not_to_have_attribute(
+        "d", first, timeout=REFRESH_TIMEOUT_MS + retry_ms
+    )
+    assert len(failures) == 1
+
+
+def test_api_006_my_code_shows_error_partial(page: Page, live_server):
+    page.route(
+        "**/code/qr",
+        lambda route: route.fulfill(
+            status=401,
+            content_type="text/html",
+            body='<p role="alert" data-error-code="LOGIN_REQUIRED">Please log in first.</p>',
+        ),
+    )
+    page.goto(f"{live_server}/code")
+    expect(page.locator('[data-error-code="LOGIN_REQUIRED"]')).to_be_visible(
+        timeout=REFRESH_TIMEOUT_MS
+    )
