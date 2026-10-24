@@ -1,18 +1,13 @@
 """App factory (ARCH-008)."""
 
-from pathlib import Path
-
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.responses import PlainTextResponse
 from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
 
+from app.auth.current import LoginRequired
 from app.config import load_config
-
-APP_DIR = Path(__file__).resolve().parent
-
-# ARCH-001: Jinja2 with autoescape on. Starlette turns it on for .html templates.
-templates = Jinja2Templates(directory=APP_DIR / "templates")
+from app.rendering import APP_DIR, templates
+from app.routes.player import code
 
 
 def create_app() -> FastAPI:
@@ -21,6 +16,17 @@ def create_app() -> FastAPI:
     app.state.config = load_config()
     # ARCH-010: the app serves its own static files.
     app.mount("/static", StaticFiles(directory=APP_DIR / "static"), name="static")
+    app.include_router(code.router)
+
+    @app.exception_handler(LoginRequired)
+    def login_required(request: Request, exc: LoginRequired):
+        # API-005: error partial with the error code from 06-api-and-screens.md section 3.
+        return templates.TemplateResponse(
+            request,
+            "partials/error.html",
+            {"error_code": "LOGIN_REQUIRED", "message": "Please log in first."},
+            status_code=401,
+        )
 
     @app.get("/health", response_class=PlainTextResponse)
     def health() -> str:

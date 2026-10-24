@@ -1,0 +1,9 @@
+{% extends "player/base.html" %}
+
+{% block title %}My Code · Side Quest{% endblock %}
+
+{% block content %}
+  <h1>My Code</h1>
+  {% include "player/partials/code_qr.html" %}
+  <p class="qr-tip">Turn your screen brightness up so it scans fast.</p>
+{% endblock %}

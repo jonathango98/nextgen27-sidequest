@@ -114,6 +114,27 @@ h1 {
   background: var(--color-surface);
 }
 
+/* QR panel: white background, large QR, quiet zone kept (GAME-001) */
+.qr-panel {
+  width: 100%;
+  max-width: 60vh;
+  margin: 0 auto;
+  background: var(--color-bg);
+}
+
+.qr-panel svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.qr-tip {
+  margin: var(--space-4) 0 0;
+  font-size: var(--font-size-small);
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     animation: none !important;

@@ -1,3 +1,5 @@
+import itertools
+import os
 import socket
 import threading
 import time
@@ -6,15 +8,28 @@ import pytest
 import uvicorn
 from fastapi import Request
 
+from app.auth.current import CurrentPlayer, get_current_player
 from app.config import load_config
 from app.main import create_app, templates
+from app.routes.player import code
+from app.services import qr
 
 FAKE_SCORE = 120  # fake data (ENG-047), not a game number
+FAKE_PLAYER = CurrentPlayer(public_id="testpid01", score=FAKE_SCORE)
+# Fake data (ENG-047), never a real key (SAFE-030).
+FAKE_KEY = "test-only-fake-signing-key"
+FAKE_START = 1_800_000_000  # fixed clock, not a game number
 VIEWPORT_HEIGHT = 740
 
 
 def _frame_app():
     app = create_app()
+    rotation = app.state.config["qr"]["rotation_seconds"]
+    windows = itertools.count(FAKE_START // rotation + 1)
+    # Each request lands 1 second before the end of the next window, so every
+    # refresh shows a new code after a 1 second wait (GAME-001, API-030).
+    app.dependency_overrides[get_current_player] = lambda: FAKE_PLAYER
+    app.dependency_overrides[code.current_time] = lambda: next(windows) * rotation - 1
 
     # Test-only route that renders the frame on its own. The real app does not have it (API-001).
     @app.get("/_test/frame")
@@ -42,6 +57,8 @@ def browser_context_args(browser_context_args):
 
 @pytest.fixture(scope="session")
 def live_server():
+    old_key = os.environ.get(qr.KEY_ENV)
+    os.environ[qr.KEY_ENV] = FAKE_KEY
     with socket.socket() as sock:
         sock.bind(("127.0.0.1", 0))
         port = sock.getsockname()[1]
@@ -57,3 +74,7 @@ def live_server():
     yield f"http://127.0.0.1:{port}"
     server.should_exit = True
     thread.join()
+    if old_key is None:
+        del os.environ[qr.KEY_ENV]
+    else:
+        os.environ[qr.KEY_ENV] = old_key
