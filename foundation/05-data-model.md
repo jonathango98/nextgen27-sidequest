@@ -2,7 +2,7 @@
 
 - Status: PROPOSED (developers confirm at kickoff; constraints marked LOCKED are required whatever the final schema looks like)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.1.0
+- Version: 1.2.0
 - Last updated: 2026-10-23
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -44,6 +44,7 @@ This file lists the tables, their fields, and the database constraints that enfo
 
 - **DATA-011** [LOCKED] Player has no other personal fields. Adding one needs a Foundation Change Request (SAFE-002).
 - **DATA-012** [PROPOSED] Players cannot change their own church after sign-up. Only an admin can fix a wrong church, and that writes an audit row.
+- **DATA-016** [LOCKED] Player: `UNIQUE (church_id, first_name COLLATE NOCASE, last_name COLLATE NOCASE)`. Names have spaces trimmed from both ends before saving. One full name per church (ARCH-033, DEC-033).
 
 ### StaffAccount (ushers and admins)
 
