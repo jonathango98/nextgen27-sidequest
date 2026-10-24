@@ -38,6 +38,7 @@ Done and live. Newest first: add your row at the top, in plain words. Who built 
 | What | Done |
 |---|---|
 | Joining and logging in: players join with their name, church, and a PIN, land on their own code, and can log in on another phone. Too many wrong PINs lock the account. Unlocking comes with the Admin console | 2026-10-23 |
+| My Code: each player has their own QR code that keeps changing, so a screenshot can't be passed around | 2026-10-23 |
 | Test server online: every change to the main code goes live on a private test site, and each proposed change gets its own preview link | 2026-10-23 |
 | App foundation: the app starts, reads the game settings, and every player page shares one look (score on top; My Code, Scan, and Quests buttons at the bottom) | 2026-10-23 |
 | Health check added to the route list, so the host can tell the app is running | 2026-10-23 |
@@ -49,7 +50,6 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| My Code (rotating QR) | `feat/my-code` | #23 | 2026-10-23 | Claude Opus 5.5 / @jonathango98 |
 
 ### Planned
 
