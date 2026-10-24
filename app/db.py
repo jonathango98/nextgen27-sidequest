@@ -3,7 +3,10 @@
 import os
 import re
 import sqlite3
+from collections.abc import Iterator
 from pathlib import Path
+
+from fastapi import Request
 
 MIGRATIONS_DIR = Path(__file__).resolve().parent.parent / "migrations"
 MIGRATION_NAME = re.compile(r"^(\d{4})_[a-z0-9_]+\.sql$")
@@ -25,12 +28,22 @@ def db_path_from_env() -> Path:
 
 
 def connect(path: Path) -> sqlite3.Connection:
-    conn = sqlite3.connect(path, autocommit=True)
+    # FastAPI may open a connection in one worker thread and use it in another, never both at once.
+    conn = sqlite3.connect(path, autocommit=True, check_same_thread=False)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys = ON")  # DATA-005
     conn.execute("PRAGMA journal_mode = WAL")  # ARCH-001
     conn.execute(f"PRAGMA busy_timeout = {BUSY_TIMEOUT_MS}")
     return conn
+
+
+def get_db(request: Request) -> Iterator[sqlite3.Connection]:
+    """FastAPI dependency: one connection per request."""
+    conn = connect(request.app.state.db_path)
+    try:
+        yield conn
+    finally:
+        conn.close()
 
 
 def _migration_files(migrations_dir: Path) -> list[tuple[int, Path]]:
