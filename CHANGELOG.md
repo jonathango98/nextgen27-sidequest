@@ -22,9 +22,9 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-10-24 · feat/mix-tokens · Claude Opus 5.5 / @jonathango98
 
-- What: `tokens.css` now holds the Mix values from `07-design-system.md` section 2: cream background, bloom colors, frosted surface, black primary, new gold, display serif, bigger title, and new radii. The QR panel, text fields, and button text use the new `--color-surface-solid`, so they stay white. Frosted glass, the bloom background, serif titles, and the new bottom bar are not built yet.
-- Why: DEC-035 made Mix the phone look, and the app still used the old blue tokens.
-- Rule IDs: UI-001, UI-008, DEC-035, AI-044
+- What: The Mix look in the app. `tokens.css` holds the Mix values from `07-design-system.md` section 2, plus shadow and gradient tokens. `player.css` adds the bloom background (CSS only, decoration only), frosted glass on bars, cards, and alerts, serif titles, score, and buttons, and pill buttons. The QR panel and text fields stay solid white. The bottom bar is now Home, My Code, Quests with icons, and the current tab is filled black (Scan and the icebreaker count as My Code). My Code gets a Scan button. Film grain is left out to keep the page free of images.
+- Why: DEC-035 made Mix the phone look, and the app still used the old blue look and the My Code, Scan, Quests bar.
+- Rule IDs: UI-001, UI-003, UI-008, UI-030, UI-035, DEC-035, AI-042, AI-044
 - Status: Done
 - PR: #32
 

@@ -37,7 +37,7 @@ Done and live. Newest first: add your row at the top, in plain words. Who built 
 
 | What | Done |
 |---|---|
-| Mix colors in the app: cream background, black buttons, and a white panel behind My Code. Frosted cards, serif titles, and the Home, My Code, Quests bar come next | 2026-10-24 |
+| The Mix look in the app: cream background with soft flower-color streaks, frosted cards, serif titles, black main buttons, and a bottom bar of Home, My Code, Quests. Scan now opens from a button on My Code | 2026-10-24 |
 | Joining asks "Are you 18 or older?" instead of "Are you under 18?", which was confusing | 2026-10-24 |
 | Joining and logging in: players join with their name, church, and a PIN, land on their own code, and can log in on another phone. Too many wrong PINs lock the account. Unlocking comes with the Admin console | 2026-10-23 |
 | My Code: each player has their own QR code that keeps changing, so a screenshot can't be passed around | 2026-10-23 |
