@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Lets the team click through the whole player flow early, and gives each later feature a page to build on.
 - Rule IDs: UI-030, ENG-100, AI-070
 - Status: Done
-- PR: draft
+- PR: #30
 
 ## 2026-10-24 · fix/age-question-18-plus · Claude Opus 5.5 / @jonathango98
 
