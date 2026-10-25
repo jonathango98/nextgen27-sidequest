@@ -58,6 +58,7 @@ In the foundation, no branch yet. Order follows `foundation/12-team-timeline.md`
 
 | Feature | Spec | Milestone |
 |---|---|---|
+| Screen skeleton: every player screen as a plain page, with every button and tab going to the right next screen. No final look and no game logic yet | `06-api-and-screens.md` screen list, UI-030 | Core build |
 | Scanner and connections, with icebreaker | ARCH-025, GAME-017 | Core build |
 | Points service | ARCH-040 | Core build |
 | Game states and pause | `02-game-rules.md` section 9, UI-033 | Core build |
