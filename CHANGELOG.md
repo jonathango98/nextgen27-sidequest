@@ -22,11 +22,11 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-10-24 · fix/age-question-18-plus · Claude Opus 5.5 / @jonathango98
 
-- What: Started. The Join page will ask "Are you 18 or older?" instead of "Are you under 18?". The answer is still saved as `is_under_18`, flipped in code, so no schema change.
-- Why: Jonathan found the under-18 question confusing.
-- Rule IDs: SAFE-002, SAFE-020, ENG-023, ENG-087, ENG-101
-- Status: Started
-- PR: draft
+- What: The Join page asks "Are you 18 or older?" instead of "Are you under 18?". The form field is now `age_18_plus`, and a "no" is saved as `is_under_18`, so the table and existing players don't change. A form sent with the old `under_18` field is refused rather than guessed. SAFE-002 reworded as DEC-034 (`03-safety-privacy.md` 1.1.0, `06-api-and-screens.md` 1.2.1, `13-decisions.md` 1.12.0).
+- Why: "Are you under 18?" was confusing, because a "yes" marks someone as a minor.
+- Rule IDs: SAFE-002, SAFE-020, DEC-034, ENG-023, ENG-087, AI-042, AI-044, ENG-101
+- Status: Done
+- PR: #29
 
 ## 2026-10-23 · feat/25-join-login · Claude Opus 5.5 / @jonathango98
 
