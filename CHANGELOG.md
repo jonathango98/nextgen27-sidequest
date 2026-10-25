@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-25 · docs/ui-008-grain · Claude Opus 5.5 / @jonathango98
+
+- What: UI-008 drops "no images", so the Mix film grain is allowed as a tiny texture generated in the CSS (`07-design-system.md` 1.2.0). Logged as DEC-036 (`13-decisions.md` 1.14.0).
+- Why: UI-008 asked for film grain and for no images, which can't both hold. Jonathan kept the grain.
+- Rule IDs: UI-008, UI-004, DEC-036, ENG-087
+- Status: Done
+- PR: draft
+
 ## 2026-10-24 · docs/mix-style · Claude Opus 5.5 / @jonathango98
 
 - What: Writes the Mix look into `07-design-system.md` (1.1.0): new color, type, and radius tokens with checked contrast, the look itself (UI-008), frosted cards, a bottom bar of Home, My Code, Quests with Scan moved onto My Code and Home (UI-030), one black main button per screen (UI-035), and one-or-two-word labels (UI-057). Logged as DEC-035 (`13-decisions.md` 1.13.0). Docs only: `tokens.css` and the bottom bar in the app still use the old look.
