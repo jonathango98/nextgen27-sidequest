@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: UI-008 asked for film grain and for no images, which can't both hold. Jonathan kept the grain.
 - Rule IDs: UI-008, UI-004, DEC-036, ENG-087
 - Status: Done
-- PR: draft
+- PR: #33
 
 ## 2026-10-24 · docs/mix-style · Claude Opus 5.5 / @jonathango98
 
