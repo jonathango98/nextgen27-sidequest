@@ -2,8 +2,8 @@
 
 - Status: PROPOSED (everything here may change until the designer signs off)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.1.0
-- Last updated: 2026-10-24
+- Version: 1.2.0
+- Last updated: 2026-10-25
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -18,7 +18,7 @@ This file says how Side Quest looks, sounds, and feels. The sticker and UI desig
 - **UI-004** [PROPOSED] Fast on weak hotel Wi-Fi: server-rendered pages, HTMX, very little JavaScript, small images, and no web fonts (use the system font stack).
 - **UI-005** [LOCKED] Meets WCAG 2.1 AA. High contrast that works in a bright lobby and a dim ballroom.
 - **UI-006** [PROPOSED] Visual motif from the leadership deck: each church is a color, and gold lines are friendships across churches. Gold is the accent for connection moments (a new connection, a new church met).
-- **UI-008** [PROPOSED] The look is "Mix", a light, overexposed superbloom. The phone background is cream with large blurred streaks of the bloom colors and a light film grain, drawn with CSS only, no images (UI-004). The background is decoration only and hidden from screen readers. Titles, numbers, and buttons use the system serif. Everything else uses the system sans. No flower icons.
+- **UI-008** [PROPOSED] The look is "Mix", a light, overexposed superbloom. The phone background is cream with large blurred streaks of the bloom colors and a light film grain. The streaks are CSS. The grain is one tiny texture generated in the CSS, so there is no image file to download (UI-004). The background is decoration only and hidden from screen readers. Titles, numbers, and buttons use the system serif. Everything else uses the system sans. No flower icons.
 
 ## 2. Tokens (PROPOSED)
 
