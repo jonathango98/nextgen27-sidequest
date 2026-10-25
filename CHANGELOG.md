@@ -25,7 +25,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - What: The browser test server serves HTTPS with a throwaway self-signed certificate, so the Join and Login browser tests pass in WebKit (Safari's engine) as well as Chromium.
 - Why: WebKit drops `Secure` cookies on plain `http://`, so the `__Host-` CSRF and session cookies were never stored. The first POST got a 400 and Join stopped at step 1. Real phones use HTTPS, so players were not affected, but Safari was never really tested on these flows.
 - Rule IDs: ENG-045, ARCH-038, AI-044, SAFE-030
-- Status: Started
+- Status: Done
 - PR: #34
 
 ## 2026-10-25 · feat/mix-tokens · Claude Opus 5.5 / @jonathango98

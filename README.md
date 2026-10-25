@@ -37,6 +37,7 @@ Done and live. Newest first: add your row at the top, in plain words. Who built 
 
 | What | Done |
 |---|---|
+| Automatic browser tests now check joining and logging in on Safari's engine too. They used to fail there because the test site had no HTTPS. Real players were never affected | 2026-10-25 |
 | Joining asks "Are you 18 or older?" instead of "Are you under 18?", which was confusing | 2026-10-24 |
 | Joining and logging in: players join with their name, church, and a PIN, land on their own code, and can log in on another phone. Too many wrong PINs lock the account. Unlocking comes with the Admin console | 2026-10-23 |
 | My Code: each player has their own QR code that keeps changing, so a screenshot can't be passed around | 2026-10-23 |
@@ -51,7 +52,6 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| Browser tests run Join and Login in Safari's engine too (they broke there before) | `fix/webkit-https-tests` | #34 | 2026-10-25 | Claude Opus 5.5 / @jonathango98 |
 
 ### Planned
 
