@@ -18,7 +18,7 @@ STEPS = {
     "details": "player/partials/join_details.html",
     "pin": "player/partials/join_pin.html",
 }
-FORM_FIELDS = ("first_name", "last_name", "church_id", "under_18")
+FORM_FIELDS = ("first_name", "last_name", "church_id", "age_18_plus")
 
 router = APIRouter()
 Db = Annotated[sqlite3.Connection, Depends(get_db)]

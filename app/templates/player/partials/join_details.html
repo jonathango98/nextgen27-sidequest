@@ -22,9 +22,9 @@
   </span>
 
   <fieldset>
-    <legend>Are you under 18?</legend>
-    <label class="choice"><input type="radio" name="under_18" value="yes" {% if form.under_18 == "yes" %}checked{% endif %} required> Yes</label>
-    <label class="choice"><input type="radio" name="under_18" value="no" {% if form.under_18 == "no" %}checked{% endif %}> No</label>
+    <legend>Are you 18 or older?</legend>
+    <label class="choice"><input type="radio" name="age_18_plus" value="yes" {% if form.age_18_plus == "yes" %}checked{% endif %} required> Yes</label>
+    <label class="choice"><input type="radio" name="age_18_plus" value="no" {% if form.age_18_plus == "no" %}checked{% endif %}> No</label>
   </fieldset>
 
   <button class="button" type="submit">Next</button>

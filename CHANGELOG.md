@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-24 · fix/age-question-18-plus · Claude Opus 5.5 / @jonathango98
+
+- What: The Join page asks "Are you 18 or older?" instead of "Are you under 18?". The form field is now `age_18_plus`, and a "no" is saved as `is_under_18`, so the table and existing players don't change. A form sent with the old `under_18` field is refused rather than guessed. SAFE-002 reworded as DEC-034 (`03-safety-privacy.md` 1.1.0, `06-api-and-screens.md` 1.2.1, `13-decisions.md` 1.12.0).
+- Why: "Are you under 18?" was confusing, because a "yes" marks someone as a minor.
+- Rule IDs: SAFE-002, SAFE-020, DEC-034, ENG-023, ENG-087, AI-042, AI-044, ENG-101
+- Status: Done
+- PR: #29
+
 ## 2026-10-23 · feat/25-join-login · Claude Opus 5.5 / @jonathango98
 
 - What: Join, PIN set, and log in (replaces #26 and #27). So far: decided ARCH-033 as DEC-033 (one full name per church, 409 `NAME_TAKEN`, DATA-016; `04-architecture.md` 1.6.0, `05-data-model.md` 1.2.0, `06-api-and-screens.md` 1.2.0, `13-decisions.md` 1.11.0, after #23's DEC-031). Added `app/db.py` (foreign keys, WAL, busy timeout) and a migration runner that applies numbered `migrations/*.sql` at app start. `0001` creates the `church` and `player` tables. The app needs `SQ_DB_PATH`, which is set in Railway staging and production with a `/data` volume. Church list loader: `python -m app.services.churches <file.csv | ->` adds churches from a one-column `name` CSV kept outside the repo, refuses near duplicates, and writes nothing on any error. Join and PIN set: `GET`/`POST /join` in two steps (details, then PIN twice), working with or without JavaScript. PINs are hashed with scrypt (`app/auth/pin.py`). A signed `__Host-sq_session` cookie (`SQ_SESSION_KEY`, 400 days) logs the player in, and `get_current_player` now reads it, so `/code` works after joining. Every POST checks a CSRF token. Forms are read with the standard library, with no new dependency. No join points until the points service exists. Log in: `GET`/`POST /login` with full name, church, and PIN. Each try is taken before the PIN is checked, so guesses sent at once can't get past the lockout, which comes after `auth.pin_max_attempts` wrong PINs in a row (403 `PIN_LOCKED`). An unknown name and a wrong PIN get the same message and the same hashing work. Now that players can log in, My Code (#23) works end to end, so its row moves to Working too.

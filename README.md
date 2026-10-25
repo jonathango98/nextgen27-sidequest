@@ -21,7 +21,7 @@ The app is built by a small volunteer team. It is not built yet. This repo curre
 
 ## Project status
 
-Status last updated: 2026-10-23 by Claude Opus 5.5 / @jonathango98
+Status last updated: 2026-10-24 by Claude Opus 5.5 / @jonathango98
 
 **Before you start anything**, check that nobody else is on it. A branch only shows up here after it merges, so also run:
 
@@ -37,6 +37,7 @@ Done and live. Newest first: add your row at the top, in plain words. Who built 
 
 | What | Done |
 |---|---|
+| Joining asks "Are you 18 or older?" instead of "Are you under 18?", which was confusing | 2026-10-24 |
 | Joining and logging in: players join with their name, church, and a PIN, land on their own code, and can log in on another phone. Too many wrong PINs lock the account. Unlocking comes with the Admin console | 2026-10-23 |
 | My Code: each player has their own QR code that keeps changing, so a screenshot can't be passed around | 2026-10-23 |
 | Test server online: every change to the main code goes live on a private test site, and each proposed change gets its own preview link | 2026-10-23 |

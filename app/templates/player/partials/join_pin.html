@@ -5,7 +5,7 @@
   <input type="hidden" name="first_name" value="{{ form.first_name }}">
   <input type="hidden" name="last_name" value="{{ form.last_name }}">
   <input type="hidden" name="church_id" value="{{ form.church_id }}">
-  <input type="hidden" name="under_18" value="{{ form.under_18 }}">
+  <input type="hidden" name="age_18_plus" value="{{ form.age_18_plus }}">
   {% if error %}{% include "partials/error.html" %}{% endif %}
 
   <p>Pick a {{ pin_digits }}-number PIN. You'll need it to log in on another phone, so pick one you'll remember.</p>

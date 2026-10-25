@@ -2,8 +2,8 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.11.0
-- Last updated: 2026-10-23
+- Version: 1.12.0
+- Last updated: 2026-10-24
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -53,6 +53,7 @@ Sources, in order of precedence:
 | DEC-031 | 2026-10-23 | If a My Code refresh fails (no connection, server error), the page tries again after `qr.poll_retry_seconds`, PROPOSED at 3 seconds (ARCH-074, API-030). HTMX shows 4xx error partials and does not swap 5xx responses (API-006) | Without a retry, one failed request on hotel Wi-Fi stops the code from changing until the player reloads, and a stale code gets refused (ARCH-022). ARCH-074 keeps polling intervals in config | Jonathan (PR #23) |
 | DEC-032 | 2026-10-23 | Drop the PR size target (under 400 changed lines) and the 360px PR screenshot from AI-034, ENG-020, `CONTRIBUTING.md`, and the PR template. The browser check still runs before commits, including looking at 360px screenshots (AI-044). Any screenshot that is posted still uses fake data only (SAFE-036) | Jonathan's call: the line target and the PR screenshot slowed PRs down without adding much, because the browser check already covers 360px layout | Jonathan |
 | DEC-033 | 2026-10-23 | Two players from the same church cannot share a full name (ARCH-033 LOCKED). Sign-up refuses a repeat with 409 `NAME_TAKEN` and sends the player to an usher (API-021). The database enforces it with a unique index on church and full name, ignoring case (DATA-016) | Login uses full name, church, and PIN (ARCH-032), so each combination must point to one player. Rare enough at one conference to handle in person | Jonathan (issue #25) |
+| DEC-034 | 2026-10-24 | Sign-up asks "Are you 18 or older?" (yes or no) instead of "Are you under 18?" (SAFE-002). A "no" is saved as under 18. The stored field stays `is_under_18` (Player table in `05-data-model.md` unchanged), and who can see it does not change (SAFE-020) | Jonathan's call: "Are you under 18?" was confusing, since a "yes" there marks someone as a minor. Keeping the stored field avoids a schema change, and existing players stay correct | Jonathan |
 
 ## 2. Resolved conflicts
 
