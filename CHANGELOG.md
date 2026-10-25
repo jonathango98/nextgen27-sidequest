@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-24 · feat/mix-tokens · Claude Opus 5.5 / @jonathango98
+
+- What: `tokens.css` now holds the Mix values from `07-design-system.md` section 2: cream background, bloom colors, frosted surface, black primary, new gold, display serif, bigger title, and new radii. The QR panel, text fields, and button text use the new `--color-surface-solid`, so they stay white. Frosted glass, the bloom background, serif titles, and the new bottom bar are not built yet.
+- Why: DEC-035 made Mix the phone look, and the app still used the old blue tokens.
+- Rule IDs: UI-001, UI-008, DEC-035, AI-044
+- Status: Done
+- PR: draft
+
 ## 2026-10-25 · docs/ui-008-grain · Claude Opus 5.5 / @jonathango98
 
 - What: UI-008 drops "no images", so the Mix film grain is allowed as a tiny texture generated in the CSS (`07-design-system.md` 1.2.0). Logged as DEC-036 (`13-decisions.md` 1.14.0).
