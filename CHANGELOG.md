@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Jonathan chose the Mix design for the player app.
 - Rule IDs: UI-008, UI-030, UI-033, UI-034, UI-035, UI-057, DEC-035, ENG-087
 - Status: Done
-- PR: draft
+- PR: #31
 
 ## 2026-10-24 · docs/plan-screen-skeleton · Claude Opus 5.5 / @jonathango98
 
