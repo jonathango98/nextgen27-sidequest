@@ -40,6 +40,18 @@ body::before {
   transform: rotate(-14deg);
 }
 
+/* Film grain over the bloom (UI-008, DEC-036) */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: var(--texture-grain);
+  mix-blend-mode: overlay;
+  opacity: 0.35;
+}
+
 /* Frosted glass (07 section 3: Card) */
 .top-bar,
 .bottom-bar,
