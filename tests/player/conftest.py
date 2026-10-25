@@ -1,6 +1,7 @@
 import itertools
 import os
 import socket
+import subprocess
 import threading
 import time
 
@@ -54,11 +55,36 @@ def browser_context_args(browser_context_args):
     return {
         **browser_context_args,
         "viewport": {"width": width, "height": VIEWPORT_HEIGHT},
+        "ignore_https_errors": True,  # the test server's self-signed certificate
     }
 
 
 @pytest.fixture(scope="session")
-def live_server():
+def live_server(tmp_path_factory):
+    # HTTPS, because WebKit drops Secure cookies on plain http, which breaks the
+    # __Host- CSRF and session cookies (ARCH-038). Throwaway cert, never in the repo (SAFE-030).
+    cert_dir = tmp_path_factory.mktemp("tls")
+    cert, key = cert_dir / "cert.pem", cert_dir / "key.pem"
+    subprocess.run(
+        [
+            "openssl",
+            "req",
+            "-x509",
+            "-newkey",
+            "rsa:2048",
+            "-nodes",
+            "-days",
+            "1",
+            "-subj",
+            "/CN=localhost",
+            "-keyout",
+            str(key),
+            "-out",
+            str(cert),
+        ],
+        check=True,
+        capture_output=True,
+    )
     old_key = os.environ.get(qr.KEY_ENV)
     os.environ[qr.KEY_ENV] = FAKE_KEY
     old_session_key = os.environ.get(session.KEY_ENV)
@@ -67,7 +93,14 @@ def live_server():
         sock.bind(("127.0.0.1", 0))
         port = sock.getsockname()[1]
     server = uvicorn.Server(
-        uvicorn.Config(_frame_app(), host="127.0.0.1", port=port, log_level="warning")
+        uvicorn.Config(
+            _frame_app(),
+            host="127.0.0.1",
+            port=port,
+            log_level="warning",
+            ssl_certfile=str(cert),
+            ssl_keyfile=str(key),
+        )
     )
     thread = threading.Thread(target=server.run, daemon=True)
     thread.start()
@@ -75,7 +108,7 @@ def live_server():
     while not server.started:
         assert time.monotonic() < deadline, "test server did not start"
         time.sleep(0.05)
-    yield f"http://127.0.0.1:{port}"
+    yield f"https://127.0.0.1:{port}"
     server.should_exit = True
     thread.join()
     if old_key is None:
