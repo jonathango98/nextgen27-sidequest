@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: DEC-035 made Mix the phone look, and the app still used the old blue tokens.
 - Rule IDs: UI-001, UI-008, DEC-035, AI-044
 - Status: Done
-- PR: draft
+- PR: #32
 
 ## 2026-10-25 · docs/ui-008-grain · Claude Opus 5.5 / @jonathango98
 
