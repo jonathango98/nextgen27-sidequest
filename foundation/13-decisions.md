@@ -2,7 +2,7 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.12.0
+- Version: 1.13.0
 - Last updated: 2026-10-24
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -54,6 +54,7 @@ Sources, in order of precedence:
 | DEC-032 | 2026-10-23 | Drop the PR size target (under 400 changed lines) and the 360px PR screenshot from AI-034, ENG-020, `CONTRIBUTING.md`, and the PR template. The browser check still runs before commits, including looking at 360px screenshots (AI-044). Any screenshot that is posted still uses fake data only (SAFE-036) | Jonathan's call: the line target and the PR screenshot slowed PRs down without adding much, because the browser check already covers 360px layout | Jonathan |
 | DEC-033 | 2026-10-23 | Two players from the same church cannot share a full name (ARCH-033 LOCKED). Sign-up refuses a repeat with 409 `NAME_TAKEN` and sends the player to an usher (API-021). The database enforces it with a unique index on church and full name, ignoring case (DATA-016) | Login uses full name, church, and PIN (ARCH-032), so each combination must point to one player. Rare enough at one conference to handle in person | Jonathan (issue #25) |
 | DEC-034 | 2026-10-24 | Sign-up asks "Are you 18 or older?" (yes or no) instead of "Are you under 18?" (SAFE-002). A "no" is saved as under 18. The stored field stays `is_under_18` (Player table in `05-data-model.md` unchanged), and who can see it does not change (SAFE-020) | Jonathan's call: "Are you under 18?" was confusing, since a "yes" there marks someone as a minor. Keeping the stored field avoids a schema change, and existing players stay correct | Jonathan |
+| DEC-035 | 2026-10-24 | The phone look is "Mix" (UI-008): cream with blurred superbloom streaks, black serif titles and buttons, and frosted white cards, with new tokens in `07-design-system.md` section 2. The bottom bar becomes Home, My Code, Quests, and Scan moves onto My Code and Home (UI-030). One black main button per screen (UI-035). Buttons and labels are one or two words (UI-057), and the UI-033 and UI-034 examples are shortened to match. The main screen keeps the dark screen tokens (UI-042) | Jonathan picked Mix from the four looks in the design canvas (Bloom, Soft Focus, Film Garden, Mix) and asked for the Home tab, Scan inside My Code, and short copy | Jonathan |
 
 ## 2. Resolved conflicts
 
