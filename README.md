@@ -51,7 +51,7 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| Browser tests run Join and Login in Safari's engine too (they broke there before) | `fix/webkit-https-tests` | draft | 2026-10-25 | Claude Opus 5.5 / @jonathango98 |
+| Browser tests run Join and Login in Safari's engine too (they broke there before) | `fix/webkit-https-tests` | #34 | 2026-10-25 | Claude Opus 5.5 / @jonathango98 |
 
 ### Planned
 
