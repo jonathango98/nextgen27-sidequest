@@ -2,7 +2,7 @@
 
 - Status: PROPOSED (everything here may change until the designer signs off)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.2.0
+- Version: 1.3.0
 - Last updated: 2026-10-25
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -19,6 +19,7 @@ This file says how Side Quest looks, sounds, and feels. The sticker and UI desig
 - **UI-005** [LOCKED] Meets WCAG 2.1 AA. High contrast that works in a bright lobby and a dim ballroom.
 - **UI-006** [PROPOSED] Visual motif from the leadership deck: each church is a color, and gold lines are friendships across churches. Gold is the accent for connection moments (a new connection, a new church met).
 - **UI-008** [PROPOSED] The look is "Mix", a light, overexposed superbloom. The phone background is cream with large blurred streaks of the bloom colors and a light film grain. The streaks are CSS. The grain is one tiny texture generated in the CSS, so there is no image file to download (UI-004). The background is decoration only and hidden from screen readers. Titles, numbers, and buttons use the system serif. Everything else uses the system sans. No flower icons.
+- **UI-009** [PROPOSED] The Mix vibe: bright, warm, and calm, like a sunny photo of a flower field taken a little overexposed. Black serif text feels like a printed program. Thin black viewfinder corners frame the top of Home. Buttons are big and few, words are short (UI-057), and nothing competes with the one black main button (UI-035).
 
 ## 2. Tokens (PROPOSED)
 
@@ -98,6 +99,11 @@ Contrast ratios below were checked with the WCAG 2.1 formula.
 - **UI-033** [PROPOSED] The paused banner says something short like "Game paused". It never scolds.
 - **UI-034** [PROPOSED] The scanner result shows within one second of a scan, with a big clear message, for example "+15" with the friend's name and church.
 - **UI-035** [PROPOSED] Each screen has at most one main (black) button, for its most important action. Everything else is frosted white.
+- **UI-036** [PROPOSED] Home layout, top to bottom: the big score (`--font-size-score-hero`) with "points" under it, then sticker progress ("Next sticker" with the numbers, UI-051). In the lower half (UI-003): Meet friends (the black main button, opens the scanner), a row split in two with Write (new journal entry, with its points pill) and Read (shared takeaways, `/summary`), then Redeem box (Open Box).
+- **UI-037** [PROPOSED] My Code shows the QR panel, then a black Scan button. The scanner, the icebreaker, and the scan result all sit under the My Code tab.
+- **UI-038** [PROPOSED] The shared takeaways page (`/summary`) lists approved shared takeaways grouped by session, newest session first, as takeaway cards (section 3).
+
+The Mix mockup shows a scan going to the icebreaker first and the points result after it. That order depends on GAME-016, which is OPEN, so don't build it until it is decided.
 
 ## 5. Main screen
 

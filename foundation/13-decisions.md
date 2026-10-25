@@ -2,7 +2,7 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.14.0
+- Version: 1.15.0
 - Last updated: 2026-10-25
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -56,6 +56,7 @@ Sources, in order of precedence:
 | DEC-034 | 2026-10-24 | Sign-up asks "Are you 18 or older?" (yes or no) instead of "Are you under 18?" (SAFE-002). A "no" is saved as under 18. The stored field stays `is_under_18` (Player table in `05-data-model.md` unchanged), and who can see it does not change (SAFE-020) | Jonathan's call: "Are you under 18?" was confusing, since a "yes" there marks someone as a minor. Keeping the stored field avoids a schema change, and existing players stay correct | Jonathan |
 | DEC-035 | 2026-10-24 | The phone look is "Mix" (UI-008): cream with blurred superbloom streaks, black serif titles and buttons, and frosted white cards, with new tokens in `07-design-system.md` section 2. The bottom bar becomes Home, My Code, Quests, and Scan moves onto My Code and Home (UI-030). One black main button per screen (UI-035). Buttons and labels are one or two words (UI-057), and the UI-033 and UI-034 examples are shortened to match. The main screen keeps the dark screen tokens (UI-042) | Jonathan picked Mix from the four looks in the design canvas (Bloom, Soft Focus, Film Garden, Mix) and asked for the Home tab, Scan inside My Code, and short copy | Jonathan |
 | DEC-036 | 2026-10-25 | UI-008 drops "no images". The film grain is a tiny noise texture generated inside the CSS, with no image file to download. The bloom streaks stay CSS gradients | UI-008 asked for both film grain and no images, which can't both hold. Jonathan chose to keep the grain | Jonathan |
+| DEC-037 | 2026-10-25 | The Mix vibe (UI-009) and the screen layouts from the Mix mockups go into `07-design-system.md`: Home (UI-036), My Code with a Scan button (UI-037), and the shared takeaways page (UI-038). The scan, icebreaker, then points order stays a note until GAME-016 is decided | Jonathan wants the design decisions written down first, with the app changes in a later PR | Jonathan |
 
 ## 2. Resolved conflicts
 

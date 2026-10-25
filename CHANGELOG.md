@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-25 · feat/mix-tokens · Claude Opus 5.5 / @jonathango98
+
+- What: Docs only. Writes the Mix vibe (UI-009) and the screen layouts from the Mix mockups into `07-design-system.md` 1.3.0: Home (UI-036), My Code with a Scan button (UI-037), and the shared takeaways page (UI-038). The scan, icebreaker, then points order is a note only, since GAME-016 is OPEN. Logged as DEC-037 (`13-decisions.md` 1.15.0). The earlier app changes on this branch were taken out. The app's look changes in a later PR.
+- Why: Jonathan wants the design decisions written down before the app is restyled.
+- Rule IDs: UI-009, UI-036, UI-037, UI-038, GAME-016, DEC-037, ENG-087
+- Status: Done
+- PR: #32
+
 ## 2026-10-25 · docs/ui-008-grain · Claude Opus 5.5 / @jonathango98
 
 - What: UI-008 drops "no images", so the Mix film grain is allowed as a tiny texture generated in the CSS (`07-design-system.md` 1.2.0). Logged as DEC-036 (`13-decisions.md` 1.14.0).
