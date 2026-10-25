@@ -15,53 +15,7 @@ body {
   font-size: var(--font-size-body);
   line-height: 1.5;
   color: var(--color-text);
-}
-
-html {
   background: var(--color-bg);
-}
-
-/* Bloom background (UI-008): blurred streaks of the bloom colors, CSS only, decoration only */
-body::before {
-  content: "";
-  position: fixed;
-  inset: -20%;
-  z-index: -1;
-  pointer-events: none;
-  background:
-    radial-gradient(ellipse 45% 14% at 25% 32%, var(--color-bloom-orange), transparent),
-    radial-gradient(ellipse 30% 8% at 30% 36%, var(--color-bloom-marigold), transparent),
-    radial-gradient(ellipse 50% 20% at 82% 62%, var(--color-bloom-pink), transparent),
-    radial-gradient(ellipse 30% 10% at 76% 66%, var(--color-bloom-magenta), transparent),
-    radial-gradient(ellipse 40% 12% at 60% 22%, var(--color-bloom-leaf), transparent),
-    radial-gradient(ellipse 45% 12% at 25% 86%, var(--color-bloom-leaf), transparent),
-    radial-gradient(ellipse 30% 10% at 78% 28%, var(--color-bloom-sky), transparent);
-  filter: blur(var(--space-2));
-  transform: rotate(-14deg);
-}
-
-/* Film grain over the bloom (UI-008, DEC-036) */
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background-image: var(--texture-grain);
-  mix-blend-mode: overlay;
-  opacity: 0.35;
-}
-
-/* Frosted glass (07 section 3: Card) */
-.top-bar,
-.bottom-bar,
-.card,
-.button-secondary,
-[role="alert"] {
-  background: var(--color-surface);
-  -webkit-backdrop-filter: blur(var(--blur-glass)) saturate(1.4);
-  backdrop-filter: blur(var(--blur-glass)) saturate(1.4);
-  box-shadow: var(--shadow-glass);
 }
 
 a {
@@ -81,12 +35,12 @@ a {
   align-items: baseline;
   gap: var(--space-2);
   padding: var(--space-3) var(--space-4);
+  background: var(--color-surface);
 }
 
 .score {
-  font-family: var(--font-family-display);
   font-size: var(--font-size-score);
-  font-weight: 400;
+  font-weight: 700;
   line-height: 1;
 }
 
@@ -103,46 +57,34 @@ a {
 }
 
 h1 {
-  font-family: var(--font-family-display);
   font-size: var(--font-size-h1);
-  font-weight: 400;
-  line-height: 1.1;
   margin: 0 0 var(--space-4);
 }
 
-/* Bottom bar: Home, My Code, Quests (UI-030; UI-003: in the lower half, big tap targets) */
+/* Bottom bar: My Code, Scan, Quests (UI-003: in the lower half, big tap targets) */
 .bottom-bar {
   position: sticky;
   bottom: 0;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--space-2);
-  padding: var(--space-2) var(--space-3) calc(var(--space-4) + env(safe-area-inset-bottom));
+  padding: var(--space-2) var(--space-2) calc(var(--space-2) + env(safe-area-inset-bottom));
+  background: var(--color-surface);
 }
 
 .bottom-bar a {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: var(--space-1);
   min-width: var(--tap-min);
-  min-height: var(--tab-height);
-  padding: var(--space-1);
-  border-radius: var(--radius-tab);
-  font-size: var(--font-size-small);
+  min-height: var(--tap-min);
+  padding: var(--space-2);
+  border-radius: var(--radius);
   font-weight: 600;
   text-align: center;
   text-decoration: none;
-  color: var(--color-text);
-}
-
-/* The current tab is filled black (07 section 3: Bottom bar) */
-.bottom-bar a[aria-current="page"] {
-  font-weight: 700;
-  color: var(--color-surface-solid);
-  background: var(--gradient-primary);
-  box-shadow: var(--shadow-primary);
+  color: var(--color-bg);
+  background: var(--color-primary);
 }
 
 /* Components (07 section 3) */
@@ -151,30 +93,25 @@ h1 {
   width: 100%;
   min-height: var(--tap-min);
   padding: var(--space-3) var(--space-4);
-  border: 0;
-  border-radius: var(--radius-pill);
+  border: medium solid var(--color-primary);
+  border-radius: var(--radius);
   font: inherit;
-  font-family: var(--font-family-display);
-  font-size: var(--font-size-button);
-  font-weight: 400;
+  font-weight: 600;
   text-align: center;
   text-decoration: none;
-  color: var(--color-surface-solid);
-  background: var(--gradient-primary);
-  box-shadow: var(--shadow-primary);
+  color: var(--color-bg);
+  background: var(--color-primary);
 }
 
 .button-secondary {
-  color: var(--color-text);
-}
-
-.content > .button {
-  margin-top: var(--space-5);
+  color: var(--color-primary);
+  background: var(--color-bg);
 }
 
 .card {
   padding: var(--space-4);
   border-radius: var(--radius);
+  background: var(--color-surface);
 }
 
 /* Forms: Join and Log in (UI-003 big targets, UI-053 visible labels, UI-051 errors in text) */
@@ -198,7 +135,7 @@ h1 {
   border-radius: var(--radius);
   font: inherit;
   color: var(--color-text);
-  background: var(--color-surface-solid);
+  background: var(--color-bg);
 }
 
 /* Safari ignores min-height on a native select, so draw it ourselves (UI-003). */
@@ -258,6 +195,7 @@ h1 {
   border-left: var(--space-1) solid var(--color-error);
   border-radius: var(--radius);
   color: var(--color-error);
+  background: var(--color-surface);
 }
 
 /* QR panel: white background, large QR, quiet zone kept (GAME-001) */
@@ -265,7 +203,7 @@ h1 {
   width: 100%;
   max-width: 60vh;
   margin: 0 auto;
-  background: var(--color-surface-solid);
+  background: var(--color-bg);
 }
 
 .qr-panel svg {

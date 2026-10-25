@@ -3,7 +3,7 @@ from playwright.sync_api import Page, expect
 from app.config import load_config
 from app.main import templates
 
-BUTTONS = ("Home", "My Code", "Quests")
+BUTTONS = ("My Code", "Scan", "Quests")
 
 
 def test_arch_001_template_autoescapes_html():

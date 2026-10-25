@@ -70,23 +70,3 @@ def test_api_006_my_code_shows_error_partial(page: Page, live_server):
     expect(page.locator('[data-error-code="LOGIN_REQUIRED"]')).to_be_visible(
         timeout=REFRESH_TIMEOUT_MS
     )
-
-
-def test_ui_030_my_code_tab_is_current(page: Page, live_server):
-    page.goto(f"{live_server}/code")
-    nav = page.get_by_role("navigation", name="Main")
-    expect(nav.get_by_role("link", name="My Code")).to_have_attribute(
-        "aria-current", "page"
-    )
-    for name in ("Home", "Quests"):
-        expect(nav.get_by_role("link", name=name)).not_to_have_attribute(
-            "aria-current", "page"
-        )
-
-
-def test_ui_030_my_code_has_scan_button(page: Page, live_server):
-    page.goto(f"{live_server}/code")
-    scan = page.get_by_role("main").get_by_role("link", name="Scan")
-    expect(scan).to_have_attribute("href", "/scan")
-    tap_min = load_config()["ui"]["min_tap_target_px"]
-    assert scan.bounding_box()["height"] >= tap_min  # UI-003
