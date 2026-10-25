@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-24 · docs/plan-screen-skeleton · Claude Opus 5.5 / @jonathango98
+
+- What: Adds "Screen skeleton" to Planned in the README Project status: every player screen as a plain page, with all buttons and tabs linked, before each feature fills its screen in.
+- Why: Lets the team click through the whole player flow early, and gives each later feature a page to build on.
+- Rule IDs: UI-030, ENG-100, AI-070
+- Status: Done
+- PR: #30
+
 ## 2026-10-24 · fix/age-question-18-plus · Claude Opus 5.5 / @jonathango98
 
 - What: The Join page asks "Are you 18 or older?" instead of "Are you under 18?". The form field is now `age_18_plus`, and a "no" is saved as `is_under_18`, so the table and existing players don't change. A form sent with the old `under_18` field is refused rather than guessed. SAFE-002 reworded as DEC-034 (`03-safety-privacy.md` 1.1.0, `06-api-and-screens.md` 1.2.1, `13-decisions.md` 1.12.0).
