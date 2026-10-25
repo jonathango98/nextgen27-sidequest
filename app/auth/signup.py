@@ -70,10 +70,11 @@ def check_details(conn: sqlite3.Connection, form: dict[str, str]) -> Details:
         ).fetchone()
     if row is None:
         raise _bad_input("Please pick your church.")
-    under_18 = form.get("under_18")
-    if under_18 not in ("yes", "no"):
-        raise _bad_input("Please answer the under-18 question.")
-    details = Details(first, last, row["id"], under_18 == "yes")
+    # DEC-034: the question is "Are you 18 or older?", so "no" means under 18.
+    age_18_plus = form.get("age_18_plus")
+    if age_18_plus not in ("yes", "no"):
+        raise _bad_input("Please answer whether you're 18 or older.")
+    details = Details(first, last, row["id"], age_18_plus == "no")
     if _name_taken(conn, details):
         raise _name_taken_error()
     return details

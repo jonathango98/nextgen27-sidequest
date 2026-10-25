@@ -2,8 +2,8 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.0.1
-- Last updated: 2026-10-23
+- Version: 1.1.0
+- Last updated: 2026-10-24
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -14,7 +14,7 @@ Some players are under 18. This file comes first whenever a feature touches peop
 These are LOCKED. No feature, playtest, or deadline changes them without a Foundation Change Request approved by Jonathan.
 
 - **SAFE-001** [LOCKED] Collect as little as possible and show as little as possible.
-- **SAFE-002** [LOCKED] Sign-up collects exactly these fields and nothing else: first name, last name, church (picked from a preloaded church list), "Are you under 18?" (yes or no), and a 4-digit PIN.
+- **SAFE-002** [LOCKED] Sign-up collects exactly these fields and nothing else: first name, last name, church (picked from a preloaded church list), "Are you 18 or older?" (yes or no; "no" is saved as under 18, DEC-034), and a 4-digit PIN.
 - **SAFE-003** [LOCKED] No email address and no phone number are collected, for anyone, for any reason (conflict C3).
 - **SAFE-004** [LOCKED] Other players see only a player's first name and church. Last names are visible to admins and ushers only.
 - **SAFE-005** [LOCKED] There is no messaging between players of any kind: no chat, no comments, no replies, no direct messages.

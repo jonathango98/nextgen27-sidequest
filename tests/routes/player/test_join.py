@@ -52,7 +52,7 @@ def details(church_a):
         "first_name": "Test",
         "last_name": "Player 1",
         "church_id": church_a,
-        "under_18": "no",
+        "age_18_plus": "yes",
     }
 
 
@@ -89,9 +89,10 @@ def test_safe_002_join_form_has_only_the_listed_fields(client):
         "first_name",
         "last_name",
         "church_id",
-        "under_18",
+        "age_18_plus",
     }
-    assert "Are you under 18?" in page
+    assert "Are you 18 or older?" in page
+    assert "under 18" not in page
 
 
 def test_safe_002_church_list_comes_from_the_database(client):
@@ -139,7 +140,7 @@ def test_api_007_details_step_works_without_javascript(client, details):
 
 
 @pytest.mark.parametrize(
-    "missing", ["first_name", "last_name", "church_id", "under_18"]
+    "missing", ["first_name", "last_name", "church_id", "age_18_plus"]
 )
 def test_safe_002_every_field_is_required(client, details, missing):
     response = _post(client, {"step": "details", **details, missing: ""}, htmx=True)
@@ -200,16 +201,37 @@ def test_safe_002_join_creates_player_and_logs_in(client, details, fake_pin, db_
     assert client.get("/code").status_code == 200  # get_current_player now finds them
 
 
-def test_safe_020_under_18_answer_saved(client, details, fake_pin, db_path):
+def test_safe_002_not_18_plus_saved_as_under_18(client, details, fake_pin, db_path):
     data = {
         "step": "pin",
         **details,
-        "under_18": "yes",
+        "age_18_plus": "no",
         "pin": fake_pin,
         "pin_again": fake_pin,
     }
     _post(client, data)
     assert _players(db_path)[0]["is_under_18"] == 1
+
+
+def test_safe_002_18_plus_saved_as_adult(client, details, fake_pin, db_path):
+    data = {"step": "pin", **details, "pin": fake_pin, "pin_again": fake_pin}
+    _post(client, data)
+    assert _players(db_path)[0]["is_under_18"] == 0
+
+
+def test_safe_002_old_under_18_field_refused(client, details, fake_pin, db_path):
+    # DEC-034: a page loaded before the change sends "under_18"; never guess its meaning.
+    old = {k: v for k, v in details.items() if k != "age_18_plus"}
+    data = {
+        "step": "pin",
+        **old,
+        "under_18": "yes",
+        "pin": fake_pin,
+        "pin_again": fake_pin,
+    }
+    response = _post(client, data, htmx=True)
+    assert response.status_code == 400
+    assert _players(db_path) == []
 
 
 def test_api_002_htmx_join_redirects_with_header(client, details, fake_pin):

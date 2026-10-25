@@ -2,8 +2,8 @@
 
 - Status: PROPOSED (developers confirm at kickoff)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.2.0
-- Last updated: 2026-10-23
+- Version: 1.2.1
+- Last updated: 2026-10-24
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -136,7 +136,7 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 
 | Screen | Role | Route | Notes | Rules |
 |---|---|---|---|---|
-| Join | Player | `/join` | First name, last name, church list, under-18 question, PIN | SAFE-002 |
+| Join | Player | `/join` | First name, last name, church list, "Are you 18 or older?" question, PIN | SAFE-002 |
 | PIN set | Player | `/join` (last step) | Enter PIN twice | SAFE-021 |
 | Log in | Player | `/login` | Full name, church, PIN | ARCH-032 |
 | Home | Player | `/` | Score, sticker progress bar, quick links | GAME-070 |
