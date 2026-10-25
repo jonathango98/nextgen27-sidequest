@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-25 · fix/webkit-https-tests · Claude Opus 5.5 / @jonathango98
+
+- What: The browser test server serves HTTPS with a throwaway self-signed certificate, so the Join and Login browser tests pass in WebKit (Safari's engine) as well as Chromium.
+- Why: WebKit drops `Secure` cookies on plain `http://`, so the `__Host-` CSRF and session cookies were never stored. The first POST got a 400 and Join stopped at step 1. Real phones use HTTPS, so players were not affected, but Safari was never really tested on these flows.
+- Rule IDs: ENG-045, ARCH-038, AI-044, SAFE-030
+- Status: Started
+- PR: draft
+
 ## 2026-10-25 · feat/mix-tokens · Claude Opus 5.5 / @jonathango98
 
 - What: Docs only. Writes the Mix vibe (UI-009) and the screen layouts from the Mix mockups into `07-design-system.md` 1.3.0: Home (UI-036), My Code with a Scan button (UI-037), and the shared takeaways page (UI-038). The scan, icebreaker, then points order is a note only, since GAME-016 is OPEN. Logged as DEC-037 (`13-decisions.md` 1.15.0). The earlier app changes on this branch were taken out. The app's look changes in a later PR.
