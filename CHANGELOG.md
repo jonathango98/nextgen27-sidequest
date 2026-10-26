@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-26 · docs/feature-tree · Claude Opus 5.5 / @jonathango98
+
+- What: Started a feature tree in the foundation. Every Planned feature is split into pieces that fit one or two agent sessions, and each piece lists the pieces it needs first.
+- Why: Volunteers can't tell which tasks are ready or small enough to start. `/pick-task` will use the tree next to offer only unlocked pieces.
+- Rule IDs: ENG-101, ENG-087, ENG-088, AI-003
+- Status: Started
+- PR: draft
+
 ## 2026-10-26 · feat/screen-skeleton · Claude Opus 5.5 / @jonathango98
 
 - What: Every player screen in the `06-api-and-screens.md` screen list is now a plain page: Home, Scan, Icebreaker, Quests, Journal, new takeaway, Summary, Open Box, and Wrapped. The bottom bar is Home, My Code, Quests, and the current tab is marked. Scan opens from My Code and from Meet friends on Home. Players land on Home after joining or logging in. Pages show placeholders, and forms stay switched off until their features are built. No new routes, no final look, no game logic. PR preview environments (named `...-pr-<number>` by Railway) now start with Example Church A, B, and C when the church list is empty. Staging and production never get them.
