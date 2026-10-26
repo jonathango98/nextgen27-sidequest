@@ -12,7 +12,17 @@ from app.config import load_config
 from app.db import connect, db_path_from_env, migrate
 from app.forms import BadForm
 from app.rendering import APP_DIR, templates
-from app.routes.player import code, join, login
+from app.routes.player import (
+    code,
+    home,
+    join,
+    journal,
+    login,
+    quests,
+    scan,
+    stickers,
+    wrapped,
+)
 
 
 @asynccontextmanager
@@ -36,6 +46,9 @@ def create_app() -> FastAPI:
     app.include_router(code.router)
     app.include_router(join.router)
     app.include_router(login.router)
+    # Screen skeleton (UI-030): plain pages, no game logic yet.
+    for module in (home, scan, quests, journal, stickers, wrapped):
+        app.include_router(module.router)
 
     @app.exception_handler(LoginRequired)
     def login_required(request: Request, exc: LoginRequired):
