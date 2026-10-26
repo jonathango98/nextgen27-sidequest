@@ -1,5 +1,6 @@
 """App factory (ARCH-008)."""
 
+import os
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
@@ -23,6 +24,7 @@ from app.routes.player import (
     stickers,
     wrapped,
 )
+from app.services import churches
 
 
 @asynccontextmanager
@@ -32,6 +34,8 @@ async def lifespan(app: FastAPI):
     conn = connect(app.state.db_path)
     try:
         migrate(conn)
+        if churches.is_preview(os.environ.get("RAILWAY_ENVIRONMENT_NAME")):
+            churches.seed_examples(conn)
     finally:
         conn.close()
     yield
