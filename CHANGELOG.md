@@ -22,9 +22,9 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-10-26 · docs/feature-tree · Claude Opus 5.5 / @jonathango98
 
-- What: Added `foundation/feature-tree.yaml`, which splits every Planned feature into 74 pieces of size S (one agent session) or M (about two), each with the pieces it needs first, its area, level, safety review, and rule IDs. 20 pieces stay locked until their OPEN rules are decided. `foundation/16-feature-tree.md` holds the rules (ENG-105 to ENG-109), the Core build backbone, and a features table. ENG-101 now claims one piece at a time. The README Planned table has a Tree column and three new rows: Staff accounts and roles, Mix look on player screens, and Game day readiness.
+- What: Added `foundation/feature-tree.yaml`, which splits every Planned feature into 74 pieces of size S (one agent session) or M (about two), each with the pieces it needs first, its area, level, safety review, and rule IDs. 20 pieces stay locked until their OPEN rules are decided. `foundation/16-feature-tree.md` holds the rules (ENG-105 to ENG-109), the Core build backbone, and a features table. ENG-101 now claims one piece at a time. The README Planned table has a Tree column and three new rows: Staff accounts and roles, Mix look on player screens, and Game day readiness. Added a map of the tree: `scripts/feature_tree_map.py` writes `docs/feature-tree.md`, a test fails when it is out of date, and the new `Feature tree map` workflow publishes an interactive version to GitHub Pages on every merge to `main` (DEC-039, approved exception to AI-022).
 - Why: Volunteers can't tell which tasks are ready or small enough to start. `/pick-task` will use the tree next to offer only unlocked pieces.
-- Rule IDs: ENG-105, ENG-106, ENG-107, ENG-108, ENG-109, ENG-101, ENG-087, ENG-088, AI-003, DEC-038
+- Rule IDs: ENG-105, ENG-106, ENG-107, ENG-108, ENG-109, ENG-110, ENG-101, ENG-087, ENG-088, AI-003, DEC-038, DEC-039
 - Status: Done
 - PR: #36
 

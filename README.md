@@ -37,7 +37,7 @@ Done and live. Newest first: add your row at the top, in plain words. Who built 
 
 | What | Done |
 |---|---|
-| Feature tree: every feature is split into small pieces, each saying what it needs first, so volunteers can see what's ready to start. Pieces that wait on an undecided rule stay locked | 2026-10-26 |
+| Feature tree: every feature is split into small pieces, each saying what it needs first, so volunteers can see what's ready to start. Pieces that wait on an undecided rule stay locked. A map of the tree updates itself after every merge | 2026-10-26 |
 | Screen skeleton: every player screen is a plain page, and every button and tab goes to the right next screen. The bottom bar is now Home, My Code, and Quests, and players land on Home after joining or logging in. No final look and no game logic yet | 2026-10-26 |
 | Automatic browser tests now check joining and logging in on Safari's engine too. They used to fail there because the test site had no HTTPS. Real players were never affected | 2026-10-25 |
 | Joining asks "Are you 18 or older?" instead of "Are you under 18?", which was confusing | 2026-10-24 |
@@ -57,7 +57,7 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 ### Planned
 
-In the foundation, no branch yet. Order follows `foundation/12-team-timeline.md`. Each feature is split into pieces in `foundation/feature-tree.yaml`. Claim one piece at a time, and remove the feature's row when its last piece is Working (ENG-108).
+In the foundation, no branch yet. Order follows `foundation/12-team-timeline.md`. Each feature is split into pieces in `foundation/feature-tree.yaml`. See what's ready in the [feature tree map](docs/feature-tree.md) ([interactive](https://jonathango98.github.io/nextgen27-sidequest/)). Claim one piece at a time, and remove the feature's row when its last piece is Working (ENG-108).
 
 | Feature | Tree | Spec | Milestone |
 |---|---|---|---|

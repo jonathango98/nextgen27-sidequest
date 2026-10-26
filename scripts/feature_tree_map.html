@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Side Quest Feature Tree</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: header with live counts, a scrollable left-to-right unlock map (columns = steps from what's built), and a detail panel for the selected piece. */
+:root {
+  --bg: #fbfaf6;
+  --panel: #ffffff;
+  --ink: #16171c;
+  --muted: #5d6270;
+  --line: #d9d7cf;
+  --edge: #c3c0b6;
+  --working: #1e7b3a;
+  --working-bg: #e6f2e9;
+  --ready: #a87400;
+  --ready-bg: #fff4d6;
+  --ready-glow: rgba(242, 193, 78, .55);
+  --waiting-bg: #f1f0eb;
+  --progress: #1f4fd1;
+  --progress-bg: #e8eefc;
+  --decision: #b42318;
+  --decision-bg: #fdeeec;
+  --focus: #1f4fd1;
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111216; --panel: #1a1c22; --ink: #f1efe8; --muted: #a3a8b4; --line: #2e313a; --edge: #3d414c;
+    --working: #6fcf8a; --working-bg: #16301f; --ready: #f2c14e; --ready-bg: #3a2f12; --ready-glow: rgba(242, 193, 78, .35);
+    --waiting-bg: #20222a; --progress: #8fb0ff; --progress-bg: #1a2442; --decision: #f08a7e; --decision-bg: #3a1b18; --focus: #8fb0ff; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111216; --panel: #1a1c22; --ink: #f1efe8; --muted: #a3a8b4; --line: #2e313a; --edge: #3d414c;
+  --working: #6fcf8a; --working-bg: #16301f; --ready: #f2c14e; --ready-bg: #3a2f12; --ready-glow: rgba(242, 193, 78, .35);
+  --waiting-bg: #20222a; --progress: #8fb0ff; --progress-bg: #1a2442; --decision: #f08a7e; --decision-bg: #3a1b18; --focus: #8fb0ff; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.5; padding-inline: 16px; padding-block: 24px 40px; }
+.wrap { max-width: 1400px; margin: 0 auto; display: grid; gap: 20px; }
+header { display: grid; gap: 6px; }
+h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(28px, 4vw, 40px); line-height: 1.1; margin: 0; text-wrap: balance; letter-spacing: -.01em; }
+.sub { color: var(--muted); margin: 0; max-width: 68ch; }
+.mono { font-family: var(--font-mono); }
+
+.controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); border-radius: 999px; padding: 6px 12px; font: 500 13px/1 var(--font-body); cursor: pointer; }
+.chip[aria-pressed="false"] { opacity: .45; }
+.chip:focus-visible, select:focus-visible, .node:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.chip b { font-variant-numeric: tabular-nums; font-weight: 600; }
+.swatch { width: 12px; height: 12px; border-radius: 3px; border: 2px solid; }
+.sw-working { background: var(--working-bg); border-color: var(--working); }
+.sw-ready { background: var(--ready-bg); border-color: var(--ready); }
+.sw-in_progress { background: var(--progress-bg); border-color: var(--progress); }
+.sw-waiting { background: var(--waiting-bg); border-color: var(--line); }
+.sw-decision { background: var(--decision-bg); border-color: var(--decision); border-style: dashed; }
+select { font: 500 13px var(--font-body); color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; }
+.hint { color: var(--muted); font-size: 13px; }
+
+.main { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 16px; align-items: start; }
+@media (max-width: 900px) { .main { grid-template-columns: minmax(0, 1fr); } }
+
+.mapbox { border: 1px solid var(--line); border-radius: 12px; background: var(--panel); overflow: auto; max-height: 78vh; min-width: 0; }
+.map { position: relative; }
+.colhead { position: absolute; top: 12px; font: 500 11px/1 var(--font-body); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+svg.edges { position: absolute; inset: 0; pointer-events: none; overflow: visible; }
+svg.edges path { fill: none; stroke: var(--edge); stroke-width: 1.2; opacity: .55; transition: opacity .15s, stroke .15s; }
+svg.edges path.up { stroke: var(--focus); stroke-width: 2; opacity: 1; }
+svg.edges path.down { stroke: var(--ready); stroke-width: 2; opacity: 1; }
+svg.edges path.faded { opacity: .08; }
+
+.node { position: absolute; width: 214px; height: 52px; border-radius: 8px; border: 1.5px solid var(--line); background: var(--waiting-bg); padding: 6px 10px; cursor: pointer; display: grid; align-content: center; gap: 1px; text-align: left; color: var(--ink); font: inherit; transition: opacity .15s, box-shadow .15s, transform .15s; }
+.node .id { font: 500 12.5px/1.25 var(--font-mono); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.node .meta { font-size: 11.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.node.working { background: var(--working-bg); border-color: var(--working); }
+.node.ready { background: var(--ready-bg); border-color: var(--ready); box-shadow: 0 0 0 3px var(--ready-glow); }
+.node.in_progress { background: var(--progress-bg); border-color: var(--progress); }
+.node.decision { background: var(--decision-bg); border-color: var(--decision); border-style: dashed; }
+.node .tag { font-weight: 600; }
+.node.working .tag { color: var(--working); }
+.node.ready .tag { color: var(--ready); }
+.node.in_progress .tag { color: var(--progress); }
+.node.decision .tag { color: var(--decision); }
+.node.sel { outline: 2px solid var(--ink); outline-offset: 2px; }
+.node.faded { opacity: .18; }
+.node.hidden-status { opacity: .12; }
+@media (prefers-reduced-motion: reduce) { .node, svg.edges path { transition: none; } }
+
+aside { border: 1px solid var(--line); border-radius: 12px; background: var(--panel); padding: 18px; display: grid; gap: 14px; position: sticky; top: env(safe-area-inset-top, 0px); min-width: 0; }
+aside h2 { font: 500 17px/1.3 var(--font-mono); margin: 0; overflow-wrap: anywhere; }
+aside .feat { color: var(--muted); font-size: 13px; margin: 0; }
+aside p { margin: 0; }
+.status { display: inline-flex; align-items: center; gap: 6px; font: 600 12px/1 var(--font-body); letter-spacing: .06em; text-transform: uppercase; padding: 5px 9px; border-radius: 999px; border: 1.5px solid; width: fit-content; }
+.status.working { color: var(--working); border-color: var(--working); background: var(--working-bg); }
+.status.ready { color: var(--ready); border-color: var(--ready); background: var(--ready-bg); }
+.status.in_progress { color: var(--progress); border-color: var(--progress); background: var(--progress-bg); }
+.status.waiting { color: var(--muted); border-color: var(--line); background: var(--waiting-bg); }
+.status.decision { color: var(--decision); border-color: var(--decision); background: var(--decision-bg); border-style: dashed; }
+dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; margin: 0; font-size: 13.5px; }
+dt { color: var(--muted); }
+dd { margin: 0; min-width: 0; }
+.sect { display: grid; gap: 6px; }
+.sect h3 { font: 600 11px/1 var(--font-body); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0; }
+.links { display: flex; flex-wrap: wrap; gap: 6px; }
+.links button { font: 500 12px/1.2 var(--font-mono); border: 1px solid var(--line); background: var(--bg); color: var(--ink); border-radius: 6px; padding: 4px 7px; cursor: pointer; }
+.links button.ok { border-color: var(--working); color: var(--working); }
+.links button.miss { border-style: dashed; }
+.open { border: 1.5px dashed var(--decision); background: var(--decision-bg); border-radius: 8px; padding: 8px 10px; font-size: 13px; }
+.open b { font-family: var(--font-mono); font-weight: 500; }
+.none { color: var(--muted); font-size: 13px; }
+footer { color: var(--muted); font-size: 12.5px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Side Quest Feature Tree</h1>
+    <p class="sub">Every piece of planned work, left to right by how many steps it sits from what's already built. Finishing a piece unlocks the ones to its right. Click any piece to trace what it needs and what it opens up.</p>
+  </header>
+
+  <div class="controls">
+    <div class="legend" id="legend"></div>
+    <select id="feature" aria-label="Show one feature"><option value="">All features</option></select>
+  </div>
+
+  <div class="main">
+    <div class="mapbox" id="mapbox"><div class="map" id="map"><svg class="edges" id="edges"></svg></div></div>
+    <aside id="detail" aria-live="polite"></aside>
+  </div>
+
+  <footer>Built from <span class="mono">foundation/feature-tree.yaml</span> and the README Project status at commit <span class="mono" id="source"></span>. It rebuilds on every merge to <span class="mono">main</span>. S fits one agent session, M about two. Run <span class="mono">/pick-task</span> to claim a piece.</footer>
+</div>
+
+<script>
+const DATA = __DATA__;
+const W = 214, H = 52, COLW = 278, ROWH = 64, TOP = 40, LEFT = 16;
+const P = {};
+DATA.built.forEach(b => P[b.id] = { id: b.id, what: b.what, feature: null, needs: [], open: [], built: true });
+DATA.pieces.forEach(p => P[p.id] = p);
+const featName = Object.fromEntries(DATA.features.map(f => [f.id, f.name]));
+const kids = {}; Object.keys(P).forEach(i => kids[i] = []);
+DATA.pieces.forEach(p => p.needs.forEach(n => kids[n].push(p.id)));
+
+const status = p => DATA.status[p.id];
+const LABEL = { working: 'Working', in_progress: 'In progress', ready: 'Ready', waiting: 'Waiting', decision: 'Needs decision' };
+document.getElementById('source').textContent = DATA.source;
+const depth = {};
+const dep = i => depth[i] ?? (depth[i] = P[i].built ? 0 : 1 + Math.max(0, ...P[i].needs.map(dep)));
+Object.keys(P).forEach(dep);
+
+// columns, ordered by feature then by parents' average row to keep lines short
+const cols = [];
+Object.keys(P).forEach(i => (cols[depth[i]] ||= []).push(i));
+const featOrder = Object.fromEntries(DATA.features.map((f, k) => [f.id, k]));
+const row = {};
+cols.forEach(c => { c.sort((a, b) => (featOrder[P[a].feature] ?? -1) - (featOrder[P[b].feature] ?? -1) || a.localeCompare(b)); c.forEach((i, k) => row[i] = k); });
+for (let pass = 0; pass < 4; pass++) {
+  cols.forEach((c, d) => {
+    if (!d) return;
+    const bary = i => { const ns = P[i].needs; return ns.length ? ns.reduce((s, n) => s + row[n], 0) / ns.length : row[i]; };
+    c.sort((a, b) => bary(a) - bary(b) || (featOrder[P[a].feature] - featOrder[P[b].feature]));
+    c.forEach((i, k) => row[i] = k);
+  });
+}
+const maxRows = Math.max(...cols.map(c => c.length));
+const pos = {};
+cols.forEach((c, d) => {
+  const off = (maxRows - c.length) * ROWH / 2;
+  c.forEach((i, k) => pos[i] = { x: LEFT + d * COLW, y: TOP + off + k * ROWH });
+});
+
+const map = document.getElementById('map'), svg = document.getElementById('edges');
+const width = LEFT * 2 + (cols.length - 1) * COLW + W, height = TOP + maxRows * ROWH + 8;
+map.style.width = width + 'px'; map.style.height = height + 'px';
+svg.setAttribute('width', width); svg.setAttribute('height', height);
+cols.forEach((c, d) => {
+  const h = document.createElement('div');
+  h.className = 'colhead'; h.style.left = (LEFT + d * COLW) + 'px';
+  h.textContent = d === 0 ? 'Already built' : `Step ${d}`;
+  map.appendChild(h);
+});
+
+const edgeEls = [];
+Object.values(P).forEach(p => p.needs.forEach(n => {
+  const a = pos[n], b = pos[p.id];
+  const x1 = a.x + W, y1 = a.y + H / 2, x2 = b.x, y2 = b.y + H / 2, mx = (x1 + x2) / 2;
+  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  path.setAttribute('d', `M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}`);
+  svg.appendChild(path); edgeEls.push({ from: n, to: p.id, el: path });
+}));
+
+const nodeEls = {};
+Object.values(P).forEach(p => {
+  const s = status(p), b = document.createElement('button');
+  b.className = 'node ' + s; b.style.left = pos[p.id].x + 'px'; b.style.top = pos[p.id].y + 'px';
+  const meta = p.built ? '<span class="tag">Working</span> · built before the tree' :
+    `<span class="tag">${s === 'decision' ? 'Locked' : LABEL[s]}</span> · ${p.size} · ${p.level}${p.safety_review ? ' · review' : ''}`;
+  b.innerHTML = `<span class="id">${p.id}</span><span class="meta">${meta}</span>`;
+  b.setAttribute('aria-label', `${p.id}, ${LABEL[s]}`);
+  b.addEventListener('click', () => select(p.id));
+  map.appendChild(b); nodeEls[p.id] = b;
+});
+
+const counts = { working: 0, in_progress: 0, ready: 0, waiting: 0, decision: 0 };
+Object.values(P).forEach(p => counts[status(p)]++);
+const shown = { working: true, in_progress: true, ready: true, waiting: true, decision: true };
+const legend = document.getElementById('legend');
+Object.keys(counts).forEach(s => {
+  const c = document.createElement('button');
+  c.className = 'chip'; c.setAttribute('aria-pressed', 'true');
+  c.innerHTML = `<span class="swatch sw-${s}"></span>${LABEL[s]} <b>${counts[s]}</b>`;
+  c.addEventListener('click', () => { shown[s] = !shown[s]; c.setAttribute('aria-pressed', shown[s]); paint(); });
+  legend.appendChild(c);
+});
+const sel = document.getElementById('feature');
+DATA.features.forEach(f => sel.add(new Option(f.name, f.id)));
+sel.addEventListener('change', paint);
+
+const walk = (start, next) => { const seen = new Set(), st = [start]; while (st.length) { const i = st.pop(); next(i).forEach(j => { if (!seen.has(j)) { seen.add(j); st.push(j); } }); } return seen; };
+let current = null;
+
+function paint() {
+  const f = sel.value;
+  const up = current ? walk(current, i => P[i].needs) : new Set();
+  const down = current ? walk(current, i => kids[i]) : new Set();
+  const focus = current ? new Set([current, ...up, ...down]) : null;
+  Object.entries(nodeEls).forEach(([i, el]) => {
+    const p = P[i];
+    const inFeat = !f || p.feature === f;
+    el.classList.toggle('sel', i === current);
+    el.classList.toggle('faded', (focus && !focus.has(i)) || !inFeat);
+    el.classList.toggle('hidden-status', !shown[status(p)]);
+  });
+  edgeEls.forEach(e => {
+    const isUp = current && (e.to === current || up.has(e.to)) && (up.has(e.from));
+    const isDown = current && (e.from === current || down.has(e.from)) && down.has(e.to);
+    e.el.classList.toggle('up', !!isUp);
+    e.el.classList.toggle('down', !!isDown && !isUp);
+    const featOk = !f || P[e.from].feature === f || P[e.to].feature === f;
+    e.el.classList.toggle('faded', (current && !isUp && !isDown) || (!current && !featOk));
+  });
+}
+
+function linkList(ids, mark) {
+  if (!ids.length) return '<p class="none">None</p>';
+  return '<div class="links">' + ids.map(i => `<button data-go="${i}" class="${mark ? (status(P[i]) === 'working' ? 'ok' : 'miss') : ''}">${i}</button>`).join('') + '</div>';
+}
+
+function select(id) {
+  current = id; paint();
+  const p = P[id], s = status(p), d = document.getElementById('detail');
+  const allDown = walk(id, i => kids[i]);
+  if (p.built) {
+    d.innerHTML = `<span class="status working">Working</span><h2>${p.id}</h2><p>${p.what}</p>
+      <div class="sect"><h3>Directly unlocks</h3>${linkList(kids[id])}</div>`;
+  } else {
+    const missing = p.needs.filter(n => status(P[n]) !== 'working');
+    const why = s === 'working' ? 'Done and merged.'
+      : s === 'in_progress' ? 'Someone has claimed it. See the README In progress table.'
+      : s === 'ready' ? 'Everything it needs is built. Anyone can claim it.'
+      : s === 'decision' ? 'Locked until the OPEN rules below are decided.'
+      : `Waiting on ${missing.length} piece${missing.length > 1 ? 's' : ''} that ${missing.length > 1 ? "aren't" : "isn't"} built yet.`;
+    d.innerHTML = `<span class="status ${s}">${LABEL[s]}</span>
+      <div><h2>${p.id}</h2><p class="feat">${featName[p.feature]}</p></div>
+      <p>${p.what}</p>
+      <p class="hint">${why}</p>
+      <dl>
+        <dt>Size</dt><dd>${p.size === 'S' ? 'S, one session' : 'M, about two sessions'}</dd>
+        <dt>Level</dt><dd>${p.level}</dd>
+        <dt>Area</dt><dd>${p.area}</dd>
+        <dt>Review</dt><dd>${p.safety_review ? 'Needs safety review' : 'Normal review'}</dd>
+        <dt>Rules</dt><dd class="mono" style="font-size:12.5px">${p.rules.join(', ')}</dd>
+      </dl>
+      <div class="sect"><h3>You'll learn</h3><p>${p.learn}</p></div>
+      ${p.open.some(r => DATA.open[r]) ? `<div class="sect"><h3>Waiting on a decision</h3>${p.open.filter(r => DATA.open[r]).map(r => `<div class="open"><b>${r}</b> ${DATA.open[r].q}<br><span class="hint">Owner: ${DATA.open[r].owner}</span></div>`).join('')}</div>` : ''}
+      <div class="sect"><h3>Needs first</h3>${linkList(p.needs, true)}</div>
+      <div class="sect"><h3>Directly unlocks${allDown.size ? ` (${allDown.size} pieces down the line)` : ''}</h3>${linkList(kids[id])}</div>`;
+  }
+  d.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => { select(b.dataset.go); nodeEls[b.dataset.go].scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' }); }));
+}
+
+select('points.audit-log');
+</script>
+</body>
+</html>
