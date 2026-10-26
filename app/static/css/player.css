@@ -27,15 +27,23 @@ a {
   outline-offset: var(--space-1);
 }
 
-/* Top bar: score */
+/* Top bar: home link and score */
 .top-bar {
   position: sticky;
   top: 0;
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: var(--space-2);
   padding: var(--space-3) var(--space-4);
   background: var(--color-surface);
+}
+
+/* UI-003: the home link is a big enough tap target. */
+.top-bar > a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-min);
+  margin-right: auto;
 }
 
 .score {
@@ -61,7 +69,7 @@ h1 {
   margin: 0 0 var(--space-4);
 }
 
-/* Bottom bar: My Code, Scan, Quests (UI-003: in the lower half, big tap targets) */
+/* Bottom bar: Home, My Code, Quests (UI-003: in the lower half, big tap targets) */
 .bottom-bar {
   position: sticky;
   bottom: 0;

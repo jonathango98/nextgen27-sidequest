@@ -5,20 +5,24 @@
   <title>{% block title %}Side Quest{% endblock %}</title>
 </head>
 <body>
-  {# UI-030: same frame on every player page #}
+  {# UI-030: same frame on every player page. Child pages set `tab` to mark the current tab. #}
   <header class="top-bar">
+    <a href="/">Side Quest</a>
+    {% block top_score %}
     <span class="score">{{ score }}</span>
     <span class="score-label">points</span>
+    {% endblock %}
   </header>
 
   <main class="content">
     {% block content %}{% endblock %}
   </main>
 
+  {# UI-030: Scan is not a tab. It opens from My Code and from Meet friends on Home. #}
   <nav class="bottom-bar" aria-label="Main">
-    <a href="/code">My Code</a>
-    <a href="/scan">Scan</a>
-    <a href="/quests">Quests</a>
+    <a href="/"{% if tab == "home" %} aria-current="page"{% endif %}>Home</a>
+    <a href="/code"{% if tab == "code" %} aria-current="page"{% endif %}>My Code</a>
+    <a href="/quests"{% if tab == "quests" %} aria-current="page"{% endif %}>Quests</a>
   </nav>
 </body>
 </html>

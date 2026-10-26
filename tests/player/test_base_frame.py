@@ -3,7 +3,7 @@ from playwright.sync_api import Page, expect
 from app.config import load_config
 from app.main import templates
 
-BUTTONS = ("My Code", "Scan", "Quests")
+BUTTONS = ("Home", "My Code", "Quests")
 
 
 def test_arch_001_template_autoescapes_html():
@@ -48,3 +48,17 @@ def test_ui_030_frame_has_no_console_errors(page: Page, live_server):
     expect(page.get_by_role("navigation", name="Main")).to_be_visible()
     assert response.status == 200
     assert problems == []
+
+
+def test_ui_030_scan_is_not_a_tab(page: Page, live_server):
+    page.goto(f"{live_server}/_test/frame")
+    nav = page.get_by_role("navigation", name="Main")
+    expect(nav.get_by_role("link", name="Scan")).to_have_count(0)
+
+
+def test_ui_030_top_bar_links_home(page: Page, live_server):
+    page.goto(f"{live_server}/_test/frame")
+    link = page.locator(".top-bar").get_by_role("link", name="Side Quest")
+    expect(link).to_have_attribute("href", "/")
+    tap_min = load_config()["ui"]["min_tap_target_px"]
+    assert link.bounding_box()["height"] >= tap_min
