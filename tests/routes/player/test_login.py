@@ -87,7 +87,7 @@ def test_arch_032_login_form_asks_full_name_church_and_pin(client):
 def test_arch_032_login_with_full_name_church_and_pin(client, church_ids, fake_pin):
     response = _login(client, church_ids, fake_pin)
     assert response.status_code == 303
-    assert response.headers["location"] == "/code"
+    assert response.headers["location"] == "/"
     assert session.COOKIE in response.headers["set-cookie"]
     assert client.get("/code").status_code == 200
 
@@ -104,7 +104,7 @@ def test_arch_032_name_match_ignores_case_and_extra_spaces(
 def test_api_002_htmx_login_redirects_with_header(client, church_ids, fake_pin):
     response = _login(client, church_ids, fake_pin, htmx=True)
     assert response.status_code == 204
-    assert response.headers["hx-redirect"] == "/code"
+    assert response.headers["hx-redirect"] == "/"
 
 
 def test_arch_032_wrong_pin_and_unknown_name_get_the_same_message(
@@ -205,4 +205,4 @@ def test_arch_034_logged_in_player_skips_login(client, church_ids, fake_pin):
     _login(client, church_ids, fake_pin)
     response = client.get("/login", follow_redirects=False)
     assert response.status_code == 303
-    assert response.headers["location"] == "/code"
+    assert response.headers["location"] == "/"

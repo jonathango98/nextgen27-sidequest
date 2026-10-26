@@ -12,8 +12,8 @@ from app.db import get_db
 from app.forms import read_form
 from app.rendering import templates
 
-# Where a player lands after joining. Home (/) is not built yet.
-AFTER_JOIN = "/code"
+# Where a player lands after joining: Home.
+AFTER_JOIN = "/"
 STEPS = {
     "details": "player/partials/join_details.html",
     "pin": "player/partials/join_pin.html",
