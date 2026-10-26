@@ -23,7 +23,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 ## 2026-10-26 · chore/improve-pick-task · Claude Opus 5.5 / @jonathango98
 
 - What: Rewrote the `pick-task` skill around the feature tree. A new helper, `.claude/skills/pick-task/unlocked.py`, lists pieces as ready, in progress, waiting on other pieces, or waiting on a decision. The skill asks for the volunteer's Claude plan and prefers one-session pieces on Pro, shows what each piece unlocks, checks again for a claim right before pushing, fills in the full PR template, labels safety-review pieces, and assigns issues. Removed the out-of-date "no app yet" advice.
-- Why: The old skill couldn't see what was half done, offered big features whole, and could let two people claim the same task. Needs #36 merged first.
+- Why: The old skill couldn't see what was half done, offered big features whole, and could let two people claim the same task. Builds on the feature tree from #36.
 - Rule IDs: ENG-101, ENG-105 to ENG-109, AI-003, AI-033, AI-043, AI-072
 - Status: Done
 - PR: #37
