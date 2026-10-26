@@ -2,8 +2,8 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.15.0
-- Last updated: 2026-10-25
+- Version: 1.16.0
+- Last updated: 2026-10-26
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -57,6 +57,8 @@ Sources, in order of precedence:
 | DEC-035 | 2026-10-24 | The phone look is "Mix" (UI-008): cream with blurred superbloom streaks, black serif titles and buttons, and frosted white cards, with new tokens in `07-design-system.md` section 2. The bottom bar becomes Home, My Code, Quests, and Scan moves onto My Code and Home (UI-030). One black main button per screen (UI-035). Buttons and labels are one or two words (UI-057), and the UI-033 and UI-034 examples are shortened to match. The main screen keeps the dark screen tokens (UI-042) | Jonathan picked Mix from the four looks in the design canvas (Bloom, Soft Focus, Film Garden, Mix) and asked for the Home tab, Scan inside My Code, and short copy | Jonathan |
 | DEC-036 | 2026-10-25 | UI-008 drops "no images". The film grain is a tiny noise texture generated inside the CSS, with no image file to download. The bloom streaks stay CSS gradients | UI-008 asked for both film grain and no images, which can't both hold. Jonathan chose to keep the grain | Jonathan |
 | DEC-037 | 2026-10-25 | The Mix vibe (UI-009) and the screen layouts from the Mix mockups go into `07-design-system.md`: Home (UI-036), My Code with a Scan button (UI-037), and the shared takeaways page (UI-038). The scan, icebreaker, then points order stays a note until GAME-016 is decided | Jonathan wants the design decisions written down first, with the app changes in a later PR | Jonathan |
+| DEC-038 | 2026-10-26 | Add a feature tree: `feature-tree.yaml` splits every Planned feature into pieces of size S or M, each with the pieces it needs and the OPEN rules that lock it, and `16-feature-tree.md` holds its rules (ENG-105 to ENG-109). Live status stays in the README Project status. ENG-101 now claims one piece at a time, and the In progress and Working rows start with the piece ID. New Planned rows: Staff accounts and roles, Mix look on player screens, and Game day readiness | Volunteers could not tell which tasks were ready or small enough for one session. A tree lets `/pick-task` offer only unlocked pieces, and finishing one piece unlocks the next. Keeping status out of the foundation means finishing a piece never needs Jonathan's approval | Jonathan |
+| DEC-039 | 2026-10-26 | Publish the feature tree map. `scripts/feature_tree_map.py` writes `docs/feature-tree.md` (a Mermaid diagram) and an interactive page. A new workflow, `.github/workflows/feature-tree-pages.yml`, publishes the page to GitHub Pages on every merge to `main`, with actions pinned by commit SHA (DEC-018). This is the repo's first workflow and an approved exception to AI-022 for this one file (ENG-110) | Volunteers need to see what's ready without asking, and the map must stay current after every merge. The repo is public, so the Pages site is too; the tree holds no secrets or real data | Jonathan (this session, 2026-10-26) |
 
 ## 2. Resolved conflicts
 

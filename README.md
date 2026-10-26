@@ -37,6 +37,7 @@ Done and live. Newest first: add your row at the top, in plain words. Who built 
 
 | What | Done |
 |---|---|
+| Feature tree: every feature is split into small pieces, each saying what it needs first, so volunteers can see what's ready to start. Pieces that wait on an undecided rule stay locked. A map of the tree updates itself after every merge | 2026-10-26 |
 | Screen skeleton: every player screen is a plain page, and every button and tab goes to the right next screen. The bottom bar is now Home, My Code, and Quests, and players land on Home after joining or logging in. No final look and no game logic yet | 2026-10-26 |
 | Automatic browser tests now check joining and logging in on Safari's engine too. They used to fail there because the test site had no HTTPS. Real players were never affected | 2026-10-25 |
 | Joining asks "Are you 18 or older?" instead of "Are you under 18?", which was confusing | 2026-10-24 |
@@ -56,24 +57,27 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 ### Planned
 
-In the foundation, no branch yet. Order follows `foundation/12-team-timeline.md`.
+In the foundation, no branch yet. Order follows `foundation/12-team-timeline.md`. Each feature is split into pieces in `foundation/feature-tree.yaml`. See what's ready in the [feature tree map](docs/feature-tree.md) ([interactive](https://jonathango98.github.io/nextgen27-sidequest/)). Claim one piece at a time, and remove the feature's row when its last piece is Working (ENG-108).
 
-| Feature | Spec | Milestone |
-|---|---|---|
-| Scanner and connections, with icebreaker | ARCH-025, GAME-017 | Core build |
-| Points service | ARCH-040 | Core build |
-| Game states and pause | `02-game-rules.md` section 9, UI-033 | Core build |
-| Home and Quests pages | GAME-070, `06-api-and-screens.md` | January build |
-| Session check-in | GAME-020 | January build |
-| Explore | `02-game-rules.md` section 5 | January build |
-| Journal and Summary page | GAME-031, SAFE-009, SAFE-017 | January build |
-| Stickers (Open Box) | GAME-073, GAME-076 | January build |
-| Leaderboards and church score | `02-game-rules.md` section 7, UI-041 | January build |
-| Usher console | GAME-112 | January build |
-| Admin console | GAME-110 | January build |
-| Main screen views (leaderboards, takeaway wall, check-in QR, paused) | UI-040, UI-041, SAFE-018, GAME-020 | January build |
-| Wrapped cards | WRAP-010 | January build |
-| Conference recap screen | WRAP-020 | January build |
+| Feature | Tree | Spec | Milestone |
+|---|---|---|---|
+| Staff accounts and roles | `staff` | ARCH-035, ARCH-036 | Core build |
+| Scanner and connections, with icebreaker | `connections` | ARCH-025, GAME-017 | Core build |
+| Points service | `points` | ARCH-040 | Core build |
+| Game states and pause | `game-state` | `02-game-rules.md` section 9, UI-033 | Core build |
+| Mix look on player screens | `look` | UI-008, UI-009, DEC-037 | January build |
+| Home and Quests pages | `home` | GAME-070, `06-api-and-screens.md` | January build |
+| Session check-in | `checkin` | GAME-020 | January build |
+| Explore | `explore` | `02-game-rules.md` section 5 | January build |
+| Journal and Summary page | `journal` | GAME-031, SAFE-009, SAFE-017 | January build |
+| Stickers (Open Box) | `stickers` | GAME-073, GAME-076 | January build |
+| Leaderboards and church score | `leaderboards` | `02-game-rules.md` section 7, UI-041 | January build |
+| Usher console | `usher` | GAME-112 | January build |
+| Admin console | `admin` | GAME-110 | January build |
+| Main screen views (leaderboards, takeaway wall, check-in QR, paused) | `screen` | UI-040, UI-041, SAFE-018, GAME-020 | January build |
+| Wrapped cards | `wrapped` | WRAP-010 | January build |
+| Conference recap screen | `recap` | WRAP-020 | January build |
+| Game day readiness: log out, rate limits, backups, load test, data cleanup | `ready` | ARCH-031, ARCH-053, ARCH-071, SAFE-014 | Before Playtest 2 |
 
 ## License
 
