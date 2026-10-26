@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-26 · feat/screen-skeleton · Claude Opus 5.5 / @jonathango98
+
+- What: Started. Every player screen in the `06-api-and-screens.md` screen list as a plain page, with every button and tab going to the right next screen. The bottom bar moves to Home, My Code, Quests, and Scan opens from My Code and Home (UI-030). No final look and no game logic yet.
+- Why: Claims the Screen skeleton from the Planned list, so the January screen features have pages to build on.
+- Rule IDs: UI-030, ENG-101, ENG-102
+- Status: Started
+- PR: draft
+
 ## 2026-10-25 · fix/webkit-https-tests · Claude Opus 5.5 / @jonathango98
 
 - What: The browser test server serves HTTPS with a throwaway self-signed certificate, so the Join and Login browser tests pass in WebKit (Safari's engine) as well as Chromium.
