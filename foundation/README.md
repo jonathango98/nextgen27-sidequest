@@ -2,8 +2,8 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.1.1
-- Last updated: 2026-10-23
+- Version: 1.2.0
+- Last updated: 2026-10-26
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -28,7 +28,9 @@ This folder is the single source of truth for Side Quest: the product, the game 
 | [13-decisions.md](13-decisions.md) | Decision log, resolved conflicts, every OPEN item | DEC |
 | [14-glossary.md](14-glossary.md) | Every term | |
 | [15-repo-setup-checklist.md](15-repo-setup-checklist.md) | GitHub settings for the repo owner, protection layers | ENG |
+| [16-feature-tree.md](16-feature-tree.md) | How features split into pieces, what unlocks what, features at a glance | ENG |
 | [game-config.yaml](game-config.yaml) | Every tunable number and flag (the canonical values) | |
+| [feature-tree.yaml](feature-tree.yaml) | Every planned piece of work, with what it needs first (the canonical plan) | |
 
 ## 2. Reading order by role
 

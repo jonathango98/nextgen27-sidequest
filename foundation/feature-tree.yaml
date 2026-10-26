@@ -1,0 +1,934 @@
+# Side Quest feature tree (every feature, split into pieces, with what each piece needs first)
+#
+# Status: Active
+# Owner: Jonathan (@jonathango98)
+# Version: 1.0.0
+# Last updated: 2026-10-26
+# Protected file. Changes go in a PR that Jonathan approves (ENG-080).
+#
+# How to read this file (rules in 16-feature-tree.md, ENG-105 to ENG-109)
+# - A piece is one branch, one PR. Its id looks like "points.ledger".
+# - This file holds the plan only. Live status is in the README Project status (ENG-100).
+#   A piece is Working when its id is in the README Working table, or in already_working below.
+# - A piece is unlocked when every id in "needs" is Working and no rule in "open" is still
+#   listed in 13-decisions.md section 3 (AI-003).
+# - size: S fits one agent session. M takes about two sessions. Nothing is bigger (ENG-106).
+# - level: how much coding experience it takes (easy, medium, hard).
+# - area: backend, player-app, admin-screens, design, infra (labels in 09 section 5).
+# - safety_review: true means the PR needs the safety-review label and a second reviewer (SAFE-016).
+# - Same format rules as game-config.yaml: plain maps, strings, lists, true or false. No anchors (ENG-030).
+
+# Pieces that were Working before this file existed. Other pieces can need them.
+already_working:
+  - id: app.foundation
+    what: App starts, reads game-config.yaml, runs migrations, shared player page frame
+  - id: infra.hosting
+    what: Railway staging, PR previews, browser tests over HTTPS
+  - id: auth.join-login
+    what: Join with name, church, and PIN, log in on another phone, lockout after wrong PINs
+  - id: code.my-code
+    what: Rotating personal QR code service and My Code page
+  - id: screens.skeleton
+    what: Every player screen as a plain page with working navigation
+
+features:
+  - id: staff
+    name: Staff accounts and roles
+    milestone: Core build
+  - id: game-state
+    name: Game states and pause
+    milestone: Core build
+  - id: points
+    name: Points service
+    milestone: Core build
+  - id: connections
+    name: Scanner and connections, with icebreaker
+    milestone: Core build
+  - id: look
+    name: Mix look on player screens
+    milestone: January build
+  - id: home
+    name: Home and Quests pages
+    milestone: January build
+  - id: checkin
+    name: Session check-in
+    milestone: January build
+  - id: explore
+    name: Explore
+    milestone: January build
+  - id: journal
+    name: Journal and Summary page
+    milestone: January build
+  - id: stickers
+    name: Stickers (Open Box)
+    milestone: January build
+  - id: leaderboards
+    name: Leaderboards and church score
+    milestone: January build
+  - id: usher
+    name: Usher console
+    milestone: January build
+  - id: admin
+    name: Admin console
+    milestone: January build
+  - id: screen
+    name: Main screen views (leaderboards, takeaway wall, check-in QR, paused)
+    milestone: January build
+  - id: wrapped
+    name: Wrapped cards
+    milestone: January build
+  - id: recap
+    name: Conference recap screen
+    milestone: January build
+  - id: ready
+    name: Game day readiness (log out, rate limits, backups, load test, data cleanup)
+    milestone: Before Playtest 2
+
+pieces:
+  # Staff accounts and roles
+  - id: staff.accounts
+    feature: staff
+    what: StaffAccount table, password hashing, and a server command that creates the first admin from an environment variable
+    needs: [app.foundation]
+    open: []
+    area: backend
+    size: M
+    level: hard
+    safety_review: true
+    rules: [ARCH-035, ARCH-036, ARCH-030]
+    learn: how to add a table with a numbered SQL migration and store passwords safely
+  - id: staff.login
+    feature: staff
+    what: Staff log in page and a role check that refuses the wrong role with WRONG_ROLE
+    needs: [staff.accounts]
+    open: []
+    area: backend
+    size: M
+    level: hard
+    safety_review: true
+    rules: [ARCH-035, ARCH-036, API-020]
+    learn: how one check protects every usher and admin page
+  - id: staff.manage
+    feature: staff
+    what: Admin page to add and turn off usher and screen accounts
+    needs: [staff.login, points.audit-log]
+    open: []
+    area: admin-screens
+    size: S
+    level: medium
+    safety_review: true
+    rules: [ARCH-036, GAME-110, ARCH-050]
+    learn: how an admin form writes an audit row
+  - id: staff.screen-mode
+    feature: staff
+    what: An admin signs a main screen device into screen mode, which can only show screen pages
+    needs: [staff.login]
+    open: []
+    area: admin-screens
+    size: S
+    level: medium
+    safety_review: true
+    rules: [ARCH-037]
+    learn: how a limited session differs from a full login
+
+  # Game states and pause
+  - id: game-state.core
+    feature: game-state
+    what: GameState table with one row (on, paused, off), a read helper, and 423 PAUSED or GAME_OFF refusals
+    needs: [app.foundation]
+    open: []
+    area: backend
+    size: M
+    level: medium
+    safety_review: false
+    rules: [ARCH-041, ARCH-042, GAME-100, GAME-102, GAME-108, API-020, DATA-013]
+    learn: how one shared switch changes what every route allows
+  - id: game-state.banner
+    feature: game-state
+    what: Paused banner on every player page, and sign-up shows closed when the game is off
+    needs: [game-state.core]
+    open: []
+    area: player-app
+    size: S
+    level: easy
+    safety_review: false
+    rules: [UI-033, GAME-108]
+    learn: how a shared template partial shows on every page
+  - id: game-state.admin-switch
+    feature: game-state
+    what: Admin buttons to turn the game on, pause it, or switch it off, each writing an audit row
+    needs: [game-state.core, staff.login, points.audit-log]
+    open: []
+    area: admin-screens
+    size: S
+    level: medium
+    safety_review: true
+    rules: [GAME-101, GAME-104, GAME-110, OPS-001, ARCH-050]
+    learn: how an HTMX button posts to the server and swaps part of the page
+
+  # Points service
+  - id: points.audit-log
+    feature: points
+    what: AuditLog table and one helper that writes an audit row, never updated or deleted
+    needs: [app.foundation]
+    open: []
+    area: backend
+    size: S
+    level: medium
+    safety_review: true
+    rules: [ARCH-050, DATA-015, ARCH-051]
+    learn: why some records are written once and never changed
+  - id: points.ledger
+    feature: points
+    what: PointLedger table and the one award service that checks game state, caps, and duplicates, then writes the ledger row and an audit row
+    needs: [points.audit-log, game-state.core]
+    open: []
+    area: backend
+    size: M
+    level: hard
+    safety_review: false
+    rules: [ARCH-040, AI-040, AI-041, GAME-002, GAME-003, GAME-004, GAME-005, DATA-027, DATA-030]
+    learn: how a database transaction keeps points correct when two phones tap at once
+  - id: points.score-bar
+    feature: points
+    what: The top bar on every player page shows the player's real score
+    needs: [points.ledger]
+    open: []
+    area: player-app
+    size: S
+    level: easy
+    safety_review: false
+    rules: [UI-030, GAME-003, DATA-030]
+    learn: how a page reads a total from the server
+  - id: points.join
+    feature: points
+    what: Award the "Join the game" points once when a player signs up
+    needs: [points.ledger]
+    open: [GAME-044]
+    area: backend
+    size: S
+    level: medium
+    safety_review: true
+    rules: [GAME-040, GAME-044]
+    learn: how a quest calls the points service
+
+  # Scanner and connections, with icebreaker
+  - id: connections.table
+    feature: connections
+    what: Connection and ChurchMet tables in their own migration PR
+    needs: [app.foundation]
+    open: []
+    area: backend
+    size: S
+    level: medium
+    safety_review: true
+    rules: [DATA-020, DATA-021, SAFE-016]
+    learn: how database constraints stop the same pair from counting twice
+  - id: connections.scanner-camera
+    feature: connections
+    what: The Scan page opens the camera and reads QR codes with barcode-detector served from our own server
+    needs: [screens.skeleton]
+    open: []
+    area: player-app
+    size: M
+    level: medium
+    safety_review: false
+    rules: [ARCH-025, ARCH-004, UI-034]
+    learn: how a phone browser reads a QR code with the camera
+  - id: connections.scan-save
+    feature: connections
+    what: POST /scan saves a connection from a player code and refuses self scans, expired codes, and repeat pairs
+    needs: [connections.table, connections.scanner-camera, code.my-code]
+    open: []
+    area: backend
+    size: M
+    level: hard
+    safety_review: true
+    rules: [GAME-013, GAME-014, ARCH-026, API-020]
+    learn: how the server checks a signed, time-limited code
+  - id: connections.incoming
+    feature: connections
+    what: My Code shows "someone scanned you" through GET /code/incoming
+    needs: [connections.scan-save]
+    open: []
+    area: player-app
+    size: S
+    level: medium
+    safety_review: false
+    rules: [API-030, API-032]
+    learn: how HTMX polling updates part of a page
+  - id: connections.points
+    feature: connections
+    what: Connection points (10, or 2 for the same church) plus the new church bonus, through the points service
+    needs: [connections.scan-save, points.ledger]
+    open: [GAME-016]
+    area: backend
+    size: M
+    level: hard
+    safety_review: false
+    rules: [GAME-010, GAME-011, GAME-012, GAME-018]
+    learn: how worked examples in the rules become tests
+  - id: connections.icebreaker-question
+    feature: connections
+    what: After a scan, both phones show the same icebreaker question
+    needs: [connections.scan-save]
+    open: [GAME-019]
+    area: player-app
+    size: S
+    level: medium
+    safety_review: false
+    rules: [GAME-017, SAFE-043]
+    learn: how two players see the same thing from one saved record
+  - id: connections.icebreaker-answer
+    feature: connections
+    what: Icebreaker answer entry, visible only to the two players
+    needs: [connections.icebreaker-question]
+    open: [GAME-015, GAME-019]
+    area: player-app
+    size: M
+    level: hard
+    safety_review: true
+    rules: [GAME-015, SAFE-006]
+    learn: how to keep private data visible to exactly two people
+
+  # Mix look on player screens
+  - id: look.frame
+    feature: look
+    what: The shared player frame in the Mix look, with top score bar, bottom bar, bloom streaks, and film grain
+    needs: [screens.skeleton]
+    open: []
+    area: design
+    size: M
+    level: easy
+    safety_review: false
+    rules: [UI-008, UI-009, UI-030, DEC-035, DEC-036]
+    learn: how design tokens in CSS keep every screen consistent
+  - id: look.components
+    feature: look
+    what: Shared components in the Mix look, including button, card, and progress bar
+    needs: [look.frame]
+    open: []
+    area: design
+    size: S
+    level: easy
+    safety_review: false
+    rules: [UI-035, UI-051]
+    learn: how one template partial becomes a reusable component
+  - id: look.home
+    feature: look
+    what: Home layout from the Mix mockup, with placeholder numbers until the data exists
+    needs: [look.components]
+    open: []
+    area: design
+    size: S
+    level: easy
+    safety_review: false
+    rules: [UI-036, DEC-037]
+    learn: how to turn a mockup into a page at 360px
+  - id: look.code
+    feature: look
+    what: My Code layout from the Mix mockup, with the QR panel and the black Scan button
+    needs: [look.components]
+    open: []
+    area: design
+    size: S
+    level: easy
+    safety_review: false
+    rules: [UI-037, DEC-037]
+    learn: how to turn a mockup into a page at 360px
+  - id: look.summary
+    feature: look
+    what: Shared takeaways page layout from the Mix mockup, with fake takeaway cards
+    needs: [look.components]
+    open: []
+    area: design
+    size: S
+    level: easy
+    safety_review: false
+    rules: [UI-038, DEC-037]
+    learn: how to turn a mockup into a page at 360px
+
+  # Home and Quests pages
+  - id: home.progress
+    feature: home
+    what: Home shows the real score and progress to the next sticker
+    needs: [points.ledger, stickers.math]
+    open: []
+    area: player-app
+    size: S
+    level: easy
+    safety_review: false
+    rules: [GAME-070, GAME-071, UI-036, UI-051]
+    learn: how a page reads computed numbers from a service
+  - id: home.quests
+    feature: home
+    what: Quests page lists every quest with its points read from game-config.yaml
+    needs: [points.ledger]
+    open: []
+    area: player-app
+    size: S
+    level: easy
+    safety_review: false
+    rules: [AI-013, ENG-031]
+    learn: why game numbers come from config and never from the template
+
+  # Session check-in
+  - id: checkin.sessions
+    feature: checkin
+    what: Session and CheckIn tables, and an admin page to add sessions by title
+    needs: [staff.login, points.audit-log]
+    open: []
+    area: admin-screens
+    size: M
+    level: medium
+    safety_review: true
+    rules: [DATA-014, DATA-022, GAME-110]
+    learn: how an admin list page adds and edits rows
+  - id: checkin.end-session
+    feature: checkin
+    what: Admin End session button opens check-in and turns the game on
+    needs: [checkin.sessions, game-state.admin-switch]
+    open: []
+    area: admin-screens
+    size: S
+    level: medium
+    safety_review: true
+    rules: [GAME-021, GAME-026, OPS-002]
+    learn: how one button changes two things in one transaction
+  - id: checkin.hall-code
+    feature: checkin
+    what: The main screen shows the session check-in code, rotating every 30 seconds
+    needs: [checkin.sessions, screen.shell, code.my-code]
+    open: []
+    area: admin-screens
+    size: S
+    level: medium
+    safety_review: true
+    rules: [GAME-020, DEC-013]
+    learn: how the QR service makes a different kind of code
+  - id: checkin.scan
+    feature: checkin
+    what: A player scans the hall code to check in once per session and gets tier points by save order
+    needs: [checkin.hall-code, connections.scanner-camera, points.ledger]
+    open: []
+    area: backend
+    size: M
+    level: hard
+    safety_review: false
+    rules: [GAME-022, GAME-023, GAME-025]
+    learn: how save order decides tiers when many phones scan at once
+  - id: checkin.close
+    feature: checkin
+    what: Admin button to close check-in for a session by hand
+    needs: [checkin.end-session]
+    open: []
+    area: admin-screens
+    size: S
+    level: easy
+    safety_review: true
+    rules: [GAME-024]
+    learn: how to build only the decided part of a rule (no automatic close)
+
+  # Journal and Summary page
+  - id: journal.table
+    feature: journal
+    what: Takeaway table in its own migration PR
+    needs: [checkin.sessions]
+    open: []
+    area: backend
+    size: S
+    level: medium
+    safety_review: true
+    rules: [DATA-023, SAFE-016]
+    learn: why tables that hold minors' writing get their own review
+  - id: journal.write
+    feature: journal
+    what: Write a private takeaway of at least 15 words for an ended session, earn points once per session, refused while paused
+    needs: [journal.table, points.ledger, checkin.end-session]
+    open: []
+    area: player-app
+    size: M
+    level: medium
+    safety_review: true
+    rules: [GAME-030, GAME-032, GAME-033, GAME-034, GAME-036]
+    learn: how a form is checked on the server and shows friendly errors
+  - id: journal.list
+    feature: journal
+    what: Journal page lists the player's own takeaways
+    needs: [journal.write]
+    open: []
+    area: player-app
+    size: S
+    level: easy
+    safety_review: true
+    rules: [GAME-031, SAFE-017]
+    learn: how a page shows only the signed-in player's data
+  - id: journal.sharing
+    feature: journal
+    what: Choose private, shared with name, or anonymous, with the form saying who can see it
+    needs: [journal.write]
+    open: []
+    area: player-app
+    size: S
+    level: medium
+    safety_review: true
+    rules: [GAME-031, SAFE-009, UI-031]
+    learn: how a privacy choice is saved and respected
+  - id: journal.review
+    feature: journal
+    what: Admin review queue to approve, reject, or hide shared takeaways, each writing an audit row
+    needs: [journal.sharing, staff.login, points.audit-log]
+    open: []
+    area: admin-screens
+    size: M
+    level: hard
+    safety_review: true
+    rules: [SAFE-007, SAFE-008, SAFE-040, SAFE-041, SAFE-042]
+    learn: how moderation keeps minors safe before anything is public
+  - id: journal.summary
+    feature: journal
+    what: Summary page shows approved shared takeaways to signed-in players
+    needs: [journal.review]
+    open: []
+    area: player-app
+    size: S
+    level: medium
+    safety_review: true
+    rules: [SAFE-017, UI-038]
+    learn: how a query shows only approved rows
+
+  # Explore
+  - id: explore.places
+    feature: explore
+    what: Booth and HiddenItem tables and admin lists to manage them, with no item locations stored
+    needs: [staff.login, points.audit-log]
+    open: []
+    area: admin-screens
+    size: M
+    level: medium
+    safety_review: true
+    rules: [GAME-110, DATA-024, DATA-025, SAFE-010]
+    learn: how to keep secret game data out of the database and the repo
+  - id: explore.booth
+    feature: explore
+    what: An usher records a booth visit, once per booth per player
+    needs: [usher.scan, explore.places, points.ledger]
+    open: []
+    area: admin-screens
+    size: S
+    level: medium
+    safety_review: false
+    rules: [GAME-041, DATA-024]
+    learn: how a database constraint enforces "once per booth"
+  - id: explore.hidden-item
+    feature: explore
+    what: An usher records a hidden item turn-in, each item claimable once in total
+    needs: [usher.scan, explore.places, points.ledger]
+    open: []
+    area: admin-screens
+    size: S
+    level: medium
+    safety_review: false
+    rules: [GAME-043, DATA-025, SAFE-010, SAFE-026]
+    learn: how the second claim on the same item gets a clear refusal
+  - id: explore.photobooth
+    feature: explore
+    what: An usher records a photobooth visit, up to the daily limit
+    needs: [usher.scan, points.ledger]
+    open: [GAME-105]
+    area: admin-screens
+    size: S
+    level: medium
+    safety_review: false
+    rules: [GAME-042, DATA-028]
+    learn: how a daily limit depends on the venue timezone
+
+  # Usher console
+  - id: usher.scan
+    feature: usher
+    what: Usher console home and scanning a player's My Code to pick who gets the action
+    needs: [staff.login, connections.scanner-camera, code.my-code]
+    open: []
+    area: admin-screens
+    size: M
+    level: medium
+    safety_review: true
+    rules: [GAME-112, ARCH-025]
+    learn: how a staff page reuses the player scanner
+  - id: usher.player-lookup
+    feature: usher
+    what: Usher looks up a player by name when their phone is dead
+    needs: [usher.scan]
+    open: []
+    area: admin-screens
+    size: S
+    level: medium
+    safety_review: true
+    rules: [GAME-113, SAFE-004, SAFE-028]
+    learn: how to show staff only the fields they need
+
+  # Stickers (Open Box)
+  - id: stickers.math
+    feature: stickers
+    what: Stickers earned and claimable computed from score and claims, never stored
+    needs: [points.ledger]
+    open: []
+    area: backend
+    size: S
+    level: easy
+    safety_review: false
+    rules: [GAME-070, GAME-071, GAME-074, DATA-031]
+    learn: how to test a small pure function with the worked examples
+  - id: stickers.open-box
+    feature: stickers
+    what: Open Box page shows how many stickers the player can claim and how
+    needs: [stickers.math]
+    open: []
+    area: player-app
+    size: S
+    level: easy
+    safety_review: false
+    rules: [GAME-073, GAME-077]
+    learn: how a page explains a real-world step clearly
+  - id: stickers.claim
+    feature: stickers
+    what: An usher saves a sticker claim, refused while paused or over the limit
+    needs: [usher.scan, stickers.math, game-state.core]
+    open: []
+    area: admin-screens
+    size: M
+    level: medium
+    safety_review: true
+    rules: [GAME-073, GAME-075, GAME-102, DATA-026, DATA-029]
+    learn: how to stop two ushers from claiming the same sticker at once
+  - id: stickers.stock
+    feature: stickers
+    what: OUT_OF_STOCK refusal once the sticker stock runs out
+    needs: [stickers.claim]
+    open: [GAME-069]
+    area: backend
+    size: S
+    level: medium
+    safety_review: false
+    rules: [GAME-076]
+    learn: how a config value turns a check on
+
+  # Leaderboards and church score
+  - id: leaderboards.players
+    feature: leaderboards
+    what: Player leaderboard with first name and church only
+    needs: [points.ledger, screen.shell]
+    open: [GAME-083, GAME-084, GAME-088]
+    area: admin-screens
+    size: M
+    level: medium
+    safety_review: true
+    rules: [GAME-086, GAME-087, SAFE-004, SAFE-019]
+    learn: how to rank players fairly and show only safe fields
+  - id: leaderboards.churches
+    feature: leaderboards
+    what: Church leaderboard by average score
+    needs: [points.ledger, screen.shell]
+    open: [GAME-089, GAME-082]
+    area: admin-screens
+    size: M
+    level: medium
+    safety_review: true
+    rules: [GAME-081, GAME-087]
+    learn: how an average changes with who counts as a player
+  - id: leaderboards.in-app
+    feature: leaderboards
+    what: Player sees a leaderboard or their own rank on the phone
+    needs: [leaderboards.players]
+    open: [GAME-085]
+    area: player-app
+    size: S
+    level: medium
+    safety_review: true
+    rules: [GAME-085]
+    learn: how a feature flag keeps undecided work switched off
+
+  # Admin console
+  - id: admin.players
+    feature: admin
+    what: Admin finds a player and sees their account, with last names for staff only
+    needs: [staff.login]
+    open: []
+    area: admin-screens
+    size: S
+    level: medium
+    safety_review: true
+    rules: [GAME-110, SAFE-004, SAFE-028]
+    learn: how a search page works with HTMX
+  - id: admin.pin-reset
+    feature: admin
+    what: Admin resets a locked or forgotten PIN after a badge check, with an audit row
+    needs: [admin.players, points.audit-log]
+    open: []
+    area: admin-screens
+    size: S
+    level: medium
+    safety_review: true
+    rules: [SAFE-023, SAFE-044, DEC-004, ARCH-050]
+    learn: how account recovery stays safe without email
+  - id: admin.fix-church
+    feature: admin
+    what: Admin changes a player's church when they picked the wrong one
+    needs: [admin.players, points.audit-log]
+    open: []
+    area: admin-screens
+    size: S
+    level: easy
+    safety_review: true
+    rules: [DATA-012, ARCH-050]
+    learn: how a small admin fix writes an audit row
+  - id: admin.award-revoke
+    feature: admin
+    what: Admin awards or revokes points by hand with a required reason, including paper fallback entries
+    needs: [admin.players, points.ledger]
+    open: []
+    area: admin-screens
+    size: M
+    level: hard
+    safety_review: true
+    rules: [GAME-103, GAME-111, GAME-114, ARCH-081]
+    learn: how the one points service handles admin awards too
+  - id: admin.churches
+    feature: admin
+    what: Admin manages the church list in the app
+    needs: [staff.login, points.audit-log]
+    open: []
+    area: admin-screens
+    size: S
+    level: medium
+    safety_review: true
+    rules: [SAFE-002, GAME-110]
+    learn: how an admin edits a list that sign-up depends on
+  - id: admin.audit-view
+    feature: admin
+    what: Admin views the audit log and the unusual activity list
+    needs: [staff.login, points.audit-log, connections.scan-save]
+    open: []
+    area: admin-screens
+    size: M
+    level: medium
+    safety_review: true
+    rules: [ARCH-050, ARCH-062]
+    learn: how to spot cheating patterns with a query
+
+  # Main screen views
+  - id: screen.shell
+    feature: screen
+    what: Main screen page in the dark screen theme with the paused holding view, refreshed by hand for now
+    needs: [staff.screen-mode, game-state.core]
+    open: []
+    area: admin-screens
+    size: M
+    level: medium
+    safety_review: true
+    rules: [UI-040, UI-041, UI-042, UI-043]
+    learn: how a big-screen layout differs from a phone layout
+  - id: screen.refresh
+    feature: screen
+    what: The main screen refreshes on its own
+    needs: [screen.shell]
+    open: [API-031]
+    area: admin-screens
+    size: S
+    level: medium
+    safety_review: false
+    rules: [API-031, ARCH-074]
+    learn: how HTMX polling keeps a screen live
+  - id: screen.takeaway-wall
+    feature: screen
+    what: Takeaway wall of approved shared takeaways on the main screen
+    needs: [screen.shell, journal.review]
+    open: []
+    area: admin-screens
+    size: S
+    level: medium
+    safety_review: true
+    rules: [SAFE-018, DEC-008]
+    learn: how a public screen shows only approved posts
+
+  # Wrapped cards
+  - id: wrapped.unlock
+    feature: wrapped
+    what: Admin unlocks Wrapped, and before that /wrapped says when it unlocks
+    needs: [game-state.core, staff.login, points.audit-log]
+    open: []
+    area: admin-screens
+    size: S
+    level: medium
+    safety_review: true
+    rules: [WRAP-002]
+    learn: how a stored switch gates a page
+  - id: wrapped.cards
+    feature: wrapped
+    what: Swipeable card viewer with the Welcome card, respecting reduce motion
+    needs: [wrapped.unlock, look.components]
+    open: []
+    area: player-app
+    size: M
+    level: medium
+    safety_review: false
+    rules: [WRAP-010, UI-055]
+    learn: how to build swipe cards that still work with reduce motion
+  - id: wrapped.people
+    feature: wrapped
+    what: People met card, without regions
+    needs: [wrapped.cards, connections.scan-save]
+    open: []
+    area: player-app
+    size: S
+    level: medium
+    safety_review: false
+    rules: [WRAP-010]
+    learn: how to count from your own connection rows
+  - id: wrapped.regions
+    feature: wrapped
+    what: Regions on the People met card
+    needs: [wrapped.people]
+    open: [WRAP-011, DATA-010]
+    area: player-app
+    size: S
+    level: medium
+    safety_review: false
+    rules: [WRAP-011]
+    learn: how an extra field joins into a card
+  - id: wrapped.collection
+    feature: wrapped
+    what: Collection card with icebreaker answers and verse matching
+    needs: [wrapped.cards, connections.icebreaker-answer]
+    open: [WRAP-012]
+    area: player-app
+    size: M
+    level: hard
+    safety_review: true
+    rules: [WRAP-012, SAFE-006]
+    learn: how to group answers without exposing anyone else's
+  - id: wrapped.journal
+    feature: wrapped
+    what: Journal card with takeaways written, sessions, and a quote
+    needs: [wrapped.cards, journal.write]
+    open: []
+    area: player-app
+    size: S
+    level: medium
+    safety_review: true
+    rules: [WRAP-013]
+    learn: how a card picks one quote from the player's own takeaways
+  - id: wrapped.play-style
+    feature: wrapped
+    what: Play style card from points by category and stickers earned
+    needs: [wrapped.cards, stickers.math]
+    open: [WRAP-017]
+    area: player-app
+    size: S
+    level: medium
+    safety_review: false
+    rules: [WRAP-010, WRAP-017]
+    learn: how to group ledger rows by category
+  - id: wrapped.together
+    feature: wrapped
+    what: Together card with cross-church connections and the church average
+    needs: [wrapped.cards, connections.scan-save]
+    open: [GAME-089]
+    area: player-app
+    size: S
+    level: medium
+    safety_review: false
+    rules: [WRAP-010, GAME-081]
+    learn: how a card combines personal and conference numbers
+  - id: wrapped.save-image
+    feature: wrapped
+    what: Save a card as an image with only the player's first name and numbers
+    needs: [wrapped.cards]
+    open: [WRAP-033]
+    area: player-app
+    size: M
+    level: hard
+    safety_review: false
+    rules: [WRAP-032, WRAP-033]
+    learn: how an image is made from a page
+
+  # Conference recap screen
+  - id: recap.totals
+    feature: recap
+    what: Sunday recap on the main screen with total connections, church pairs, and takeaways shared, with no names
+    needs: [screen.shell, connections.scan-save, journal.review]
+    open: []
+    area: admin-screens
+    size: S
+    level: medium
+    safety_review: true
+    rules: [WRAP-020, WRAP-021, WRAP-022]
+    learn: how to count church pairs from connections
+  - id: recap.verse
+    feature: recap
+    what: Most collected verse on the recap screen
+    needs: [recap.totals, connections.icebreaker-answer]
+    open: [WRAP-012]
+    area: admin-screens
+    size: S
+    level: medium
+    safety_review: false
+    rules: [WRAP-020, WRAP-012]
+    learn: how a total depends on how answers are matched
+
+  # Game day readiness
+  - id: ready.logout
+    feature: ready
+    what: POST /logout ends the player's session on this phone
+    needs: [auth.join-login]
+    open: []
+    area: backend
+    size: S
+    level: easy
+    safety_review: true
+    rules: [ARCH-034]
+    learn: how a signed session cookie is cleared
+  - id: ready.rate-limits
+    feature: ready
+    what: Per-IP limits on log in and sign-up
+    needs: [auth.join-login]
+    open: [ARCH-031]
+    area: backend
+    size: M
+    level: hard
+    safety_review: true
+    rules: [ARCH-031]
+    learn: how rate limits slow down PIN guessing
+  - id: ready.backups
+    feature: ready
+    what: Scheduled backups with an off-Railway copy and a tested restore
+    needs: [app.foundation]
+    open: [ARCH-053]
+    area: infra
+    size: M
+    level: hard
+    safety_review: true
+    rules: [ARCH-053]
+    learn: how to back up SQLite safely while it runs
+  - id: ready.load-test
+    feature: ready
+    what: Load test of the join moment on staging
+    needs: [auth.join-login]
+    open: [ARCH-072]
+    area: infra
+    size: M
+    level: hard
+    safety_review: false
+    rules: [ARCH-070, ARCH-071, ARCH-072, OPS-030]
+    learn: how to measure the p95 response time under load
+  - id: ready.retention
+    feature: ready
+    what: Cleanup job that deletes event data after the retention date
+    needs: [points.audit-log]
+    open: [SAFE-014]
+    area: backend
+    size: M
+    level: hard
+    safety_review: true
+    rules: [SAFE-014, ARCH-052, DATA-015, WRAP-004]
+    learn: how data retention protects players after the event

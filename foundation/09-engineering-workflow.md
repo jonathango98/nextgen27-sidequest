@@ -2,8 +2,8 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.7.0
-- Last updated: 2026-10-23
+- Version: 1.8.0
+- Last updated: 2026-10-26
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -148,7 +148,7 @@ These rules apply to every PR, from a human or an AI agent (DEC-022).
   - Working: merged to `main` and works end to end.
   - In progress: has an open branch.
   - Planned: in the foundation, with no branch yet.
-- **ENG-101** [LOCKED] Claim before you build. Before starting, check the README Project status, `git branch -r` (after `git fetch --prune`), and `gh pr list --state open`. If someone already has the feature, stop and talk to them. If nobody does, the first commit on your branch moves the feature's row from Planned to In progress (branch, PR, start date, signature) and adds a "Started" entry to `CHANGELOG.md`. Push it and open a draft PR right away, so others can see your claim.
+- **ENG-101** [LOCKED] Claim before you build. Before starting, check the README Project status, `git branch -r` (after `git fetch --prune`), and `gh pr list --state open`. If someone already has the feature, stop and talk to them. If nobody does, the first commit on your branch moves the feature's row from Planned to In progress (branch, PR, start date, signature) and adds a "Started" entry to `CHANGELOG.md`. Push it and open a draft PR right away, so others can see your claim. For a feature split into pieces in the feature tree, claim one piece at a time (ENG-108).
 - **ENG-102** [LOCKED] Every PR adds one entry at the top of `CHANGELOG.md`, using the format at the top of that file: date, branch, signature, what, why, rule IDs, status, PR. Update the entry as the PR changes. Keep it to one entry per PR.
 - **ENG-103** [LOCKED] Keep the status true. When a PR finishes a feature, it moves the row to Working in that same PR. When work stops or a PR is closed without merging, remove its In progress row. Update the "Status last updated" line every time you edit the section. Mark a feature Working only when it works end to end and its tests pass.
 - **ENG-104** [LOCKED] Signatures are `<Model name> / @<github-handle>`, for example `Claude Opus 5.5 / @jonathango98`. A human working without an AI agent signs `Human / @<github-handle>`. Dates are `YYYY-MM-DD`. `CHANGELOG.md` is a record of changes, not a runtime log, so SAFE-030 does not forbid it. Secrets and real attendee data never go in it.
