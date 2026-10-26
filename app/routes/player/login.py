@@ -13,8 +13,8 @@ from app.db import get_db
 from app.forms import read_form
 from app.rendering import templates
 
-# Where a player lands after logging in. Home (/) is not built yet.
-AFTER_LOGIN = "/code"
+# Where a player lands after logging in: Home.
+AFTER_LOGIN = "/"
 FORM_FIELDS = ("first_name", "last_name", "church_id")
 
 router = APIRouter()

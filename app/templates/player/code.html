@@ -1,4 +1,5 @@
 {% extends "player/base.html" %}
+{% set tab = "code" %}
 
 {% block title %}My Code · Side Quest{% endblock %}
 
@@ -6,4 +7,6 @@
   <h1>My Code</h1>
   {% include "player/partials/code_qr.html" %}
   <p class="qr-tip">Turn your screen brightness up so it scans fast.</p>
+  {# UI-037: the Scan button sits under the QR panel. #}
+  <a class="button" href="/scan">Scan</a>
 {% endblock %}

@@ -41,8 +41,8 @@ def test_safe_002_join_flow_at_min_width(page: Page, live_server, test_db_path):
     page.get_by_label("PIN again").fill(pin)
     page.get_by_role("button", name="Join the game").click()
 
-    page.wait_for_url(f"{live_server}/code")
-    expect(page.get_by_role("heading", name="My Code")).to_be_visible()
+    page.wait_for_url(f"{live_server}/")
+    expect(page.get_by_role("link", name="Meet friends")).to_be_visible()
     assert (
         page.evaluate("document.documentElement.scrollWidth")
         <= cfg["ui"]["min_viewport_px"]
@@ -76,8 +76,8 @@ def test_arch_032_login_flow_at_min_width(page: Page, live_server, test_db_path)
     )
     page.get_by_role("button", name="Log in").click()
 
-    page.wait_for_url(f"{live_server}/code")
-    expect(page.get_by_role("heading", name="My Code")).to_be_visible()
+    page.wait_for_url(f"{live_server}/")
+    expect(page.get_by_role("link", name="Meet friends")).to_be_visible()
     assert (
         page.evaluate("document.documentElement.scrollWidth")
         <= cfg["ui"]["min_viewport_px"]

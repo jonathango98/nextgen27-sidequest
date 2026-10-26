@@ -84,3 +84,13 @@ def test_arch_023_my_code_fails_closed_without_key(client, monkeypatch, cfg, pat
     response = TestClient(client.app, raise_server_exceptions=False).get(path)
     assert response.status_code == 500
     assert cfg["format_version"] not in response.text
+
+
+def test_ui_037_my_code_has_scan_button(client):
+    assert '<a class="button" href="/scan">Scan</a>' in client.get("/code").text
+
+
+def test_ui_030_my_code_marks_its_tab(client):
+    html = client.get("/code").text
+    assert '<a href="/code" aria-current="page">My Code</a>' in html
+    assert html.count('aria-current="page"') == 1

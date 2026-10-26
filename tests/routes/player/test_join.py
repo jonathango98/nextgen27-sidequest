@@ -187,7 +187,7 @@ def test_safe_002_join_creates_player_and_logs_in(client, details, fake_pin, db_
     }
     response = _post(client, data)
     assert response.status_code == 303
-    assert response.headers["location"] == "/code"
+    assert response.headers["location"] == "/"
     assert session.COOKIE in response.headers["set-cookie"]
 
     [player] = _players(db_path)
@@ -238,7 +238,7 @@ def test_api_002_htmx_join_redirects_with_header(client, details, fake_pin):
     data = {"step": "pin", **details, "pin": fake_pin, "pin_again": fake_pin}
     response = _post(client, data, htmx=True)
     assert response.status_code == 204
-    assert response.headers["hx-redirect"] == "/code"
+    assert response.headers["hx-redirect"] == "/"
 
 
 def test_safe_021_pin_never_sent_back(client, details, fake_pin):
@@ -266,7 +266,7 @@ def test_arch_034_logged_in_player_skips_join(client, details, fake_pin):
     _post(client, {"step": "pin", **details, "pin": fake_pin, "pin_again": fake_pin})
     response = client.get("/join", follow_redirects=False)
     assert response.status_code == 303
-    assert response.headers["location"] == "/code"
+    assert response.headers["location"] == "/"
 
 
 def test_arch_034_signed_cookie_for_unknown_player_is_not_logged_in(client):

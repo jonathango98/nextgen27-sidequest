@@ -1,9 +1,19 @@
 import io
 
 import pytest
+from fastapi.testclient import TestClient
 
 from app.db import connect, migrate
-from app.services.churches import ChurchListError, load, main, parse
+from app.main import create_app
+from app.services.churches import (
+    EXAMPLE_CHURCHES,
+    ChurchListError,
+    is_preview,
+    load,
+    main,
+    parse,
+    seed_examples,
+)
 
 # Fake data only (ENG-047).
 CSV = "name\nExample Church A\n  Example Church B  \n\n"
@@ -73,3 +83,45 @@ def test_safe_002_command_reports_refusal(tmp_path, monkeypatch, capsys):
     monkeypatch.setenv("SQ_DB_PATH", str(tmp_path / "cmd.db"))
     assert main([str(path)]) == 1
     assert "Nothing loaded" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize(
+    ("name", "preview"),
+    [
+        ("nextgen27-sidequest-pr-35", True),
+        ("nextgen27-sidequest-pr-7", True),
+        ("production", False),
+        ("staging", False),
+        ("pr-preview", False),
+        ("", False),
+        (None, False),
+    ],
+)
+def test_arch_017_only_pr_previews_count_as_preview(name, preview):
+    assert is_preview(name) is preview
+
+
+def test_safe_031_seed_adds_fake_churches_when_empty(conn):
+    assert seed_examples(conn) == EXAMPLE_CHURCHES
+    assert _names(conn) == EXAMPLE_CHURCHES
+
+
+def test_safe_031_seed_leaves_a_loaded_list_alone(conn):
+    load(conn, ["Example Church Z"])
+    assert seed_examples(conn) == []
+    assert _names(conn) == ["Example Church Z"]
+
+
+@pytest.mark.parametrize(
+    ("environment", "expected"),
+    [("nextgen27-sidequest-pr-35", EXAMPLE_CHURCHES), ("production", [])],
+)
+def test_arch_017_app_start_seeds_only_pr_previews(
+    tmp_path, monkeypatch, environment, expected
+):
+    db = tmp_path / "start.db"
+    monkeypatch.setenv("SQ_DB_PATH", str(db))
+    monkeypatch.setenv("RAILWAY_ENVIRONMENT_NAME", environment)
+    with TestClient(create_app()):
+        pass
+    assert _names(connect(db)) == expected

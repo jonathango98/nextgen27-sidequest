@@ -27,15 +27,23 @@ a {
   outline-offset: var(--space-1);
 }
 
-/* Top bar: score */
+/* Top bar: home link and score */
 .top-bar {
   position: sticky;
   top: 0;
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: var(--space-2);
   padding: var(--space-3) var(--space-4);
   background: var(--color-surface);
+}
+
+/* UI-003: the home link is a big enough tap target. */
+.top-bar > a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-min);
+  margin-right: auto;
 }
 
 .score {
@@ -61,7 +69,7 @@ h1 {
   margin: 0 0 var(--space-4);
 }
 
-/* Bottom bar: My Code, Scan, Quests (UI-003: in the lower half, big tap targets) */
+/* Bottom bar: Home, My Code, Quests (UI-003: in the lower half, big tap targets) */
 .bottom-bar {
   position: sticky;
   bottom: 0;
@@ -87,6 +95,12 @@ h1 {
   background: var(--color-primary);
 }
 
+/* Only the current tab is filled (UI-030) */
+.bottom-bar a:not([aria-current="page"]) {
+  color: var(--color-primary);
+  background: var(--color-bg);
+}
+
 /* Components (07 section 3) */
 .button {
   display: block;
@@ -108,10 +122,23 @@ h1 {
   background: var(--color-bg);
 }
 
+/* Switched off until the feature behind it is built */
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .card {
   padding: var(--space-4);
   border-radius: var(--radius);
   background: var(--color-surface);
+}
+
+/* A column of buttons with space between them */
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
 }
 
 /* Forms: Join and Log in (UI-003 big targets, UI-053 visible labels, UI-051 errors in text) */
@@ -127,7 +154,8 @@ h1 {
 }
 
 .form input:not([type="radio"]),
-.form select {
+.form select,
+.form textarea {
   width: 100%;
   min-height: var(--tap-min);
   padding: var(--space-2) var(--space-3);

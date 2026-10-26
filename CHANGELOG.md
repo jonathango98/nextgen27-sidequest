@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-26 · feat/screen-skeleton · Claude Opus 5.5 / @jonathango98
+
+- What: Every player screen in the `06-api-and-screens.md` screen list is now a plain page: Home, Scan, Icebreaker, Quests, Journal, new takeaway, Summary, Open Box, and Wrapped. The bottom bar is Home, My Code, Quests, and the current tab is marked. Scan opens from My Code and from Meet friends on Home. Players land on Home after joining or logging in. Pages show placeholders, and forms stay switched off until their features are built. No new routes, no final look, no game logic. PR preview environments (named `...-pr-<number>` by Railway) now start with Example Church A, B, and C when the church list is empty. Staging and production never get them.
+- Why: Gives the January screen features pages to build on, following the Mix mockups' screens and links. PR previews start with an empty database, so nobody could pick a church and join to test them.
+- Rule IDs: ARCH-017, SAFE-031, UI-030, UI-031, UI-035, UI-036, UI-037, UI-038, API-001, API-005, GAME-015, GAME-017, GAME-031, GAME-036, GAME-073, WRAP-002, AI-043, ENG-045
+- Status: Done
+- PR: #35
+
 ## 2026-10-25 · fix/webkit-https-tests · Claude Opus 5.5 / @jonathango98
 
 - What: The browser test server serves HTTPS with a throwaway self-signed certificate, so the Join and Login browser tests pass in WebKit (Safari's engine) as well as Chromium.

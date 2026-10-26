@@ -8,12 +8,19 @@ The real list is real event data, so it never goes in the repo (SAFE-030, ARCH-0
 
 import csv
 import io
+import re
 import sqlite3
 import sys
 
 from app.db import connect, db_path_from_env, migrate
 
 HEADER = ["name"]
+
+# Railway names each PR preview environment "<project>-pr-<number>" (ARCH-017).
+# Staging and production never match.
+PREVIEW_ENV = re.compile(r"-pr-\d+$")
+# Obviously fake (SAFE-031), so a preview can be tested without the real list.
+EXAMPLE_CHURCHES = ["Example Church A", "Example Church B", "Example Church C"]
 
 
 class ChurchListError(Exception):
@@ -67,6 +74,17 @@ def load(conn: sqlite3.Connection, names: list[str]) -> list[str]:
         conn.execute("ROLLBACK")
         raise
     return added
+
+
+def is_preview(environment_name: str | None) -> bool:
+    return bool(environment_name and PREVIEW_ENV.search(environment_name))
+
+
+def seed_examples(conn: sqlite3.Connection) -> list[str]:
+    """A PR preview starts with no churches, so nobody can join. Adds fake ones only if empty."""
+    if conn.execute("SELECT 1 FROM church LIMIT 1").fetchone():
+        return []
+    return load(conn, EXAMPLE_CHURCHES)
 
 
 def main(argv: list[str]) -> int:
