@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-26 · chore/improve-pick-task · Claude Opus 5.5 / @jonathango98
+
+- What: Started rewriting the `pick-task` skill to read the feature tree and offer only unlocked pieces.
+- Why: The skill had out-of-date advice, couldn't split big features, and could let two people claim the same task.
+- Rule IDs: ENG-101, ENG-105 to ENG-109, AI-003, AI-072
+- Status: Started
+- PR: draft
+
 ## 2026-10-26 · docs/feature-tree · Claude Opus 5.5 / @jonathango98
 
 - What: Added `foundation/feature-tree.yaml`, which splits every Planned feature into 74 pieces of size S (one agent session) or M (about two), each with the pieces it needs first, its area, level, safety review, and rule IDs. 20 pieces stay locked until their OPEN rules are decided. `foundation/16-feature-tree.md` holds the rules (ENG-105 to ENG-109), the Core build backbone, and a features table. ENG-101 now claims one piece at a time. The README Planned table has a Tree column and three new rows: Staff accounts and roles, Mix look on player screens, and Game day readiness. Added a map of the tree: `scripts/feature_tree_map.py` writes `docs/feature-tree.md`, a test fails when it is out of date, and the new `Feature tree map` workflow publishes an interactive version to GitHub Pages on every merge to `main` (DEC-039, approved exception to AI-022).

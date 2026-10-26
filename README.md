@@ -54,6 +54,7 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
+| Better `/pick-task`: offers only pieces from the feature tree that are ready, sized to the volunteer's Claude plan | `chore/improve-pick-task` | draft | 2026-10-26 | Claude Opus 5.5 / @jonathango98 |
 
 ### Planned
 
