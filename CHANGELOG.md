@@ -22,10 +22,10 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-10-26 · feat/screen-skeleton · Claude Opus 5.5 / @jonathango98
 
-- What: Started. Every player screen in the `06-api-and-screens.md` screen list as a plain page, with every button and tab going to the right next screen. The bottom bar moves to Home, My Code, Quests, and Scan opens from My Code and Home (UI-030). No final look and no game logic yet.
-- Why: Claims the Screen skeleton from the Planned list, so the January screen features have pages to build on.
-- Rule IDs: UI-030, ENG-101, ENG-102
-- Status: Started
+- What: Every player screen in the `06-api-and-screens.md` screen list is now a plain page: Home, Scan, Icebreaker, Quests, Journal, new takeaway, Summary, Open Box, and Wrapped. The bottom bar is Home, My Code, Quests, and the current tab is marked. Scan opens from My Code and from Meet friends on Home. Players land on Home after joining or logging in. Pages show placeholders, and forms stay switched off until their features are built. No new routes, no final look, no game logic.
+- Why: Gives the January screen features pages to build on, following the Mix mockups' screens and links.
+- Rule IDs: UI-030, UI-031, UI-035, UI-036, UI-037, UI-038, API-001, API-005, GAME-015, GAME-017, GAME-031, GAME-036, GAME-073, WRAP-002, AI-043, ENG-045
+- Status: Done
 - PR: #35
 
 ## 2026-10-25 · fix/webkit-https-tests · Claude Opus 5.5 / @jonathango98

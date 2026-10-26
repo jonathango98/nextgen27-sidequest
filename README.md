@@ -37,6 +37,7 @@ Done and live. Newest first: add your row at the top, in plain words. Who built 
 
 | What | Done |
 |---|---|
+| Screen skeleton: every player screen is a plain page, and every button and tab goes to the right next screen. The bottom bar is now Home, My Code, and Quests, and players land on Home after joining or logging in. No final look and no game logic yet | 2026-10-26 |
 | Automatic browser tests now check joining and logging in on Safari's engine too. They used to fail there because the test site had no HTTPS. Real players were never affected | 2026-10-25 |
 | Joining asks "Are you 18 or older?" instead of "Are you under 18?", which was confusing | 2026-10-24 |
 | Joining and logging in: players join with their name, church, and a PIN, land on their own code, and can log in on another phone. Too many wrong PINs lock the account. Unlocking comes with the Admin console | 2026-10-23 |
@@ -52,7 +53,6 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| Screen skeleton: every player screen as a plain page, with every button and tab going to the right next screen. No final look and no game logic yet | `feat/screen-skeleton` | #35 | 2026-10-26 | Claude Opus 5.5 / @jonathango98 |
 
 ### Planned
 
