@@ -53,7 +53,7 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| Feature tree: every feature split into small pieces with what each needs first, so `/pick-task` can offer only pieces that are ready | `docs/feature-tree` | draft | 2026-10-26 | Claude Opus 5.5 / @jonathango98 |
+| Feature tree: every feature split into small pieces with what each needs first, so `/pick-task` can offer only pieces that are ready | `docs/feature-tree` | #36 | 2026-10-26 | Claude Opus 5.5 / @jonathango98 |
 
 ### Planned
 

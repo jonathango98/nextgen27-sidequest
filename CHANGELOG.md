@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Volunteers can't tell which tasks are ready or small enough to start. `/pick-task` will use the tree next to offer only unlocked pieces.
 - Rule IDs: ENG-101, ENG-087, ENG-088, AI-003
 - Status: Started
-- PR: draft
+- PR: #36
 
 ## 2026-10-26 · feat/screen-skeleton · Claude Opus 5.5 / @jonathango98
 
