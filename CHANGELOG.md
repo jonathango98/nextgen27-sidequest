@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Claims the Screen skeleton from the Planned list, so the January screen features have pages to build on.
 - Rule IDs: UI-030, ENG-101, ENG-102
 - Status: Started
-- PR: draft
+- PR: #35
 
 ## 2026-10-25 · fix/webkit-https-tests · Claude Opus 5.5 / @jonathango98
 

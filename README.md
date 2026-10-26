@@ -52,7 +52,7 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| Screen skeleton: every player screen as a plain page, with every button and tab going to the right next screen. No final look and no game logic yet | `feat/screen-skeleton` | draft | 2026-10-26 | Claude Opus 5.5 / @jonathango98 |
+| Screen skeleton: every player screen as a plain page, with every button and tab going to the right next screen. No final look and no game logic yet | `feat/screen-skeleton` | #35 | 2026-10-26 | Claude Opus 5.5 / @jonathango98 |
 
 ### Planned
 
