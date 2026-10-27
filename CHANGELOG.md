@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-26 · docs/resolve-open-decisions · Claude Opus 5.5 / @jonathango98
+
+- What: Records Jonathan's answers to 36 of the 40 OPEN decisions in the foundation and `game-config.yaml`.
+- Why: 20 feature pieces were locked behind undecided rules.
+- Rule IDs: ENG-087, ENG-088
+- Status: Started
+- PR: draft
+
 ## 2026-10-26 · chore/improve-pick-task · Claude Opus 5.5 / @jonathango98
 
 - What: Rewrote the `pick-task` skill around the feature tree. A new helper, `.claude/skills/pick-task/unlocked.py`, lists pieces as ready, in progress, waiting on other pieces, or waiting on a decision. The skill asks for the volunteer's Claude plan and prefers one-session pieces on Pro, shows what each piece unlocks, checks again for a claim right before pushing, fills in the full PR template, labels safety-review pieces, and assigns issues. Removed the out-of-date "no app yet" advice.

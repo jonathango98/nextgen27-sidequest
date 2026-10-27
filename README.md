@@ -55,6 +55,7 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
+| Answer most of the open game questions (connection points, church score, check-in, stickers, Wrapped, data retention) | `docs/resolve-open-decisions` | draft | 2026-10-26 | Claude Opus 5.5 / @jonathango98 |
 
 ### Planned
 
