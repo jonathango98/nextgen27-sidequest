@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-26 · docs/resolve-open-decisions · Claude Opus 5.5 / @jonathango98
+
+- What: Records Jonathan's answers to 36 of the 40 OPEN decisions as DEC-040 to DEC-050, in each rule's foundation file and in `game-config.yaml`. Answers on items owned by others are PROPOSED until the owner confirms. Changes two LOCKED rules: leaderboards show a last initial (SAFE-004, SAFE-019, GAME-086) and church score becomes a shrunk average (GAME-081). Adds exceptions for join points while paused and Sunday sticker claims while off. Drops Wrapped regions and removes the `wrapped.regions` piece. DEC-051 adds follow-ups: takeaways only for ended sessions, an admin Close redemption button, and session start times for auto-pause, which changes DATA-014 (LOCKED). The data model saves the icebreaker question as a category key and verses in one standard form. DEC-052 replaces stickers with blind boxes holding a mystery item: same milestones, renamed in rules, config (`blind_box.*`), data model (`BoxClaim`), routes (`/box`), tree pieces (`blind-box.*`), and the Open Box page. What goes inside is a new OPEN item (GAME-068). DEC-053 applies a full foundation audit: connection points on typing, active players in church scores, split rate limits, no code freeze, 60-minute auto-unlock, counts-only Wrapped card 4, and full deletion on the retention date. Still OPEN: PRD-011, PRD-053, GAME-068, GAME-069, GAME-092.
+- Why: 20 feature pieces were locked behind undecided rules. Now 1 is.
+- Rule IDs: ENG-087, ENG-088, AI-003, SAFE-004, SAFE-016, GAME-081, GAME-089, GAME-016, SAFE-014, DATA-014, GAME-110, GAME-068, GAME-070 to GAME-080, SAFE-022, ARCH-031, PRD-052, ENG-071, WRAP-013, DATA-032
+- Status: Done
+- PR: #38
+
 ## 2026-10-26 · chore/improve-pick-task · Claude Opus 5.5 / @jonathango98
 
 - What: Rewrote the `pick-task` skill around the feature tree. A new helper, `.claude/skills/pick-task/unlocked.py`, lists pieces as ready, in progress, waiting on other pieces, or waiting on a decision. The skill asks for the volunteer's Claude plan and prefers one-session pieces on Pro, shows what each piece unlocks, checks again for a claim right before pushing, fills in the full PR template, labels safety-review pieces, and assigns issues. Removed the out-of-date "no app yet" advice.

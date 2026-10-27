@@ -2,8 +2,8 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.6.0
-- Last updated: 2026-10-23
+- Version: 1.7.0
+- Last updated: 2026-10-27
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -18,7 +18,7 @@ This file says how Side Quest is built and run. The stack is PROPOSED and the de
   - YAML loader for `game-config.yaml`: PyYAML, with `yaml.safe_load` only
   - server-side QR image generator: segno (no dependencies, SVG output)
   - JavaScript QR decoder for the in-app scanner: `barcode-detector`. It uses the browser's built-in barcode detector where Chromium has one, and ZXing WebAssembly elsewhere, including iPhone Safari. It must work in Safari and Chromium. The script and `.wasm` file are served from our own server, not a CDN
-  - the Wrapped "Save as image" file: still OPEN (WRAP-033)
+  - the Wrapped "Save as image" file: Pillow, on the server (WRAP-033, DEC-048)
 
 Allowed stack (v1):
 
@@ -53,7 +53,7 @@ Allowed stack (v1):
 | `app/routes/usher/` | Usher routes | `area:admin-screens` | Admin and screens |
 | `app/routes/admin/` | Admin routes | `area:admin-screens` (plus `safety-review`) | Admin and screens |
 | `app/routes/screen/` | Main screen routes | `area:admin-screens` | Admin and screens |
-| `app/services/` | Points service, QR and TOTP, pause, stickers, Wrapped | `area:backend` | Backend |
+| `app/services/` | Points service, QR and TOTP, pause, blind boxes, Wrapped | `area:backend` | Backend |
 | `app/auth/` | Sign-up, PIN, roles, lockout | `area:backend` (plus `safety-review`) | Backend |
 | `app/models/` | Database models | `area:backend` (plus `safety-review`) | Backend |
 | `migrations/` | Numbered SQL migrations (ENG-050) | `area:backend` (plus `safety-review`) | Backend |
@@ -108,7 +108,7 @@ Example payload (fake): `SQ1.P.k3x9q2mf.482913`
 ## 5. Accounts, login, and roles
 
 - **ARCH-030** [PROPOSED] PINs are stored only as a salted, slow hash. Python's built-in `hashlib.scrypt` is suggested because it needs no new dependency. Developers set the parameters, and the PR goes through safety review (SAFE-016).
-- **ARCH-031** [OPEN] Rate limits on login and sign-up per IP address, on top of the per-account lockout (SAFE-022). A 4-digit PIN has only 10,000 values, so without this an attacker can try one common PIN against every account. Config: `auth.ip_rate_limit`.
+- **ARCH-031** [PROPOSED] Per IP address: 60 login attempts per minute and 600 sign-ups per minute, on top of the per-account lockout (SAFE-022). A 4-digit PIN has only 10,000 values, so the login limit stops one common PIN being tried against every account. Sign-up has its own higher limit because about 300 phones join from the shared venue Wi-Fi address at once (ARCH-071, DEC-053). Config: `auth.login_ip_limit_per_minute`, `auth.signup_ip_limit_per_minute`.
 - **ARCH-032** [LOCKED] To log in on another phone, a player enters their full name, picks their church, and enters their PIN.
 - **ARCH-033** [LOCKED] Two players from the same church cannot have the same full name. Sign-up refuses a repeat with 409 `NAME_TAKEN` and asks the player to find an usher at the game booth. Because full name and church are unique, login finds at most one player (ARCH-032). The database enforces it (DATA-016, DEC-033).
 - **ARCH-034** [PROPOSED] After login, the server sets a signed session cookie: `Secure`, `HttpOnly`, `SameSite=Lax`. The signing key comes from the environment variable `SQ_SESSION_KEY`. The cookie lasts at least until Wrapped closes (WRAP-004), so the recap stays in the browser the person played on.
@@ -129,13 +129,13 @@ Example payload (fake): `SQ1.P.k3x9q2mf.482913`
 - **ARCH-050** [LOCKED] Every award, revocation, and admin or usher action writes an audit row: who did it, what they did, to which record, the reason (if any), and when.
 - **ARCH-051** [LOCKED] Logs never contain PINs, icebreaker answers, takeaway text, last names, or session cookies. Logs refer to players by internal ID.
 - **ARCH-052** [LOCKED] Logs, database files, and backups stay on the server. They are never committed (SAFE-030). They are deleted on the retention date (SAFE-014).
-- **ARCH-053** [OPEN] Backup frequency and whether an encrypted copy is kept off Railway. Railway volume backups restore only into the same project and environment, so they do not count as the off-Railway copy. Developers propose this before Playtest 2.
+- **ARCH-053** [PROPOSED] Backups are Railway volume backups only, on a schedule developers set in Railway. No copy is kept off Railway. Railway backups restore only into the same project and environment, so losing the project means losing the backups. This risk is accepted (DEC-049). Backups are deleted on the retention date (SAFE-014). Developers confirm before Playtest 2 that Railway backups can be deleted on that date (DEC-053).
 
 ## 8. Performance and the join moment
 
 - **ARCH-070** [PROPOSED] Target: 95% of requests finish in under 500 ms, measured on the production setup.
 - **ARCH-071** [LOCKED] About 300 phones join at once during the Day 1 stage intro. This moment is load tested on staging before Playtest 2 and on the venue Wi-Fi at the mid-February walkthrough (OPS-030).
-- **ARCH-072** [OPEN] The exact load test profile (how many sign-ups in how many seconds). Developers propose it before the load test.
+- **ARCH-072** [PROPOSED] Load test profile: 300 sign-ups spread over 60 seconds, then 10 minutes of connection scans, My Code polling, and main screen polling (ARCH-071, DEC-049).
 - **ARCH-073** [PROPOSED] The sign-up page is as small as possible: server-rendered HTML, no web fonts, no images beyond a logo, and static files sent with long cache headers.
 - **ARCH-074** [PROPOSED] v1 uses HTMX polling for live updates (My Code refresh, the second phone in a connection, main screen views). No WebSockets. Polling intervals live in config.
 

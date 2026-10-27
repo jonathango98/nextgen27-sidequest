@@ -14,6 +14,7 @@ from app.db import connect, db_path_from_env, migrate
 from app.forms import BadForm
 from app.rendering import APP_DIR, templates
 from app.routes.player import (
+    box,
     code,
     home,
     join,
@@ -21,7 +22,6 @@ from app.routes.player import (
     login,
     quests,
     scan,
-    stickers,
     wrapped,
 )
 from app.services import churches
@@ -51,7 +51,7 @@ def create_app() -> FastAPI:
     app.include_router(join.router)
     app.include_router(login.router)
     # Screen skeleton (UI-030): plain pages, no game logic yet.
-    for module in (home, scan, quests, journal, stickers, wrapped):
+    for module in (home, scan, quests, journal, box, wrapped):
         app.include_router(module.router)
 
     @app.exception_handler(LoginRequired)

@@ -12,8 +12,8 @@ router = APIRouter()
 Player = Annotated[CurrentPlayer, Depends(get_current_player)]
 
 
-@router.get("/stickers")
+@router.get("/box")
 def open_box(request: Request, player: Player):
     return templates.TemplateResponse(
-        request, "player/stickers.html", {"score": player.score}
+        request, "player/box.html", {"score": player.score}
     )

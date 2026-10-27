@@ -2,8 +2,8 @@
 
 - Status: PROPOSED (developers confirm at kickoff; constraints marked LOCKED are required whatever the final schema looks like)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.2.0
-- Last updated: 2026-10-23
+- Version: 1.3.0
+- Last updated: 2026-10-27
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -25,7 +25,7 @@ This file lists the tables, their fields, and the database constraints that enfo
 |---|---|---|
 | `id` | integer | Primary key |
 | `name` | text | Unique. Loaded by an admin before the event (SAFE-002) |
-| `region` | text, nullable | Source is OPEN, see DATA-010 (needed by WRAP-011) |
+| `region` | text, nullable | Unused. Regions were dropped (DATA-010) |
 
 ### Player
 
@@ -34,7 +34,7 @@ This file lists the tables, their fields, and the database constraints that enfo
 | `id` | integer | Primary key |
 | `public_id` | text | Unique, random (ARCH-020) |
 | `first_name` | text | Shown to other players |
-| `last_name` | text | Admins and ushers only (SAFE-004) |
+| `last_name` | text | Admins and ushers only. Leaderboards show the last initial (SAFE-004, GAME-088) |
 | `church_id` | integer | Foreign key to Church |
 | `is_under_18` | boolean | Admins only (SAFE-020) |
 | `pin_hash` | text | Slow hash only (SAFE-021, ARCH-030) |
@@ -63,6 +63,7 @@ This file lists the tables, their fields, and the database constraints that enfo
 | `id` | integer | Always 1. Exactly one row |
 | `state` | text | `on`, `paused`, or `off` (GAME-100) |
 | `wrapped_unlocked` | boolean | WRAP-002 |
+| `redemption_closed_at` | timestamp, nullable | Set when an admin closes blind box redemption on Sunday (GAME-078) |
 | `updated_at`, `updated_by` | timestamp, staff ID | Every change is also audited |
 
 - **DATA-013** [LOCKED] GameState has exactly one row. A check constraint keeps `state` to the three allowed values.
@@ -76,8 +77,9 @@ This file lists the tables, their fields, and the database constraints that enfo
 | `title` | text | Entered by an admin |
 | `ended_at` | timestamp, nullable | Set by "End session" (GAME-026). Check-in opens then |
 | `checkin_closed_at` | timestamp, nullable | Set when the admin closes check-in (GAME-024) |
+| `starts_at` | timestamp, nullable | Entered by an admin. The server pauses the game then (GAME-107). Admin only (DATA-014) |
 
-- **DATA-014** [LOCKED] The Session table holds no room names and no schedule tied to where minors will be (SAFE-037). Titles only.
+- **DATA-014** [LOCKED] The Session table holds no room names or places (SAFE-037). It holds a title and an optional start time for auto-pause (GAME-107, DEC-051). Start times are seen only by admins, never by players or on the main screen.
 
 ### Connection
 
@@ -87,7 +89,7 @@ This file lists the tables, their fields, and the database constraints that enfo
 | `player_low_id` | integer | The smaller of the two player IDs |
 | `player_high_id` | integer | The larger of the two player IDs |
 | `scanner_id` | integer | Who scanned |
-| `question_id` | integer | Icebreaker question shown to both |
+| `question_category` | text | Icebreaker question shown to both, as a key from `icebreaker.categories` (GAME-019), for example `verse` |
 | `is_same_church` | boolean | Decides 2 or 10 points |
 | `created_at` | timestamp | |
 
@@ -98,8 +100,9 @@ This file lists the tables, their fields, and the database constraints that enfo
 | `id` | integer | Primary key |
 | `connection_id` | integer | Foreign key |
 | `about_player_id` | integer | Whose answer this is |
-| `typed_by_player_id` | integer | Who typed it (depends on GAME-015) |
-| `answer_text` | text | Visible to the two people only (SAFE-006) |
+| `typed_by_player_id` | integer | Who typed it: the other person in the pair (GAME-015) |
+| `answer_text` | text | Visible to the two people only (SAFE-006). A verse is always saved as full book name, a space, then chapter:verse, for example "John 3:16", so Wrapped can match it exactly (WRAP-012) |
+| `created_at` | timestamp | When it was saved. Connection points are given then (GAME-016) |
 
 ### ChurchMet (for the new church bonus)
 
@@ -107,7 +110,7 @@ This file lists the tables, their fields, and the database constraints that enfo
 |---|---|---|
 | `player_id` | integer | The player who got the bonus |
 | `church_id` | integer | The church that was new to them |
-| `connection_id` | integer | The connection that earned it |
+| `connection_id` | integer | The connection whose typed answer earned it (GAME-011, GAME-016) |
 
 ### CheckIn
 
@@ -138,14 +141,14 @@ This file lists the tables, their fields, and the database constraints that enfo
 | PhotoboothVisit | `player_id`, `event_day`, `recorded_by`, `created_at` | `event_day` is the date in the venue timezone (GAME-042) |
 | HiddenItem | `id`, `item_number`, `claimed_by`, `claimed_at`, `recorded_by` | No location field, ever (SAFE-010) |
 
-### StickerClaim
+### BoxClaim
 
 | Field | Type | Notes |
 |---|---|---|
 | `id` | integer | Primary key |
 | `player_id` | integer | |
 | `claim_number` | integer | 1, 2, or 3 for that player |
-| `recorded_by` | staff ID | The usher who handed over the pack |
+| `recorded_by` | staff ID | The usher who handed over the blind box |
 | `created_at` | timestamp | |
 
 ### PointLedger
@@ -184,20 +187,21 @@ This file lists the tables, their fields, and the database constraints that enfo
 | **DATA-023** [LOCKED] | Takeaway: `UNIQUE (player_id, session_id)` | One takeaway per session (GAME-030) |
 | **DATA-024** [LOCKED] | BoothVisit: `UNIQUE (player_id, booth_id)` | Once per booth (GAME-041) |
 | **DATA-025** [LOCKED] | HiddenItem: `UNIQUE (item_number)`, and `claimed_by` can be set only once | Each item claimed once in total (GAME-043) |
-| **DATA-026** [LOCKED] | StickerClaim: `UNIQUE (player_id, claim_number)` | No double claims (GAME-074) |
+| **DATA-026** [LOCKED] | BoxClaim: `UNIQUE (player_id, claim_number)` | No double claims (GAME-074) |
 | **DATA-027** [LOCKED] | PointLedger: `UNIQUE (player_id, reason_code, source_type, source_id)` for system awards | The same record never pays twice |
+| **DATA-032** [PROPOSED] | IcebreakerAnswer: `UNIQUE (connection_id, typed_by_player_id)` | One answer per person per connection, so points pay once (GAME-015, GAME-016, DEC-053) |
 
 Rules that a unique constraint cannot express are checked by the points service inside the same transaction (ARCH-040):
 
 - **DATA-028** [LOCKED] Photobooth cap: count that player's PhotoboothVisit rows for that `event_day` before inserting (GAME-042).
-- **DATA-029** [LOCKED] Sticker cap and stock: `claim_number` must be at most `stickers.max_per_player` and at most the stickers earned. Total claims must stay under `stickers.stock_total` once that is set (GAME-071, GAME-074, GAME-076).
+- **DATA-029** [LOCKED] Blind box cap and stock: `claim_number` must be at most `blind_box.max_per_player` and at most the blind boxes earned. Once `blind_box.stock_total` is set, a claim is refused when total claims already equal it (GAME-071, GAME-074, GAME-076).
 
 ## 4. Score
 
 - **DATA-030** [LOCKED] A player's score is the sum of `amount` in PointLedger for that player. Nothing else stores the score as a separate number that could drift. A cached total is allowed only if it is updated in the same transaction as the ledger row.
-- **DATA-031** [LOCKED] Stickers earned is computed from score (GAME-070). It is not stored.
+- **DATA-031** [LOCKED] Blind boxes earned is computed from score (GAME-070). It is not stored.
 
 ## 5. Open items
 
-- **DATA-010** [OPEN] Where region data for churches comes from. Sign-up collects only name, church, and the under-18 answer, so region must come from the church list. Needed for the "## regions" number in Wrapped (WRAP-011).
+- **DATA-010** [PROPOSED] Region data is not collected. Wrapped has no regions number (WRAP-011), so the church list needs no region column. The `region` column stays, unused. Removing it needs its own migration PR (DEC-048).
 - **DATA-040** [PROPOSED] Migrations are numbered plain SQL files, run in order by a small runner in the app. No migration library (ENG-050, DEC-027).

@@ -2,8 +2,8 @@
 #
 # Status: Active
 # Owner: Jonathan (@jonathango98)
-# Version: 1.1.0
-# Last updated: 2026-10-23
+# Version: 1.2.0
+# Last updated: 2026-10-27
 # Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 #
 # How to read this file
@@ -19,9 +19,9 @@ config_version: 1                     # ENG-030 LOCKED: bump when the shape of t
 
 game:
   states: ["on", "paused", "off"]     # GAME-100 LOCKED: the only three game states (quoted so YAML keeps them as text)
-  timezone: null                      # GAME-105 OPEN: venue timezone (IANA name). Server stores UTC.
-  hours_window: null                  # GAME-106 OPEN: daily hours when the game may be on (leadership decides)
-  auto_pause_schedule: false          # GAME-107 OPEN: load the timetable for automatic pauses (flag off = manual only)
+  timezone: America/Chicago           # GAME-105 PROPOSED: venue timezone, Houston (IANA name). Server stores UTC.
+  hours_window: manual                # GAME-106 PROPOSED: no automatic hours; an admin sets the game off each night (OPS-005)
+  auto_pause_schedule: true           # GAME-107 PROPOSED: the timetable pauses each session as a backup to manual pause
 
 points:
   connect_other_church: 10            # GAME-010 PROPOSED: each player, someone from another church
@@ -36,34 +36,37 @@ points:
 checkin:
   tier_size: 10                       # GAME-022 PROPOSED: scans per tier (scans 1 to 10 are tier 1)
   tier_points: [25, 20, 15, 10, 5]    # GAME-022 PROPOSED: points per tier. The last value applies to every scan after.
-  auto_close_minutes: null            # GAME-024 OPEN: how long check-in stays live after the admin ends a session
+  auto_close_minutes: 10              # GAME-024 PROPOSED: check-in stays live this long after the admin ends a session
 
 limits:
   photobooth_per_day: 5               # GAME-042 PROPOSED: photobooth visits that earn points, per player per day
   journal_min_words: 15               # GAME-030 PROPOSED: minimum words in a takeaway
 
-stickers:
-  milestone_points: 300               # GAME-070 PROPOSED: one sticker unlocks every this many points of score
-  max_per_player: 3                   # GAME-071 PROPOSED: most stickers one player can earn
-  stock_total: null                   # GAME-069 OPEN: boxes available, set from the final sticker order
+blind_box:
+  milestone_points: 300               # GAME-070 PROPOSED: one blind box unlocks every this many points of score
+  max_per_player: 3                   # GAME-071 PROPOSED: most blind boxes one player can earn
+  stock_total: null                   # GAME-069 OPEN: boxes available, set from the final blind box order
   live_counter: false                 # GAME-077 LOCKED: no "boxes left" counter anywhere
-  redemption_window: null             # GAME-078 OPEN: when claims are open (Day 1 evening and Day 2 breaks, or also Sunday)
-  trading: false                      # GAME-079 OPEN: Swap Spot with no points, or no trading
+  redemption_window: [day1_evening, day2_breaks, sunday_before_service]  # GAME-078 PROPOSED: when claims are open
+  trading: false                      # GAME-079 PROPOSED: no blind box trading
 
 leaderboard:
-  church_score_denominator: null      # GAME-089 OPEN: all_registered or players_with_points
-  church_min_players: null            # GAME-082 OPEN: minimum players for a church to appear on the board
-  main_screen_top_n: null             # GAME-083 OPEN: rows shown on the main screen leaderboards
-  tie_break: null                     # GAME-084 OPEN: how ties are ordered on boards and for prizes
-  in_app_leaderboard: false           # GAME-085 OPEN: show a leaderboard or own rank on the phone
+  church_score_denominator: active_players  # GAME-089 PROPOSED: only players with points beyond joining count
+  church_score_prior_players: 5       # GAME-089 PROPOSED: k, the average players added to every church in the shrunk average
+  church_min_players: 1               # GAME-082 PROPOSED: minimum active players for a church to appear on the board
+  main_screen_top_n: 10               # GAME-083 PROPOSED: rows shown on the main screen leaderboards
+  tie_break: first_to_reach           # GAME-084 PROPOSED: the earlier latest point award ranks higher
+  in_app_leaderboard: false           # GAME-085 PROPOSED: no leaderboard and no rank on the phone
 
 journal:
   review_scope: all_shared            # SAFE-008 PROPOSED: review every shared post (stricter option) until leadership decides
   allow_while_paused: false           # GAME-033 LOCKED: no takeaway submissions while paused
+  require_checkin: false              # GAME-035 PROPOSED: a takeaway does not need a check-in, and has no deadline
 
 icebreaker:
-  who_types: null                     # GAME-015 OPEN: each_person or scanner_only (conflict C5)
-  award_trigger: null                 # GAME-016 OPEN: award on scan, or after the answer is typed
+  who_types: each_person              # GAME-015 PROPOSED: each person types the other's answer (conflict C5)
+  award_trigger: own_answer           # GAME-016 PROPOSED: each player earns when they type their own answer, no time limit
+  categories: [verse, food, game, song, place, hobby]  # GAME-019 PROPOSED: starter pool, game director edits
 
 qr:
   format_version: SQ1                 # ARCH-020 PROPOSED: QR payload format version prefix
@@ -74,33 +77,36 @@ qr:
 
 auth:
   pin_digits: 4                       # SAFE-021 LOCKED: PIN length
-  pin_max_attempts: 5                 # SAFE-022 LOCKED: wrong tries before the account locks
+  pin_max_attempts: 5                 # SAFE-022 PROPOSED: wrong tries before the account locks
+  auto_unlock_minutes: 60             # SAFE-022 PROPOSED: a locked account unlocks itself after this long
   pin_reset_role: admin               # SAFE-023 LOCKED: only an admin resets a locked PIN
-  ip_rate_limit: null                 # ARCH-031 OPEN: login and sign-up attempts allowed per IP per time window
+  login_ip_limit_per_minute: 60       # ARCH-031 PROPOSED: login attempts allowed per IP per minute
+  signup_ip_limit_per_minute: 600     # ARCH-031 PROPOSED: sign-ups allowed per IP per minute (venue Wi-Fi shares one address)
 
 join:
-  points_while_paused: false          # GAME-044 OPEN: give join points during a pause (Day 1 stage intro)
+  points_while_paused: true           # GAME-044 PROPOSED: join points are given during a pause (Day 1 stage intro)
 
 prizes:
-  raffle: false                       # GAME-091 OPEN: raffle where points earn entries
+  raffle: false                       # GAME-091 PROPOSED: no raffle, prizes go by rank
   categories: null                    # GAME-092 OPEN: final prize list (top player, top church, others)
 
 wrapped:
   unlock: admin_manual                # WRAP-002 LOCKED: an admin unlocks Wrapped on Sunday right after results
-  church_recap: false                 # WRAP-030 OPEN: optional recap for each youth pastor
+  church_recap: true                  # WRAP-030 PROPOSED: church counts on card 6 for every player, no new login
+  play_style_tie_order: [connector, explorer, journalist]  # WRAP-017 PROPOSED: play style tie order
 
 data:
-  retention_days_after_event: null    # SAFE-014 OPEN: how long names, answers, and takeaways are kept (leadership)
+  retention_days_after_event: 365     # SAFE-014 PROPOSED: how long names, answers, and takeaways are kept (leadership)
 
 features:
-  midday_challenge: false             # GAME-120 OPEN: parked design, not in v1 (conflict C1)
-  golden_qr_drops: false              # GAME-121 OPEN: not in v1 until Jonathan confirms (conflict C2)
-  no_phone_players: false             # GAME-122 OPEN: how players without a phone take part
+  midday_challenge: false             # GAME-120 PROPOSED: parked design, not in v1 (conflict C1)
+  golden_qr_drops: false              # GAME-121 LOCKED: not in v1 (conflict C2)
+  no_phone_players: false             # GAME-122 PROPOSED: players without a phone are not supported in v1
 
 main_screen:
   min_text_px_1080p: 40               # UI-041 PROPOSED: smallest text on the main screen at 1920x1080
   min_row_px_1080p: 56                # UI-041 PROPOSED: smallest leaderboard row height at 1920x1080
-  poll_seconds: null                  # API-031 OPEN: how often main screen views refresh
+  poll_seconds: 30                    # API-031 PROPOSED: how often main screen views refresh
 
 ui:
   min_viewport_px: 360                # UI-002 PROPOSED: narrowest phone width every screen must work at

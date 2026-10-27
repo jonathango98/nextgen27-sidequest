@@ -37,6 +37,7 @@ Done and live. Newest first: add your row at the top, in plain words. Who built 
 
 | What | Done |
 |---|---|
+| 36 of the 40 open game questions answered, from when connection points land to how church scores stay fair and how long data is kept. 18 pieces no longer wait on a decision. Prize and blind box questions are still open | 2026-10-26 |
 | `/pick-task` now offers only work that's ready to start, sized to fit the volunteer's Claude plan, and double-checks nobody else claimed it before calling dibs | 2026-10-26 |
 | Feature tree: every feature is split into small pieces, each saying what it needs first, so volunteers can see what's ready to start. Pieces that wait on an undecided rule stay locked. A map of the tree updates itself after every merge | 2026-10-26 |
 | Screen skeleton: every player screen is a plain page, and every button and tab goes to the right next screen. The bottom bar is now Home, My Code, and Quests, and players land on Home after joining or logging in. No final look and no game logic yet | 2026-10-26 |
@@ -71,7 +72,7 @@ In the foundation, no branch yet. Order follows `foundation/12-team-timeline.md`
 | Session check-in | `checkin` | GAME-020 | January build |
 | Explore | `explore` | `02-game-rules.md` section 5 | January build |
 | Journal and Summary page | `journal` | GAME-031, SAFE-009, SAFE-017 | January build |
-| Stickers (Open Box) | `stickers` | GAME-073, GAME-076 | January build |
+| Blind boxes (Open Box) | `blind-box` | GAME-072, GAME-073, GAME-076 | January build |
 | Leaderboards and church score | `leaderboards` | `02-game-rules.md` section 7, UI-041 | January build |
 | Usher console | `usher` | GAME-112 | January build |
 | Admin console | `admin` | GAME-110 | January build |
