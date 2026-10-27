@@ -21,7 +21,7 @@ These are LOCKED. No feature, playtest, or deadline changes them without a Found
 - **SAFE-006** [LOCKED] Icebreaker answers are visible only to the two people in that connection. No admin, usher, or main screen view shows them. Wrapped may count them for the two people only (WRAP-012).
 - **SAFE-007** [LOCKED] Shared takeaways are reviewed before anyone else can see them.
 - **SAFE-009** [LOCKED] "Anonymous" means anonymous to other players only. Admins can still see who wrote an anonymous post, so a concerning post can be followed up. The Journal form says this in plain words next to the choice (UI-031).
-- **SAFE-011** [LOCKED] No money anywhere. Points cannot be bought. The blind box is a free mystery pack earned through play.
+- **SAFE-011** [LOCKED] No money anywhere. Points cannot be bought. The blind box is a free mystery box earned through play.
 - **SAFE-013** [LOCKED] The game never competes with the program. It is paused during every session (GAME-101), and the main screen shows game content only between sessions (UI-040).
 - **SAFE-024** [LOCKED] The main screen never shows a photo of a minor without consent.
 
@@ -46,7 +46,7 @@ Legend: Yes = can see. No = cannot see. Own = only their own record.
 | Under-18 answer | Own | No | No | Yes | No |
 | PIN | No (only the person knows it) | No | No | No (stored hashed, never shown) | No |
 | Score | Own | OPEN (GAME-085) | Yes | Yes | Yes (top of leaderboard) |
-| Stickers earned and claimed | Own | No | Yes (at claim time) | Yes | No |
+| Blind boxes earned and claimed | Own | No | Yes (at claim time) | Yes | No |
 | People you connected with | Own (first name and church) | No | No | Yes (pairs only, for fixing scores) | No |
 | Icebreaker answers | Own pairs only | Only the other person in that pair | No | No | No |
 | Private takeaway | Own | No | No | Yes (for review of junk and concerns) | No |

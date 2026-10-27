@@ -15,7 +15,7 @@ TABBED_PAGES = {
     "/journal": "Home",
     "/journal/new": "Home",
     "/summary": "Home",
-    "/stickers": "Home",
+    "/box": "Home",
 }
 PAGES = (*TABBED_PAGES, "/wrapped")
 TAB_HREFS = {"Home": "/", "My Code": "/code", "Quests": "/quests"}
@@ -66,7 +66,7 @@ def test_ui_036_home_shows_big_score(client):
         ("Meet friends", "/scan"),
         ("Write", "/journal/new"),
         ("Read", "/summary"),
-        ("Redeem box", "/stickers"),
+        ("Redeem box", "/box"),
     ],
 )
 def test_ui_036_home_links(client, label, href):
@@ -108,7 +108,7 @@ def test_ui_030_journal_links_to_new_takeaway(client):
 
 
 def test_game_073_open_box_says_where_to_claim(client):
-    html = client.get("/stickers").text
+    html = client.get("/box").text
     assert "Go to the game booth during a break." in html
     assert 'href="/code">My Code</a>' in html
 

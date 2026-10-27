@@ -7,7 +7,7 @@
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
-This file says how Side Quest looks, sounds, and feels. The sticker and UI designer owns the final look. Until they sign off, build with the tokens below, so a change later only edits one CSS file. The tokens below are the Mix look (UI-008, DEC-035).
+This file says how Side Quest looks, sounds, and feels. The UI designer owns the final look. Until they sign off, build with the tokens below, so a change later only edits one CSS file. The tokens below are the Mix look (UI-008, DEC-035).
 
 - **UI-001** [PROPOSED] All design tokens live as CSS custom properties in one file, `app/static/css/tokens.css`. Templates and other CSS use the tokens, never raw color or size values.
 
@@ -81,7 +81,7 @@ Contrast ratios below were checked with the WCAG 2.1 formula.
 | Bottom bar | Three tabs, each an icon and a label (UI-030). The current tab is filled black. Each tab is at least 60px tall. |
 | Points pill | Gold, bold dark text, for example "+20". Only for points. |
 | Score display | Big number, label "points". |
-| Sticker progress bar | Shows points toward the next sticker, for example "120 / 300". Shows "All 3 stickers unlocked!" at the max. |
+| Box progress bar | Shows points toward the next blind box, for example "120 / 300". Shows "All 3 boxes unlocked!" at the max. |
 | QR panel | Solid white background, large QR, quiet zone kept, screen brightness tip. |
 | Scanner frame | Camera view with a square guide and one line of help text. |
 | Result message | Success, info, or error, with an icon and text (never color alone). |
@@ -99,7 +99,7 @@ Contrast ratios below were checked with the WCAG 2.1 formula.
 - **UI-033** [PROPOSED] The paused banner says something short like "Game paused". It never scolds.
 - **UI-034** [PROPOSED] The scanner result shows within one second of a scan, with a big clear message, for example "+15" with the friend's name and church.
 - **UI-035** [PROPOSED] Each screen has at most one main (black) button, for its most important action. Everything else is frosted white.
-- **UI-036** [PROPOSED] Home layout, top to bottom: the big score (`--font-size-score-hero`) with "points" under it, then sticker progress ("Next sticker" with the numbers, UI-051). In the lower half (UI-003): Meet friends (the black main button, opens the scanner), a row split in two with Write (new journal entry, with its points pill) and Read (shared takeaways, `/summary`), then Redeem box (Open Box).
+- **UI-036** [PROPOSED] Home layout, top to bottom: the big score (`--font-size-score-hero`) with "points" under it, then blind box progress ("Next box" with the numbers, UI-051). In the lower half (UI-003): Meet friends (the black main button, opens the scanner), a row split in two with Write (new journal entry, with its points pill) and Read (shared takeaways, `/summary`), then Redeem box (Open Box).
 - **UI-037** [PROPOSED] My Code shows the QR panel, then a black Scan button. The scanner, the icebreaker, and the scan result all sit under the My Code tab.
 - **UI-038** [PROPOSED] The shared takeaways page (`/summary`) lists approved shared takeaways grouped by session, newest session first, as takeaway cards (section 3).
 
@@ -122,7 +122,7 @@ The Mix mockup shows a scan going to the icebreaker first and the points result 
 | "Session in progress. See you at the break!" | "You can't play now." |
 | "Add 3 more words to save this." | "Your takeaway is too short." |
 | "You wrote 4 takeaways this weekend." | "You wrote fewer takeaways than most people." |
-| "Keep playing to unlock your next sticker." | "Not enough points." |
+| "Keep playing to unlock your next box." | "Not enough points." |
 
 - **UI-057** [PROPOSED] Buttons, labels, and helper lines are one or two words, for example "Meet friends", "Scan again", "Save +20". Don't explain what the screen already shows. Use longer text only where a rule sets the exact words (UI-031).
 

@@ -63,7 +63,7 @@ This file lists the tables, their fields, and the database constraints that enfo
 | `id` | integer | Always 1. Exactly one row |
 | `state` | text | `on`, `paused`, or `off` (GAME-100) |
 | `wrapped_unlocked` | boolean | WRAP-002 |
-| `redemption_closed_at` | timestamp, nullable | Set when an admin closes sticker redemption on Sunday (GAME-078) |
+| `redemption_closed_at` | timestamp, nullable | Set when an admin closes blind box redemption on Sunday (GAME-078) |
 | `updated_at`, `updated_by` | timestamp, staff ID | Every change is also audited |
 
 - **DATA-013** [LOCKED] GameState has exactly one row. A check constraint keeps `state` to the three allowed values.
@@ -140,14 +140,14 @@ This file lists the tables, their fields, and the database constraints that enfo
 | PhotoboothVisit | `player_id`, `event_day`, `recorded_by`, `created_at` | `event_day` is the date in the venue timezone (GAME-042) |
 | HiddenItem | `id`, `item_number`, `claimed_by`, `claimed_at`, `recorded_by` | No location field, ever (SAFE-010) |
 
-### StickerClaim
+### BoxClaim
 
 | Field | Type | Notes |
 |---|---|---|
 | `id` | integer | Primary key |
 | `player_id` | integer | |
 | `claim_number` | integer | 1, 2, or 3 for that player |
-| `recorded_by` | staff ID | The usher who handed over the pack |
+| `recorded_by` | staff ID | The usher who handed over the blind box |
 | `created_at` | timestamp | |
 
 ### PointLedger
@@ -186,18 +186,18 @@ This file lists the tables, their fields, and the database constraints that enfo
 | **DATA-023** [LOCKED] | Takeaway: `UNIQUE (player_id, session_id)` | One takeaway per session (GAME-030) |
 | **DATA-024** [LOCKED] | BoothVisit: `UNIQUE (player_id, booth_id)` | Once per booth (GAME-041) |
 | **DATA-025** [LOCKED] | HiddenItem: `UNIQUE (item_number)`, and `claimed_by` can be set only once | Each item claimed once in total (GAME-043) |
-| **DATA-026** [LOCKED] | StickerClaim: `UNIQUE (player_id, claim_number)` | No double claims (GAME-074) |
+| **DATA-026** [LOCKED] | BoxClaim: `UNIQUE (player_id, claim_number)` | No double claims (GAME-074) |
 | **DATA-027** [LOCKED] | PointLedger: `UNIQUE (player_id, reason_code, source_type, source_id)` for system awards | The same record never pays twice |
 
 Rules that a unique constraint cannot express are checked by the points service inside the same transaction (ARCH-040):
 
 - **DATA-028** [LOCKED] Photobooth cap: count that player's PhotoboothVisit rows for that `event_day` before inserting (GAME-042).
-- **DATA-029** [LOCKED] Sticker cap and stock: `claim_number` must be at most `stickers.max_per_player` and at most the stickers earned. Total claims must stay under `stickers.stock_total` once that is set (GAME-071, GAME-074, GAME-076).
+- **DATA-029** [LOCKED] Blind box cap and stock: `claim_number` must be at most `blind_box.max_per_player` and at most the blind boxes earned. Total claims must stay under `blind_box.stock_total` once that is set (GAME-071, GAME-074, GAME-076).
 
 ## 4. Score
 
 - **DATA-030** [LOCKED] A player's score is the sum of `amount` in PointLedger for that player. Nothing else stores the score as a separate number that could drift. A cached total is allowed only if it is updated in the same transaction as the ledger row.
-- **DATA-031** [LOCKED] Stickers earned is computed from score (GAME-070). It is not stored.
+- **DATA-031** [LOCKED] Blind boxes earned is computed from score (GAME-070). It is not stored.
 
 ## 5. Open items
 

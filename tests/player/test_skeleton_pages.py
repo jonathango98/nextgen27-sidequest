@@ -11,7 +11,7 @@ PAGES = (
     "/journal",
     "/journal/new",
     "/summary",
-    "/stickers",
+    "/box",
     "/wrapped",
 )
 

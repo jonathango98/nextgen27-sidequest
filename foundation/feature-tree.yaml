@@ -59,8 +59,8 @@ features:
   - id: journal
     name: Journal and Summary page
     milestone: January build
-  - id: stickers
-    name: Stickers (Open Box)
+  - id: blind-box
+    name: Blind boxes (Open Box)
     milestone: January build
   - id: leaderboards
     name: Leaderboards and church score
@@ -351,8 +351,8 @@ pieces:
   # Home and Quests pages
   - id: home.progress
     feature: home
-    what: Home shows the real score and progress to the next sticker
-    needs: [points.ledger, stickers.math]
+    what: Home shows the real score and progress to the next blind box
+    needs: [points.ledger, blind-box.math]
     open: []
     area: player-app
     size: S
@@ -567,10 +567,10 @@ pieces:
     rules: [GAME-113, SAFE-004, SAFE-028]
     learn: how to show staff only the fields they need
 
-  # Stickers (Open Box)
-  - id: stickers.math
-    feature: stickers
-    what: Stickers earned and claimable computed from score and claims, never stored
+  # Blind boxes (Open Box)
+  - id: blind-box.math
+    feature: blind-box
+    what: Blind boxes earned and claimable computed from score and claims, never stored
     needs: [points.ledger]
     open: []
     area: backend
@@ -579,10 +579,10 @@ pieces:
     safety_review: false
     rules: [GAME-070, GAME-071, GAME-074, DATA-031]
     learn: how to test a small pure function with the worked examples
-  - id: stickers.open-box
-    feature: stickers
-    what: Open Box page shows how many stickers the player can claim and how
-    needs: [stickers.math]
+  - id: blind-box.open-box
+    feature: blind-box
+    what: Open Box page shows how many blind boxes the player can claim and how
+    needs: [blind-box.math]
     open: []
     area: player-app
     size: S
@@ -590,21 +590,21 @@ pieces:
     safety_review: false
     rules: [GAME-073, GAME-077]
     learn: how a page explains a real-world step clearly
-  - id: stickers.claim
-    feature: stickers
-    what: An usher saves a sticker claim, refused while paused or over the limit
-    needs: [usher.scan, stickers.math, game-state.core]
+  - id: blind-box.claim
+    feature: blind-box
+    what: An usher saves a blind box claim, refused while paused or over the limit
+    needs: [usher.scan, blind-box.math, game-state.core]
     open: []
     area: admin-screens
     size: M
     level: medium
     safety_review: true
     rules: [GAME-073, GAME-075, GAME-102, DATA-026, DATA-029]
-    learn: how to stop two ushers from claiming the same sticker at once
-  - id: stickers.stock
-    feature: stickers
-    what: OUT_OF_STOCK refusal once the sticker stock runs out
-    needs: [stickers.claim]
+    learn: how to stop two ushers from claiming the same blind box at once
+  - id: blind-box.stock
+    feature: blind-box
+    what: OUT_OF_STOCK refusal once the blind box stock runs out
+    needs: [blind-box.claim]
     open: [GAME-069]
     area: backend
     size: S
@@ -809,8 +809,8 @@ pieces:
     learn: how a card picks one quote from the player's own takeaways
   - id: wrapped.play-style
     feature: wrapped
-    what: Play style card from points by category and stickers earned
-    needs: [wrapped.cards, stickers.math]
+    what: Play style card from points by category and blind boxes earned
+    needs: [wrapped.cards, blind-box.math]
     open: [WRAP-017]
     area: player-app
     size: S

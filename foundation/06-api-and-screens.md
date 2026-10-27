@@ -31,7 +31,7 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 | GET | `/login` | Login form: full name, church, PIN | ARCH-032 |
 | POST | `/login` | Check the PIN, count wrong tries, lock after 5 | SAFE-022 |
 | POST | `/logout` | End the session | |
-| GET | `/` | Home: score, sticker progress, quests, game state | GAME-070 |
+| GET | `/` | Home: score, blind box progress, quests, game state | GAME-070 |
 | GET | `/code` | My Code page | GAME-001 |
 | GET | `/code/qr` | Partial: the current QR, refreshed by polling | ARCH-074 |
 | GET | `/code/incoming` | Partial: tells the scanned player's phone that a connection started | API-032 |
@@ -44,7 +44,7 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 | GET | `/journal/new` | Takeaway form for an ended session | GAME-036 |
 | POST | `/journal` | Submit a takeaway | GAME-030, GAME-033 |
 | GET | `/summary` | Shared takeaways grouped by session (signed-in only) | SAFE-017 |
-| GET | `/stickers` | Open Box: stickers earned, claimed, claimable, how to claim | GAME-073 |
+| GET | `/box` | Open Box: blind boxes earned, claimed, claimable, how to claim | GAME-073 |
 | GET | `/wrapped` | Wrapped cards (after unlock) | WRAP-002 |
 
 ### Usher
@@ -55,7 +55,7 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 | POST | `/usher/booth` | Scan My Code for a booth visit | GAME-041 |
 | POST | `/usher/photobooth` | Scan My Code for a photobooth visit | GAME-042 |
 | POST | `/usher/hidden-item` | Record an item number and scan My Code | GAME-043 |
-| POST | `/usher/sticker-claim` | Scan My Code and record a sticker handed over | GAME-073 |
+| POST | `/usher/box-claim` | Scan My Code and record a blind box handed over | GAME-073 |
 | GET | `/usher/players` | Look up a player by name (dead phone) | GAME-113 |
 
 ### Admin
@@ -116,14 +116,14 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 | 409 | `ITEM_CLAIMED` | Hidden item already claimed | "This item was already turned in." |
 | 409 | `LIMIT_REACHED` | A daily or total cap is reached | "That's all the photobooth points for today." |
 | 409 | `NAME_TAKEN` | Sign-up with a full name already used in that church | "Someone from your church already joined with this name. Please find an usher at the game booth." |
-| 409 | `NOTHING_TO_CLAIM` | No claimable stickers | "Keep playing to unlock your next sticker." |
-| 409 | `OUT_OF_STOCK` | No packs left | "All the sticker packs are gone." |
+| 409 | `NOTHING_TO_CLAIM` | No claimable blind boxes | "Keep playing to unlock your next box." |
+| 409 | `OUT_OF_STOCK` | No blind boxes left | "All the blind boxes are gone." |
 | 410 | `CODE_EXPIRED` | The rotating code is too old | "That code expired. Ask them to show it again." |
 | 423 | `PAUSED` | The game is paused | "The game is paused during the session." |
 | 423 | `GAME_OFF` | The game is off | "The game is closed right now." |
 | 429 | `RATE_LIMITED` | Too many tries from one place | "Too many tries. Wait a minute and try again." |
 
-- **API-020** [LOCKED] While the game is paused, every earning action returns HTTP 423 with `PAUSED` (ARCH-041, GAME-102). While it is off, the same actions return 423 with `GAME_OFF` (GAME-108). Two exceptions: join points at sign-up while paused (GAME-044), and sticker claims inside the redemption window while off (GAME-078). 423 is used only for these two cases.
+- **API-020** [LOCKED] While the game is paused, every earning action returns HTTP 423 with `PAUSED` (ARCH-041, GAME-102). While it is off, the same actions return 423 with `GAME_OFF` (GAME-108). Two exceptions: join points at sign-up while paused (GAME-044), and blind box claims inside the redemption window while off (GAME-078). 423 is used only for these two cases.
 - **API-021** [PROPOSED] The other codes in the table above. A PIN lockout uses 403 `PIN_LOCKED`, not 423, so 423 always means "the game is not on".
 
 ## 4. Live updates
@@ -139,14 +139,14 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 | Join | Player | `/join` | First name, last name, church list, "Are you 18 or older?" question, PIN | SAFE-002 |
 | PIN set | Player | `/join` (last step) | Enter PIN twice | SAFE-021 |
 | Log in | Player | `/login` | Full name, church, PIN | ARCH-032 |
-| Home | Player | `/` | Score, sticker progress bar, quick links | GAME-070 |
+| Home | Player | `/` | Score, blind box progress bar, quick links | GAME-070 |
 | My Code | Player | `/code` | Rotating QR, big and bright | GAME-001 |
 | Scanner | Player | `/scan` | Camera view, clear result | ARCH-025 |
 | Icebreaker | Player | `/connections/{id}` | Same question on both phones | GAME-017 |
 | Quests | Player | `/quests` | What earns points and what is done | |
 | Journal | Player | `/journal`, `/journal/new` | Visibility choice and the note about anonymous posts | GAME-031, SAFE-009, UI-031 |
 | Summary page | Player | `/summary` | Shared takeaways by session | SAFE-017 |
-| Open Box | Player | `/stickers` | Earned, claimed, claimable, "Go to the game booth during a break" | GAME-073 |
+| Open Box | Player | `/box` | Earned, claimed, claimable, "Go to the game booth during a break" | GAME-073 |
 | Paused state | Player | Banner on every page | Friendly, short, no shaming | UI-033 |
 | Wrapped cards | Player | `/wrapped` | Six swipeable cards, Save as image | WRAP-010 |
 | Usher console | Usher | `/usher` | Big buttons for each scan type | GAME-112 |

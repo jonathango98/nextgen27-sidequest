@@ -52,7 +52,7 @@ It also supports the program. Small rewards go to attending sessions, visiting t
 
 ## 5. Asks from leadership
 
-- **PRD-030** [LOCKED] The game needs leadership approval, 5 to 10 ushers, Wi-Fi for about 300 phones, stage time on all three days, and a budget for the server, hardware, printed materials, and stickers. Details and dates are in `12-team-timeline.md`. Budget amounts are not written in this repo.
+- **PRD-030** [LOCKED] The game needs leadership approval, 5 to 10 ushers, Wi-Fi for about 300 phones, stage time on all three days, and a budget for the server, hardware, printed materials, and blind boxes. Details and dates are in `12-team-timeline.md`. Budget amounts are not written in this repo.
 
 ## 6. Not in v1
 
@@ -65,7 +65,7 @@ It also supports the program. Small rewards go to attending sessions, visiting t
 | Selfie prompts | Removed | GAME-051 |
 | Midday challenge | On hold (parked design kept) | GAME-120 |
 | Golden QR drops | Not confirmed | GAME-121 |
-| Coins | Replaced by sticker milestones on score | DEC-002 |
+| Coins | Replaced by blind box milestones on score | DEC-002 |
 | "Boxes left" counter | Removed | GAME-077 |
 | Messaging between players | Safety | SAFE-005 |
 | Email or phone collection | Safety | SAFE-003 |

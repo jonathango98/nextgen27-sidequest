@@ -53,7 +53,7 @@ Allowed stack (v1):
 | `app/routes/usher/` | Usher routes | `area:admin-screens` | Admin and screens |
 | `app/routes/admin/` | Admin routes | `area:admin-screens` (plus `safety-review`) | Admin and screens |
 | `app/routes/screen/` | Main screen routes | `area:admin-screens` | Admin and screens |
-| `app/services/` | Points service, QR and TOTP, pause, stickers, Wrapped | `area:backend` | Backend |
+| `app/services/` | Points service, QR and TOTP, pause, blind boxes, Wrapped | `area:backend` | Backend |
 | `app/auth/` | Sign-up, PIN, roles, lockout | `area:backend` (plus `safety-review`) | Backend |
 | `app/models/` | Database models | `area:backend` (plus `safety-review`) | Backend |
 | `migrations/` | Numbered SQL migrations (ENG-050) | `area:backend` (plus `safety-review`) | Backend |

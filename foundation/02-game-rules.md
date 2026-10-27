@@ -15,8 +15,8 @@ Status words: LOCKED (build it), PROPOSED (build against it, may change after a 
 
 - **GAME-001** [LOCKED] Every player has a personal QR code called My Code. It changes every 30 seconds, so a screenshot stops working quickly. Config: `qr.rotation_seconds`.
 - **GAME-002** [LOCKED] The server is the only authority for points. The phone never decides who earns what. The phone only sends what was scanned or typed, and the server checks everything.
-- **GAME-003** [LOCKED] Points are the only currency. A player's points total is called their score. There are no coins. Score moves the player leaderboard and the church leaderboard, and it unlocks stickers (section 6).
-- **GAME-004** [LOCKED] Score never goes down, with one exception: an admin revokes points by hand (GAME-111). Claiming a sticker never lowers score.
+- **GAME-003** [LOCKED] Points are the only currency. A player's points total is called their score. There are no coins. Score moves the player leaderboard and the church leaderboard, and it unlocks blind boxes (section 6).
+- **GAME-004** [LOCKED] Score never goes down, with one exception: an admin revokes points by hand (GAME-111). Claiming a blind box never lowers score.
 - **GAME-005** [LOCKED] Connections have no limit. Every other quest has a limit.
 - **GAME-006** [PROPOSED] All point values in this file are proposals. The game director adjusts them after Playtest 1 by changing `game-config.yaml`.
 
@@ -54,8 +54,8 @@ Tier size: 10 scans per tier. Config: `checkin.tier_size`.
 |---|---|---|---|
 | Photobooth visits that earn points, per player per day | 5 | `limits.photobooth_per_day` | GAME-042 |
 | Minimum words in a takeaway | 15 | `limits.journal_min_words` | GAME-030 |
-| Points per sticker milestone | 300 | `stickers.milestone_points` | GAME-070 |
-| Most stickers per player | 3 | `stickers.max_per_player` | GAME-071 |
+| Points per blind box milestone | 300 | `blind_box.milestone_points` | GAME-070 |
+| Most blind boxes per player | 3 | `blind_box.max_per_player` | GAME-071 |
 | My Code and check-in code rotation, in seconds | 30 | `qr.rotation_seconds` | GAME-001 |
 
 ## 3. Connect
@@ -111,26 +111,27 @@ Tier size: 10 scans per tier. Config: `checkin.tier_size`.
 - **GAME-044** [PROPOSED] Join points are given at sign-up even while the game is paused, so players see their first points during the Day 1 stage intro. This is the only earning allowed while paused (GAME-102, DEC-043). Config: `join.points_while_paused`.
 - **GAME-045** [PROPOSED] The game booth does not count as a booth for GAME-041 (DEC-040).
 
-## 6. Stickers (blind box)
+## 6. Blind boxes
 
-Stickers replace the coin system from the Blueprint (decision DEC-002). Score unlocks stickers. Nothing is spent.
+Blind boxes replace the coin system from the Blueprint (DEC-002). They replaced blind boxes (DEC-052). Score unlocks blind boxes. Nothing is spent.
 
-- **GAME-070** [PROPOSED] A player earns one sticker every 300 points of score. Stickers earned = score divided by 300, rounded down, capped at the max (GAME-071). This is computed from score every time. Nothing is stored or reset. The progress bar on the phone shows points since the last milestone, for example 120 of 300. Config: `stickers.milestone_points`.
-- **GAME-071** [PROPOSED] A player can earn at most 3 stickers. Config: `stickers.max_per_player`.
-- **GAME-072** [LOCKED] Each sticker is one mystery sticker in a sealed pack (the blind box). All stickers come from the blind box. There are no separate milestone stickers and no "Side Quest Legend".
-- **GAME-073** [LOCKED] To claim: the player taps Open Box in the app, goes to the game booth during a break, an usher scans their My Code, the usher hands over a sealed pack, and the claim is saved. Tapping Open Box does not reserve a pack. It only opens the claim screen.
-- **GAME-074** [LOCKED] Stickers the player can claim now = stickers earned minus stickers already claimed. This is never below 0.
+- **GAME-070** [PROPOSED] A player earns one blind box every 300 points of score. Blind boxes earned = score divided by 300, rounded down, capped at the max (GAME-071). This is computed from score every time. Nothing is stored or reset. The progress bar on the phone shows points since the last milestone, for example 120 of 300. Config: `blind_box.milestone_points`.
+- **GAME-071** [PROPOSED] A player can earn at most 3 blind boxes. Config: `blind_box.max_per_player`.
+- **GAME-072** [LOCKED] Each blind box is a sealed box with a mystery item inside. What goes inside is OPEN (GAME-068). All milestone rewards are blind boxes. There are no separate milestone rewards and no "Side Quest Legend" (DEC-052).
+- **GAME-068** [OPEN] What goes inside a blind box. Owner: game director. Building the claim flow does not depend on it (DEC-052).
+- **GAME-073** [LOCKED] To claim: the player taps Open Box in the app, goes to the game booth during a break, an usher scans their My Code, the usher hands over a sealed blind box, and the claim is saved. Tapping Open Box does not reserve a box. It only opens the claim screen.
+- **GAME-074** [LOCKED] Blind boxes the player can claim now = blind boxes earned minus blind boxes already claimed. This is never below 0.
 - **GAME-075** [LOCKED] Claims happen during breaks only. The booth closes during sessions, so the server refuses claims while the game is paused. On Sunday the game is off, but claims stay open until the service (GAME-078).
-- **GAME-076** [LOCKED] Packs are limited and first come, first served. When they run out, they are gone. When claims reach the stock number (GAME-069), the server refuses new claims with `OUT_OF_STOCK`.
-- **GAME-069** [OPEN] The number of packs. It comes from the final sticker order. Until it is set, the server does not limit claims by stock. Config: `stickers.stock_total`.
-- **GAME-077** [LOCKED] There is no "boxes left" counter anywhere: not on the main screen, not in the app. Config: `stickers.live_counter`.
-- **GAME-078** [PROPOSED] Claims are open on Day 1 evening, during Day 2 breaks, and on Sunday before the service (option B, DEC-045). On Sunday the game is off, so nothing earns points, but sticker claims still work until an admin taps Close redemption when the service starts (GAME-110, DEC-051). Unclaimed stickers are lost when redemption closes. Config: `stickers.redemption_window`.
-- **GAME-079** [PROPOSED] No sticker trading (option B, DEC-040). Config: `stickers.trading`.
-- **GAME-080** [PROPOSED] Sticker order is about 450 stickers. This is an estimate. Recalculate after Playtest 1 (conflict C6).
+- **GAME-076** [LOCKED] Blind boxes are limited and first come, first served. When they run out, they are gone. When claims reach the stock number (GAME-069), the server refuses new claims with `OUT_OF_STOCK`.
+- **GAME-069** [OPEN] The number of blind boxes. It comes from the final blind box order. Until it is set, the server does not limit claims by stock. Config: `blind_box.stock_total`.
+- **GAME-077** [LOCKED] There is no "boxes left" counter anywhere: not on the main screen, not in the app. Config: `blind_box.live_counter`.
+- **GAME-078** [PROPOSED] Claims are open on Day 1 evening, during Day 2 breaks, and on Sunday before the service (option B, DEC-045). On Sunday the game is off, so nothing earns points, but blind box claims still work until an admin taps Close redemption when the service starts (GAME-110, DEC-051). Unclaimed blind boxes are lost when redemption closes. Config: `blind_box.redemption_window`.
+- **GAME-079** [PROPOSED] No blind box trading (option B, DEC-040). Config: `blind_box.trading`.
+- **GAME-080** [PROPOSED] The blind box order is about 450 boxes. This is an estimate. Recalculate after Playtest 1 (conflict C6).
 
 The Blueprint's estimated share of players at each level (indicative only, conflict C6). It assumed 15 points per connection and a +10 bonus. With the current values (10 and +5), fewer players reach each level.
 
-| Stickers earned | Score range | Estimated share of players |
+| Blind boxes earned | Score range | Estimated share of players |
 |---|---|---|
 | 0 | 0 to 299 | about 29% |
 | 1 | 300 to 599 | about 34% |
@@ -168,20 +169,20 @@ Example Church B has 1 player with 300 points. Its church score is (300 + 5 × 9
 
 - **GAME-100** [LOCKED] The game is always in one of three states: on, paused, or off. Config: `game.states`.
 - **GAME-101** [LOCKED] The game is paused during every session. An admin turns pause on and off by hand.
-- **GAME-102** [LOCKED] While paused, the server refuses every action that earns points or claims a sticker, with the "paused" response (API-020). This includes connection scans, check-ins, takeaway submissions, booth scans, photobooth scans, hidden item turn-ins, and sticker claims. While paused, players can still sign up, log in, view My Code, read their own data, and read the summary page. The one exception to refusing is join points at sign-up (GAME-044).
+- **GAME-102** [LOCKED] While paused, the server refuses every action that earns points or claims a blind box, with the "paused" response (API-020). This includes connection scans, check-ins, takeaway submissions, booth scans, photobooth scans, hidden item turn-ins, and blind box claims. While paused, players can still sign up, log in, view My Code, read their own data, and read the summary page. The one exception to refusing is join points at sign-up (GAME-044).
 - **GAME-103** [LOCKED] Admin fixes work in every state. An admin can award or revoke points by hand at any time, including while paused or off.
 - **GAME-104** [LOCKED] Day by day: Day 1 evening the game is on after the stage intro. Day 2 the game is on during breaks and paused during sessions. Day 3 (Sunday) the game is off: no gameplay, only final results, prizes, and Wrapped.
 - **GAME-105** [PROPOSED] The venue is in Houston, Texas, so the timezone is `America/Chicago` (DEC-050). The server stores all times in UTC and uses this timezone for "per day" limits (GAME-042). Config: `game.timezone`.
 - **GAME-106** [PROPOSED] No automatic game hours. An admin sets the game to off at the end of each game day by hand (OPS-005, SAFE-027, DEC-049). Owner: leadership. Config: `game.hours_window`.
-- **GAME-108** [PROPOSED] While the game is off, the server refuses every earning action and sticker claim with `GAME_OFF` (API-020). Sign-up is closed. Login, the player's own data, the summary page, and Wrapped (after unlock) still work. Sticker claims also still work inside the redemption window (GAME-078).
+- **GAME-108** [PROPOSED] While the game is off, the server refuses every earning action and blind box claim with `GAME_OFF` (API-020). Sign-up is closed. Login, the player's own data, the summary page, and Wrapped (after unlock) still work. Blind box claims also still work inside the redemption window (GAME-078).
 - **GAME-107** [PROPOSED] An admin enters a start time with each session, and the server pauses the game at that time, as a backup to manual pause (DATA-014, DEC-051). It never resumes the game; ending a session does (GAME-026). Admins can still pause and resume by hand, for example when a session runs late (DEC-049). Config: `game.auto_pause_schedule`.
 
 ## 10. Admin and usher powers
 
-- **GAME-110** [LOCKED] Admins can: pause and resume the game, set the game to off, end a session (GAME-026), review shared takeaways, award and revoke points by hand, reset a locked PIN (SAFE-023), fix a player's church, manage the church list, booths, hidden item numbers, sessions, and usher accounts, close sticker redemption on Sunday (GAME-078), and unlock Wrapped (WRAP-002).
+- **GAME-110** [LOCKED] Admins can: pause and resume the game, set the game to off, end a session (GAME-026), review shared takeaways, award and revoke points by hand, reset a locked PIN (SAFE-023), fix a player's church, manage the church list, booths, hidden item numbers, sessions, and usher accounts, close blind box redemption on Sunday (GAME-078), and unlock Wrapped (WRAP-002).
 - **GAME-111** [LOCKED] Every manual award or revocation needs a written reason and writes an audit row (ARCH-050). Revocation is the only action that lowers a score (GAME-004).
-- **GAME-112** [LOCKED] Ushers can: scan My Code for booth visits, photobooth visits, hidden item turn-ins, and sticker claims, and look up a player by name to help them. Ushers cannot give arbitrary points. Only admins can (GAME-110).
-- **GAME-113** [PROPOSED] If a player's phone is dead, an usher looks the player up by name and records the same quest (booth, photobooth, hidden item, sticker claim) without a scan. The usher's account is saved on the record.
+- **GAME-112** [LOCKED] Ushers can: scan My Code for booth visits, photobooth visits, hidden item turn-ins, and blind box claims, and look up a player by name to help them. Ushers cannot give arbitrary points. Only admins can (GAME-110).
+- **GAME-113** [PROPOSED] If a player's phone is dead, an usher looks the player up by name and records the same quest (booth, photobooth, hidden item, blind box claim) without a scan. The usher's account is saved on the record.
 - **GAME-114** [PROPOSED] An admin cannot revoke more points than the player has. Score never goes below 0.
 
 ## 11. Removed and parked
@@ -219,9 +220,9 @@ All names are fake.
 
 **E9. Hidden item claimed once (GAME-043).** Player G turns in item 7 and earns 15. Later, Player H brings in a second item with the number 7 on it. The server refuses because item 7 is already claimed. The usher tells the game director, since a duplicate number means a printing or placement mistake.
 
-**E10. Sticker math (GAME-070, GAME-071, GAME-074).** Player J has 905 points. Stickers earned = 905 / 300 = 3 (rounded down). Player J has claimed 1. Player J can claim 2 more. At 1,500 points, stickers earned is still 3 (the max).
+**E10. Blind box math (GAME-070, GAME-071, GAME-074).** Player J has 905 points. Blind boxes earned = 905 / 300 = 3 (rounded down). Player J has claimed 1. Player J can claim 2 more. At 1,500 points, blind boxes earned is still 3 (the max).
 
-**E11. Revocation after a claim (GAME-004, GAME-074, GAME-111).** Player K has 610 points, has earned 2 stickers, and has claimed 2. An admin revokes 20 points for a junk takeaway, with a reason. Score is now 590. Stickers earned is now 1, claimed is still 2, so claimable is 0 (never below 0). Player K keeps both stickers. To claim a 3rd, Player K needs 900 points.
+**E11. Revocation after a claim (GAME-004, GAME-074, GAME-111).** Player K has 610 points, has earned 2 blind boxes, and has claimed 2. An admin revokes 20 points for a junk takeaway, with a reason. Score is now 590. Blind boxes earned is now 1, claimed is still 2, so claimable is 0 (never below 0). Player K keeps both blind boxes. To claim a 3rd, Player K needs 900 points.
 
 **E12. Shared screenshot (GAME-001).** Player L sends a screenshot of their My Code to a friend in another room. After the code rotates and the previous window passes (ARCH-022), a scan of the screenshot is refused with "code expired".
 

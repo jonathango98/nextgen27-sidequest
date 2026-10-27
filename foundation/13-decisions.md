@@ -71,6 +71,7 @@ Sources, in order of precedence:
 | DEC-049 | 2026-10-26 | Operations: no automatic game hours (GAME-106, SAFE-027, OPS-005). The timetable pauses each session as a backup to manual pause (GAME-107, OPS-001). 60 login and sign-up attempts per IP per minute (ARCH-031). Railway volume backups only (ARCH-053). Load test: 300 sign-ups over 60 seconds, then 10 minutes of play (ARCH-072). Player data kept 365 days (SAFE-014). Real event data in a private Google Drive folder (OPS-040) | Jonathan's call. Losing the Railway project would lose the backups, an accepted risk | Jonathan (open decisions session, 2026-10-26). PROPOSED until leadership and developers confirm, except OPS-040 (LOCKED) |
 | DEC-050 | 2026-10-26 | The event runs 5 to 7 March 2027 (PRD-022) in Houston, Texas, timezone `America/Chicago` (GAME-105) | Event facts | Jonathan (open decisions session, 2026-10-26). PROPOSED until the organizers confirm |
 | DEC-051 | 2026-10-26 | Follow-ups to DEC-040 to DEC-050. Takeaways only for sessions an admin has ended (GAME-035). An admin closes Sunday sticker redemption with a button, a new admin power (GAME-078, GAME-110, `GameState.redemption_closed_at`). Auto-pause uses a start time an admin enters with each session (GAME-107, `Session.starts_at`), so DATA-014 now allows start times but still no rooms. Kept: the starter icebreaker pool (GAME-019), whole-number church scores (GAME-089), church ties by earliest latest award (GAME-084), and top verse ties by first collected (WRAP-012) | Nobody writes about a talk that hasn't happened. A button handles a service that starts late. Times without rooms don't say where minors are | Jonathan (open decisions session, 2026-10-26). DATA-014 change needs safety review |
+| DEC-052 | 2026-10-27 | Stickers are replaced by blind boxes with a mystery item inside. Same milestones: one box every 300 points, up to 3, claimed at the game booth (GAME-070 to GAME-080). What goes inside is a new OPEN item (GAME-068). The rename runs through the rules, config (`blind_box.*`), data model (`BoxClaim`), routes (`/box`, `/usher/box-claim`), and tree pieces (`blind-box.*`). End prizes still go by rank (GAME-090), and the prize list stays OPEN (GAME-092) | Jonathan's call: no stickers. Older decision rows keep the word "sticker" as history | Jonathan (2026-10-27) |
 
 ## 2. Resolved conflicts
 
@@ -97,7 +98,8 @@ Every OPEN rule in the foundation. Until an item is decided, do not build behavi
 |---|---|---|---|---|
 | PRD-011 | Target numbers for success metrics | Set from Playtest 1 results | Jonathan | After Playtest 1 |
 | PRD-053 | Whether prizes come from the game budget | This budget or another | Leadership | Early November |
-| GAME-069 | Number of sticker packs | From the final order | Game director | Early February |
+| GAME-068 | What goes inside a blind box | | Game director | Early February |
+| GAME-069 | Number of blind boxes | From the final order | Game director | Early February |
 | GAME-092 | Final prize list | | Game director, leadership | Before Playtest 2 |
 
 ## 4. PROPOSED values to review after Playtest 1
@@ -108,7 +110,7 @@ These are built as written, then reviewed with playtest data.
 |---|---|---|---|
 | GAME-010, GAME-011 | 10 per connection, +5 bonus | Keep, or raise to 15 and +10 so meeting people stays the top earner | Game director |
 | GAME-022 | Check-in tiers 25, 20, 15, 10, 5 | Keep or change | Game director |
-| GAME-070, GAME-071 | Sticker every 300 points, max 3 | Keep or change, then recalculate the sticker order (GAME-080) | Game director |
+| GAME-070, GAME-071 | Blind box every 300 points, max 3 | Keep or change, then recalculate the blind box order (GAME-080) | Game director |
 | SAFE-008 | Review every shared post | Every shared post, or only posts from under-18 players | Leadership |
 | GAME-016 | Each player earns on typing their own answer, no time limit | Keep, or add a time limit if many players never type | Game director |
 | GAME-089 | Shrunk average, k = 5 | Keep, or change k after seeing real church sizes | Game director |

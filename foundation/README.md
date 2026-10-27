@@ -2,8 +2,8 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.2.0
-- Last updated: 2026-10-26
+- Version: 1.2.1
+- Last updated: 2026-10-27
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -14,7 +14,7 @@ This folder is the single source of truth for Side Quest: the product, the game 
 | File | What it covers | Rule prefix |
 |---|---|---|
 | [01-product.md](01-product.md) | What Side Quest is, goals, metrics, the three days, non-goals | PRD |
-| [02-game-rules.md](02-game-rules.md) | Every quest, point value, limit, sticker milestone, leaderboard, pause rule, worked examples | GAME |
+| [02-game-rules.md](02-game-rules.md) | Every quest, point value, limit, blind box milestone, leaderboard, pause rule, worked examples | GAME |
 | [03-safety-privacy.md](03-safety-privacy.md) | Minors, who sees what, moderation, retention, second-person review, public repo rules | SAFE |
 | [04-architecture.md](04-architecture.md) | Stack, one-repo decision, app layout, QR format, login, roles, performance, threat model | ARCH |
 | [05-data-model.md](05-data-model.md) | Tables, fields, and database constraints | DATA |

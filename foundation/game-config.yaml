@@ -42,13 +42,13 @@ limits:
   photobooth_per_day: 5               # GAME-042 PROPOSED: photobooth visits that earn points, per player per day
   journal_min_words: 15               # GAME-030 PROPOSED: minimum words in a takeaway
 
-stickers:
-  milestone_points: 300               # GAME-070 PROPOSED: one sticker unlocks every this many points of score
-  max_per_player: 3                   # GAME-071 PROPOSED: most stickers one player can earn
-  stock_total: null                   # GAME-069 OPEN: boxes available, set from the final sticker order
+blind_box:
+  milestone_points: 300               # GAME-070 PROPOSED: one blind box unlocks every this many points of score
+  max_per_player: 3                   # GAME-071 PROPOSED: most blind boxes one player can earn
+  stock_total: null                   # GAME-069 OPEN: boxes available, set from the final blind box order
   live_counter: false                 # GAME-077 LOCKED: no "boxes left" counter anywhere
   redemption_window: [day1_evening, day2_breaks, sunday_before_service]  # GAME-078 PROPOSED: when claims are open
-  trading: false                      # GAME-079 PROPOSED: no sticker trading
+  trading: false                      # GAME-079 PROPOSED: no blind box trading
 
 leaderboard:
   church_score_denominator: players_with_points  # GAME-089 PROPOSED: only players with at least 1 point count

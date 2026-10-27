@@ -51,16 +51,16 @@ The tree is the source. If this table and the tree disagree, the tree wins.
 | `points` Points service | Core build | 4 | `game-state.core` | None |
 | `connections` Scanner and connections, with icebreaker | Core build | 7 | `points.ledger` | None |
 | `look` Mix look on player screens | January build | 5 | Working pieces only | None |
-| `home` Home and Quests pages | January build | 2 | `points.ledger`, `stickers.math` | None |
+| `home` Home and Quests pages | January build | 2 | `points.ledger`, `blind-box.math` | None |
 | `checkin` Session check-in | January build | 5 | `staff.login`, `points.audit-log`, `game-state.admin-switch`, `screen.shell`, `connections.scanner-camera`, `points.ledger` | None |
 | `explore` Explore | January build | 4 | `staff.login`, `points.audit-log`, `usher.scan`, `points.ledger` | None |
 | `journal` Journal and Summary page | January build | 6 | `checkin.sessions`, `points.ledger`, `checkin.end-session`, `staff.login`, `points.audit-log` | None |
-| `stickers` Stickers (Open Box) | January build | 4 | `points.ledger`, `usher.scan`, `game-state.core` | `stock` (GAME-069) |
+| `blind-box` Blind boxes (Open Box) | January build | 4 | `points.ledger`, `usher.scan`, `game-state.core` | `stock` (GAME-069) |
 | `leaderboards` Leaderboards and church score | January build | 3 | `points.ledger`, `screen.shell` | None |
 | `usher` Usher console | January build | 2 | `staff.login`, `connections.scanner-camera` | None |
 | `admin` Admin console | January build | 6 | `staff.login`, `points.audit-log`, `points.ledger`, `connections.scan-save` | None |
 | `screen` Main screen views | January build | 3 | `staff.screen-mode`, `game-state.core`, `journal.review` | None |
-| `wrapped` Wrapped cards | January build | 8 | `game-state.core`, `staff.login`, `points.audit-log`, `look.components`, `connections.scan-save`, `connections.icebreaker-answer`, `journal.write`, `stickers.math` | None |
+| `wrapped` Wrapped cards | January build | 8 | `game-state.core`, `staff.login`, `points.audit-log`, `look.components`, `connections.scan-save`, `connections.icebreaker-answer`, `journal.write`, `blind-box.math` | None |
 | `recap` Conference recap screen | January build | 2 | `screen.shell`, `connections.scan-save`, `journal.review`, `connections.icebreaker-answer` | None |
 | `ready` Game day readiness | Before Playtest 2 | 5 | `points.audit-log` | None |
 

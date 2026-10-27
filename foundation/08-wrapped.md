@@ -27,7 +27,7 @@ Wrapped is a personal recap of the weekend, like a year-end music recap: short c
 | 2 | People you met | `##` people from `##` churches, plus your first friend | WRAP-011 |
 | 3 | Your collection | `##` favorite verses and `##` favorite foods collected from people you met, plus your top verse | WRAP-012 |
 | 4 | Your journal | `##` takeaways from `##` sessions, and a line you wrote | WRAP-013 |
-| 5 | Your play style | The Connector, The Explorer, or The Journalist, plus `##` stickers earned | WRAP-014, WRAP-015 |
+| 5 | Your play style | The Connector, The Explorer, or The Journalist, plus `##` blind boxes earned | WRAP-014, WRAP-015 |
 | 6 | Together we made | `##` connections across `##` churches among `##` players, plus your church's average points, and `##` from your church played and met `##` other churches | WRAP-016, WRAP-030 |
 
 - **WRAP-010** [LOCKED] Six cards, in the order above. The designer sets the final look.
@@ -35,7 +35,7 @@ Wrapped is a personal recap of the weekend, like a year-end music recap: short c
 - **WRAP-012** [PROPOSED] Card 3 counts the verse and food answers the player typed for the people they met (GAME-015: each person types the other's answer). Verses are picked with book, chapter, and verse pickers, so matching is exact. "Your top verse" is the verse that came up most; a tie goes to the one collected first (DEC-042). Card 3 uses only the player's own pairs (SAFE-006).
 - **WRAP-013** [LOCKED] Card 4 may quote any of the player's own takeaways, including private ones, because only that player sees their recap. Private takeaways never appear in anyone else's recap.
 - **WRAP-014** [PROPOSED] Play style is the category where most of the player's points came from: Connect is The Connector, Explore is The Explorer, Sessions (check-ins and takeaways) is The Journalist. Manual admin awards do not count toward play style. If two categories tie, WRAP-017 sets the order.
-- **WRAP-015** [PROPOSED] "`##` stickers earned" is stickers earned from score (GAME-070), not stickers claimed.
+- **WRAP-015** [PROPOSED] "`##` blind boxes earned" is blind boxes earned from score (GAME-070), not blind boxes claimed.
 - **WRAP-016** [PROPOSED] Card 6 counts: total connections between different churches, the number of churches with at least one player, and the number of players. "Your church's average points" uses the church score (GAME-081), so it follows the open decision GAME-089.
 - **WRAP-017** [PROPOSED] A play style tie is broken in a fixed order: The Connector, then The Explorer, then The Journalist (DEC-048). Config: `wrapped.play_style_tie_order`.
 
