@@ -163,7 +163,7 @@ Finish with:
 - The PR link.
 - The first 3 small steps to start the piece.
 - The docs to read before coding (AI-001), from the piece's `rules`.
-- How to finish: when it works end to end with passing tests, the same PR moves the row to Working. The Working row also starts with the piece ID in backticks, so the pieces waiting on it unlock (ENG-108).
+- How to finish: when it works end to end with passing tests, the same PR moves the row to Working. Update its area's row in the Working table: today's date first, the piece ID in backticks in Pieces, and what people can now do in plain words, so the pieces waiting on it unlock (ENG-108).
 - For an M piece on Pro: where a good stopping point is, so the next session can pick up from the draft PR.
 - A starter prompt they can copy, for example: "Read AGENTS.md and the rules for `<piece-id>` (<rule IDs>) in `foundation/feature-tree.yaml`. Show me a short plan with rule IDs before editing anything."
 

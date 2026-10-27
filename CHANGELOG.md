@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-27 · docs/readme-working-topics · Claude Opus 5.5 / @jonathango98
+
+- What: The README Working table is grouped by area in plain words (Updated, Pieces, Area, What works today) instead of one row per PR, with one "Behind the scenes" row for dev tools. ENG-108 and `/pick-task` now say Working rows list piece IDs in the Pieces column.
+- Why: Leadership reads the Working table to see what the app can do, and per-PR rows were too technical.
+- Rule IDs: ENG-100, ENG-103, ENG-108, ENG-087, DEC-055, AI-070
+- Status: Done
+- PR: draft
+
 ## 2026-10-27 · docs/simple-feature-tree · Claude Opus 5.5 / @jonathango98
 
 - What: Every feature tree piece's `what` is rewritten in words a 10-year-old understands, and every piece gets a `try_it` line saying what to test by hand once it's built. `/pick-task`, `docs/feature-tree.md`, and the Pages map show it. A test checks every piece has both.
