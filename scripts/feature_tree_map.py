@@ -145,7 +145,11 @@ def render_markdown(tree, status, open_rules):
         "## Ready now",
         "",
         *listing(
-            "ready", lambda p: f"{p['what']} ({p['size']}, {p['level']}, {p['area']})"
+            "ready",
+            lambda p: (
+                f"{p['what']} ({p['size']}, {p['level']}, {p['area']})"
+                f"\n  - Try it: {p['try_it']}"
+            ),
         ),
         "",
         "## In progress",

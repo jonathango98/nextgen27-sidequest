@@ -50,6 +50,12 @@ def test_eng_105_rule_ids_are_defined_in_the_foundation():
         assert set(p["rules"]) | set(p["open"]) <= defined, p["id"]
 
 
+def test_eng_105_every_piece_says_what_and_how_to_try_it():
+    for p in _tree()["pieces"]:
+        assert p["what"].strip(), p["id"]
+        assert p["try_it"].strip(), p["id"]
+
+
 def test_eng_106_every_piece_is_size_s_or_m():
     for p in _tree()["pieces"]:
         assert p["size"] in {"S", "M"}, p["id"]

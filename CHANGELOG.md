@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-27 · docs/simple-feature-tree · Claude Opus 5.5 / @jonathango98
+
+- What: Every feature tree piece's `what` is rewritten in words a 10-year-old understands, and every piece gets a `try_it` line saying what to test by hand once it's built. `/pick-task`, `docs/feature-tree.md`, and the Pages map show it. A test checks every piece has both.
+- Why: Volunteers found the technical `what` lines hard to pick from, and nothing said how to check a piece works.
+- Rule IDs: ENG-105, ENG-110, DEC-054, AI-013
+- Status: Done
+- PR: #42
+
 ## 2026-10-27 · chore/pick-task-venv · Claude Opus 5.5 / @jonathango98
 
 - What: `/pick-task` sets up Python first. It reuses `.venv`, or makes one with Python 3.14 and installs `requirements-dev.txt` when packages are missing. It runs `unlocked.py`, ruff, and pytest through `source .venv/bin/activate`.

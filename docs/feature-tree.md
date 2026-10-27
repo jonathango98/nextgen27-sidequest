@@ -267,16 +267,26 @@ flowchart LR
 
 ## Ready now
 
-- `staff.accounts`: StaffAccount table, password hashing, and a server command that creates the first admin from an environment variable (M, hard, backend)
-- `game-state.core`: GameState table with one row (on, paused, off), a read helper, and 423 PAUSED or GAME_OFF refusals (M, medium, backend)
-- `points.audit-log`: AuditLog table and one helper that writes an audit row, never updated or deleted (S, medium, backend)
-- `connections.table`: Connection and ChurchMet tables in their own migration PR (S, medium, backend)
-- `connections.scanner-camera`: The Scan page opens the camera and reads QR codes with barcode-detector served from our own server (M, medium, player-app)
-- `look.frame`: The shared player frame in the Mix look, with top score bar, bottom bar, bloom streaks, and film grain (M, easy, design)
-- `ready.logout`: POST /logout ends the player's session on this phone (S, easy, backend)
-- `ready.rate-limits`: Per-IP limits on log in and sign-up (M, hard, backend)
-- `ready.backups`: Scheduled backups with an off-Railway copy and a tested restore (M, hard, infra)
-- `ready.load-test`: Load test of the join moment on staging (M, hard, infra)
+- `staff.accounts`: A safe place to keep the accounts of ushers and admins, with passwords nobody can read. Also a way to make the very first admin when the game is set up. (M, hard, backend)
+  - Try it: On a local run, set the first admin's password in the environment and run the create-admin server command named in the PR. You should see a message that the admin was made, and the password should not show up anywhere in the output. Try to break it by running the command twice, you should not get two copies of the same admin.
+- `game-state.core`: One big switch that says if the game is on, paused, or off. When it is paused or off, nothing that earns points is allowed to work. (M, medium, backend)
+  - Try it: Run `pytest -k game_100` (or the game state tests named in the PR). With the game on, an earning action should work. With the game set to paused or off, the same action should be refused with the paused or game off answer. Try to break it by switching the game state in the test and trying again right away, the new state should apply to the very next request.
+- `points.audit-log`: A notebook the game writes in every time something important happens. Nobody can erase or change what's written. (S, medium, backend)
+  - Try it: Run `pytest -k audit` (or the test names in the PR). You should see that writing a note works and that trying to change or delete a note fails. Also check that the notes never contain PINs, secret answers, or other private words.
+- `connections.table`: The game's memory for who met whom and which churches each person has met. It is built so the same two people can never be saved as a pair twice. (S, medium, backend)
+  - Try it: Run the server's migration step on a fresh local database, then `pytest -k connection`. You should see the new tables created and the tests pass. Try to break it by saving the same pair twice, even in the opposite order, the second one should be refused.
+- `connections.scanner-camera`: The Scan page opens the phone's camera and reads QR codes. If it is not a Side Quest code, it says so. (M, medium, player-app)
+  - Try it: On a real phone with a PR preview, join as Test Player 1, open Scan and allow the camera. Point it at a Side Quest code, you should see it read the code. Point it at any other QR code, you should see a message that it is not a Side Quest code.
+- `look.frame`: The frame around every player screen in the chosen design, with the score bar on top, the buttons at the bottom, and a glowing, grainy background. (M, easy, design)
+  - Try it: Open Home, My Code and Quests at 360px wide. The top bar, bottom bar and background should look the same on each, with no sideways scrolling or console errors.
+- `ready.logout`: A way to sign out on this phone only, so the next person who picks it up cannot be you. (S, easy, backend)
+  - Try it: On a phone, log in as Test Player 1, tap log out, then try to open a player page. You should be sent back to the log in or join page. Try to break it by logging in on a second phone first, and check that one stays signed in after the first phone logs out.
+- `ready.rate-limits`: Stops someone from trying to log in or sign up too many times too fast from the same place. This makes guessing someone's PIN much harder. (M, hard, backend)
+  - Try it: On a local run or PR preview, type a wrong PIN for the log in over and over, quickly, using different Test Players. After too many tries you should get a slow down message instead of a normal wrong PIN message. Wait a bit and check log in works again, and never do this on production.
+- `ready.backups`: Railway makes safe copies of the game's data on a schedule, and we prove a copy can bring everything back if something goes wrong. (M, hard, infra)
+  - Try it: On staging, never production, make a Railway backup, then join as Test Player 9 and restore the backup. Test Player 1 should still log in and Test Player 9 should be gone, which proves the restore worked. Write down how long the restore took.
+- `ready.load-test`: A test that pretends hundreds of phones join the game at the same moment, to see if the app stays fast enough on staging. (M, hard, infra)
+  - Try it: Run the load test command against staging, never production, and wait for it to finish. It should print a summary showing how fast the pages answered and whether any failed. Check the staging app still opens normally on a phone afterward.
 
 ## In progress
 

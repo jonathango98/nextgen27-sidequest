@@ -2,7 +2,7 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.2.0
+- Version: 1.3.0
 - Last updated: 2026-10-27
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -11,7 +11,7 @@ Every Planned feature is split into small pieces in [feature-tree.yaml](feature-
 
 ## 1. Rules
 
-- **ENG-105** [LOCKED] `feature-tree.yaml` is the plan: every piece of planned work, with what it builds, what it needs, its OPEN blockers, area, size, level, safety review, and rule IDs. It never holds live status. Status lives in the README Project status (ENG-100), so finishing a piece never needs a foundation change.
+- **ENG-105** [LOCKED] `feature-tree.yaml` is the plan: every piece of planned work, with what it builds (in words a 10-year-old understands), how to try it by hand once it's built, what it needs, its OPEN blockers, area, size, level, safety review, and rule IDs. It never holds live status. Status lives in the README Project status (ENG-100), so finishing a piece never needs a foundation change.
 - **ENG-106** [LOCKED] Every piece is size S (fits one agent session) or M (about two sessions). Nothing is bigger. If a piece turns out bigger than M, stop and split it in the tree through a PR before building more.
 - **ENG-107** [LOCKED] A piece is unlocked when every piece in its `needs` is Working and none of the rules in its `open` list is still in `13-decisions.md` section 3. Working means its ID is in the README Working table or in `already_working` in the tree. Claim only unlocked pieces (AI-003).
 - **ENG-108** [LOCKED] Claim and finish one piece at a time, following ENG-101 and ENG-103. The In progress row and the Working row each start with the piece ID in backticks, for example `` `points.ledger` Points are saved in one place``. The feature's Planned row stays until its last piece is Working, then it is removed.
