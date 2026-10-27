@@ -2,8 +2,8 @@
 #
 # Status: Active
 # Owner: Jonathan (@jonathango98)
-# Version: 1.1.0
-# Last updated: 2026-10-26
+# Version: 1.2.0
+# Last updated: 2026-10-27
 # Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 #
 # How to read this file (rules in 16-feature-tree.md, ENG-105 to ENG-109)
@@ -165,6 +165,17 @@ pieces:
     safety_review: true
     rules: [GAME-101, GAME-104, GAME-110, OPS-001, ARCH-050]
     learn: how an HTMX button posts to the server and swaps part of the page
+  - id: game-state.auto-pause
+    feature: game-state
+    what: Admins enter a start time for each session, and the server pauses the game at that time while it is on
+    needs: [checkin.sessions, game-state.admin-switch]
+    open: []
+    area: backend
+    size: M
+    level: medium
+    safety_review: true
+    rules: [GAME-107, DATA-014, OPS-001]
+    learn: how a server runs a timed job without missing or repeating it
 
   # Points service
   - id: points.audit-log
@@ -290,6 +301,17 @@ pieces:
     safety_review: true
     rules: [GAME-015, SAFE-006]
     learn: how to keep private data visible to exactly two people
+  - id: connections.verse-picker
+    feature: connections
+    what: The verse icebreaker answer uses book, chapter, and verse pickers and saves it as "John 3:16"
+    needs: [connections.icebreaker-answer]
+    open: []
+    area: player-app
+    size: S
+    level: medium
+    safety_review: false
+    rules: [WRAP-012, GAME-019]
+    learn: how a fixed list of choices keeps data clean enough to match
 
   # Mix look on player screens
   - id: look.frame
@@ -605,13 +627,24 @@ pieces:
     feature: blind-box
     what: OUT_OF_STOCK refusal once the blind box stock runs out
     needs: [blind-box.claim]
-    open: [GAME-069]
+    open: []
     area: backend
     size: S
     level: medium
     safety_review: false
     rules: [GAME-076]
     learn: how a config value turns a check on
+  - id: blind-box.close-redemption
+    feature: blind-box
+    what: Sunday claims work while the game is off, until an admin taps Close redemption
+    needs: [blind-box.claim, game-state.admin-switch]
+    open: []
+    area: admin-screens
+    size: M
+    level: medium
+    safety_review: true
+    rules: [GAME-078, GAME-108, GAME-110, API-020]
+    learn: how one narrow exception is added to a rule without weakening it
 
   # Leaderboards and church score
   - id: leaderboards.players

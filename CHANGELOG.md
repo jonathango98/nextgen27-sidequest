@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-27 · docs/tree-new-pieces · Claude Opus 5.5 / @jonathango98
+
+- What: Adds three feature tree pieces: `game-state.auto-pause` (session start times, GAME-107), `blind-box.close-redemption` (Sunday claims and the Close redemption button, GAME-078), and `connections.verse-picker` (WRAP-012). Adds `POST /admin/redemption/close` to the route list. Unlocks `blind-box.stock`, since the stock number comes from config (GAME-069).
+- Why: DEC-051 to DEC-053 created work that no piece covered, so `/pick-task` could not offer it.
+- Rule IDs: ENG-105 to ENG-108, GAME-107, GAME-078, WRAP-012, GAME-069, API-020
+- Status: Done
+- PR: #39
+
 ## 2026-10-26 · docs/resolve-open-decisions · Claude Opus 5.5 / @jonathango98
 
 - What: Records Jonathan's answers to 36 of the 40 OPEN decisions as DEC-040 to DEC-050, in each rule's foundation file and in `game-config.yaml`. Answers on items owned by others are PROPOSED until the owner confirms. Changes two LOCKED rules: leaderboards show a last initial (SAFE-004, SAFE-019, GAME-086) and church score becomes a shrunk average (GAME-081). Adds exceptions for join points while paused and Sunday sticker claims while off. Drops Wrapped regions and removes the `wrapped.regions` piece. DEC-051 adds follow-ups: takeaways only for ended sessions, an admin Close redemption button, and session start times for auto-pause, which changes DATA-014 (LOCKED). The data model saves the icebreaker question as a category key and verses in one standard form. DEC-052 replaces stickers with blind boxes holding a mystery item: same milestones, renamed in rules, config (`blind_box.*`), data model (`BoxClaim`), routes (`/box`), tree pieces (`blind-box.*`), and the Open Box page. What goes inside is a new OPEN item (GAME-068). DEC-053 applies a full foundation audit: connection points on typing, active players in church scores, split rate limits, no code freeze, 60-minute auto-unlock, counts-only Wrapped card 4, and full deletion on the retention date. Still OPEN: PRD-011, PRD-053, GAME-068, GAME-069, GAME-092.
