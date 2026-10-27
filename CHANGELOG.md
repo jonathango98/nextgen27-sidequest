@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Leadership reads the Working table to see what the app can do, and per-PR rows were too technical.
 - Rule IDs: ENG-100, ENG-103, ENG-108, ENG-087, DEC-055, AI-070
 - Status: Done
-- PR: draft
+- PR: #43
 
 ## 2026-10-27 · docs/simple-feature-tree · Claude Opus 5.5 / @jonathango98
 
