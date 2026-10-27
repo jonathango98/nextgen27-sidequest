@@ -2,8 +2,8 @@
 
 - Status: PROPOSED (developers confirm at kickoff)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.2.1
-- Last updated: 2026-10-24
+- Version: 1.3.0
+- Last updated: 2026-10-26
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -123,13 +123,13 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 | 423 | `GAME_OFF` | The game is off | "The game is closed right now." |
 | 429 | `RATE_LIMITED` | Too many tries from one place | "Too many tries. Wait a minute and try again." |
 
-- **API-020** [LOCKED] While the game is paused, every earning action returns HTTP 423 with `PAUSED` (ARCH-041, GAME-102). While it is off, the same actions return 423 with `GAME_OFF` (GAME-108). 423 is used only for these two cases.
+- **API-020** [LOCKED] While the game is paused, every earning action returns HTTP 423 with `PAUSED` (ARCH-041, GAME-102). While it is off, the same actions return 423 with `GAME_OFF` (GAME-108). Two exceptions: join points at sign-up while paused (GAME-044), and sticker claims inside the redemption window while off (GAME-078). 423 is used only for these two cases.
 - **API-021** [PROPOSED] The other codes in the table above. A PIN lockout uses 403 `PIN_LOCKED`, not 423, so 423 always means "the game is not on".
 
 ## 4. Live updates
 
 - **API-030** [PROPOSED] The My Code page polls `/code/qr` so the code changes on time, and polls `/code/incoming` so the scanned player sees the icebreaker without doing anything.
-- **API-031** [OPEN] How often main screen views refresh. Config: `main_screen.poll_seconds`.
+- **API-031** [PROPOSED] Main screen views refresh every 30 seconds (DEC-041). Config: `main_screen.poll_seconds`.
 - **API-032** [PROPOSED] When player A scans player B, B's phone learns about it the next time `/code/incoming` is polled, then shows the same icebreaker question.
 
 ## 5. Screen inventory

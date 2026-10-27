@@ -22,11 +22,11 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-10-26 · docs/resolve-open-decisions · Claude Opus 5.5 / @jonathango98
 
-- What: Records Jonathan's answers to 36 of the 40 OPEN decisions in the foundation and `game-config.yaml`.
-- Why: 20 feature pieces were locked behind undecided rules.
-- Rule IDs: ENG-087, ENG-088
-- Status: Started
-- PR: draft
+- What: Records Jonathan's answers to 36 of the 40 OPEN decisions as DEC-040 to DEC-050, in each rule's foundation file and in `game-config.yaml`. Answers on items owned by others are PROPOSED until the owner confirms. Changes two LOCKED rules: leaderboards show a last initial (SAFE-004, SAFE-019, GAME-086) and church score becomes a shrunk average (GAME-081). Adds exceptions for join points while paused and Sunday sticker claims while off. Drops Wrapped regions and removes the `wrapped.regions` piece. Still OPEN: PRD-011, PRD-053, GAME-069, GAME-092.
+- Why: 20 feature pieces were locked behind undecided rules. Now 1 is.
+- Rule IDs: ENG-087, ENG-088, AI-003, SAFE-004, SAFE-016, GAME-081, GAME-089, GAME-016, SAFE-014
+- Status: Done
+- PR: #38
 
 ## 2026-10-26 · chore/improve-pick-task · Claude Opus 5.5 / @jonathango98
 

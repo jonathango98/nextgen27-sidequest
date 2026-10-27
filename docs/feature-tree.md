@@ -5,7 +5,7 @@
 
 Every planned piece of work and what it needs first (ENG-105 to ENG-108). Pieces flow left to right: finishing one unlocks the pieces it points to. Run `/pick-task` to claim one.
 
-**Working** 5 · **In progress** 0 · **Ready** 7 · **Waiting** 47 · **Needs decision** 20
+**Working** 5 · **In progress** 0 · **Ready** 10 · **Waiting** 62 · **Needs decision** 1
 
 Colors: green Working, blue In progress, gold Ready, gray Waiting, red dashed Needs decision.
 
@@ -108,7 +108,6 @@ flowchart LR
     wrapped_unlock["wrapped.unlock<br/>S · medium"]
     wrapped_cards["wrapped.cards<br/>M · medium"]
     wrapped_people["wrapped.people<br/>S · medium"]
-    wrapped_regions["wrapped.regions<br/>S · medium"]
     wrapped_collection["wrapped.collection<br/>M · hard"]
     wrapped_journal["wrapped.journal<br/>S · medium"]
     wrapped_play_style["wrapped.play-style<br/>S · medium"]
@@ -229,7 +228,6 @@ flowchart LR
   look_components --> wrapped_cards
   wrapped_cards --> wrapped_people
   connections_scan_save --> wrapped_people
-  wrapped_people --> wrapped_regions
   wrapped_cards --> wrapped_collection
   connections_icebreaker_answer --> wrapped_collection
   wrapped_cards --> wrapped_journal
@@ -255,9 +253,9 @@ flowchart LR
   classDef waiting fill:#f1f0eb,stroke:#c3c0b6,color:#545a66
   classDef decision fill:#fdeeec,stroke:#b42318,stroke-dasharray:4 3,color:#14151a
   class app_foundation,auth_join_login,code_my_code,infra_hosting,screens_skeleton working
-  class connections_scanner_camera,connections_table,game_state_core,look_frame,points_audit_log,ready_logout,staff_accounts ready
-  class admin_audit_view,admin_award_revoke,admin_churches,admin_fix_church,admin_pin_reset,admin_players,checkin_close,checkin_end_session,checkin_hall_code,checkin_scan,checkin_sessions,connections_incoming,connections_scan_save,explore_booth,explore_hidden_item,explore_places,game_state_admin_switch,game_state_banner,home_progress,home_quests,journal_list,journal_review,journal_sharing,journal_summary,journal_table,journal_write,look_code,look_components,look_home,look_summary,points_ledger,points_score_bar,recap_totals,screen_shell,screen_takeaway_wall,staff_login,staff_manage,staff_screen_mode,stickers_claim,stickers_math,stickers_open_box,usher_player_lookup,usher_scan,wrapped_cards,wrapped_journal,wrapped_people,wrapped_unlock waiting
-  class connections_icebreaker_answer,connections_icebreaker_question,connections_points,explore_photobooth,leaderboards_churches,leaderboards_in_app,leaderboards_players,points_join,ready_backups,ready_load_test,ready_rate_limits,ready_retention,recap_verse,screen_refresh,stickers_stock,wrapped_collection,wrapped_play_style,wrapped_regions,wrapped_save_image,wrapped_together decision
+  class connections_scanner_camera,connections_table,game_state_core,look_frame,points_audit_log,ready_backups,ready_load_test,ready_logout,ready_rate_limits,staff_accounts ready
+  class admin_audit_view,admin_award_revoke,admin_churches,admin_fix_church,admin_pin_reset,admin_players,checkin_close,checkin_end_session,checkin_hall_code,checkin_scan,checkin_sessions,connections_icebreaker_answer,connections_icebreaker_question,connections_incoming,connections_points,connections_scan_save,explore_booth,explore_hidden_item,explore_photobooth,explore_places,game_state_admin_switch,game_state_banner,home_progress,home_quests,journal_list,journal_review,journal_sharing,journal_summary,journal_table,journal_write,leaderboards_churches,leaderboards_in_app,leaderboards_players,look_code,look_components,look_home,look_summary,points_join,points_ledger,points_score_bar,ready_retention,recap_totals,recap_verse,screen_refresh,screen_shell,screen_takeaway_wall,staff_login,staff_manage,staff_screen_mode,stickers_claim,stickers_math,stickers_open_box,usher_player_lookup,usher_scan,wrapped_cards,wrapped_collection,wrapped_journal,wrapped_people,wrapped_play_style,wrapped_save_image,wrapped_together,wrapped_unlock waiting
+  class stickers_stock decision
 ```
 
 ## Ready now
@@ -269,6 +267,9 @@ flowchart LR
 - `connections.scanner-camera`: The Scan page opens the camera and reads QR codes with barcode-detector served from our own server (M, medium, player-app)
 - `look.frame`: The shared player frame in the Mix look, with top score bar, bottom bar, bloom streaks, and film grain (M, easy, design)
 - `ready.logout`: POST /logout ends the player's session on this phone (S, easy, backend)
+- `ready.rate-limits`: Per-IP limits on log in and sign-up (M, hard, backend)
+- `ready.backups`: Scheduled backups with an off-Railway copy and a tested restore (M, hard, infra)
+- `ready.load-test`: Load test of the join moment on staging (M, hard, infra)
 
 ## In progress
 
@@ -276,23 +277,4 @@ flowchart LR
 
 ## Needs a decision
 
-- `points.join`: GAME-044 (Game director)
-- `connections.points`: GAME-016 (Game director)
-- `connections.icebreaker-question`: GAME-019 (Game director)
-- `connections.icebreaker-answer`: GAME-015 (Game director); GAME-019 (Game director)
-- `explore.photobooth`: GAME-105 (Organizers)
 - `stickers.stock`: GAME-069 (Game director)
-- `leaderboards.players`: GAME-083 (Designer, game director); GAME-084 (Game director); GAME-088 (Game director, safety reviewer)
-- `leaderboards.churches`: GAME-089 (Game director); GAME-082 (Game director)
-- `leaderboards.in-app`: GAME-085 (Game director)
-- `screen.refresh`: API-031 (Developers)
-- `wrapped.regions`: WRAP-011 (Jonathan); DATA-010 (Jonathan, game director)
-- `wrapped.collection`: WRAP-012 (Game director, developers)
-- `wrapped.play-style`: WRAP-017 (Game director)
-- `wrapped.together`: GAME-089 (Game director)
-- `wrapped.save-image`: WRAP-033 (Developers)
-- `recap.verse`: WRAP-012 (Game director, developers)
-- `ready.rate-limits`: ARCH-031 (Developers, safety reviewer)
-- `ready.backups`: ARCH-053 (Developers)
-- `ready.load-test`: ARCH-072 (Developers)
-- `ready.retention`: SAFE-014 (Leadership)

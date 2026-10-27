@@ -2,8 +2,8 @@
 
 - Status: PROPOSED (everything here may change until the designer signs off)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.3.0
-- Last updated: 2026-10-25
+- Version: 1.4.0
+- Last updated: 2026-10-26
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -87,7 +87,7 @@ Contrast ratios below were checked with the WCAG 2.1 formula.
 | Result message | Success, info, or error, with an icon and text (never color alone). |
 | Paused banner | Shown at the top of every player page while paused (UI-033). |
 | Visibility picker | Three radio options for takeaways, with the note in UI-031. |
-| Leaderboard row | Rank, first name, church, score. |
+| Leaderboard row | Rank, first name, last initial, church, score (GAME-088). |
 | Takeaway card | Text, then first name and church, or "Anonymous". |
 | Wrapped card | Full-screen card, swipe or tap to move on (WRAP-010). |
 
@@ -103,7 +103,7 @@ Contrast ratios below were checked with the WCAG 2.1 formula.
 - **UI-037** [PROPOSED] My Code shows the QR panel, then a black Scan button. The scanner, the icebreaker, and the scan result all sit under the My Code tab.
 - **UI-038** [PROPOSED] The shared takeaways page (`/summary`) lists approved shared takeaways grouped by session, newest session first, as takeaway cards (section 3).
 
-The Mix mockup shows a scan going to the icebreaker first and the points result after it. That order depends on GAME-016, which is OPEN, so don't build it until it is decided.
+The Mix mockup shows a scan going to the icebreaker first and the points result after it. GAME-016 settles it (DEC-042): points land only once both people have typed their answer, so build this order.
 
 ## 5. Main screen
 

@@ -2,8 +2,8 @@
 
 - Status: PROPOSED (developers confirm at kickoff; constraints marked LOCKED are required whatever the final schema looks like)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.2.0
-- Last updated: 2026-10-23
+- Version: 1.3.0
+- Last updated: 2026-10-26
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -25,7 +25,7 @@ This file lists the tables, their fields, and the database constraints that enfo
 |---|---|---|
 | `id` | integer | Primary key |
 | `name` | text | Unique. Loaded by an admin before the event (SAFE-002) |
-| `region` | text, nullable | Source is OPEN, see DATA-010 (needed by WRAP-011) |
+| `region` | text, nullable | Unused. Regions were dropped (DATA-010) |
 
 ### Player
 
@@ -199,5 +199,5 @@ Rules that a unique constraint cannot express are checked by the points service 
 
 ## 5. Open items
 
-- **DATA-010** [OPEN] Where region data for churches comes from. Sign-up collects only name, church, and the under-18 answer, so region must come from the church list. Needed for the "## regions" number in Wrapped (WRAP-011).
+- **DATA-010** [PROPOSED] Region data is not collected. Wrapped has no regions number (WRAP-011), so the church list needs no region column. The `region` column stays, unused. Removing it needs its own migration PR (DEC-048).
 - **DATA-040** [PROPOSED] Migrations are numbered plain SQL files, run in order by a small runner in the app. No migration library (ENG-050, DEC-027).

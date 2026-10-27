@@ -2,7 +2,7 @@
 #
 # Status: Active
 # Owner: Jonathan (@jonathango98)
-# Version: 1.0.0
+# Version: 1.1.0
 # Last updated: 2026-10-26
 # Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 #
@@ -785,17 +785,6 @@ pieces:
     safety_review: false
     rules: [WRAP-010]
     learn: how to count from your own connection rows
-  - id: wrapped.regions
-    feature: wrapped
-    what: Regions on the People met card
-    needs: [wrapped.people]
-    open: [WRAP-011, DATA-010]
-    area: player-app
-    size: S
-    level: medium
-    safety_review: false
-    rules: [WRAP-011]
-    learn: how an extra field joins into a card
   - id: wrapped.collection
     feature: wrapped
     what: Collection card with icebreaker answers and verse matching

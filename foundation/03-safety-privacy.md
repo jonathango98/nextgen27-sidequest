@@ -2,8 +2,8 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.1.0
-- Last updated: 2026-10-24
+- Version: 1.2.0
+- Last updated: 2026-10-26
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -16,7 +16,7 @@ These are LOCKED. No feature, playtest, or deadline changes them without a Found
 - **SAFE-001** [LOCKED] Collect as little as possible and show as little as possible.
 - **SAFE-002** [LOCKED] Sign-up collects exactly these fields and nothing else: first name, last name, church (picked from a preloaded church list), "Are you 18 or older?" (yes or no; "no" is saved as under 18, DEC-034), and a 4-digit PIN.
 - **SAFE-003** [LOCKED] No email address and no phone number are collected, for anyone, for any reason (conflict C3).
-- **SAFE-004** [LOCKED] Other players see only a player's first name and church. Last names are visible to admins and ushers only.
+- **SAFE-004** [LOCKED] Other players see only a player's first name and church. Leaderboards also show the last initial (GAME-088, DEC-046). Full last names are visible to admins and ushers only.
 - **SAFE-005** [LOCKED] There is no messaging between players of any kind: no chat, no comments, no replies, no direct messages.
 - **SAFE-006** [LOCKED] Icebreaker answers are visible only to the two people in that connection. No admin, usher, or main screen view shows them. Wrapped may count them for the two people only (WRAP-012).
 - **SAFE-007** [LOCKED] Shared takeaways are reviewed before anyone else can see them.
@@ -27,12 +27,12 @@ These are LOCKED. No feature, playtest, or deadline changes them without a Found
 
 ## 2. Minors
 
-- **SAFE-019** [LOCKED] Under-18 players appear on leaderboards and the takeaway wall the same way as everyone else: first name and church only.
+- **SAFE-019** [LOCKED] Under-18 players appear on leaderboards and the takeaway wall the same way as everyone else: first name and church, plus the last initial on leaderboards (GAME-088).
 - **SAFE-020** [PROPOSED] The under-18 answer is visible to admins only. Players, ushers, and the main screen never see it.
 - **SAFE-025** [PROPOSED] v1 has no photo upload of any kind. This keeps SAFE-024 simple: the app holds no photos. The photobooth is a physical booth, and the app only records the visit.
 - **SAFE-026** [LOCKED] Hidden items stay in conference areas only. Never guest floors, restrooms, stairwells, or parking. See SAFE-010.
 - **SAFE-015** [LOCKED] Leadership checks these rules against the organization's child safety policy as part of approval.
-- **SAFE-027** [OPEN] Whether the game is off overnight and outside set hours. Leadership decides (GAME-106). Until decided, admins set the game to off at the end of each game day by hand.
+- **SAFE-027** [PROPOSED] The game has no automatic hours (GAME-106). An admin sets the game to off at the end of each game day by hand (OPS-005, DEC-049). Owner: leadership.
 
 ## 3. Who can see what
 
@@ -41,7 +41,7 @@ Legend: Yes = can see. No = cannot see. Own = only their own record.
 | Field | The player | Other players | Usher | Admin | Main screen |
 |---|---|---|---|---|---|
 | First name | Own | Yes | Yes | Yes | Yes (leaderboard, named takeaways) |
-| Last name | Own | No | Yes | Yes | No |
+| Last name | Own | No | Yes | Yes | Initial only (leaderboard, GAME-088) |
 | Church | Own | Yes | Yes | Yes | Yes |
 | Under-18 answer | Own | No | No | Yes | No |
 | PIN | No (only the person knows it) | No | No | No (stored hashed, never shown) | No |
@@ -78,7 +78,7 @@ Legend: Yes = can see. No = cannot see. Own = only their own record.
 
 - **SAFE-010** [LOCKED] The hidden item list and item locations never appear in the repo, in issues, or in screenshots. They live with the real event data (OPS-040).
 - **SAFE-012** [LOCKED] Prizes are claimed in person on Sunday (GAME-090).
-- **SAFE-014** [OPEN] How long names, icebreaker answers, and takeaways are kept after the event. Leadership decides. It must be at least as long as Wrapped stays open (WRAP-004). After that date, all player data is deleted from the server and from backups. Config: `data.retention_days_after_event`.
+- **SAFE-014** [PROPOSED] Names, icebreaker answers, and takeaways are kept for 365 days after the event, so Wrapped stays open for a year (WRAP-004, DEC-049). After that date, all player data is deleted from the server, from backups, and from the real data folder (OPS-042). Owner: leadership, checked against the child safety policy (SAFE-015). Config: `data.retention_days_after_event`.
 - **SAFE-017** [LOCKED] The summary page (shared takeaways) is visible to signed-in players only. It is not a public web page.
 - **SAFE-018** [LOCKED] The main screen shows a takeaway wall with approved shared takeaways only, between sessions only. Named posts show first name and church. Anonymous posts show "Anonymous".
 

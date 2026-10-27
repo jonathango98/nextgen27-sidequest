@@ -2,7 +2,7 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.16.0
+- Version: 1.17.0
 - Last updated: 2026-10-26
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -59,16 +59,27 @@ Sources, in order of precedence:
 | DEC-037 | 2026-10-25 | The Mix vibe (UI-009) and the screen layouts from the Mix mockups go into `07-design-system.md`: Home (UI-036), My Code with a Scan button (UI-037), and the shared takeaways page (UI-038). The scan, icebreaker, then points order stays a note until GAME-016 is decided | Jonathan wants the design decisions written down first, with the app changes in a later PR | Jonathan |
 | DEC-038 | 2026-10-26 | Add a feature tree: `feature-tree.yaml` splits every Planned feature into pieces of size S or M, each with the pieces it needs and the OPEN rules that lock it, and `16-feature-tree.md` holds its rules (ENG-105 to ENG-109). Live status stays in the README Project status. ENG-101 now claims one piece at a time, and the In progress and Working rows start with the piece ID. New Planned rows: Staff accounts and roles, Mix look on player screens, and Game day readiness | Volunteers could not tell which tasks were ready or small enough for one session. A tree lets `/pick-task` offer only unlocked pieces, and finishing one piece unlocks the next. Keeping status out of the foundation means finishing a piece never needs Jonathan's approval | Jonathan |
 | DEC-039 | 2026-10-26 | Publish the feature tree map. `scripts/feature_tree_map.py` writes `docs/feature-tree.md` (a Mermaid diagram) and an interactive page. A new workflow, `.github/workflows/feature-tree-pages.yml`, publishes the page to GitHub Pages on every merge to `main`, with actions pinned by commit SHA (DEC-018). This is the repo's first workflow and an approved exception to AI-022 for this one file (ENG-110) | Volunteers need to see what's ready without asking, and the map must stay current after every merge. The repo is public, so the Pages site is too; the tree holds no secrets or real data | Jonathan (this session, 2026-10-26) |
+| DEC-040 | 2026-10-26 | Not in v1: the midday challenge (GAME-120), golden QR drops (GAME-121), and players without a phone (GAME-122). No raffle (GAME-091), no sticker trading (GAME-079), no leaderboard or rank on the phone (GAME-085), and the game booth is not a booth for points (GAME-045) | Jonathan's call. Keeps v1 small for a volunteer team, and keeps leaderboards on the main screen | Jonathan (open decisions session, 2026-10-26). PROPOSED until the game director confirms, except GAME-121 (LOCKED) |
+| DEC-041 | 2026-10-26 | Main screens refresh every 30 seconds (API-031). Boards show 10 rows (GAME-083). A church needs 1 player with points to appear (GAME-082). Check-in closes 10 minutes after a session ends (GAME-024). Ties go to whoever reached the score first (GAME-084) | Jonathan's call. GAME-089 handles small churches, so the minimum can be 1 | Jonathan (open decisions session, 2026-10-26). PROPOSED until the game director confirms |
+| DEC-042 | 2026-10-26 | Each person types the other's icebreaker answer (GAME-015). Connection points land for both players once both have typed, with no time limit (GAME-016). A starter question pool goes in GAME-019 for the game director to edit. Verse answers use book, chapter, and verse pickers, so Wrapped matches them exactly (WRAP-012). Resolves conflict C5 | Jonathan's call: points reward the conversation, not just the scan | Jonathan (open decisions session, 2026-10-26). PROPOSED until the game director confirms |
+| DEC-043 | 2026-10-26 | Join points are given at sign-up even while paused (GAME-044). GAME-102 and API-020 note the exception | Players see their first points during the Day 1 stage intro | Jonathan (open decisions session, 2026-10-26). PROPOSED until the game director confirms |
+| DEC-044 | 2026-10-26 | Church score is a shrunk average with k = 5 over players with at least 1 point (GAME-089). GAME-081 is reworded from a plain average. Resolves conflict C4 | Jonathan asked for a fairer score. With the minimum at 1 player (GAME-082), a plain average lets one strong player carry a church to the top | Jonathan (open decisions session, 2026-10-26). GAME-081 change needs Jonathan's approval in the PR |
+| DEC-045 | 2026-10-26 | Sticker claims are also open on Sunday before the service (GAME-078). The game stays off on Sunday, so nothing earns points, but claims still work until an admin closes redemption. GAME-075, GAME-108, API-020, and the Sunday runbook row note the exception | Jonathan's call: one last chance to claim, with no points on Sunday | Jonathan (open decisions session, 2026-10-26). PROPOSED until the game director confirms |
+| DEC-046 | 2026-10-26 | Player leaderboards show the last initial after every first name (GAME-088). SAFE-004, SAFE-019, GAME-086, the who-sees-what table, and the leaderboard row in `07-design-system.md` change to match | Jonathan's call. Tells apart players with the same first name and church. Changes a LOCKED safety rule, so it needs safety review (SAFE-016) | Jonathan (open decisions session, 2026-10-26). Needs safety review |
+| DEC-047 | 2026-10-26 | A takeaway does not need a check-in for that session and has no deadline (GAME-035) | Jonathan's call. Points stay once per session (GAME-030), and admins can revoke junk entries (GAME-111) | Jonathan (open decisions session, 2026-10-26). PROPOSED until the game director confirms |
+| DEC-048 | 2026-10-26 | Wrapped: play style ties go Connector, then Explorer, then Journalist (WRAP-017). The server makes the image with Pillow (WRAP-033). Card 6 adds a church recap every player sees, with counts only and no new login (WRAP-030). Regions are dropped, so no region data is needed (WRAP-011, DATA-010) | Jonathan's call. Card 6 keeps Wrapped at six cards (WRAP-010) | Jonathan (open decisions session, 2026-10-26). PROPOSED until the owners confirm, except WRAP-011 (LOCKED) |
+| DEC-049 | 2026-10-26 | Operations: no automatic game hours (GAME-106, SAFE-027, OPS-005). The timetable pauses each session as a backup to manual pause (GAME-107, OPS-001). 60 login and sign-up attempts per IP per minute (ARCH-031). Railway volume backups only (ARCH-053). Load test: 300 sign-ups over 60 seconds, then 10 minutes of play (ARCH-072). Player data kept 365 days (SAFE-014). Real event data in a private Google Drive folder (OPS-040) | Jonathan's call. Losing the Railway project would lose the backups, an accepted risk | Jonathan (open decisions session, 2026-10-26). PROPOSED until leadership and developers confirm, except OPS-040 (LOCKED) |
+| DEC-050 | 2026-10-26 | The event runs 5 to 7 March 2027 (PRD-022) in Houston, Texas, timezone `America/Chicago` (GAME-105) | Event facts | Jonathan (open decisions session, 2026-10-26). PROPOSED until the organizers confirm |
 
 ## 2. Resolved conflicts
 
 | ID | Conflict | Result | Rules |
 |---|---|---|---|
-| C1 | Midday challenge: the brief lists it as a quest; the Blueprint says it is on hold | Not in v1. Parked design kept as OPEN. Removed from usher and game director v1 duties | GAME-120, PRD-050 |
-| C2 | Golden QR drops on the main screen: in the brief only | OPEN. Not in v1 until Jonathan confirms | GAME-121 |
+| C1 | Midday challenge: the brief lists it as a quest; the Blueprint says it is on hold | Not in v1 (DEC-040). Parked design kept | GAME-120, PRD-050 |
+| C2 | Golden QR drops on the main screen: in the brief only | Not in v1 (DEC-040) | GAME-121 |
 | C3 | Phone and email: the brief says "unless opted in"; the Blueprint says neither is collected | Not collected. LOCKED | SAFE-003 |
-| C4 | Church score denominator: "per registered player" or "per player" | OPEN. The minimum players to appear on the board is also OPEN | GAME-089, GAME-082 |
-| C5 | Icebreaker answers: the brief says the scanner types; the Blueprint says both earn; Wrapped counts answers "collected from the people you met" | OPEN | GAME-015, WRAP-012 |
+| C4 | Church score denominator: "per registered player" or "per player" | Shrunk average over players with at least 1 point, and a minimum of 1 player (DEC-041, DEC-044) | GAME-089, GAME-082 |
+| C5 | Icebreaker answers: the brief says the scanner types; the Blueprint says both earn; Wrapped counts answers "collected from the people you met" | Each person types the other's answer, and points land once both have typed (DEC-042) | GAME-015, WRAP-012 |
 | C6 | The sticker distribution table assumes 15 points per connection and a +10 bonus, but current values are 10 and +5 | The table is indicative only. Recalculate the sticker order after Playtest 1 | GAME-080 |
 | C7 | Repo structure | One repo for server and front end. LOCKED | ARCH-005, DEC-001 |
 | C8 | PIN reset: the Blueprint says an usher resets | Admin only | SAFE-023, DEC-004 |
@@ -84,45 +95,9 @@ Every OPEN rule in the foundation. Until an item is decided, do not build behavi
 | Rule | Question | Options | Owner | Needed by |
 |---|---|---|---|---|
 | PRD-011 | Target numbers for success metrics | Set from Playtest 1 results | Jonathan | After Playtest 1 |
-| PRD-022 | Exact event dates | | Organizers | As soon as possible |
 | PRD-053 | Whether prizes come from the game budget | This budget or another | Leadership | Early November |
-| GAME-015 | Who types icebreaker answers (C5) | Each person types the other's answer, or only the scanner types | Game director | Kickoff |
-| GAME-016 | When connection points are given | On scan, or after the answer is typed | Game director | Kickoff |
-| GAME-019 | Icebreaker question pool and answer categories | | Game director | Before core build ends |
-| GAME-024 | How long check-in stays live after a session | A set number of minutes, or manual close only | Game director | Before Playtest 1 |
-| GAME-035 | Must a player check in before writing a takeaway? Is there a deadline? | Yes or no, and a deadline or none | Game director | Before core build ends |
-| GAME-044 | Join points during a pause (Day 1 intro) | Give them, or hold them until the game is on | Game director | Kickoff |
-| GAME-045 | Does the game booth count as a booth? | Yes or no | Game director | Before Playtest 1 |
 | GAME-069 | Number of sticker packs | From the final order | Game director | Early February |
-| GAME-078 | Sticker redemption window | Day 1 evening and Day 2 breaks, or also Sunday before the service | Game director | Before Playtest 1 |
-| GAME-079 | Sticker trading | Swap Spot with no points, or no trading | Game director | Before Playtest 1 |
-| GAME-089 | Church score denominator (C4) | All registered players, or players with at least 1 point | Game director | Kickoff |
-| GAME-082 | Minimum players for a church to appear on the board | A number | Game director | Before Playtest 1 |
-| GAME-083 | Rows on each main screen leaderboard | A number | Designer, game director | Before Playtest 2 |
-| GAME-084 | Tie-breaks on boards and for prizes | For example, earlier to reach the score wins | Game director | Before Playtest 1 |
-| GAME-085 | Leaderboard or own rank on the phone | Show or not | Game director | Before core build ends |
-| GAME-088 | Two players with the same first name and church on a board | For example, last initial, or a number | Game director, safety reviewer | Before Playtest 1 |
-| GAME-091 | Raffle with entries from points | Yes or no | Game director, leadership | Before Playtest 1 |
 | GAME-092 | Final prize list | | Game director, leadership | Before Playtest 2 |
-| GAME-105 | Venue timezone | IANA timezone name | Organizers | When the venue is confirmed |
-| GAME-106 | Daily game hours, off overnight | A time window, or manual | Leadership | Before Playtest 1 |
-| GAME-107 | Automatic pause schedule | Load the timetable, or manual only | Developers | Before feature complete |
-| GAME-120 | Midday challenge (C1) | Return or not; then format, length, team forming | Game director | Not v1 |
-| GAME-121 | Golden QR drops (C2) | In or out | Jonathan | Not v1 unless confirmed |
-| GAME-122 | Players without a phone | Usher-created account, usher-only participation, or not supported | Game director, safety reviewer | Before Playtest 1 |
-| SAFE-014 | Data retention after the event | A number of days, at least until Wrapped closes | Leadership | Before Playtest 2 |
-| SAFE-027 | Game off overnight and outside set hours | Same as GAME-106 | Leadership | Before Playtest 1 |
-| ARCH-031 | Login and sign-up rate limits per IP | Numbers per time window | Developers, safety reviewer | Before core build ends |
-| ARCH-053 | Backup frequency and off-Railway copy | | Developers | Before Playtest 2 |
-| ARCH-072 | Load test profile | Sign-ups per second, duration | Developers | Before Playtest 2 |
-| API-031 | Main screen refresh interval | Seconds | Developers | Before Playtest 1 |
-| DATA-010 | Where church region data comes from | Added to the church list by an admin | Jonathan, game director | Before Wrapped build |
-| WRAP-011 | Regions on card 2 | Depends on DATA-010 | Jonathan | Before Wrapped build |
-| WRAP-012 | Card 3 counts and verse matching | Depends on GAME-015 and GAME-019 | Game director, developers | Before Wrapped build |
-| WRAP-017 | Play style tie-break | A fixed order, or show both | Game director | Before Wrapped build |
-| WRAP-030 | Church recap for youth pastors | Build with a new login, or skip | Jonathan, leadership | Before feature complete |
-| WRAP-033 | How the Wrapped image is made | In the browser or on the server | Developers | Before Wrapped build |
-| OPS-040 | Where real event data lives | A private Google Drive folder (planned default) or another place | Jonathan | Before any real data exists |
 
 ## 4. PROPOSED values to review after Playtest 1
 
@@ -134,3 +109,5 @@ These are built as written, then reviewed with playtest data.
 | GAME-022 | Check-in tiers 25, 20, 15, 10, 5 | Keep or change | Game director |
 | GAME-070, GAME-071 | Sticker every 300 points, max 3 | Keep or change, then recalculate the sticker order (GAME-080) | Game director |
 | SAFE-008 | Review every shared post | Every shared post, or only posts from under-18 players | Leadership |
+| GAME-016 | Points once both have typed, no time limit | Keep, or add a time limit if many pairs never finish | Game director |
+| GAME-089 | Shrunk average, k = 5 | Keep, or change k after seeing real church sizes | Game director |

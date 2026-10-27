@@ -2,8 +2,8 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.1.0
-- Last updated: 2026-10-23
+- Version: 1.2.0
+- Last updated: 2026-10-26
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -18,11 +18,11 @@ This file is for game day and the weeks before it: who does what, what to do whe
 | Usher | 5 to 10 | Game booth and sticker line, booth scans, hidden items, photobooth, helping people join |
 | Developer on call | At least 1 | Watches the server, fixes urgent bugs (only with an approved issue during freeze, ENG-071) |
 
-- **OPS-001** [LOCKED] An admin pauses the game at the start of every session (GAME-101). Until an automatic schedule is decided (GAME-107), this is done by hand.
+- **OPS-001** [LOCKED] An admin pauses the game at the start of every session (GAME-101). The timetable schedule (GAME-107) is only a backup, so this is still done by hand.
 - **OPS-002** [LOCKED] When a session ends, an admin presses "End session". That opens check-in and resumes the game (GAME-026). The hall screen then shows the rotating check-in code (GAME-020).
 - **OPS-003** [LOCKED] During breaks, at least 2 ushers work the game booth, with a separate line for sticker claims.
 - **OPS-004** [LOCKED] Sticker packs are pre-packed and sealed before the event.
-- **OPS-005** [PROPOSED] At the end of each game day, an admin sets the game to off until game hours are decided (GAME-106).
+- **OPS-005** [PROPOSED] At the end of each game day, an admin sets the game to off. There are no automatic game hours (GAME-106).
 
 ## 2. Usher tasks
 
@@ -47,7 +47,7 @@ This file is for game day and the weeks before it: who does what, what to do whe
 | During breaks | Work the review queue. Check unusual activity | SAFE-007, ARCH-062 |
 | Any time | Fix scores with a reason. Reset locked PINs after checking the badge | GAME-111, SAFE-044 |
 | End of each game day | Set the game to off | OPS-005 |
-| Sunday | Game off. Show results. Run the conference recap. Unlock Wrapped right after results | GAME-104, WRAP-002, WRAP-020 |
+| Sunday | Game off. Sticker claims stay open until the service, then close redemption. Show results. Run the conference recap. Unlock Wrapped right after results | GAME-104, GAME-078, WRAP-002, WRAP-020 |
 
 ## 4. Failure playbook
 
@@ -106,6 +106,6 @@ Real event data is any information about real people or the real venue. Examples
 - database files and backups
 - any schedule that ties sessions to rooms
 
-- **OPS-040** [OPEN] Where real event data is stored. The planned default was a private Google Drive folder owned by Jonathan. Jonathan decides the final location. Until then, ask Jonathan before saving real event data anywhere.
+- **OPS-040** [LOCKED] Real event data is stored in a private Google Drive folder owned by Jonathan, shared only with the people who need it (DEC-049). Ask Jonathan for access.
 - **OPS-041** [LOCKED] Whatever the location: real event data never goes in this repo, in issues, in PR comments, or in screenshots (SAFE-030). Access is limited to the people who need it. Links to it are never posted in the repo.
 - **OPS-042** [LOCKED] After the retention date (SAFE-014), real event data is deleted from that location and from the server and backups. Staff accounts are switched off after the event.

@@ -2,7 +2,7 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.0.0
+- Version: 1.1.0
 - Last updated: 2026-10-26
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -48,21 +48,21 @@ The tree is the source. If this table and the tree disagree, the tree wins.
 |---|---|---|---|---|
 | `staff` Staff accounts and roles | Core build | 4 | `points.audit-log` | None |
 | `game-state` Game states and pause | Core build | 3 | `staff.login`, `points.audit-log` | None |
-| `points` Points service | Core build | 4 | `game-state.core` | `join` (GAME-044) |
-| `connections` Scanner and connections, with icebreaker | Core build | 7 | `points.ledger` | `points` (GAME-016); `icebreaker-question` (GAME-019); `icebreaker-answer` (GAME-015, GAME-019) |
+| `points` Points service | Core build | 4 | `game-state.core` | None |
+| `connections` Scanner and connections, with icebreaker | Core build | 7 | `points.ledger` | None |
 | `look` Mix look on player screens | January build | 5 | Working pieces only | None |
 | `home` Home and Quests pages | January build | 2 | `points.ledger`, `stickers.math` | None |
 | `checkin` Session check-in | January build | 5 | `staff.login`, `points.audit-log`, `game-state.admin-switch`, `screen.shell`, `connections.scanner-camera`, `points.ledger` | None |
-| `explore` Explore | January build | 4 | `staff.login`, `points.audit-log`, `usher.scan`, `points.ledger` | `photobooth` (GAME-105) |
+| `explore` Explore | January build | 4 | `staff.login`, `points.audit-log`, `usher.scan`, `points.ledger` | None |
 | `journal` Journal and Summary page | January build | 6 | `checkin.sessions`, `points.ledger`, `checkin.end-session`, `staff.login`, `points.audit-log` | None |
 | `stickers` Stickers (Open Box) | January build | 4 | `points.ledger`, `usher.scan`, `game-state.core` | `stock` (GAME-069) |
-| `leaderboards` Leaderboards and church score | January build | 3 | `points.ledger`, `screen.shell` | `players` (GAME-083, GAME-084, GAME-088); `churches` (GAME-089, GAME-082); `in-app` (GAME-085) |
+| `leaderboards` Leaderboards and church score | January build | 3 | `points.ledger`, `screen.shell` | None |
 | `usher` Usher console | January build | 2 | `staff.login`, `connections.scanner-camera` | None |
 | `admin` Admin console | January build | 6 | `staff.login`, `points.audit-log`, `points.ledger`, `connections.scan-save` | None |
-| `screen` Main screen views | January build | 3 | `staff.screen-mode`, `game-state.core`, `journal.review` | `refresh` (API-031) |
-| `wrapped` Wrapped cards | January build | 9 | `game-state.core`, `staff.login`, `points.audit-log`, `look.components`, `connections.scan-save`, `connections.icebreaker-answer`, `journal.write`, `stickers.math` | `regions` (WRAP-011, DATA-010); `collection` (WRAP-012); `play-style` (WRAP-017); `together` (GAME-089); `save-image` (WRAP-033) |
-| `recap` Conference recap screen | January build | 2 | `screen.shell`, `connections.scan-save`, `journal.review`, `connections.icebreaker-answer` | `verse` (WRAP-012) |
-| `ready` Game day readiness | Before Playtest 2 | 5 | `points.audit-log` | `rate-limits` (ARCH-031); `backups` (ARCH-053); `load-test` (ARCH-072); `retention` (SAFE-014) |
+| `screen` Main screen views | January build | 3 | `staff.screen-mode`, `game-state.core`, `journal.review` | None |
+| `wrapped` Wrapped cards | January build | 8 | `game-state.core`, `staff.login`, `points.audit-log`, `look.components`, `connections.scan-save`, `connections.icebreaker-answer`, `journal.write`, `stickers.math` | None |
+| `recap` Conference recap screen | January build | 2 | `screen.shell`, `connections.scan-save`, `journal.review`, `connections.icebreaker-answer` | None |
+| `ready` Game day readiness | Before Playtest 2 | 5 | `points.audit-log` | None |
 
 ## 4. Changing the tree
 

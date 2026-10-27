@@ -2,8 +2,8 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.0.1
-- Last updated: 2026-10-23
+- Version: 1.1.0
+- Last updated: 2026-10-26
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -38,7 +38,7 @@ It also supports the program. Small rewards go to attending sessions, visiting t
 
 - **PRD-020** [LOCKED] Players: 200 to 300 youth leaders from many churches and regions. Some are under 18 (see `03-safety-privacy.md`).
 - **PRD-021** [LOCKED] Where: the conference hotel venue. The venue name is not written in this repo.
-- **PRD-022** [OPEN] The exact event dates. Early March 2027 is planned. Playtest and walkthrough dates depend on this.
+- **PRD-022** [PROPOSED] The event runs 5 to 7 March 2027 (DEC-050). Playtest and walkthrough dates follow from this. Owner: organizers.
 
 ### The three days
 
