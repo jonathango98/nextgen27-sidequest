@@ -89,7 +89,7 @@ This file lists the tables, their fields, and the database constraints that enfo
 | `player_low_id` | integer | The smaller of the two player IDs |
 | `player_high_id` | integer | The larger of the two player IDs |
 | `scanner_id` | integer | Who scanned |
-| `question_id` | integer | Icebreaker question shown to both |
+| `question_category` | text | Icebreaker question shown to both, as a key from `icebreaker.categories` (GAME-019), for example `verse` |
 | `is_same_church` | boolean | Decides 2 or 10 points |
 | `created_at` | timestamp | |
 
@@ -100,8 +100,8 @@ This file lists the tables, their fields, and the database constraints that enfo
 | `id` | integer | Primary key |
 | `connection_id` | integer | Foreign key |
 | `about_player_id` | integer | Whose answer this is |
-| `typed_by_player_id` | integer | Who typed it (depends on GAME-015) |
-| `answer_text` | text | Visible to the two people only (SAFE-006) |
+| `typed_by_player_id` | integer | Who typed it: the other person in the pair (GAME-015) |
+| `answer_text` | text | Visible to the two people only (SAFE-006). A verse is always saved as full book name, a space, then chapter:verse, for example "John 3:16", so Wrapped can match it exactly (WRAP-012) |
 
 ### ChurchMet (for the new church bonus)
 
