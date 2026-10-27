@@ -21,7 +21,7 @@ The app is built by a small volunteer team. It is not built yet. This repo curre
 
 ## Project status
 
-Status last updated: 2026-10-26 by Claude Opus 5.5 / @jonathango98
+Status last updated: 2026-10-27 by Claude Opus 5.5 / @jonathango98
 
 **Before you start anything**, check that nobody else is on it. A branch only shows up here after it merges, so also run:
 
@@ -56,6 +56,7 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
+| Add the new work from this week's decisions to the feature tree (auto-pause, Close redemption, verse picker) | `docs/tree-new-pieces` | draft | 2026-10-27 | Claude Opus 5.5 / @jonathango98 |
 
 ### Planned
 
