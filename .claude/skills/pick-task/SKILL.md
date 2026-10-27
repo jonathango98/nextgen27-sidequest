@@ -1,6 +1,6 @@
 ---
 name: pick-task
-description: Help a Side Quest volunteer choose what to work on, then call dibs on it. Use when someone types /pick-task or says things like "I want to help", "what can I work on?", "give me options", "I'm free, what's next?", or "find me a task". Reads the feature tree, the README Project status, open branches, open PRs, and open issues, offers 3 unlocked pieces sized to the volunteer's Claude plan, and claims the one they pick (ENG-101, ENG-108).
+description: Help a Side Quest volunteer choose what to work on, then call dibs on it. Use when someone types /pick-task or says things like "I want to help", "what can I work on?", "give me options", "I'm free, what's next?", or "find me a task". Reads the feature tree, the README Project status, open branches, open PRs, and open issues, offers 3 unlocked pieces sized to the volunteer's Claude plan, and claims the one they pick (ENG-101, ENG-108). Also use for "/pick-task tree", "/pick-task <piece-id>", "show me everything that's ready", or "I know what I want": skip the questions and let them pick from a tree of every ready piece.
 ---
 
 # Pick a task
@@ -30,6 +30,15 @@ python .claude/skills/pick-task/unlocked.py
 Then cross out READY pieces that are taken but not yet in the README. If an open branch or PR clearly covers one (match the piece ID, branch slug, or PR title), drop it. If you're unsure, keep it but say "might be taken by @someone, check with them" (AI-072).
 
 Open issues with no assignee are also candidates, especially `good first issue`. Bug fixes, docs, and tooling need no piece (ENG-109). If an issue asks for a new feature that isn't in the tree, don't offer it. Say it needs a tree PR first.
+
+### Fast path: pick from the tree
+
+Use this when the volunteer already knows what they want: they typed `/pick-task tree` or `/pick-task <piece-id>`, or said "show me everything" or "just list what's ready". Skip steps 2 to 4.
+
+1. Run `python .claude/skills/pick-task/unlocked.py --tree` in place of the plain call above. It prints every READY piece, numbered and grouped under its feature, with how many of that feature's pieces are still locked.
+2. Cross out taken pieces the same way as above. Show the tree as printed, minus taken pieces, plus open unassigned issues as a last group. Keep the numbers so they can reply with one.
+3. If they named a piece ID, skip the tree. Check that the piece is READY and not taken. If it's locked, say what it waits on, then show the tree.
+4. Once they pick, show that one piece in the step 4 format (size, read first, unlocks, heads-up). Say plainly if it's a safety review piece or an M piece on a Pro plan, but don't block their choice. Then go to step 5.
 
 ## 2. Ask three quick questions
 

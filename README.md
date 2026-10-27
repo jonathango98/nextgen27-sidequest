@@ -39,6 +39,7 @@ Done and live. Newest first: add your row at the top, in plain words. Who built 
 |---|---|
 | The feature tree now includes this week's new work: automatic pause at each session's start time, the Sunday Close redemption button, and the verse picker. The blind box stock piece is unlocked | 2026-10-27 |
 | 36 of the 40 open game questions answered, from when connection points land to how church scores stay fair and how long data is kept. 18 pieces no longer wait on a decision. Prize and blind box questions are still open | 2026-10-26 |
+| `/pick-task tree` shows every task that's ready to start, grouped by feature, so volunteers who already know what they want can pick one without answering the questions first | 2026-10-27 |
 | `/pick-task` now offers only work that's ready to start, sized to fit the volunteer's Claude plan, and double-checks nobody else claimed it before calling dibs | 2026-10-26 |
 | Feature tree: every feature is split into small pieces, each saying what it needs first, so volunteers can see what's ready to start. Pieces that wait on an undecided rule stay locked. A map of the tree updates itself after every merge | 2026-10-26 |
 | Screen skeleton: every player screen is a plain page, and every button and tab goes to the right next screen. The bottom bar is now Home, My Code, and Quests, and players land on Home after joining or logging in. No final look and no game logic yet | 2026-10-26 |

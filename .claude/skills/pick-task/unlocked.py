@@ -1,6 +1,7 @@
 """List feature tree pieces by status, for the pick-task skill (ENG-105 to ENG-108).
 
 Run from the repo root: python .claude/skills/pick-task/unlocked.py
+Add --tree to print only READY pieces, grouped by feature and numbered.
 Reads foundation/feature-tree.yaml, the README Project status, and the OPEN table in
 foundation/13-decisions.md. Prints only; changes nothing.
 """
@@ -53,6 +54,25 @@ def main():
             waiting.append(f"{pid}: waiting on {', '.join(missing)}")
         else:
             ready.append(p)
+
+    if "--tree" in sys.argv:
+        locked = {s.split(":")[0] for s in waiting + decision}
+        print(f"READY ({len(ready)}), grouped by feature. Pick by number or piece ID.")
+        n = 0
+        for f in tree["features"]:
+            mine = [p for p in ready if p["feature"] == f["id"]]
+            if not mine:
+                continue
+            more = sum(pieces[i]["feature"] == f["id"] for i in locked)
+            print(f"\n{f['name']} [{f['milestone']}]" + (f", {more} locked" if more else ""))
+            for p in mine:
+                n += 1
+                safety = ", safety review" if p["safety_review"] else ""
+                print(
+                    f"  {n}. {p['id']} | {p['size']}, {p['level']}, {p['area']}{safety} | unlocks {unlocks[p['id']]}"
+                )
+                print(f"     {p['what']}")
+        return
 
     print(f"READY ({len(ready)})")
     for p in ready:
