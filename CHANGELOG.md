@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: `python .claude/skills/pick-task/unlocked.py` failed with `No module named 'yaml'` outside the venv.
 - Rule IDs: AI-033, ENG-101
 - Status: Done
-- PR: draft
+- PR: #41
 
 ---
 
