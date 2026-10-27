@@ -3,7 +3,7 @@
 - Status: Active
 - Owner: Jonathan (@jonathango98)
 - Version: 1.17.0
-- Last updated: 2026-10-26
+- Last updated: 2026-10-27
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -72,6 +72,7 @@ Sources, in order of precedence:
 | DEC-050 | 2026-10-26 | The event runs 5 to 7 March 2027 (PRD-022) in Houston, Texas, timezone `America/Chicago` (GAME-105) | Event facts | Jonathan (open decisions session, 2026-10-26). PROPOSED until the organizers confirm |
 | DEC-051 | 2026-10-26 | Follow-ups to DEC-040 to DEC-050. Takeaways only for sessions an admin has ended (GAME-035). An admin closes Sunday sticker redemption with a button, a new admin power (GAME-078, GAME-110, `GameState.redemption_closed_at`). Auto-pause uses a start time an admin enters with each session (GAME-107, `Session.starts_at`), so DATA-014 now allows start times but still no rooms. Kept: the starter icebreaker pool (GAME-019), whole-number church scores (GAME-089), church ties by earliest latest award (GAME-084), and top verse ties by first collected (WRAP-012) | Nobody writes about a talk that hasn't happened. A button handles a service that starts late. Times without rooms don't say where minors are | Jonathan (open decisions session, 2026-10-26). DATA-014 change needs safety review |
 | DEC-052 | 2026-10-27 | Stickers are replaced by blind boxes with a mystery item inside. Same milestones: one box every 300 points, up to 3, claimed at the game booth (GAME-070 to GAME-080). What goes inside is a new OPEN item (GAME-068). The rename runs through the rules, config (`blind_box.*`), data model (`BoxClaim`), routes (`/box`, `/usher/box-claim`), and tree pieces (`blind-box.*`). End prizes still go by rank (GAME-090), and the prize list stays OPEN (GAME-092) | Jonathan's call: no stickers. Older decision rows keep the word "sticker" as history | Jonathan (2026-10-27) |
+| DEC-053 | 2026-10-27 | Foundation audit fixes. Connection points are given when each player saves the answer they type, and the rules, table, examples, UI-034, and a new DATA-032 say so. Church scores count active players, with points beyond joining (GAME-089, GAME-082). Rate limits split: 60 logins and 600 sign-ups per IP per minute (ARCH-031). No code freeze: ENG-071 removed, PRD-052 reworded, ARCH-016 kept. Locked accounts unlock themselves after 60 minutes (SAFE-022). Wrapped card 4 shows counts only (WRAP-013). Retention deletes every player-linked record, including backups (SAFE-014). The saved Wrapped image may show card 6 totals (WRAP-032). Pending answers get no list screen. Plus runbook, timeline, glossary, and wording fixes | Jonathan's answers to the audit questions. The 60-minute auto-unlock allows about 120 PIN guesses a day per account, a risk the safety reviewer should weigh | Jonathan (2026-10-27). SAFE-022 change needs safety review |
 
 ## 2. Resolved conflicts
 
@@ -80,7 +81,7 @@ Sources, in order of precedence:
 | C1 | Midday challenge: the brief lists it as a quest; the Blueprint says it is on hold | Not in v1 (DEC-040). Parked design kept | GAME-120, PRD-050 |
 | C2 | Golden QR drops on the main screen: in the brief only | Not in v1 (DEC-040) | GAME-121 |
 | C3 | Phone and email: the brief says "unless opted in"; the Blueprint says neither is collected | Not collected. LOCKED | SAFE-003 |
-| C4 | Church score denominator: "per registered player" or "per player" | Shrunk average over players with at least 1 point, and a minimum of 1 player (DEC-041, DEC-044) | GAME-089, GAME-082 |
+| C4 | Church score denominator: "per registered player" or "per player" | Shrunk average over active players (points beyond joining), and a minimum of 1 active player (DEC-041, DEC-044, DEC-053) | GAME-089, GAME-082 |
 | C5 | Icebreaker answers: the brief says the scanner types; the Blueprint says both earn; Wrapped counts answers "collected from the people you met" | Each person types the other's answer, and each earns when they type their own (DEC-042) | GAME-015, WRAP-012 |
 | C6 | The sticker distribution table assumes 15 points per connection and a +10 bonus, but current values are 10 and +5 | The table is indicative only. Recalculate the sticker order after Playtest 1 | GAME-080 |
 | C7 | Repo structure | One repo for server and front end. LOCKED | ARCH-005, DEC-001 |

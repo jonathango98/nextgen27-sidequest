@@ -3,7 +3,7 @@
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
 - Version: 1.1.0
-- Last updated: 2026-10-26
+- Last updated: 2026-10-27
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -46,7 +46,7 @@ It also supports the program. Small rewards go to attending sessions, visiting t
 |---|---|---|---|
 | Day 1 | Evening | Game intro on stage, everyone scans the join QR together, first connections | On after the intro |
 | Day 2 | Full day | Meeting people, booths, hidden items, takeaways after each session | On during breaks, paused during sessions |
-| Day 3 | Sunday morning service | Final player and church results, prizes, Wrapped unlocks | Off |
+| Day 3 | Sunday morning service | Final player and church results, prizes, Wrapped unlocks | Off (blind box claims stay open until the service, GAME-078) |
 
 - **PRD-023** [LOCKED] The three-day shape above (GAME-104).
 

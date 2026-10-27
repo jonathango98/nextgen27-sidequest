@@ -3,7 +3,7 @@
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
 - Version: 1.2.0
-- Last updated: 2026-10-26
+- Last updated: 2026-10-27
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -16,7 +16,7 @@ This file is for game day and the weeks before it: who does what, what to do whe
 | Game director | 1 | Runs the game, makes calls on rules during the event, hands out prizes on Sunday |
 | Admin | Set by Jonathan | Pause and resume, end sessions, review takeaways, fix scores, reset PINs |
 | Usher | 5 to 10 | Game booth and blind box line, booth scans, hidden items, photobooth, helping people join |
-| Developer on call | At least 1 | Watches the server, fixes urgent bugs (only with an approved issue during freeze, ENG-071) |
+| Developer on call | At least 1 | Watches the server, fixes urgent bugs (no production deploys during live game hours, ARCH-016) |
 
 - **OPS-001** [LOCKED] An admin pauses the game at the start of every session (GAME-101). The timetable schedule (GAME-107) is only a backup, so this is still done by hand.
 - **OPS-002** [LOCKED] When a session ends, an admin presses "End session". That opens check-in and resumes the game (GAME-026). The hall screen then shows the rotating check-in code (GAME-020).
@@ -40,8 +40,9 @@ This file is for game day and the weeks before it: who does what, what to do whe
 
 | When | Task | Rule |
 |---|---|---|
-| Day 1, before the intro | Check the church list, booths, item numbers, sessions, and staff accounts are loaded. Game state: paused | GAME-110 |
+| Day 1, before the intro | Check the church list, booths, item numbers, sessions with start times, and staff accounts are loaded. Game state: paused | GAME-110, GAME-107 |
 | Day 1, after the intro | Set the game to on | GAME-104 |
+| Day 2, before the first session | Set the game from off to on. Auto-pause then pauses each session (it never acts while off) | GAME-104, GAME-107 |
 | Start of every session | Pause | OPS-001 |
 | End of every session | End session (opens check-in, resumes) | OPS-002 |
 | During breaks | Work the review queue. Check unusual activity | SAFE-007, ARCH-062 |
@@ -61,7 +62,8 @@ This file is for game day and the weeks before it: who does what, what to do whe
 | Wrong score | Admin checks the player's history and makes a manual award or revocation with a reason | Admin | If it is a bug, open an issue with fake data |
 | Long booth line | Use the separate blind box line. Add a second usher | Usher lead | |
 | Blind boxes run out | The server refuses new claims (GAME-076). Ushers explain kindly | Ushers | |
-| Locked PIN | Admin checks the name badge, then resets (SAFE-044) | Admin | |
+| Locked PIN | Admin checks the name badge, then resets (SAFE-044). Or the player waits: the account unlocks itself after 60 minutes (SAFE-022) | Admin | |
+| Game left on overnight | Set the game to off now (OPS-005). Then decide whether to revoke points earned overnight | Admin, game director | |
 | Forgot to pause | Pause now. Then decide whether to revoke points earned during the session | Admin, game director | |
 | Unusual activity (possible fake accounts) | Look at the activity view. Do not accuse anyone in public | Admin, game director | Before prizes, check top players in person (GAME-090) |
 | Concerning takeaway | Do not approve it. Tell the organizer responsible for child safety in person (SAFE-042) | Admin | Follow the organization's child safety policy |
@@ -70,13 +72,13 @@ This file is for game day and the weeks before it: who does what, what to do whe
 
 ## 5. Checklists
 
-### Pre-event (two weeks before, after code freeze)
+### Pre-event (two weeks before the event)
 
 - [ ] Production on Railway is up, HTTPS works, and staging matches production (ARCH-010, ARCH-011)
 - [ ] Secrets are set as environment variables on the server, not in any file in the repo (SAFE-032)
 - [ ] Backups run and a restore was tested (ARCH-053)
 - [ ] Church list loaded. Booths loaded. Hidden item numbers loaded (no locations in the app, SAFE-010)
-- [ ] Session titles loaded (no room details, DATA-014)
+- [ ] Session titles and start times loaded (no room details, DATA-014, GAME-107)
 - [ ] Usher and admin accounts created, one per person (ARCH-036)
 - [ ] Usher training done (OPS-010)
 - [ ] Paper fallback kit printed: blank paper logs and pens (ARCH-081)
@@ -103,7 +105,7 @@ Real event data is any information about real people or the real venue. Examples
 - the usher roster and volunteer contact details
 - the hidden item list and where each item is hidden
 - playtest results and notes about real players
-- database files and backups
+- database exports (database files and backups stay on the server, ARCH-052, ARCH-053)
 - any schedule that ties sessions to rooms
 
 - **OPS-040** [LOCKED] Real event data is stored in a private Google Drive folder owned by Jonathan, shared only with the people who need it (DEC-049). Ask Jonathan for access.

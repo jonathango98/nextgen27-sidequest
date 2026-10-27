@@ -109,7 +109,7 @@ def test_ui_030_journal_links_to_new_takeaway(client):
 
 def test_game_073_open_box_says_where_to_claim(client):
     html = client.get("/box").text
-    assert "Go to the game booth during a break." in html
+    assert "Go to the game booth when it's open." in html
     assert 'href="/code">My Code</a>' in html
 
 

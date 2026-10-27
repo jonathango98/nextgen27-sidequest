@@ -3,7 +3,7 @@
 - Status: PROPOSED (everything here may change until the designer signs off)
 - Owner: Jonathan (@jonathango98)
 - Version: 1.4.0
-- Last updated: 2026-10-26
+- Last updated: 2026-10-27
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -97,7 +97,7 @@ Contrast ratios below were checked with the WCAG 2.1 formula.
 - **UI-031** [LOCKED] The Journal form shows this note next to the visibility choice, in plain words: "Anonymous hides your name from other players. Game organizers can still see who wrote it." (SAFE-009)
 - **UI-032** [PROPOSED] If submitting a form fails (paused, no connection, too short), the text stays in the form so nothing typed is lost.
 - **UI-033** [PROPOSED] The paused banner says something short like "Game paused". It never scolds.
-- **UI-034** [PROPOSED] The scanner result shows within one second of a scan, with a big clear message, for example "+15" with the friend's name and church.
+- **UI-034** [PROPOSED] The scanner result shows within one second of a scan, with a big clear message: the friend's name and church, then the icebreaker question. Points show after the player types their answer, for example "+15" (GAME-016, DEC-053).
 - **UI-035** [PROPOSED] Each screen has at most one main (black) button, for its most important action. Everything else is frosted white.
 - **UI-036** [PROPOSED] Home layout, top to bottom: the big score (`--font-size-score-hero`) with "points" under it, then blind box progress ("Next box" with the numbers, UI-051). In the lower half (UI-003): Meet friends (the black main button, opens the scanner), a row split in two with Write (new journal entry, with its points pill) and Read (shared takeaways, `/summary`), then Redeem box (Open Box).
 - **UI-037** [PROPOSED] My Code shows the QR panel, then a black Scan button. The scanner, the icebreaker, and the scan result all sit under the My Code tab.

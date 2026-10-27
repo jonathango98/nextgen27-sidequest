@@ -3,7 +3,7 @@
 - Status: PROPOSED (developers confirm at kickoff)
 - Owner: Jonathan (@jonathango98)
 - Version: 1.3.0
-- Last updated: 2026-10-26
+- Last updated: 2026-10-27
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -76,7 +76,7 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 | GET, POST | `/admin/churches` | Manage the church list | SAFE-002 |
 | GET, POST | `/admin/booths` | Manage booths | GAME-041 |
 | GET, POST | `/admin/hidden-items` | Manage item numbers (no locations) | SAFE-010 |
-| GET, POST | `/admin/sessions` | Manage sessions (titles only) | DATA-014 |
+| GET, POST | `/admin/sessions` | Manage sessions (titles and start times, no rooms) | DATA-014, GAME-107 |
 | GET, POST | `/admin/staff` | Manage usher and admin accounts | ARCH-036 |
 | GET | `/admin/activity` | Unusual activity view | ARCH-062 |
 | GET | `/admin/audit` | Audit log | ARCH-050 |
@@ -123,7 +123,7 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 | 423 | `GAME_OFF` | The game is off | "The game is closed right now." |
 | 429 | `RATE_LIMITED` | Too many tries from one place | "Too many tries. Wait a minute and try again." |
 
-- **API-020** [LOCKED] While the game is paused, every earning action returns HTTP 423 with `PAUSED` (ARCH-041, GAME-102). While it is off, the same actions return 423 with `GAME_OFF` (GAME-108). Two exceptions: join points at sign-up while paused (GAME-044), and blind box claims inside the redemption window while off (GAME-078). 423 is used only for these two cases.
+- **API-020** [LOCKED] While the game is paused, every earning action returns HTTP 423 with `PAUSED` (ARCH-041, GAME-102). While it is off, the same actions return 423 with `GAME_OFF` (GAME-108). Two exceptions: join points at sign-up while paused (GAME-044), and blind box claims inside the redemption window while off (GAME-078). 423 is used only for `PAUSED` and `GAME_OFF`.
 - **API-021** [PROPOSED] The other codes in the table above. A PIN lockout uses 403 `PIN_LOCKED`, not 423, so 423 always means "the game is not on".
 
 ## 4. Live updates
@@ -146,7 +146,7 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 | Quests | Player | `/quests` | What earns points and what is done | |
 | Journal | Player | `/journal`, `/journal/new` | Visibility choice and the note about anonymous posts | GAME-031, SAFE-009, UI-031 |
 | Summary page | Player | `/summary` | Shared takeaways by session | SAFE-017 |
-| Open Box | Player | `/box` | Earned, claimed, claimable, "Go to the game booth during a break" | GAME-073 |
+| Open Box | Player | `/box` | Earned, claimed, claimable, "Go to the game booth when it's open" | GAME-073 |
 | Paused state | Player | Banner on every page | Friendly, short, no shaming | UI-033 |
 | Wrapped cards | Player | `/wrapped` | Six swipeable cards, Save as image | WRAP-010 |
 | Usher console | Usher | `/usher` | Big buttons for each scan type | GAME-112 |

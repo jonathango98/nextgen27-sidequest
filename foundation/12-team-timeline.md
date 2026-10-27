@@ -49,12 +49,12 @@ This file lists the roles, which folders each role owns, the milestones, and wha
 | January | Build continues | Remaining features, including Wrapped (WRAP-005) |
 | Late January | Feature complete (gate) | Every feature works end to end. Nothing new after this (ENG-070) |
 | Late January | Playtest 1 | 20 to 30 people from a youth group. Point values reviewed after |
-| Early February | Blind boxes ordered | Contents locked (GAME-068). Order size recalculated (GAME-080) |
+| Early February | Blind boxes ordered | Contents decided (GAME-068). Order size recalculated (GAME-080) |
 | Mid February | Playtest 2 and venue walkthrough | Hotel Wi-Fi load test of the join moment (OPS-030). Ends with a test Wrapped |
-| Late February | Code freeze (gate) | Polish only, usher training, intro slides (ENG-071) |
-| Early March | NextGen Conference 2027 | Game runs Day 1 evening and Day 2. Results Sunday |
+| Late February | Final prep | Polish continues, usher training, intro slides |
+| 5 to 7 March 2027 | NextGen Conference 2027 | Game runs Day 1 evening and Day 2. Results Sunday |
 
-- **PRD-052** [LOCKED] Two gates: feature complete (late January) and code freeze (late February). Both are firm, so the team keeps about two weeks of buffer before the event.
+- **PRD-052** [LOCKED] One gate: feature complete (late January). There is no code freeze: polish and fixes continue up to the event, and ARCH-016 still bars production deploys during live game hours (DEC-053).
 
 ## 4. What is frozen when
 
@@ -64,7 +64,6 @@ This file lists the roles, which folders each role owns, the milestones, and wha
 | Feature complete | The feature list. No new features |
 | After Playtest 1 | Point values, once the game director updates `game-config.yaml` |
 | Blind boxes ordered | The contents and the order size |
-| Code freeze | All code except bug fixes with an approved issue |
 
 ## 5. Leadership asks
 

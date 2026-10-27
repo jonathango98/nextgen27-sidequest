@@ -2,8 +2,8 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.8.0
-- Last updated: 2026-10-26
+- Version: 1.9.0
+- Last updated: 2026-10-27
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -119,7 +119,7 @@ Tests in `tests/` follow the area of the code they test.
 ## 10. Timeline rules
 
 - **ENG-070** [LOCKED] After the feature complete gate (late January), nothing new is added. Only fixes and polish.
-- **ENG-071** [LOCKED] Code freeze (late February): only bug fixes with an approved issue. Nothing new.
+- **ENG-071** [REMOVED] Was: code freeze in late February. There is no code freeze; polish and fixes continue up to the event, and ARCH-016 still bars production deploys during live game hours (DEC-053).
 - **ENG-072** [LOCKED] Holiday break (December 21 to January 3): nothing critical is scheduled. Bonus work only.
 
 ## 11. Protected paths

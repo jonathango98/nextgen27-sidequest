@@ -3,7 +3,7 @@
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
 - Version: 1.1.0
-- Last updated: 2026-10-26
+- Last updated: 2026-10-27
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -26,9 +26,9 @@ This is the full list of ways to earn points. If an action is not in this table,
 
 | Category | Quest | Rule | Points | Config key | Limit | Who confirms |
 |---|---|---|---|---|---|---|
-| Connect | Meet someone from another church | GAME-010 | 10 each (both players) | `points.connect_other_church` | Each pair once | The two players scan |
+| Connect | Meet someone from another church | GAME-010 | 10 each (both players) | `points.connect_other_church` | Each pair once | Scan, then each player types their answer (GAME-016) |
 | Connect | First person met from a church new to you | GAME-011 | 5 (bonus) | `points.connect_new_church_bonus` | Once per church, per player | Automatic |
-| Connect | Meet someone from your own church | GAME-012 | 2 each | `points.connect_same_church` | Each pair once | The two players scan |
+| Connect | Meet someone from your own church | GAME-012 | 2 each | `points.connect_same_church` | Each pair once | Scan, then each player types their answer (GAME-016) |
 | Sessions | Session check-in | GAME-020 | See check-in tiers | `checkin.tier_points` | Once per session | Player scans the hall screen |
 | Sessions | Journal takeaway | GAME-030 | 20 | `points.journal_takeaway` | Once per session | Server checks word count |
 | Explore | Join the game | GAME-040 | 10 | `points.join` | Once | Automatic at sign-up |
@@ -60,13 +60,13 @@ Tier size: 10 scans per tier. Config: `checkin.tier_size`.
 
 ## 3. Connect
 
-- **GAME-010** [PROPOSED] When two players from different churches connect, each player earns 10 points.
-- **GAME-011** [PROPOSED] A player earns a 5 point bonus the first time they connect with anyone from a church they have not met before. The bonus is judged for each player on their own. One player can get the bonus while the other does not (see example E1).
-- **GAME-012** [PROPOSED] When two players from the same church connect, each player earns 2 points. This stays low so a group cannot pad scores by scanning each other.
+- **GAME-010** [PROPOSED] When two players from different churches connect, each player earns 10 points when they type their icebreaker answer (GAME-016).
+- **GAME-011** [PROPOSED] A player earns a 5 point bonus the first time they connect with anyone from a church they have not met before. It is given with the first icebreaker answer the player types for someone from that church (GAME-016). The bonus is judged for each player on their own. One player can get the bonus while the other does not (see example E1).
+- **GAME-012** [PROPOSED] When two players from the same church connect, each player earns 2 points when they type their icebreaker answer (GAME-016). This stays low so a group cannot pad scores by scanning each other.
 - **GAME-013** [LOCKED] Each pair of players counts once, no matter who scans whom or how many times. Alice scanning Ben and Ben scanning Alice is the same pair.
 - **GAME-014** [LOCKED] A connection starts when one player scans the other player's My Code with the in-app scanner. A player cannot connect with themselves. An expired code is refused (see ARCH-022).
 - **GAME-015** [PROPOSED] Who types the icebreaker answer: each person types the other person's answer on their own phone (option A, conflict C5, DEC-042). Config: `icebreaker.who_types`.
-- **GAME-016** [PROPOSED] Each player earns their connection points when they type their own answer. They never wait on the other phone, so a player who doesn't type only misses their own points. There is no time limit. Until a player types, the connection exists (GAME-013) but earns them nothing. Typing the answer earns points, so it follows the pause and off rules (GAME-102, GAME-108) (DEC-042). Config: `icebreaker.award_trigger`.
+- **GAME-016** [PROPOSED] Each player earns their connection points when they save the answer they type (the IcebreakerAnswer row where `typed_by_player_id` is them). They never wait on the other phone, so a player who doesn't type only misses their own points. There is no time limit. Until a player types, the connection exists (GAME-013) but earns them nothing. Typing the answer earns points, so it follows the pause and off rules (GAME-102, GAME-108) (DEC-042). Config: `icebreaker.award_trigger`.
 - **GAME-017** [LOCKED] After a scan, both phones show the same icebreaker question, for example "Favorite food?" or "Favorite verse?". The answers are visible only to the two people (SAFE-006).
 - **GAME-018** [LOCKED] "Another church" means the church each player picked from the church list at sign-up (SAFE-002). Who can change a player's church later is in DATA-012.
 - **GAME-019** [PROPOSED] Each pair gets one question picked at random from the pool below. It is a starter pool for the game director to edit before core build ends (DEC-042). Wrapped counts the verse and food answers (WRAP-012). Config: `icebreaker.categories`.
@@ -113,13 +113,13 @@ Tier size: 10 scans per tier. Config: `checkin.tier_size`.
 
 ## 6. Blind boxes
 
-Blind boxes replace the coin system from the Blueprint (DEC-002). They replaced blind boxes (DEC-052). Score unlocks blind boxes. Nothing is spent.
+Blind boxes replace the coin system from the Blueprint (DEC-002). They replaced stickers (DEC-052). Score unlocks blind boxes. Nothing is spent.
 
 - **GAME-070** [PROPOSED] A player earns one blind box every 300 points of score. Blind boxes earned = score divided by 300, rounded down, capped at the max (GAME-071). This is computed from score every time. Nothing is stored or reset. The progress bar on the phone shows points since the last milestone, for example 120 of 300. Config: `blind_box.milestone_points`.
 - **GAME-071** [PROPOSED] A player can earn at most 3 blind boxes. Config: `blind_box.max_per_player`.
 - **GAME-072** [LOCKED] Each blind box is a sealed box with a mystery item inside. What goes inside is OPEN (GAME-068). All milestone rewards are blind boxes. There are no separate milestone rewards and no "Side Quest Legend" (DEC-052).
 - **GAME-068** [OPEN] What goes inside a blind box. Owner: game director. Building the claim flow does not depend on it (DEC-052).
-- **GAME-073** [LOCKED] To claim: the player taps Open Box in the app, goes to the game booth during a break, an usher scans their My Code, the usher hands over a sealed blind box, and the claim is saved. Tapping Open Box does not reserve a box. It only opens the claim screen.
+- **GAME-073** [LOCKED] To claim: the player taps Open Box in the app, goes to the game booth while redemption is open (GAME-078), an usher scans their My Code, the usher hands over a sealed blind box, and the claim is saved. Tapping Open Box does not reserve a box. It only opens the claim screen.
 - **GAME-074** [LOCKED] Blind boxes the player can claim now = blind boxes earned minus blind boxes already claimed. This is never below 0.
 - **GAME-075** [LOCKED] Claims happen during breaks only. The booth closes during sessions, so the server refuses claims while the game is paused. On Sunday the game is off, but claims stay open until the service (GAME-078).
 - **GAME-076** [LOCKED] Blind boxes are limited and first come, first served. When they run out, they are gone. When claims reach the stock number (GAME-069), the server refuses new claims with `OUT_OF_STOCK`.
@@ -141,8 +141,8 @@ The Blueprint's estimated share of players at each level (indicative only, confl
 ## 7. Leaderboards and church score
 
 - **GAME-081** [LOCKED] Church score is a fair average of points per player, so a church of 5 can compete with a church of 40 and one very active player cannot carry a church alone. The formula is in GAME-089 (DEC-044).
-- **GAME-089** [PROPOSED] Church score is a shrunk average (conflict C4, DEC-044). It counts the church's players with at least 1 point (option B). Church score = (their points added up + k × overall average) ÷ (their number + k), where the overall average is over every player with at least 1 point and k is 5. This counts each church as if it also had k average players, so a small church can still win, but not on one lucky player. It is shown rounded to a whole number. Config: `leaderboard.church_score_denominator`, `leaderboard.church_score_prior_players`.
-- **GAME-082** [PROPOSED] A church needs 1 player with points to appear on the church leaderboard. GAME-089 stops a small church from topping the board on one player (DEC-041). Config: `leaderboard.church_min_players`.
+- **GAME-089** [PROPOSED] Church score is a shrunk average (conflict C4, DEC-044). It counts the church's active players: players with points from anything other than joining (GAME-040, DEC-053). Church score = (their points added up + k × overall average) ÷ (their number + k), where the overall average is over every active player and k is 5. This counts each church as if it also had k average players, so a small church can still win, but not on one lucky player. It is shown rounded to a whole number. Config: `leaderboard.church_score_denominator`, `leaderboard.church_score_prior_players`.
+- **GAME-082** [PROPOSED] A church needs 1 active player (GAME-089) to appear on the church leaderboard. GAME-089 stops a small church from topping the board on one player (DEC-041, DEC-053). Config: `leaderboard.church_min_players`.
 - **GAME-083** [PROPOSED] Each main screen leaderboard shows 10 rows (DEC-041). Config: `leaderboard.main_screen_top_n`.
 - **GAME-084** [PROPOSED] Ties go to whoever reached that score first: the earlier latest point award ranks higher. Church ties use the latest point award of any counted player. This applies to boards and prizes (DEC-041). Config: `leaderboard.tie_break`.
 - **GAME-085** [PROPOSED] The phone shows no leaderboard and no rank, only the player's own points. Leaderboards are on the main screen only (DEC-040). Config: `leaderboard.in_app_leaderboard`.
@@ -150,7 +150,7 @@ The Blueprint's estimated share of players at each level (indicative only, confl
 - **GAME-087** [LOCKED] Leaderboards appear on the main screen only between sessions, never during a talk (UI-040).
 - **GAME-088** [PROPOSED] Every row on a player leaderboard shows the last initial after the first name, for example "Sam K." (DEC-046). This tells apart most players with the same first name and church. It changed SAFE-004, so it went through safety review (SAFE-016).
 
-Church score example (GAME-089). The overall average is 90. Example Church A has 5 players with scores 100, 80, 60, 0, 0, so 3 players count.
+Church score example (GAME-089). The overall average is 90. Example Church A has 5 players with scores 100, 80, 60, 10, 10. The two with 10 only joined, so 3 active players count.
 
 | Step | Calculation | Result |
 |---|---|---|
@@ -169,13 +169,13 @@ Example Church B has 1 player with 300 points. Its church score is (300 + 5 × 9
 
 - **GAME-100** [LOCKED] The game is always in one of three states: on, paused, or off. Config: `game.states`.
 - **GAME-101** [LOCKED] The game is paused during every session. An admin turns pause on and off by hand.
-- **GAME-102** [LOCKED] While paused, the server refuses every action that earns points or claims a blind box, with the "paused" response (API-020). This includes connection scans, check-ins, takeaway submissions, booth scans, photobooth scans, hidden item turn-ins, and blind box claims. While paused, players can still sign up, log in, view My Code, read their own data, and read the summary page. The one exception to refusing is join points at sign-up (GAME-044).
+- **GAME-102** [LOCKED] While paused, the server refuses every action that earns points or claims a blind box, with the "paused" response (API-020). This includes connection scans, saving an icebreaker answer, check-ins, takeaway submissions, booth scans, photobooth scans, hidden item turn-ins, and blind box claims. While paused, players can still sign up, log in, view My Code, read their own data, and read the summary page. The one exception to refusing is join points at sign-up (GAME-044).
 - **GAME-103** [LOCKED] Admin fixes work in every state. An admin can award or revoke points by hand at any time, including while paused or off.
 - **GAME-104** [LOCKED] Day by day: Day 1 evening the game is on after the stage intro. Day 2 the game is on during breaks and paused during sessions. Day 3 (Sunday) the game is off: no gameplay, only final results, prizes, and Wrapped.
 - **GAME-105** [PROPOSED] The venue is in Houston, Texas, so the timezone is `America/Chicago` (DEC-050). The server stores all times in UTC and uses this timezone for "per day" limits (GAME-042). Config: `game.timezone`.
 - **GAME-106** [PROPOSED] No automatic game hours. An admin sets the game to off at the end of each game day by hand (OPS-005, SAFE-027, DEC-049). Owner: leadership. Config: `game.hours_window`.
 - **GAME-108** [PROPOSED] While the game is off, the server refuses every earning action and blind box claim with `GAME_OFF` (API-020). Sign-up is closed. Login, the player's own data, the summary page, and Wrapped (after unlock) still work. Blind box claims also still work inside the redemption window (GAME-078).
-- **GAME-107** [PROPOSED] An admin enters a start time with each session, and the server pauses the game at that time, as a backup to manual pause (DATA-014, DEC-051). It never resumes the game; ending a session does (GAME-026). Admins can still pause and resume by hand, for example when a session runs late (DEC-049). Config: `game.auto_pause_schedule`.
+- **GAME-107** [PROPOSED] An admin enters a start time with each session, and the server pauses the game at that time, as a backup to manual pause (DATA-014, DEC-051). It acts only while the game is on, so it never turns an off game to paused. It never resumes the game; ending a session does (GAME-026). Admins can still pause and resume by hand, for example when a session runs late (DEC-049). Config: `game.auto_pause_schedule`.
 
 ## 10. Admin and usher powers
 
@@ -197,7 +197,7 @@ Example Church B has 1 player with 300 points. Its church score is (300 + 5 × 9
 
 All names are fake.
 
-**E1. First connection with a new church (GAME-010, GAME-011).** Test Player A (Example Church A) scans Test Player B (Example Church B). Player A has never met anyone from Church B. Player B has already met someone from Church A.
+**E1. First connection with a new church (GAME-010, GAME-011).** Test Player A (Example Church A) scans Test Player B (Example Church B). Player A has never met anyone from Church B. Player B has already met someone from Church A. Each player earns when they type their icebreaker answer (GAME-016).
 
 | Player | Base | New church bonus | Total |
 |---|---|---|---|
@@ -206,7 +206,7 @@ All names are fake.
 
 **E2. Same pair again (GAME-013).** Later, Player B scans Player A. The pair already exists. The server refuses with "already connected" and nobody earns points.
 
-**E3. Same church (GAME-012).** Two players from Example Church A connect. Each earns 2. No bonus, because their own church is not "new".
+**E3. Same church (GAME-012).** Two players from Example Church A connect. Each earns 2 when they type their answer. No bonus, because their own church is not "new".
 
 **E4. Check-in tiers (GAME-022, GAME-025).** The admin ends Session 3. Test Player C is the 12th check-in the server saves. Player C earns 20 (tier 2).
 

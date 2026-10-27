@@ -3,7 +3,7 @@
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
 - Version: 1.7.0
-- Last updated: 2026-10-26
+- Last updated: 2026-10-27
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -108,7 +108,7 @@ Example payload (fake): `SQ1.P.k3x9q2mf.482913`
 ## 5. Accounts, login, and roles
 
 - **ARCH-030** [PROPOSED] PINs are stored only as a salted, slow hash. Python's built-in `hashlib.scrypt` is suggested because it needs no new dependency. Developers set the parameters, and the PR goes through safety review (SAFE-016).
-- **ARCH-031** [PROPOSED] Login and sign-up are limited to 60 attempts per IP address per minute, on top of the per-account lockout (SAFE-022). A 4-digit PIN has only 10,000 values, so without this an attacker can try one common PIN against every account. Many phones share the venue Wi-Fi address, so the limit stays loose and the lockout does the fine work (DEC-049). Config: `auth.ip_rate_limit_per_minute`.
+- **ARCH-031** [PROPOSED] Per IP address: 60 login attempts per minute and 600 sign-ups per minute, on top of the per-account lockout (SAFE-022). A 4-digit PIN has only 10,000 values, so the login limit stops one common PIN being tried against every account. Sign-up has its own higher limit because about 300 phones join from the shared venue Wi-Fi address at once (ARCH-071, DEC-053). Config: `auth.login_ip_limit_per_minute`, `auth.signup_ip_limit_per_minute`.
 - **ARCH-032** [LOCKED] To log in on another phone, a player enters their full name, picks their church, and enters their PIN.
 - **ARCH-033** [LOCKED] Two players from the same church cannot have the same full name. Sign-up refuses a repeat with 409 `NAME_TAKEN` and asks the player to find an usher at the game booth. Because full name and church are unique, login finds at most one player (ARCH-032). The database enforces it (DATA-016, DEC-033).
 - **ARCH-034** [PROPOSED] After login, the server sets a signed session cookie: `Secure`, `HttpOnly`, `SameSite=Lax`. The signing key comes from the environment variable `SQ_SESSION_KEY`. The cookie lasts at least until Wrapped closes (WRAP-004), so the recap stays in the browser the person played on.
@@ -129,7 +129,7 @@ Example payload (fake): `SQ1.P.k3x9q2mf.482913`
 - **ARCH-050** [LOCKED] Every award, revocation, and admin or usher action writes an audit row: who did it, what they did, to which record, the reason (if any), and when.
 - **ARCH-051** [LOCKED] Logs never contain PINs, icebreaker answers, takeaway text, last names, or session cookies. Logs refer to players by internal ID.
 - **ARCH-052** [LOCKED] Logs, database files, and backups stay on the server. They are never committed (SAFE-030). They are deleted on the retention date (SAFE-014).
-- **ARCH-053** [PROPOSED] Backups are Railway volume backups only, on a schedule developers set in Railway. No copy is kept off Railway. Railway backups restore only into the same project and environment, so losing the project means losing the backups. This risk is accepted (DEC-049). Backups are deleted on the retention date (SAFE-014).
+- **ARCH-053** [PROPOSED] Backups are Railway volume backups only, on a schedule developers set in Railway. No copy is kept off Railway. Railway backups restore only into the same project and environment, so losing the project means losing the backups. This risk is accepted (DEC-049). Backups are deleted on the retention date (SAFE-014). Developers confirm before Playtest 2 that Railway backups can be deleted on that date (DEC-053).
 
 ## 8. Performance and the join moment
 

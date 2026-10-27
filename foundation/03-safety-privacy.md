@@ -3,7 +3,7 @@
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
 - Version: 1.2.0
-- Last updated: 2026-10-26
+- Last updated: 2026-10-27
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -45,7 +45,7 @@ Legend: Yes = can see. No = cannot see. Own = only their own record.
 | Church | Own | Yes | Yes | Yes | Yes |
 | Under-18 answer | Own | No | No | Yes | No |
 | PIN | No (only the person knows it) | No | No | No (stored hashed, never shown) | No |
-| Score | Own | OPEN (GAME-085) | Yes | Yes | Yes (top of leaderboard) |
+| Score | Own | No (GAME-085) | Yes | Yes | Yes (top of leaderboard) |
 | Blind boxes earned and claimed | Own | No | Yes (at claim time) | Yes | No |
 | People you connected with | Own (first name and church) | No | No | Yes (pairs only, for fixing scores) | No |
 | Icebreaker answers | Own pairs only | Only the other person in that pair | No | No | No |
@@ -70,15 +70,15 @@ Legend: Yes = can see. No = cannot see. Own = only their own record.
 ## 5. Accounts and login
 
 - **SAFE-021** [LOCKED] The PIN is 4 digits. It is stored only as a slow hash (ARCH-030). It is never shown, logged, or sent back to the phone. Config: `auth.pin_digits`.
-- **SAFE-022** [LOCKED] After 5 wrong PIN tries in a row, the account locks. Config: `auth.pin_max_attempts`.
-- **SAFE-023** [LOCKED] Only an admin can reset a locked PIN. This replaces the Blueprint's "until an usher resets it" (decision DEC-004). Config: `auth.pin_reset_role`.
+- **SAFE-022** [PROPOSED] After 5 wrong PIN tries in a row, the account locks. A locked account unlocks itself after 60 minutes, during and after the event (DEC-053). This allows about 120 guesses a day against one account, so over the year Wrapped is open a known account's PIN could be guessed. Needs safety review. Config: `auth.pin_max_attempts`, `auth.auto_unlock_minutes`.
+- **SAFE-023** [LOCKED] Only an admin can reset a locked PIN. This replaces the Blueprint's "until an usher resets it" (decision DEC-004). An account can also unlock itself after a wait (SAFE-022), which keeps the same PIN. Config: `auth.pin_reset_role`.
 - **SAFE-044** [PROPOSED] Before resetting a PIN, the admin checks the person's name badge in person. The player then sets a new PIN on their phone.
 
 ## 6. Other rules
 
 - **SAFE-010** [LOCKED] The hidden item list and item locations never appear in the repo, in issues, or in screenshots. They live with the real event data (OPS-040).
 - **SAFE-012** [LOCKED] Prizes are claimed in person on Sunday (GAME-090).
-- **SAFE-014** [PROPOSED] Names, icebreaker answers, and takeaways are kept for 365 days after the event, so Wrapped stays open for a year (WRAP-004, DEC-049). After that date, all player data is deleted from the server, from backups, and from the real data folder (OPS-042). Owner: leadership, checked against the child safety policy (SAFE-015). Config: `data.retention_days_after_event`.
+- **SAFE-014** [PROPOSED] Player data is kept for 365 days after the event, so Wrapped stays open for a year (WRAP-004, DEC-049). On that date every record linked to a player is deleted: names, the under-18 answer, PIN hashes, scores and point history, connections, icebreaker answers, takeaways, check-ins, claims, and audit rows (DEC-053). This covers the server, Railway backups (ARCH-053), and the real data folder (OPS-042). Only totals with no link to a person may stay. Owner: leadership, checked against the child safety policy (SAFE-015). Config: `data.retention_days_after_event`.
 - **SAFE-017** [LOCKED] The summary page (shared takeaways) is visible to signed-in players only. It is not a public web page.
 - **SAFE-018** [LOCKED] The main screen shows a takeaway wall with approved shared takeaways only, between sessions only. Named posts show first name and church. Anonymous posts show "Anonymous".
 

@@ -3,7 +3,7 @@
 # Status: Active
 # Owner: Jonathan (@jonathango98)
 # Version: 1.2.0
-# Last updated: 2026-10-26
+# Last updated: 2026-10-27
 # Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 #
 # How to read this file
@@ -51,9 +51,9 @@ blind_box:
   trading: false                      # GAME-079 PROPOSED: no blind box trading
 
 leaderboard:
-  church_score_denominator: players_with_points  # GAME-089 PROPOSED: only players with at least 1 point count
+  church_score_denominator: active_players  # GAME-089 PROPOSED: only players with points beyond joining count
   church_score_prior_players: 5       # GAME-089 PROPOSED: k, the average players added to every church in the shrunk average
-  church_min_players: 1               # GAME-082 PROPOSED: minimum players with points for a church to appear on the board
+  church_min_players: 1               # GAME-082 PROPOSED: minimum active players for a church to appear on the board
   main_screen_top_n: 10               # GAME-083 PROPOSED: rows shown on the main screen leaderboards
   tie_break: first_to_reach           # GAME-084 PROPOSED: the earlier latest point award ranks higher
   in_app_leaderboard: false           # GAME-085 PROPOSED: no leaderboard and no rank on the phone
@@ -77,9 +77,11 @@ qr:
 
 auth:
   pin_digits: 4                       # SAFE-021 LOCKED: PIN length
-  pin_max_attempts: 5                 # SAFE-022 LOCKED: wrong tries before the account locks
+  pin_max_attempts: 5                 # SAFE-022 PROPOSED: wrong tries before the account locks
+  auto_unlock_minutes: 60             # SAFE-022 PROPOSED: a locked account unlocks itself after this long
   pin_reset_role: admin               # SAFE-023 LOCKED: only an admin resets a locked PIN
-  ip_rate_limit_per_minute: 60        # ARCH-031 PROPOSED: login and sign-up attempts allowed per IP per minute
+  login_ip_limit_per_minute: 60       # ARCH-031 PROPOSED: login attempts allowed per IP per minute
+  signup_ip_limit_per_minute: 600     # ARCH-031 PROPOSED: sign-ups allowed per IP per minute (venue Wi-Fi shares one address)
 
 join:
   points_while_paused: true           # GAME-044 PROPOSED: join points are given during a pause (Day 1 stage intro)
