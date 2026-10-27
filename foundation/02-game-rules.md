@@ -99,7 +99,7 @@ Tier size: 10 scans per tier. Config: `checkin.tier_size`.
 - **GAME-032** [PROPOSED] Points are given when the takeaway is submitted. Review only controls whether a shared post becomes visible (SAFE-007). An admin can revoke points for a junk entry (GAME-111).
 - **GAME-033** [LOCKED] Takeaways cannot be submitted while the game is paused. Config: `journal.allow_while_paused`.
 - **GAME-034** [PROPOSED] Words are counted by splitting the text on spaces and line breaks. "God is good" is 3 words. Punctuation alone, like "-", does not count as a word.
-- **GAME-035** [PROPOSED] A player does not need to check in to a session to write a takeaway for it, and there is no deadline beyond the pause and off rules (GAME-033, GAME-108). Points stay once per session (GAME-030) (DEC-047). Config: `journal.require_checkin`.
+- **GAME-035** [PROPOSED] A player does not need to check in to a session to write a takeaway for it, but the session must have ended (GAME-026, DEC-051). There is no deadline beyond the pause and off rules (GAME-033, GAME-108). Points stay once per session (GAME-030) (DEC-047). Config: `journal.require_checkin`.
 - **GAME-036** [PROPOSED] A player can write a takeaway only for a session that the admin has ended.
 
 ## 5. Explore
@@ -124,7 +124,7 @@ Stickers replace the coin system from the Blueprint (decision DEC-002). Score un
 - **GAME-076** [LOCKED] Packs are limited and first come, first served. When they run out, they are gone. When claims reach the stock number (GAME-069), the server refuses new claims with `OUT_OF_STOCK`.
 - **GAME-069** [OPEN] The number of packs. It comes from the final sticker order. Until it is set, the server does not limit claims by stock. Config: `stickers.stock_total`.
 - **GAME-077** [LOCKED] There is no "boxes left" counter anywhere: not on the main screen, not in the app. Config: `stickers.live_counter`.
-- **GAME-078** [PROPOSED] Claims are open on Day 1 evening, during Day 2 breaks, and on Sunday before the service (option B, DEC-045). On Sunday the game is off, so nothing earns points, but sticker claims still work until an admin closes redemption when the service starts. Unclaimed stickers are lost when redemption closes. Config: `stickers.redemption_window`.
+- **GAME-078** [PROPOSED] Claims are open on Day 1 evening, during Day 2 breaks, and on Sunday before the service (option B, DEC-045). On Sunday the game is off, so nothing earns points, but sticker claims still work until an admin taps Close redemption when the service starts (GAME-110, DEC-051). Unclaimed stickers are lost when redemption closes. Config: `stickers.redemption_window`.
 - **GAME-079** [PROPOSED] No sticker trading (option B, DEC-040). Config: `stickers.trading`.
 - **GAME-080** [PROPOSED] Sticker order is about 450 stickers. This is an estimate. Recalculate after Playtest 1 (conflict C6).
 
@@ -174,11 +174,11 @@ Example Church B has 1 player with 300 points. Its church score is (300 + 5 × 9
 - **GAME-105** [PROPOSED] The venue is in Houston, Texas, so the timezone is `America/Chicago` (DEC-050). The server stores all times in UTC and uses this timezone for "per day" limits (GAME-042). Config: `game.timezone`.
 - **GAME-106** [PROPOSED] No automatic game hours. An admin sets the game to off at the end of each game day by hand (OPS-005, SAFE-027, DEC-049). Owner: leadership. Config: `game.hours_window`.
 - **GAME-108** [PROPOSED] While the game is off, the server refuses every earning action and sticker claim with `GAME_OFF` (API-020). Sign-up is closed. Login, the player's own data, the summary page, and Wrapped (after unlock) still work. Sticker claims also still work inside the redemption window (GAME-078).
-- **GAME-107** [PROPOSED] The server loads the timetable and pauses the game at each session start, as a backup to manual pause. It never resumes the game; ending a session does (GAME-026). Admins can still pause and resume by hand, for example when a session runs late (DEC-049). Config: `game.auto_pause_schedule`.
+- **GAME-107** [PROPOSED] An admin enters a start time with each session, and the server pauses the game at that time, as a backup to manual pause (DATA-014, DEC-051). It never resumes the game; ending a session does (GAME-026). Admins can still pause and resume by hand, for example when a session runs late (DEC-049). Config: `game.auto_pause_schedule`.
 
 ## 10. Admin and usher powers
 
-- **GAME-110** [LOCKED] Admins can: pause and resume the game, set the game to off, end a session (GAME-026), review shared takeaways, award and revoke points by hand, reset a locked PIN (SAFE-023), fix a player's church, manage the church list, booths, hidden item numbers, sessions, and usher accounts, and unlock Wrapped (WRAP-002).
+- **GAME-110** [LOCKED] Admins can: pause and resume the game, set the game to off, end a session (GAME-026), review shared takeaways, award and revoke points by hand, reset a locked PIN (SAFE-023), fix a player's church, manage the church list, booths, hidden item numbers, sessions, and usher accounts, close sticker redemption on Sunday (GAME-078), and unlock Wrapped (WRAP-002).
 - **GAME-111** [LOCKED] Every manual award or revocation needs a written reason and writes an audit row (ARCH-050). Revocation is the only action that lowers a score (GAME-004).
 - **GAME-112** [LOCKED] Ushers can: scan My Code for booth visits, photobooth visits, hidden item turn-ins, and sticker claims, and look up a player by name to help them. Ushers cannot give arbitrary points. Only admins can (GAME-110).
 - **GAME-113** [PROPOSED] If a player's phone is dead, an usher looks the player up by name and records the same quest (booth, photobooth, hidden item, sticker claim) without a scan. The usher's account is saved on the record.

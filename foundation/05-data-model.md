@@ -63,6 +63,7 @@ This file lists the tables, their fields, and the database constraints that enfo
 | `id` | integer | Always 1. Exactly one row |
 | `state` | text | `on`, `paused`, or `off` (GAME-100) |
 | `wrapped_unlocked` | boolean | WRAP-002 |
+| `redemption_closed_at` | timestamp, nullable | Set when an admin closes sticker redemption on Sunday (GAME-078) |
 | `updated_at`, `updated_by` | timestamp, staff ID | Every change is also audited |
 
 - **DATA-013** [LOCKED] GameState has exactly one row. A check constraint keeps `state` to the three allowed values.
@@ -76,8 +77,9 @@ This file lists the tables, their fields, and the database constraints that enfo
 | `title` | text | Entered by an admin |
 | `ended_at` | timestamp, nullable | Set by "End session" (GAME-026). Check-in opens then |
 | `checkin_closed_at` | timestamp, nullable | Set when the admin closes check-in (GAME-024) |
+| `starts_at` | timestamp, nullable | Entered by an admin. The server pauses the game then (GAME-107). Admin only (DATA-014) |
 
-- **DATA-014** [LOCKED] The Session table holds no room names and no schedule tied to where minors will be (SAFE-037). Titles only.
+- **DATA-014** [LOCKED] The Session table holds no room names or places (SAFE-037). It holds a title and an optional start time for auto-pause (GAME-107, DEC-051). Start times are seen only by admins, never by players or on the main screen.
 
 ### Connection
 
