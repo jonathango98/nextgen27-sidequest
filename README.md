@@ -33,24 +33,15 @@ gh pr list --state open    # every open PR, including drafts
 
 ### Working
 
-Done and live. Newest first: add your row at the top, in plain words. Who built it, the rule IDs, and the details go in [CHANGELOG.md](CHANGELOG.md).
+What the app can do today, grouped by area, in plain words for anyone to read. When your piece works end to end, update its area's row (or add one): set today's date, add the piece ID in backticks to Pieces, and say what people can now do (ENG-108). Who built it, the rule IDs, and the details go in [CHANGELOG.md](CHANGELOG.md).
 
-| What | Done |
-|---|---|
-| The feature tree now includes this week's new work: automatic pause at each session's start time, the Sunday Close redemption button, and the verse picker. The blind box stock piece is unlocked | 2026-10-27 |
-| 36 of the 40 open game questions answered, from when connection points land to how church scores stay fair and how long data is kept. 18 pieces no longer wait on a decision. Prize and blind box questions are still open | 2026-10-26 |
-| `/pick-task` first asks if you already know what you want, with a link to the feature tree map. If you do, it shows every task that's ready to start, grouped by feature, and you pick one without answering the other questions | 2026-10-27 |
-| `/pick-task` now offers only work that's ready to start, sized to fit the volunteer's Claude plan, and double-checks nobody else claimed it before calling dibs | 2026-10-26 |
-| Feature tree: every feature is split into small pieces, each saying what it needs first, so volunteers can see what's ready to start. Pieces that wait on an undecided rule stay locked. A map of the tree updates itself after every merge | 2026-10-26 |
-| Screen skeleton: every player screen is a plain page, and every button and tab goes to the right next screen. The bottom bar is now Home, My Code, and Quests, and players land on Home after joining or logging in. No final look and no game logic yet | 2026-10-26 |
-| Automatic browser tests now check joining and logging in on Safari's engine too. They used to fail there because the test site had no HTTPS. Real players were never affected | 2026-10-25 |
-| Joining asks "Are you 18 or older?" instead of "Are you under 18?", which was confusing | 2026-10-24 |
-| Joining and logging in: players join with their name, church, and a PIN, land on their own code, and can log in on another phone. Too many wrong PINs lock the account. Unlocking comes with the Admin console | 2026-10-23 |
-| My Code: each player has their own QR code that keeps changing, so a screenshot can't be passed around | 2026-10-23 |
-| Test server online: every change to the main code goes live on a private test site, and each proposed change gets its own preview link | 2026-10-23 |
-| App foundation: the app starts, reads the game settings, and every player page shares one look (score on top; My Code, Scan, and Quests buttons at the bottom) | 2026-10-23 |
-| Health check added to the route list, so the host can tell the app is running | 2026-10-23 |
-| Project setup: game rules and plans written, hosting chosen, repo safety checks, and AI helper tools for volunteers | 2026-10-23 |
+| Updated | Pieces | Area | What works today |
+|---|---|---|---|
+| 2026-10-24 | `auth.join-login` | Joining and logging in | Players join with their name, church, a PIN, and an "Are you 18 or older?" question. They can log in again on another phone. Too many wrong PINs lock the account |
+| 2026-10-23 | `code.my-code` | Personal QR code | Each player has their own QR code on the My Code screen. It keeps changing, so a screenshot can't be passed around |
+| 2026-10-26 | `screens.skeleton` | Player screens | Every player screen exists as a plain page, and every button and tab leads to the right next screen. The bottom bar has Home, My Code, and Quests. The final look and the game itself come next |
+| 2026-10-27 | | Game rules | The full game rules are written down, and most open game questions are answered. Prizes and what goes inside the blind boxes are still to be decided |
+| 2026-10-27 | `app.foundation` `infra.hosting` | Behind the scenes | A private test site updates with every change, and each proposed change gets its own preview link. Automatic tests check pages on the iPhone browser engine too. Game numbers live in one settings file, so they're easy to tune after playtests. Volunteers get a map of what's ready to build and a `/pick-task` helper to claim work |
 
 ### In progress
 
