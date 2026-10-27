@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Volunteers who already know what they want had to answer questions first.
 - Rule IDs: ENG-101, ENG-105 to ENG-109, AI-003, AI-072
 - Status: Done
-- PR: draft
+- PR: #40
 
 ## 2026-10-27 · docs/tree-new-pieces · Claude Opus 5.5 / @jonathango98
 
