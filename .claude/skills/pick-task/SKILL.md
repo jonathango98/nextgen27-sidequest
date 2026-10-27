@@ -88,6 +88,7 @@ If fewer than 3 fit, show what there is and say so. For each option, write:
 - **Size:** "one session" (S) or "about two sessions" (M).
 - **Difficulty:** easy, medium, or hard for *this* person.
 - **You'll learn:** the piece's `learn` line.
+- **Try it when done:** the piece's `try_it` line, so they know how to check it works.
 - **Read first:** the 2 or 3 rule IDs from `rules` that matter most.
 - **Unlocks:** what finishing it opens up, if anything ("unlocks 12 pieces, including the points service").
 - **Heads-up:** only if there is one (safety review, might be taken).
@@ -140,7 +141,7 @@ Use `feat` for pieces, `chore` for `infra` pieces, and the matching type for iss
 
    ## How to test
 
-   1. Not ready yet. Draft claim (ENG-101).
+   1. Not ready yet. Draft claim (ENG-101). When done: <try_it>
 
    ## Before review
 

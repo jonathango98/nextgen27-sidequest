@@ -72,6 +72,7 @@ def main():
                     f"  {n}. {p['id']} | {p['size']}, {p['level']}, {p['area']}{safety} | unlocks {unlocks[p['id']]}"
                 )
                 print(f"     {p['what']}")
+                print(f"     try it: {p['try_it']}")
         return
 
     print(f"READY ({len(ready)})")
@@ -81,6 +82,7 @@ def main():
             f"- {p['id']} | {p['size']}, {p['level']}, {p['area']}{safety} | unlocks {unlocks[p['id']]}"
         )
         print(f"  what: {p['what']}")
+        print(f"  try it: {p['try_it']}")
         print(f"  learn: {p['learn']}")
         print(f"  rules: {', '.join(p['rules'])}")
     print(
