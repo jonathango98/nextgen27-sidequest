@@ -20,6 +20,16 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-27 · chore/pick-task-venv · Claude Opus 5.5 / @jonathango98
+
+- What: `/pick-task` sets up Python first. It reuses `.venv`, or makes one with Python 3.14 and installs `requirements-dev.txt` when packages are missing. It runs `unlocked.py`, ruff, and pytest through `source .venv/bin/activate`.
+- Why: `python .claude/skills/pick-task/unlocked.py` failed with `No module named 'yaml'` outside the venv.
+- Rule IDs: AI-033, ENG-101
+- Status: Done
+- PR: #41
+
+---
+
 ## 2026-10-27 · chore/pick-task-tree · Claude Opus 5.5 / @jonathango98
 
 - What: `/pick-task` first asks whether the volunteer already knows what they want, with a link to the feature tree map. If yes, `unlocked.py --tree` lists every READY piece, numbered and grouped by feature, and they pick by number or piece ID without the three questions. The normal claim steps still run.

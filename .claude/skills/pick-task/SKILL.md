@@ -11,14 +11,25 @@ Work comes from the feature tree in `foundation/feature-tree.yaml`. Every featur
 
 ## 1. See what's ready
 
-Run these from the repo root:
+First make sure the project's Python is ready. `unlocked.py` needs PyYAML, and the claim step needs ruff and pytest. Run this from the repo root:
+
+```bash
+test -x .venv/bin/python || python3.14 -m venv .venv
+source .venv/bin/activate && python -c "import yaml, ruff, pytest" 2>/dev/null || python -m pip install -q -r requirements-dev.txt
+```
+
+- If `.venv` is missing, tell the volunteer in one line that you're making one and installing the pinned packages from `requirements-dev.txt`.
+- If `python3.14` is not found, stop and ask them to install Python 3.14 (the project needs 3.14, see `pyproject.toml`). Don't use a different version.
+- Each shell command starts fresh, so begin every command that runs `python`, `ruff`, or `pytest` with `source .venv/bin/activate &&`.
+
+Then run these from the repo root:
 
 ```bash
 git fetch --prune
 git branch -r
 gh pr list --state open --json number,title,headRefName,author,isDraft
 gh issue list --state open --json number,title,labels,assignees --limit 50
-python .claude/skills/pick-task/unlocked.py
+source .venv/bin/activate && python .claude/skills/pick-task/unlocked.py
 ```
 
 `unlocked.py` reads the tree, the README Project status, and the OPEN table in `foundation/13-decisions.md`. It prints:
@@ -48,7 +59,7 @@ The map updates on every merge to `main`, so it can miss pieces someone claimed 
 
 Skip the three questions and steps 3 and 4.
 
-1. Run `python .claude/skills/pick-task/unlocked.py --tree` in place of the plain call above. It prints every READY piece, numbered and grouped under its feature, with how many of that feature's pieces are still locked.
+1. Run `source .venv/bin/activate && python .claude/skills/pick-task/unlocked.py --tree` in place of the plain call above. It prints every READY piece, numbered and grouped under its feature, with how many of that feature's pieces are still locked.
 2. Cross out taken pieces the same way as above. Show the tree as printed, minus taken pieces, plus open unassigned issues as a last group. Keep the numbers so they can reply with one.
 3. If they named a piece ID, skip the tree. Check that the piece is READY and not taken. If it's locked, say what it waits on, then show the tree.
 4. Once they pick, show that one piece in the step 4 format (size, read first, unlocks, heads-up). Say plainly if it's a safety review piece or an M piece (about two sessions), but don't block their choice. Then go to step 5.
@@ -103,7 +114,7 @@ Use `feat` for pieces, `chore` for `infra` pieces, and the matching type for iss
 4. Run the formatter, linter, and tests (AI-033), then commit only those two files:
 
    ```bash
-   ruff format --check . && ruff check . && pytest -q
+   source .venv/bin/activate && ruff format --check . && ruff check . && pytest -q
    git add README.md CHANGELOG.md
    git commit -m "chore: claim <piece-id>"
    ```
