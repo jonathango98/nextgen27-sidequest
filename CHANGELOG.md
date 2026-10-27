@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Volunteers found the technical `what` lines hard to pick from, and nothing said how to check a piece works.
 - Rule IDs: ENG-105, ENG-110, DEC-054, AI-013
 - Status: Done
-- PR: draft
+- PR: #42
 
 ## 2026-10-27 · chore/pick-task-venv · Claude Opus 5.5 / @jonathango98
 
