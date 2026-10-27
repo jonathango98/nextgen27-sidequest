@@ -1,6 +1,6 @@
 ---
 name: pick-task
-description: Help a Side Quest volunteer choose what to work on, then call dibs on it. Use when someone types /pick-task or says things like "I want to help", "what can I work on?", "give me options", "I'm free, what's next?", or "find me a task". Reads the feature tree, the README Project status, open branches, open PRs, and open issues, offers 3 unlocked pieces sized to the volunteer's Claude plan, and claims the one they pick (ENG-101, ENG-108). Also use for "/pick-task tree", "/pick-task <piece-id>", "show me everything that's ready", or "I know what I want": skip the questions and let them pick from a tree of every ready piece.
+description: Help a Side Quest volunteer choose what to work on, then call dibs on it. Use when someone types /pick-task or says things like "I want to help", "what can I work on?", "give me options", "I'm free, what's next?", or "find me a task". Reads the feature tree, the README Project status, open branches, open PRs, and open issues, offers 3 unlocked pieces sized to the volunteer's Claude plan, and claims the one they pick (ENG-101, ENG-108). Asks first whether they already know what they want, with a link to the feature tree map. If yes, or for "/pick-task tree" or "/pick-task <piece-id>", skips the other questions and lets them pick from every ready piece.
 ---
 
 # Pick a task
@@ -31,16 +31,29 @@ Then cross out READY pieces that are taken but not yet in the README. If an open
 
 Open issues with no assignee are also candidates, especially `good first issue`. Bug fixes, docs, and tooling need no piece (ENG-109). If an issue asks for a new feature that isn't in the tree, don't offer it. Say it needs a tree PR first.
 
+## 2. Ask if they already know what they want
+
+Ask this first, on its own, and wait for the answer. Skip it if they typed `/pick-task tree` or a piece ID, or already said what they want.
+
+> Do you already know what you want to work on? Here's the map of every feature and what's ready to start: https://jonathango98.github.io/nextgen27-sidequest/
+>
+> a) Yes, I'll pick from the list. b) No, help me choose.
+
+- **Yes:** follow the fast path below.
+- **No:** ask the three quick questions.
+
+The map updates on every merge to `main`, so it can miss pieces someone claimed on an open branch. The list you show from `unlocked.py` is the live check.
+
 ### Fast path: pick from the tree
 
-Use this when the volunteer already knows what they want: they typed `/pick-task tree` or `/pick-task <piece-id>`, or said "show me everything" or "just list what's ready". Skip steps 2 to 4.
+Skip the three questions and steps 3 and 4.
 
 1. Run `python .claude/skills/pick-task/unlocked.py --tree` in place of the plain call above. It prints every READY piece, numbered and grouped under its feature, with how many of that feature's pieces are still locked.
 2. Cross out taken pieces the same way as above. Show the tree as printed, minus taken pieces, plus open unassigned issues as a last group. Keep the numbers so they can reply with one.
 3. If they named a piece ID, skip the tree. Check that the piece is READY and not taken. If it's locked, say what it waits on, then show the tree.
-4. Once they pick, show that one piece in the step 4 format (size, read first, unlocks, heads-up). Say plainly if it's a safety review piece or an M piece on a Pro plan, but don't block their choice. Then go to step 5.
+4. Once they pick, show that one piece in the step 4 format (size, read first, unlocks, heads-up). Say plainly if it's a safety review piece or an M piece (about two sessions), but don't block their choice. Then go to step 5.
 
-## 2. Ask three quick questions
+### Three quick questions
 
 Skip any the volunteer already answered. Keep it to one message, numbered, with options they can reply to fast (for example "1a, 2c, 3b"):
 
