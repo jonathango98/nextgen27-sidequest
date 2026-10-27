@@ -103,7 +103,7 @@ Contrast ratios below were checked with the WCAG 2.1 formula.
 - **UI-037** [PROPOSED] My Code shows the QR panel, then a black Scan button. The scanner, the icebreaker, and the scan result all sit under the My Code tab.
 - **UI-038** [PROPOSED] The shared takeaways page (`/summary`) lists approved shared takeaways grouped by session, newest session first, as takeaway cards (section 3).
 
-The Mix mockup shows a scan going to the icebreaker first and the points result after it. GAME-016 settles it (DEC-042): points land only once both people have typed their answer, so build this order.
+The Mix mockup shows a scan going to the icebreaker first and the points result after it. GAME-016 settles it (DEC-042): each player's points land when they type their own answer, so build this order.
 
 ## 5. Main screen
 

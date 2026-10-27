@@ -65,7 +65,7 @@ journal:
 
 icebreaker:
   who_types: each_person              # GAME-015 PROPOSED: each person types the other's answer (conflict C5)
-  award_trigger: both_answered        # GAME-016 PROPOSED: both earn once both answers are typed, no time limit
+  award_trigger: own_answer           # GAME-016 PROPOSED: each player earns when they type their own answer, no time limit
   categories: [verse, food, game, song, place, hobby]  # GAME-019 PROPOSED: starter pool, game director edits
 
 qr:
