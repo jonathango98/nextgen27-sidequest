@@ -2,8 +2,8 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.1.0
-- Last updated: 2026-10-26
+- Version: 1.2.0
+- Last updated: 2026-10-27
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -47,15 +47,15 @@ The tree is the source. If this table and the tree disagree, the tree wins.
 | Feature | Milestone | Pieces | Needs first, from other features | Pieces locked by OPEN rules |
 |---|---|---|---|---|
 | `staff` Staff accounts and roles | Core build | 4 | `points.audit-log` | None |
-| `game-state` Game states and pause | Core build | 3 | `staff.login`, `points.audit-log` | None |
+| `game-state` Game states and pause | Core build | 4 | `staff.login`, `points.audit-log`, `checkin.sessions` | None |
 | `points` Points service | Core build | 4 | `game-state.core` | None |
-| `connections` Scanner and connections, with icebreaker | Core build | 7 | `points.ledger` | None |
+| `connections` Scanner and connections, with icebreaker | Core build | 8 | `points.ledger` | None |
 | `look` Mix look on player screens | January build | 5 | Working pieces only | None |
 | `home` Home and Quests pages | January build | 2 | `points.ledger`, `blind-box.math` | None |
 | `checkin` Session check-in | January build | 5 | `staff.login`, `points.audit-log`, `game-state.admin-switch`, `screen.shell`, `connections.scanner-camera`, `points.ledger` | None |
 | `explore` Explore | January build | 4 | `staff.login`, `points.audit-log`, `usher.scan`, `points.ledger` | None |
 | `journal` Journal and Summary page | January build | 6 | `checkin.sessions`, `points.ledger`, `checkin.end-session`, `staff.login`, `points.audit-log` | None |
-| `blind-box` Blind boxes (Open Box) | January build | 4 | `points.ledger`, `usher.scan`, `game-state.core` | `stock` (GAME-069) |
+| `blind-box` Blind boxes (Open Box) | January build | 5 | `points.ledger`, `usher.scan`, `game-state.core`, `game-state.admin-switch` | None |
 | `leaderboards` Leaderboards and church score | January build | 3 | `points.ledger`, `screen.shell` | None |
 | `usher` Usher console | January build | 2 | `staff.login`, `connections.scanner-camera` | None |
 | `admin` Admin console | January build | 6 | `staff.login`, `points.audit-log`, `points.ledger`, `connections.scan-save` | None |

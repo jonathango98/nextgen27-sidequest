@@ -2,7 +2,7 @@
 
 - Status: PROPOSED (developers confirm at kickoff)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.3.0
+- Version: 1.4.0
 - Last updated: 2026-10-27
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -80,6 +80,7 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 | GET, POST | `/admin/staff` | Manage usher and admin accounts | ARCH-036 |
 | GET | `/admin/activity` | Unusual activity view | ARCH-062 |
 | GET | `/admin/audit` | Audit log | ARCH-050 |
+| POST | `/admin/redemption/close` | Close blind box redemption on Sunday when the service starts | GAME-078, GAME-110 |
 | POST | `/admin/wrapped/unlock` | Unlock Wrapped | WRAP-002 |
 | POST | `/admin/screen-mode` | Switch this device to screen mode | ARCH-037 |
 

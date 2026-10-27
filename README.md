@@ -37,6 +37,7 @@ Done and live. Newest first: add your row at the top, in plain words. Who built 
 
 | What | Done |
 |---|---|
+| The feature tree now includes this week's new work: automatic pause at each session's start time, the Sunday Close redemption button, and the verse picker. The blind box stock piece is unlocked | 2026-10-27 |
 | 36 of the 40 open game questions answered, from when connection points land to how church scores stay fair and how long data is kept. 18 pieces no longer wait on a decision. Prize and blind box questions are still open | 2026-10-26 |
 | `/pick-task` now offers only work that's ready to start, sized to fit the volunteer's Claude plan, and double-checks nobody else claimed it before calling dibs | 2026-10-26 |
 | Feature tree: every feature is split into small pieces, each saying what it needs first, so volunteers can see what's ready to start. Pieces that wait on an undecided rule stay locked. A map of the tree updates itself after every merge | 2026-10-26 |
@@ -56,7 +57,6 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| Add the new work from this week's decisions to the feature tree (auto-pause, Close redemption, verse picker) | `docs/tree-new-pieces` | draft | 2026-10-27 | Claude Opus 5.5 / @jonathango98 |
 
 ### Planned
 

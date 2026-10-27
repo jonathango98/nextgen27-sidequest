@@ -5,7 +5,7 @@
 
 Every planned piece of work and what it needs first (ENG-105 to ENG-108). Pieces flow left to right: finishing one unlocks the pieces it points to. Run `/pick-task` to claim one.
 
-**Working** 5 · **In progress** 0 · **Ready** 10 · **Waiting** 62 · **Needs decision** 1
+**Working** 5 · **In progress** 0 · **Ready** 10 · **Waiting** 66 · **Needs decision** 0
 
 Colors: green Working, blue In progress, gold Ready, gray Waiting, red dashed Needs decision.
 
@@ -28,6 +28,7 @@ flowchart LR
     game_state_core["game-state.core<br/>M · medium"]
     game_state_banner["game-state.banner<br/>S · easy"]
     game_state_admin_switch["game-state.admin-switch<br/>S · medium"]
+    game_state_auto_pause["game-state.auto-pause<br/>M · medium"]
   end
   subgraph f_points ["Points service"]
     points_audit_log["points.audit-log<br/>S · medium"]
@@ -43,6 +44,7 @@ flowchart LR
     connections_points["connections.points<br/>M · hard"]
     connections_icebreaker_question["connections.icebreaker-question<br/>S · medium"]
     connections_icebreaker_answer["connections.icebreaker-answer<br/>M · hard"]
+    connections_verse_picker["connections.verse-picker<br/>S · medium"]
   end
   subgraph f_look ["Mix look on player screens"]
     look_frame["look.frame<br/>M · easy"]
@@ -81,6 +83,7 @@ flowchart LR
     blind_box_open_box["blind-box.open-box<br/>S · easy"]
     blind_box_claim["blind-box.claim<br/>M · medium"]
     blind_box_stock["blind-box.stock<br/>S · medium"]
+    blind_box_close_redemption["blind-box.close-redemption<br/>M · medium"]
   end
   subgraph f_leaderboards ["Leaderboards and church score"]
     leaderboards_players["leaderboards.players<br/>M · medium"]
@@ -135,6 +138,8 @@ flowchart LR
   game_state_core --> game_state_admin_switch
   staff_login --> game_state_admin_switch
   points_audit_log --> game_state_admin_switch
+  checkin_sessions --> game_state_auto_pause
+  game_state_admin_switch --> game_state_auto_pause
   app_foundation --> points_audit_log
   points_audit_log --> points_ledger
   game_state_core --> points_ledger
@@ -150,6 +155,7 @@ flowchart LR
   points_ledger --> connections_points
   connections_scan_save --> connections_icebreaker_question
   connections_icebreaker_question --> connections_icebreaker_answer
+  connections_icebreaker_answer --> connections_verse_picker
   screens_skeleton --> look_frame
   look_frame --> look_components
   look_components --> look_home
@@ -199,6 +205,8 @@ flowchart LR
   blind_box_math --> blind_box_claim
   game_state_core --> blind_box_claim
   blind_box_claim --> blind_box_stock
+  blind_box_claim --> blind_box_close_redemption
+  game_state_admin_switch --> blind_box_close_redemption
   points_ledger --> leaderboards_players
   screen_shell --> leaderboards_players
   points_ledger --> leaderboards_churches
@@ -254,8 +262,7 @@ flowchart LR
   classDef decision fill:#fdeeec,stroke:#b42318,stroke-dasharray:4 3,color:#14151a
   class app_foundation,auth_join_login,code_my_code,infra_hosting,screens_skeleton working
   class connections_scanner_camera,connections_table,game_state_core,look_frame,points_audit_log,ready_backups,ready_load_test,ready_logout,ready_rate_limits,staff_accounts ready
-  class admin_audit_view,admin_award_revoke,admin_churches,admin_fix_church,admin_pin_reset,admin_players,blind_box_claim,blind_box_math,blind_box_open_box,checkin_close,checkin_end_session,checkin_hall_code,checkin_scan,checkin_sessions,connections_icebreaker_answer,connections_icebreaker_question,connections_incoming,connections_points,connections_scan_save,explore_booth,explore_hidden_item,explore_photobooth,explore_places,game_state_admin_switch,game_state_banner,home_progress,home_quests,journal_list,journal_review,journal_sharing,journal_summary,journal_table,journal_write,leaderboards_churches,leaderboards_in_app,leaderboards_players,look_code,look_components,look_home,look_summary,points_join,points_ledger,points_score_bar,ready_retention,recap_totals,recap_verse,screen_refresh,screen_shell,screen_takeaway_wall,staff_login,staff_manage,staff_screen_mode,usher_player_lookup,usher_scan,wrapped_cards,wrapped_collection,wrapped_journal,wrapped_people,wrapped_play_style,wrapped_save_image,wrapped_together,wrapped_unlock waiting
-  class blind_box_stock decision
+  class admin_audit_view,admin_award_revoke,admin_churches,admin_fix_church,admin_pin_reset,admin_players,blind_box_claim,blind_box_close_redemption,blind_box_math,blind_box_open_box,blind_box_stock,checkin_close,checkin_end_session,checkin_hall_code,checkin_scan,checkin_sessions,connections_icebreaker_answer,connections_icebreaker_question,connections_incoming,connections_points,connections_scan_save,connections_verse_picker,explore_booth,explore_hidden_item,explore_photobooth,explore_places,game_state_admin_switch,game_state_auto_pause,game_state_banner,home_progress,home_quests,journal_list,journal_review,journal_sharing,journal_summary,journal_table,journal_write,leaderboards_churches,leaderboards_in_app,leaderboards_players,look_code,look_components,look_home,look_summary,points_join,points_ledger,points_score_bar,ready_retention,recap_totals,recap_verse,screen_refresh,screen_shell,screen_takeaway_wall,staff_login,staff_manage,staff_screen_mode,usher_player_lookup,usher_scan,wrapped_cards,wrapped_collection,wrapped_journal,wrapped_people,wrapped_play_style,wrapped_save_image,wrapped_together,wrapped_unlock waiting
 ```
 
 ## Ready now
@@ -277,4 +284,4 @@ flowchart LR
 
 ## Needs a decision
 
-- `blind-box.stock`: GAME-069 (Game director)
+- None

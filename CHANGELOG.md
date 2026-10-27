@@ -22,11 +22,11 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-10-27 · docs/tree-new-pieces · Claude Opus 5.5 / @jonathango98
 
-- What: Adds feature tree pieces for session start times and auto-pause, the Close redemption button, and the verse picker. Unlocks `blind-box.stock`.
+- What: Adds three feature tree pieces: `game-state.auto-pause` (session start times, GAME-107), `blind-box.close-redemption` (Sunday claims and the Close redemption button, GAME-078), and `connections.verse-picker` (WRAP-012). Adds `POST /admin/redemption/close` to the route list. Unlocks `blind-box.stock`, since the stock number comes from config (GAME-069).
 - Why: DEC-051 to DEC-053 created work that no piece covered, so `/pick-task` could not offer it.
-- Rule IDs: ENG-105 to ENG-108, GAME-107, GAME-078, WRAP-012
-- Status: Started
-- PR: draft
+- Rule IDs: ENG-105 to ENG-108, GAME-107, GAME-078, WRAP-012, GAME-069, API-020
+- Status: Done
+- PR: #39
 
 ## 2026-10-26 · docs/resolve-open-decisions · Claude Opus 5.5 / @jonathango98
 
