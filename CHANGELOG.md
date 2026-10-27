@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-27 · chore/pick-task-tree · Claude Opus 5.5 / @jonathango98
+
+- What: `/pick-task` first asks whether the volunteer already knows what they want, with a link to the feature tree map. If yes, `unlocked.py --tree` lists every READY piece, numbered and grouped by feature, and they pick by number or piece ID without the three questions. The normal claim steps still run.
+- Why: Volunteers who already know what they want had to answer questions first.
+- Rule IDs: ENG-101, ENG-105 to ENG-109, AI-003, AI-072
+- Status: Done
+- PR: #40
+
 ## 2026-10-27 · docs/tree-new-pieces · Claude Opus 5.5 / @jonathango98
 
 - What: Adds three feature tree pieces: `game-state.auto-pause` (session start times, GAME-107), `blind-box.close-redemption` (Sunday claims and the Close redemption button, GAME-078), and `connections.verse-picker` (WRAP-012). Adds `POST /admin/redemption/close` to the route list. Unlocks `blind-box.stock`, since the stock number comes from config (GAME-069).
