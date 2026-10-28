@@ -2,8 +2,8 @@
 #
 # Status: Active
 # Owner: Jonathan (@jonathango98)
-# Version: 1.3.0
-# Last updated: 2026-10-27
+# Version: 1.4.0
+# Last updated: 2026-10-28
 # Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 #
 # How to read this file (rules in 16-feature-tree.md, ENG-105 to ENG-109)
@@ -14,6 +14,8 @@
 #   A piece is Working when its id is in the README Working table, or in already_working below.
 # - A piece is unlocked when every id in "needs" is Working and no rule in "open" is still
 #   listed in 13-decisions.md section 3 (AI-003).
+# - due (on each feature): the Friday every piece of the feature should be Working by (PRD-054).
+#   A piece other pieces need is due by the earliest due date among them. /pick-task works this out.
 # - size: S fits one agent session. M takes about two sessions. Nothing is bigger (ENG-106).
 # - level: how much coding experience it takes (easy, medium, hard).
 # - area: backend, player-app, admin-screens, design, infra (labels in 09 section 5).
@@ -37,54 +39,71 @@ features:
   - id: staff
     name: Staff accounts and roles
     milestone: Core build
+    due: "2026-11-20"
   - id: game-state
     name: Game states and pause
     milestone: Core build
+    due: "2026-12-04"
   - id: points
     name: Points service
     milestone: Core build
+    due: "2026-11-20"
   - id: connections
     name: Scanner and connections, with icebreaker
     milestone: Core build
+    due: "2026-12-04"
   - id: look
     name: Mix look on player screens
     milestone: January build
+    due: "2026-11-27"
   - id: home
     name: Home and Quests pages
     milestone: January build
+    due: "2026-12-11"
   - id: checkin
     name: Session check-in
     milestone: January build
+    due: "2026-12-11"
   - id: explore
     name: Explore
     milestone: January build
+    due: "2026-12-18"
   - id: journal
     name: Journal and Summary page
     milestone: January build
+    due: "2027-01-08"
   - id: blind-box
     name: Blind boxes (Open Box)
     milestone: January build
+    due: "2026-12-18"
   - id: leaderboards
     name: Leaderboards and church score
     milestone: January build
+    due: "2026-12-18"
   - id: usher
     name: Usher console
     milestone: January build
+    due: "2026-12-04"
   - id: admin
     name: Admin console
     milestone: January build
+    due: "2026-12-11"
   - id: screen
     name: Main screen views (leaderboards, takeaway wall, check-in QR, paused)
     milestone: January build
+    due: "2027-01-15"
   - id: wrapped
     name: Wrapped cards
     milestone: January build
+    due: "2027-01-15"
   - id: recap
     name: Conference recap screen
     milestone: January build
+    due: "2027-01-15"
   - id: ready
     name: Game day readiness (log out, rate limits, backups, load test, data cleanup)
-    milestone: Before Playtest 2
+    milestone: January build
+    due: "2027-01-08"
 
 pieces:
   # Staff accounts and roles

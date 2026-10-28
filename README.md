@@ -41,7 +41,7 @@ What the app can do today, grouped by area, in plain words for anyone to read. W
 | 2026-10-23 | `code.my-code` | Personal QR code | Each player has their own QR code on the My Code screen. It keeps changing, so a screenshot can't be passed around |
 | 2026-10-26 | `screens.skeleton` | Player screens | Every player screen exists as a plain page, and every button and tab leads to the right next screen. The bottom bar has Home, My Code, and Quests. The final look and the game itself come next |
 | 2026-10-27 | | Game rules | The full game rules are written down, and most open game questions are answered. Prizes and what goes inside the blind boxes are still to be decided |
-| 2026-10-27 | `app.foundation` `infra.hosting` | Behind the scenes | A private test site updates with every change, and each proposed change gets its own preview link. Automatic tests check pages on the iPhone browser engine too. Game numbers live in one settings file, so they're easy to tune after playtests. Volunteers get a map of what's ready to build and a `/pick-task` helper to claim work |
+| 2026-10-28 | `app.foundation` `infra.hosting` | Behind the scenes | A private test site updates with every change, and each proposed change gets its own preview link. Automatic tests check pages on the iPhone browser engine too. Game numbers live in one settings file, so they're easy to tune after playtests. Volunteers get a map of what's ready to build and a `/pick-task` helper to claim work. Every feature has a due week so all of them are done by January 15, before Playtest 1, and `/pick-task` offers what's due soonest |
 
 ### In progress
 
@@ -49,7 +49,6 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| Build timeline: a due week for every feature, read by `/pick-task` | `docs/build-timeline` | draft | 2026-10-28 | Claude Opus 5.5 / @jonathango98 |
 
 ### Planned
 
@@ -73,7 +72,7 @@ In the foundation, no branch yet. Order follows `foundation/12-team-timeline.md`
 | Main screen views (leaderboards, takeaway wall, check-in QR, paused) | `screen` | UI-040, UI-041, SAFE-018, GAME-020 | January build |
 | Wrapped cards | `wrapped` | WRAP-010 | January build |
 | Conference recap screen | `recap` | WRAP-020 | January build |
-| Game day readiness: log out, rate limits, backups, load test, data cleanup | `ready` | ARCH-031, ARCH-053, ARCH-071, SAFE-014 | Before Playtest 2 |
+| Game day readiness: log out, rate limits, backups, load test, data cleanup | `ready` | ARCH-031, ARCH-053, ARCH-071, SAFE-014 | January build |
 
 ## License
 

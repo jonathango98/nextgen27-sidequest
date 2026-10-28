@@ -1,6 +1,6 @@
 ---
 name: pick-task
-description: Help a Side Quest volunteer choose what to work on, then call dibs on it. Use when someone types /pick-task or says things like "I want to help", "what can I work on?", "give me options", "I'm free, what's next?", or "find me a task". Reads the feature tree, the README Project status, open branches, open PRs, and open issues, offers 3 unlocked pieces sized to the volunteer's Claude plan, and claims the one they pick (ENG-101, ENG-108). Asks first whether they already know what they want, with a link to the feature tree map. If yes, or for "/pick-task tree" or "/pick-task <piece-id>", skips the other questions and lets them pick from every ready piece.
+description: Help a Side Quest volunteer choose what to work on, then call dibs on it. Use when someone types /pick-task or says things like "I want to help", "what can I work on?", "give me options", "I'm free, what's next?", or "find me a task". Reads the feature tree, the README Project status, open branches, open PRs, and open issues, offers 3 unlocked pieces sized for Claude Pro, most urgent first by the build timeline, and claims the one they pick (ENG-101, ENG-108). Asks first whether they already know what they want, with a link to the feature tree map. If yes, or for "/pick-task tree" or "/pick-task <piece-id>", skips the other questions and lets them pick from every ready piece.
 ---
 
 # Pick a task
@@ -8,6 +8,10 @@ description: Help a Side Quest volunteer choose what to work on, then call dibs 
 A volunteer wants to help but doesn't know where to start. Your job: show them 3 pieces of work they can actually finish, in plain words, then call dibs on the one they pick. Talk like a friendly teammate, not a ticket system (AI-045).
 
 Work comes from the feature tree in `foundation/feature-tree.yaml`. Every feature is split into pieces of size S (one session) or M (about two sessions). A piece is ready when the pieces it needs are Working and no OPEN rule locks it (ENG-105 to ENG-107).
+
+Every feature has a `due` Friday from the build weeks in `foundation/12-team-timeline.md`, so all features are done by 2027-01-15, before Playtest 1 (PRD-054). A piece is due by its feature's date, or earlier if a piece that needs it is due sooner. Steer volunteers to what's due soonest, so the project stays on time.
+
+Everyone is on Claude Pro. Don't ask which plan they use.
 
 ## 1. See what's ready
 
@@ -34,7 +38,7 @@ source .venv/bin/activate && python .claude/skills/pick-task/unlocked.py
 
 `unlocked.py` reads the tree, the README Project status, and the OPEN table in `foundation/13-decisions.md`. It prints:
 
-- **READY**: pieces anyone can claim now, with size, level, area, safety review, and how many pieces each one unlocks.
+- **READY**: pieces anyone can claim now, soonest due first, with size, level, area, safety review, due date, and how many pieces each one unlocks. `LATE` means the due date has passed.
 - **IN PROGRESS**: pieces with a row in the README In progress table.
 - **WAITING ON OTHER PIECES** and **NEEDS A DECISION**: locked. Never offer these as claimable (AI-003).
 
@@ -51,34 +55,34 @@ Ask this first, on its own, and wait for the answer. Skip it if they typed `/pic
 > a) Yes, I'll pick from the list. b) No, help me choose.
 
 - **Yes:** follow the fast path below.
-- **No:** ask the three quick questions.
+- **No:** ask the two quick questions.
 
 The map updates on every merge to `main`, so it can miss pieces someone claimed on an open branch. The list you show from `unlocked.py` is the live check.
 
 ### Fast path: pick from the tree
 
-Skip the three questions and steps 3 and 4.
+Skip the two questions and steps 3 and 4.
 
-1. Run `source .venv/bin/activate && python .claude/skills/pick-task/unlocked.py --tree` in place of the plain call above. It prints every READY piece, numbered and grouped under its feature, with how many of that feature's pieces are still locked.
+1. Run `source .venv/bin/activate && python .claude/skills/pick-task/unlocked.py --tree` in place of the plain call above. It prints every READY piece, numbered and grouped under its feature, features in due date order, with how many of that feature's pieces are still locked.
 2. Cross out taken pieces the same way as above. Show the tree as printed, minus taken pieces, plus open unassigned issues as a last group. Keep the numbers so they can reply with one.
 3. If they named a piece ID, skip the tree. Check that the piece is READY and not taken. If it's locked, say what it waits on, then show the tree.
-4. Once they pick, show that one piece in the step 4 format (size, read first, unlocks, heads-up). Say plainly if it's a safety review piece or an M piece (about two sessions), but don't block their choice. Then go to step 5.
+4. Once they pick, show that one piece in the step 4 format (size, due, read first, unlocks, heads-up). Say plainly if it's a safety review piece or an M piece (about two sessions), but don't block their choice. Then go to step 5.
 
-### Three quick questions
+### Two quick questions
 
-Skip any the volunteer already answered. Keep it to one message, numbered, with options they can reply to fast (for example "1a, 2c, 3b"):
+Skip any the volunteer already answered. Keep it to one message, numbered, with options they can reply to fast (for example "1a, 2c"):
 
 1. How comfortable are you with code? a) brand new, b) some experience, c) comfortable
 2. What sounds fun? a) how screens look and feel, b) game logic on the server, c) tools for ushers and admins, d) surprise me
-3. Which Claude plan are you using? a) Pro, b) Max, c) not sure
 
 ## 3. Match pieces to the person
 
 - **Level:** brand new gets `easy` pieces. Some experience gets `easy` or `medium`. Comfortable gets anything.
 - **Interest:** a) `design` and `player-app`, b) `backend`, c) `admin-screens`, d) any area.
-- **Plan:** Pro or not sure: prefer S pieces. Offer an M only if nothing S fits, and say it will take about two sessions, so plan to stop and pick up again. Max: S or M.
+- **Size:** prefer S pieces. Offer an M only if nothing S fits or it's the most urgent piece, and say it will take about two sessions on Claude Pro, so plan to stop and pick up again.
 - **Safety review:** pieces with `safety_review: true` need the `safety-review` label and a second reviewer (SAFE-016, AI-043). Never make one a brand new volunteer's first pick.
-- **Ties:** prefer the piece that unlocks more, then Core build before January build (`12-team-timeline.md`).
+- **Due date:** among pieces that fit, offer the ones due soonest. `LATE` pieces come first. If a `LATE` piece fits their level but not their interest, still offer it as one option and say it's behind schedule.
+- **Ties:** same due date, prefer the piece that unlocks more.
 
 ## 4. Offer 3 options
 
@@ -86,6 +90,7 @@ If fewer than 3 fit, show what there is and say so. For each option, write:
 
 - **Name:** the piece ID and one sentence on what it does for players, in plain words.
 - **Size:** "one session" (S) or "about two sessions" (M).
+- **Due:** the due date, and "behind schedule" if it's `LATE`.
 - **Difficulty:** easy, medium, or hard for *this* person.
 - **You'll learn:** the piece's `learn` line.
 - **Try it when done:** the piece's `try_it` line, so they know how to check it works.
@@ -93,7 +98,7 @@ If fewer than 3 fit, show what there is and say so. For each option, write:
 - **Unlocks:** what finishing it opens up, if anything ("unlocks 12 pieces, including the points service").
 - **Heads-up:** only if there is one (safety review, might be taken).
 
-Then recommend one and say why in one sentence. Let them pick, ask for something different, or ask questions.
+Then recommend one and say why in one sentence. Prefer the one due soonest. Let them pick, ask for something different, or ask questions.
 
 If nothing READY fits, say so plainly. Name the closest locked pieces and what they wait on: the piece they need, or the OPEN rule and its owner from `13-decisions.md` section 3. Suggest asking @jonathango98.
 
@@ -164,7 +169,7 @@ Finish with:
 - The first 3 small steps to start the piece.
 - The docs to read before coding (AI-001), from the piece's `rules`.
 - How to finish: when it works end to end with passing tests, the same PR moves the row to Working. Update its area's row in the Working table: today's date first, the piece ID in backticks in Pieces, and what people can now do in plain words, so the pieces waiting on it unlock (ENG-108).
-- For an M piece on Pro: where a good stopping point is, so the next session can pick up from the draft PR.
+- For an M piece: where a good stopping point is, so the next session can pick up from the draft PR.
 - A starter prompt they can copy, for example: "Read AGENTS.md and the rules for `<piece-id>` (<rule IDs>) in `foundation/feature-tree.yaml`. Show me a short plan with rule IDs before editing anything."
 
 ## Don'ts
