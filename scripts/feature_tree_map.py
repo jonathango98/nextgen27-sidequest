@@ -14,6 +14,7 @@ import argparse
 import json
 import re
 import sys
+from datetime import date
 from pathlib import Path
 
 import yaml
@@ -83,18 +84,44 @@ def statuses(tree, readme, open_rules):
     return result
 
 
+def due_dates(tree):
+    """Due date of every piece (PRD-054): its feature's due date, or earlier if a piece
+    that needs it is due sooner."""
+    feature_due = {f["id"]: str(f["due"]) for f in tree["features"]}
+    pieces = {p["id"]: p for p in tree["pieces"]}
+    due = {}
+
+    def visit(pid):
+        if pid not in due:
+            due[pid] = min(
+                [feature_due[pieces[pid]["feature"]]]
+                + [visit(q) for q, p in pieces.items() if pid in p["needs"]]
+            )
+        return due[pid]
+
+    for pid in pieces:
+        visit(pid)
+    return due
+
+
+def due_label(day):
+    d = date.fromisoformat(day)
+    return f"Due {d:%a %b} {d.day}"
+
+
 def render_markdown(tree, status, open_rules):
     def node_id(pid):
         return pid.replace(".", "_").replace("-", "_")
 
+    due = due_dates(tree)
     lines = ["```mermaid", "flowchart LR"]
     lines.append("  subgraph built [Already working]")
     lines += [f'    {node_id(p["id"])}["{p["id"]}"]' for p in tree["already_working"]]
     lines.append("  end")
-    for f in tree["features"]:
-        lines.append(f'  subgraph f_{node_id(f["id"])} ["{f["name"]}"]')
+    for day in sorted(set(due.values())):
+        lines.append(f'  subgraph w_{day.replace("-", "_")} ["{due_label(day)}"]')
         for p in tree["pieces"]:
-            if p["feature"] == f["id"]:
+            if due[p["id"]] == day:
                 lines.append(
                     f'    {node_id(p["id"])}["{p["id"]}<br/>{p["size"]} · {p["level"]}"]'
                 )
@@ -118,7 +145,8 @@ def render_markdown(tree, status, open_rules):
     counts = {s: sum(v == s for v in status.values()) for s in LABELS}
 
     def listing(state, extra):
-        rows = [f"- `{i}`: {extra(pieces[i])}" for i in pieces if status[i] == state]
+        ids = sorted((i for i in pieces if status[i] == state), key=lambda i: due[i])
+        rows = [f"- `{i}`: {extra(pieces[i])}" for i in ids]
         return rows or ["- None"]
 
     out = [
@@ -128,9 +156,9 @@ def render_markdown(tree, status, open_rules):
         f"> Interactive version: {PAGES_URL}",
         "",
         (
-            "Every planned piece of work and what it needs first (ENG-105 to ENG-108). "
-            "Pieces flow left to right: finishing one unlocks the pieces it points to. "
-            "Run `/pick-task` to claim one."
+            "Every planned piece of work and what it needs first (ENG-105 to ENG-108), "
+            "grouped by the week it is due (PRD-054). Pieces flow left to right in time: "
+            "finishing one unlocks the pieces it points to. Run `/pick-task` to claim one."
         ),
         "",
         " · ".join(f"**{LABELS[s]}** {counts[s]}" for s in LABELS),
@@ -147,7 +175,8 @@ def render_markdown(tree, status, open_rules):
         *listing(
             "ready",
             lambda p: (
-                f"{p['what']} ({p['size']}, {p['level']}, {p['area']})"
+                f"{p['what']} ({p['size']}, {p['level']}, {p['area']}, "
+                f"{due_label(due[p['id']]).lower()})"
                 f"\n  - Try it: {p['try_it']}"
             ),
         ),
@@ -175,6 +204,7 @@ def render_html(tree, status, open_rules, source):
         "features": tree["features"],
         "pieces": tree["pieces"],
         "status": status,
+        "due": due_dates(tree),
         "open": {
             r: v
             for r, v in open_rules.items()

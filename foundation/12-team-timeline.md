@@ -2,8 +2,8 @@
 
 - Status: Active (dates are approximate until the event date is confirmed, PRD-022)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.2.0
-- Last updated: 2026-10-27
+- Version: 1.3.0
+- Last updated: 2026-10-28
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -44,9 +44,10 @@ This file lists the roles, which folders each role owns, the milestones, and wha
 |---|---|---|
 | Early November | Leadership approval | Game and safety rules approved, budget approved |
 | Mid November | Kickoff | Plan locked, repo set up, roles claimed, PROPOSED items confirmed or changed |
-| Late November to December 18 | Core build | Joining, personal codes, scanning, points, game pause |
+| November 2 to December 18 | Core build | Joining, personal codes, scanning, points, game pause. Build weeks 1 to 7 |
 | December 21 to January 3 | Holiday break | Nothing critical. Bonus work only (ENG-072) |
-| January | Build continues | Remaining features, including Wrapped (WRAP-005) |
+| January 4 to 15 | Build continues | Remaining features, including Wrapped (WRAP-005). Build weeks 8 and 9 |
+| Friday January 15 | Every feature done (target) | Every feature works end to end, about a week before the gate (PRD-054) |
 | Late January | Feature complete (gate) | Every feature works end to end. Nothing new after this (ENG-070) |
 | Late January | Playtest 1 | 20 to 30 people from a youth group. Point values reviewed after |
 | Early February | Blind boxes ordered | Contents decided (GAME-068). Order size recalculated (GAME-080) |
@@ -55,6 +56,26 @@ This file lists the roles, which folders each role owns, the milestones, and wha
 | 5 to 7 March 2027 | NextGen Conference 2027 | Game runs Day 1 evening and Day 2. Results Sunday |
 
 - **PRD-052** [LOCKED] One gate: feature complete (late January). There is no code freeze: polish and fixes continue up to the event, and ARCH-016 still bars production deploys during live game hours (DEC-053).
+
+### Build weeks
+
+- **PRD-054** [PROPOSED] Every feature is done by Friday 2027-01-15, about a week before the feature complete gate and Playtest 1, so late January is for fixes, not building. Each feature has a `due` Friday in `feature-tree.yaml`. A piece that other pieces need is due by the earliest due date among them, so blockers come first. `/pick-task` offers the pieces due soonest and flags late ones (DEC-056).
+
+The weeks follow the order pieces need each other (`16-feature-tree.md`), spread evenly. They do not count how many people are free: the plan is about 106 sessions of work (S is one session, M is two), so about 12 sessions a week across the team. A feature's milestone says which group it belongs to, and its due date says when it is done, so a January build feature can be due in December. If Playtest 1's date moves, shift the `due` dates in one PR.
+
+| Week | Dates | Features due that Friday |
+|---|---|---|
+| 1 | November 2 to 6 | None. Start the backbone pieces (`16-feature-tree.md` section 2) |
+| 2 | November 9 to 13 | None. Backbone continues |
+| 3 | November 16 to 20 | `staff` Staff accounts and roles, `points` Points service |
+| 4 | November 23 to 27 | `look` Mix look on player screens |
+| 5 | November 30 to December 4 | `game-state` Game states and pause, `connections` Scanner and connections, `usher` Usher console |
+| 6 | December 7 to 11 | `home` Home and Quests pages, `checkin` Session check-in, `admin` Admin console |
+| 7 | December 14 to 18 | `explore` Explore, `blind-box` Blind boxes, `leaderboards` Leaderboards and church score |
+| Break | December 21 to January 3 | Nothing due. Bonus work only (ENG-072) |
+| 8 | January 4 to 8 | `journal` Journal and Summary page, `ready` Game day readiness |
+| 9 | January 11 to 15 | `screen` Main screen views, `wrapped` Wrapped cards, `recap` Conference recap screen |
+| Buffer | January 18 to feature complete | Fixes and late pieces only |
 
 ## 4. What is frozen when
 

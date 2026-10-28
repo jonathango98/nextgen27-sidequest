@@ -2,15 +2,21 @@
 
 Run from the repo root: python .claude/skills/pick-task/unlocked.py
 Add --tree to print only READY pieces, grouped by feature and numbered.
+READY pieces are sorted by due date (PRD-054). A piece is due by its feature's due date, or
+earlier if a piece that needs it is due sooner. Pieces past due are marked LATE.
 Reads foundation/feature-tree.yaml, the README Project status, and the OPEN table in
 foundation/13-decisions.md. Prints only; changes nothing.
 """
 
 import re
 import sys
+from datetime import date
 from pathlib import Path
 
 import yaml
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+from scripts.feature_tree_map import due_dates
 
 TREE = "foundation/feature-tree.yaml"
 README = "README.md"
@@ -41,6 +47,9 @@ def main():
         )
     )
     unlocks = {i: sum(i in p["needs"] for p in pieces.values()) for i in pieces}
+    due = due_dates(tree)
+    today = date.today().isoformat()
+    when = lambda i: f"due {due[i]}" + (" LATE" if due[i] < today else "")
 
     ready, waiting, decision = [], [], []
     for pid, p in pieces.items():
@@ -54,22 +63,26 @@ def main():
             waiting.append(f"{pid}: waiting on {', '.join(missing)}")
         else:
             ready.append(p)
+    ready.sort(key=lambda p: (due[p["id"]], -unlocks[p["id"]]))
 
     if "--tree" in sys.argv:
         locked = {s.split(":")[0] for s in waiting + decision}
         print(f"READY ({len(ready)}), grouped by feature. Pick by number or piece ID.")
         n = 0
-        for f in tree["features"]:
+        for f in sorted(tree["features"], key=lambda f: str(f["due"])):
             mine = [p for p in ready if p["feature"] == f["id"]]
             if not mine:
                 continue
             more = sum(pieces[i]["feature"] == f["id"] for i in locked)
-            print(f"\n{f['name']} [{f['milestone']}]" + (f", {more} locked" if more else ""))
+            print(
+                f"\n{f['name']} [{f['milestone']}, due {f['due']}]"
+                + (f", {more} locked" if more else "")
+            )
             for p in mine:
                 n += 1
                 safety = ", safety review" if p["safety_review"] else ""
                 print(
-                    f"  {n}. {p['id']} | {p['size']}, {p['level']}, {p['area']}{safety} | unlocks {unlocks[p['id']]}"
+                    f"  {n}. {p['id']} | {p['size']}, {p['level']}, {p['area']}{safety} | {when(p['id'])} | unlocks {unlocks[p['id']]}"
                 )
                 print(f"     {p['what']}")
                 print(f"     try it: {p['try_it']}")
@@ -79,7 +92,7 @@ def main():
     for p in ready:
         safety = ", safety review" if p["safety_review"] else ""
         print(
-            f"- {p['id']} | {p['size']}, {p['level']}, {p['area']}{safety} | unlocks {unlocks[p['id']]}"
+            f"- {p['id']} | {p['size']}, {p['level']}, {p['area']}{safety} | {when(p['id'])} | unlocks {unlocks[p['id']]}"
         )
         print(f"  what: {p['what']}")
         print(f"  try it: {p['try_it']}")

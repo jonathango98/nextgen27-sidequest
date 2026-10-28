@@ -103,3 +103,27 @@ def test_eng_108_readme_rows_set_working_and_in_progress():
 
 def test_eng_110_feature_tree_map_is_current():
     assert ftm.main(["--check"]) == 0, "Run: python scripts/feature_tree_map.py --write"
+
+
+def test_prd_054_piece_is_due_by_the_earliest_piece_that_needs_it():
+    tree = {
+        "features": [
+            {"id": "a", "due": "2026-12-18"},
+            {"id": "b", "due": "2026-11-20"},
+        ],
+        "pieces": [
+            {"id": "a.base", "feature": "a", "needs": []},
+            {"id": "a.other", "feature": "a", "needs": []},
+            {"id": "b.top", "feature": "b", "needs": ["a.base"]},
+        ],
+    }
+    assert ftm.due_dates(tree) == {
+        "a.base": "2026-11-20",
+        "a.other": "2026-12-18",
+        "b.top": "2026-11-20",
+    }
+
+
+def test_prd_054_every_feature_has_a_due_date():
+    for f in _tree()["features"]:
+        assert re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(f["due"])), f["id"]
