@@ -15,6 +15,9 @@ from pathlib import Path
 
 import yaml
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+from scripts.feature_tree_map import due_dates
+
 TREE = "foundation/feature-tree.yaml"
 README = "README.md"
 DECISIONS = "foundation/13-decisions.md"
@@ -23,23 +26,6 @@ DECISIONS = "foundation/13-decisions.md"
 def section(text, start, end):
     i = text.index(start)
     return text[i : text.index(end, i)]
-
-
-def due_dates(tree, pieces):
-    feature_due = {f["id"]: str(f["due"]) for f in tree["features"]}
-    due = {}
-
-    def visit(pid):
-        if pid not in due:
-            due[pid] = min(
-                [feature_due[pieces[pid]["feature"]]]
-                + [visit(q) for q, p in pieces.items() if pid in p["needs"]]
-            )
-        return due[pid]
-
-    for pid in pieces:
-        visit(pid)
-    return due
 
 
 def main():
@@ -61,7 +47,7 @@ def main():
         )
     )
     unlocks = {i: sum(i in p["needs"] for p in pieces.values()) for i in pieces}
-    due = due_dates(tree, pieces)
+    due = due_dates(tree)
     today = date.today().isoformat()
     when = lambda i: f"due {due[i]}" + (" LATE" if due[i] < today else "")
 

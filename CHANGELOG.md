@@ -22,7 +22,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-10-28 · docs/build-timeline · Claude Opus 5.5 / @jonathango98
 
-- What: Every feature has a `due` Friday in `feature-tree.yaml`, with a week-by-week table in `12-team-timeline.md` (new PRD-054), so all features are done by 2027-01-15, about a week before the feature complete gate and Playtest 1. Game day readiness moves to January build. `/pick-task` sorts ready pieces by due date, marks late ones, and no longer asks about Claude Pro vs Max (everyone is on Pro).
+- What: Every feature has a `due` Friday in `feature-tree.yaml`, with a week-by-week table in `12-team-timeline.md` (new PRD-054), so all features are done by 2027-01-15, about a week before the feature complete gate and Playtest 1. Game day readiness moves to January build. `/pick-task` sorts ready pieces by due date, marks late ones, and no longer asks about Claude Pro vs Max (everyone is on Pro). The feature tree map (docs and the interactive page) is laid out by due week, with a By step toggle and Late tags.
 - Why: Jonathan asked for a timeline that finishes before Playtest 1 and a picker that follows it.
 - Rule IDs: PRD-054, DEC-056, PRD-052, ENG-070, ENG-072, ENG-105, ENG-087, AI-070
 - Status: Done
