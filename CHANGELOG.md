@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-29 · feat/tree-live-status · Claude Opus 5.5 / @jonathango98
+
+- What: The feature tree map on GitHub Pages works out each piece's status live in the browser, from the README and OPEN decisions on `main` and from every open PR. A piece claimed in an open PR shows In progress with a link to that PR.
+- Why: A claim lives on the PR branch until it merges, so the map showed claimed pieces as Ready and two people could pick the same one.
+- Rule IDs: ENG-101, ENG-107, ENG-108, ENG-109, ENG-110
+- Status: Started
+- PR: draft
+
 ## 2026-10-28 · docs/checkin-before-session · Claude Opus 5.5 / @jonathango98
 
 - What: Session check-in moves to before the session. It opens on its own a number of minutes before the start time (set by an admin per session) and closes at the start time. Sessions with no start time get an Open check-in button. End session now only resumes the game, opens takeaways, and closes any open check-in. The hall screen shows a countdown to the close. New Session fields `checkin_open_minutes` and `checkin_opened_at`, new route `/admin/sessions/{id}/open-checkin`, new tree piece `checkin.open`, and `checkin.auto_close_minutes` is dropped from config.
