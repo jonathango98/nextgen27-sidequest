@@ -5,7 +5,7 @@
 
 Every planned piece of work and what it needs first (ENG-105 to ENG-108), grouped by the week it is due (PRD-054). Pieces flow left to right in time: finishing one unlocks the pieces it points to. Run `/pick-task` to claim one.
 
-**Working** 5 · **In progress** 0 · **Ready** 10 · **Waiting** 67 · **Needs decision** 0
+**Working** 5 · **In progress** 1 · **Ready** 9 · **Waiting** 67 · **Needs decision** 0
 
 Colors: green Working, blue In progress, gold Ready, gray Waiting, red dashed Needs decision.
 
@@ -244,7 +244,8 @@ flowchart LR
   classDef waiting fill:#f1f0eb,stroke:#c3c0b6,color:#545a66
   classDef decision fill:#fdeeec,stroke:#b42318,stroke-dasharray:4 3,color:#14151a
   class app_foundation,auth_join_login,code_my_code,infra_hosting,screens_skeleton working
-  class connections_scanner_camera,connections_table,game_state_core,look_frame,points_audit_log,ready_backups,ready_load_test,ready_logout,ready_rate_limits,staff_accounts ready
+  class points_audit_log in_progress
+  class connections_scanner_camera,connections_table,game_state_core,look_frame,ready_backups,ready_load_test,ready_logout,ready_rate_limits,staff_accounts ready
   class admin_audit_view,admin_award_revoke,admin_churches,admin_fix_church,admin_pin_reset,admin_players,blind_box_claim,blind_box_close_redemption,blind_box_math,blind_box_open_box,blind_box_stock,checkin_close,checkin_end_session,checkin_hall_code,checkin_open,checkin_scan,checkin_sessions,connections_icebreaker_answer,connections_icebreaker_question,connections_incoming,connections_points,connections_scan_save,connections_verse_picker,explore_booth,explore_hidden_item,explore_photobooth,explore_places,game_state_admin_switch,game_state_auto_pause,game_state_banner,home_progress,home_quests,journal_list,journal_review,journal_sharing,journal_summary,journal_table,journal_write,leaderboards_churches,leaderboards_in_app,leaderboards_players,look_code,look_components,look_home,look_summary,points_join,points_ledger,points_score_bar,ready_retention,recap_totals,recap_verse,screen_refresh,screen_shell,screen_takeaway_wall,staff_login,staff_manage,staff_screen_mode,usher_player_lookup,usher_scan,wrapped_cards,wrapped_collection,wrapped_journal,wrapped_people,wrapped_play_style,wrapped_save_image,wrapped_together,wrapped_unlock waiting
 ```
 
@@ -254,8 +255,6 @@ flowchart LR
   - Try it: On a local run, set the first admin's password in the environment and run the create-admin server command named in the PR. You should see a message that the admin was made, and the password should not show up anywhere in the output. Try to break it by running the command twice, you should not get two copies of the same admin.
 - `game-state.core`: One big switch that says if the game is on, paused, or off. When it is paused or off, nothing that earns points is allowed to work. (M, medium, backend, due fri nov 20)
   - Try it: Run `pytest -k game_100` (or the game state tests named in the PR). With the game on, an earning action should work. With the game set to paused or off, the same action should be refused with the paused or game off answer. Try to break it by switching the game state in the test and trying again right away, the new state should apply to the very next request.
-- `points.audit-log`: A notebook the game writes in every time something important happens. Nobody can erase or change what's written. (S, medium, backend, due fri nov 20)
-  - Try it: Run `pytest -k audit` (or the test names in the PR). You should see that writing a note works and that trying to change or delete a note fails. Also check that the notes never contain PINs, secret answers, or other private words.
 - `look.frame`: The frame around every player screen in the chosen design, with the score bar on top, the buttons at the bottom, and a glowing, grainy background. (M, easy, design, due fri nov 27)
   - Try it: Open Home, My Code and Quests at 360px wide. The top bar, bottom bar and background should look the same on each, with no sideways scrolling or console errors.
 - `connections.table`: The game's memory for who met whom and which churches each person has met. It is built so the same two people can never be saved as a pair twice. (S, medium, backend, due fri dec 4)
@@ -273,7 +272,7 @@ flowchart LR
 
 ## In progress
 
-- None
+- `points.audit-log`: A notebook the game writes in every time something important happens. Nobody can erase or change what's written.
 
 ## Needs a decision
 

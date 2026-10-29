@@ -20,6 +20,16 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-28 · feat/points-audit-log · Claude Opus 5.5 / @OwenTjandra
+
+- What: Claimed `points.audit-log`, an append-only audit log the game writes to on every important event. Nothing in it can be changed or deleted.
+- Why: Picked through `/pick-task`. Every point award, admin action, and most later pieces depend on it.
+- Rule IDs: ARCH-050, DATA-015, ARCH-051, ENG-101
+- Status: Started
+- PR: draft
+
+---
+
 ## 2026-10-28 · docs/checkin-before-session · Claude Opus 5.5 / @jonathango98
 
 - What: Session check-in moves to before the session. It opens on its own a number of minutes before the start time (set by an admin per session) and closes at the start time. Sessions with no start time get an Open check-in button. End session now only resumes the game, opens takeaways, and closes any open check-in. The hall screen shows a countdown to the close. New Session fields `checkin_open_minutes` and `checkin_opened_at`, new route `/admin/sessions/{id}/open-checkin`, new tree piece `checkin.open`, and `checkin.auto_close_minutes` is dropped from config.
