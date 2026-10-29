@@ -20,6 +20,15 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-28 · feat/points-audit-log · Claude Opus 5.5 / @OwenTjandra
+
+- What: Builds `points.audit-log`. Migration `0002_create_audit_log.sql` adds the `audit_log` table, with checks that allow only known actor types, short action codes, and IDs, plus triggers that refuse any update, delete, or `INSERT OR REPLACE` of a row. `app/services/audit.py` has one `record()` function that writes inside the caller's transaction. The retention cleanup (SAFE-014) deletes by dropping and recreating the delete trigger in one transaction, which a test shows works. Nothing calls `record()` yet. Later pieces such as `points.ledger` and the admin tools will.
+- Why: Picked through `/pick-task`. Every point award, admin action, and 49 later pieces depend on it.
+- Rule IDs: ARCH-050, ARCH-051, DATA-015, DATA-001, DATA-004, SAFE-014, ENG-052, ENG-101, ENG-108
+- Status: Done
+- PR: #47
+
+---
 ## 2026-10-29 · feat/tree-live-status · Claude Opus 5.5 / @jonathango98
 
 - What: The feature tree map on GitHub Pages works out each piece's status live in the browser, from the README and OPEN decisions on `main` and from every open PR's README Project status. A piece named in an open PR, and not Working on `main`, shows In progress with "#N" on its box and a link to the PR in the side panel. It uses 2 GitHub API calls per visit. If GitHub can't be reached, the page keeps the status built in when it was published and says so. The workflow is unchanged, and `docs/feature-tree.md` still reads only the README. Browser tests fake GitHub, so they need no network.
