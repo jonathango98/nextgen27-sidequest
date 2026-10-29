@@ -50,7 +50,7 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| `connections.table` The game remembers who met whom, once per pair | `feat/connections-table` | draft | 2026-10-29 | Claude Opus 5.5 / @OwenTjandra |
+| `connections.table` The game remembers who met whom, once per pair | `feat/connections-table` | #50 | 2026-10-29 | Claude Opus 5.5 / @OwenTjandra |
 
 ### Planned
 

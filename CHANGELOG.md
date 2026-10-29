@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Picked through `/pick-task`. The scanner and the rest of the connections feature build on it.
 - Rule IDs: DATA-020, DATA-021, SAFE-016, ENG-101
 - Status: Started
-- PR: draft
+- PR: #50
 
 ---
 
