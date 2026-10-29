@@ -2,8 +2,8 @@
 
 - Status: PROPOSED (developers confirm at kickoff)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.4.0
-- Last updated: 2026-10-27
+- Version: 1.5.0
+- Last updated: 2026-10-28
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -64,8 +64,9 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 |---|---|---|---|
 | GET | `/admin` | Admin console: game state, alerts | |
 | POST | `/admin/game-state` | Set on, paused, or off | GAME-100, GAME-101 |
-| POST | `/admin/sessions/{id}/end` | End a session: open check-in and resume | GAME-026 |
-| POST | `/admin/sessions/{id}/close-checkin` | Close check-in | GAME-024 |
+| POST | `/admin/sessions/{id}/end` | End a session: resume, open takeaways, close check-in if still open | GAME-026 |
+| POST | `/admin/sessions/{id}/open-checkin` | Open check-in by hand for a session with no start time | GAME-027 |
+| POST | `/admin/sessions/{id}/close-checkin` | Close check-in early | GAME-024 |
 | GET | `/admin/review` | Review queue for shared takeaways | SAFE-007 |
 | POST | `/admin/review/{id}` | Approve, reject, or hide | SAFE-040, SAFE-041 |
 | GET | `/admin/players` | Find players, see scores | |
@@ -76,7 +77,7 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 | GET, POST | `/admin/churches` | Manage the church list | SAFE-002 |
 | GET, POST | `/admin/booths` | Manage booths | GAME-041 |
 | GET, POST | `/admin/hidden-items` | Manage item numbers (no locations) | SAFE-010 |
-| GET, POST | `/admin/sessions` | Manage sessions (titles and start times, no rooms) | DATA-014, GAME-107 |
+| GET, POST | `/admin/sessions` | Manage sessions (titles, start times, check-in minutes, no rooms) | DATA-014, GAME-021, GAME-107 |
 | GET, POST | `/admin/staff` | Manage usher and admin accounts | ARCH-036 |
 | GET | `/admin/activity` | Unusual activity view | ARCH-062 |
 | GET | `/admin/audit` | Audit log | ARCH-050 |
@@ -92,7 +93,7 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 | GET | `/screen/players` | Partial: player leaderboard | GAME-086 |
 | GET | `/screen/churches` | Partial: church leaderboard | GAME-081 |
 | GET | `/screen/takeaways` | Partial: takeaway wall | SAFE-018 |
-| GET | `/screen/checkin/{session_id}` | Rotating session check-in QR for the hall screen | GAME-020 |
+| GET | `/screen/checkin/{session_id}` | Rotating session check-in QR and countdown for the hall screen | GAME-020, GAME-028 |
 | GET | `/screen/recap` | Conference recap on Sunday | WRAP-020 |
 
 ### System
@@ -154,6 +155,6 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 | Admin console | Admin | `/admin` | Game state switch first, then queues | GAME-110 |
 | Main screen: leaderboards | Screen | `/screen/players`, `/screen/churches` | Readable from the back of the room | UI-041 |
 | Main screen: takeaway wall | Screen | `/screen/takeaways` | Approved shared posts only | SAFE-018 |
-| Main screen: check-in QR | Screen | `/screen/checkin/{id}` | Shown in the hall after the session ends | GAME-020 |
+| Main screen: check-in QR | Screen | `/screen/checkin/{id}` | Shown in the hall while check-in is open, before the session starts, with a countdown | GAME-020, GAME-028 |
 | Main screen: paused | Screen | `/screen` | Neutral holding screen, no leaderboard | UI-040 |
 | Main screen: conference recap | Screen | `/screen/recap` | Sunday before prizes | WRAP-020 |

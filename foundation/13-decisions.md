@@ -2,7 +2,7 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.20.0
+- Version: 1.21.0
 - Last updated: 2026-10-28
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -76,6 +76,7 @@ Sources, in order of precedence:
 | DEC-054 | 2026-10-27 | Feature tree pieces say what they do in words a 10-year-old understands, and every piece gets a `try_it` line: what to test by hand once it's built. Pieces with nothing to tap give a command to run instead. ENG-105 now lists both. `/pick-task`, `docs/feature-tree.md`, and the Pages map show `try_it` | Volunteers are still learning. Technical `what` lines were hard to pick from, and nobody said how to check a piece works. Rule IDs on each piece still point to the details | Jonathan (2026-10-27) |
 | DEC-055 | 2026-10-27 | The README Working table is grouped by area (joining, QR code, screens, and so on) in plain words, with columns Updated, Pieces, Area, and What works today, instead of one row per PR. ENG-108 now says Working rows list their piece IDs in a Pieces column rather than start with them. In progress rows still start with the piece ID | Leadership reads the Working table to see what the app can do, and per-PR rows were too technical. `/pick-task` and the map find piece IDs anywhere in the Working section, so nothing else changes | Jonathan (2026-10-27) |
 | DEC-056 | 2026-10-28 | Build timeline: every feature has a due Friday in `feature-tree.yaml`, and all of them are done by 2027-01-15, about a week before the feature complete gate and Playtest 1 (PRD-054). Game day readiness (`ready`) moves from Before Playtest 2 to January build. `/pick-task` offers the pieces due soonest first, and a piece is due by the earliest due date of anything that needs it. Everyone is assumed to be on Claude Pro, so `/pick-task` no longer asks which plan | Finishing early leaves late January for fixes, not building. Due dates follow the order pieces need each other, spread evenly over 9 build weeks with the holiday break skipped (ENG-072). They do not model how many people are free | Jonathan (2026-10-28) |
+| DEC-057 | 2026-10-28 | Check-in moves to before a session. It opens on its own a number of minutes before the start time, set by an admin for each session, and closes at the start time (GAME-021, GAME-024). A session with no start time gets an "Open check-in" button (GAME-027). End session no longer opens check-in. It resumes the game, opens takeaways, and closes check-in if still open (GAME-026). The hall screen counts down to the close, the only place a start time shows outside admin pages (GAME-028, bends DATA-014). Replaces the 10-minute close from DEC-041 and drops `checkin.auto_close_minutes`. New Session fields `checkin_open_minutes` and `checkin_opened_at`, new OPS-006 | Rewards arriving on time, and first-come tiers now reward being early. Trade-off: check-in no longer rewards staying to the end, though takeaways still need the session to end (GAME-036) | Jonathan (2026-10-28) |
 
 ## 2. Resolved conflicts
 

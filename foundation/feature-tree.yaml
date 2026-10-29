@@ -2,7 +2,7 @@
 #
 # Status: Active
 # Owner: Jonathan (@jonathango98)
-# Version: 1.4.0
+# Version: 1.5.0
 # Last updated: 2026-10-28
 # Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 #
@@ -445,39 +445,51 @@ pieces:
   # Session check-in
   - id: checkin.sessions
     feature: checkin
-    what: A list of the conference sessions, and an admin page to add a new one by giving it a title.
-    try_it: Log in as a Test Admin, add a session called Example Session 1, and edit its title. It should show in the list after a refresh. Run `pytest -k checkin` and expect it to pass.
+    what: A list of the conference sessions, and an admin page to add one with a title, an optional start time, and how many minutes before the start check-in opens.
+    try_it: Log in as a Test Admin, add a session called Example Session 1 with a start time and check-in minutes, and edit its title. It should show in the list after a refresh. Run `pytest -k checkin` and expect it to pass.
     needs: [staff.login, points.audit-log]
     open: []
     area: admin-screens
     size: M
     level: medium
     safety_review: true
-    rules: [DATA-014, DATA-022, GAME-110]
+    rules: [DATA-014, DATA-022, GAME-021, GAME-110]
     learn: how an admin list page adds and edits rows
   - id: checkin.end-session
     feature: checkin
-    what: An admin button that ends a session. It opens check-in for that session and turns the game on.
-    try_it: Log in as a Test Admin with the game paused and press End session on Example Session 1. Check-in should open and the game should now be on. Pressing it again should not break anything.
+    what: An admin button that ends a session. It turns the game back on and lets players write takeaways for that session.
+    try_it: Log in as a Test Admin with the game paused and press End session on Example Session 1. The game should now be on and Journal should offer that session. Pressing it again should not break anything.
     needs: [checkin.sessions, game-state.admin-switch]
     open: []
     area: admin-screens
     size: S
     level: medium
     safety_review: true
-    rules: [GAME-021, GAME-026, OPS-002]
+    rules: [GAME-026, OPS-002]
     learn: how one button changes two things in one transaction
+  - id: checkin.open
+    feature: checkin
+    what: Check-in opens on its own a few minutes before a session starts and closes when it starts. A session with no start time gets an Open check-in button instead.
+    try_it: Log in as a Test Admin and give Example Session 1 a start time a few minutes away with 2 check-in minutes. Check-in should open on its own 2 minutes before and close at the start time. Add Example Session 2 with no start time and press Open check-in, it should open right away.
+    needs: [checkin.sessions, game-state.admin-switch]
+    open: []
+    area: backend
+    size: M
+    level: medium
+    safety_review: true
+    rules: [GAME-021, GAME-024, GAME-027, OPS-006]
+    learn: how the server works out if something is open from stored times, not from a timer
   - id: checkin.hall-code
     feature: checkin
-    what: The big hall screen shows a check-in code that keeps changing, so a photo of it soon stops working.
-    try_it: Open the main screen for a session and watch the code. It should change on its own after a short wait. Try to break it by scanning an old code you saved, which should be refused.
-    needs: [checkin.sessions, screen.shell, code.my-code]
+    what: The big hall screen shows a check-in code that keeps changing, so a photo of it soon stops working, and a big countdown to when check-in closes.
+    try_it: Open the main screen for a session whose check-in is open and watch the code. It should change on its own after a short wait, and the countdown should tick down to the start time. Try to break it by scanning an old code you saved, which should be refused.
+    needs: [checkin.open, screen.shell, code.my-code]
     open: []
     area: admin-screens
     size: S
     level: medium
     safety_review: true
-    rules: [GAME-020, DEC-013]
+    rules: [GAME-020, GAME-028, DEC-013]
     learn: how the QR service makes a different kind of code
   - id: checkin.scan
     feature: checkin
@@ -494,15 +506,15 @@ pieces:
   - id: checkin.close
     feature: checkin
     what: An admin button that stops check-in for a session whenever they choose.
-    try_it: Log in as a Test Admin, open check-in for Example Session 1, then press the close button. Now Test Player 1 scanning the hall code should be refused.
-    needs: [checkin.end-session]
+    try_it: Log in as a Test Admin, press Open check-in on Example Session 2 (no start time), then press the close button. Now Test Player 1 scanning the hall code should be refused.
+    needs: [checkin.open]
     open: []
     area: admin-screens
     size: S
     level: easy
     safety_review: true
     rules: [GAME-024]
-    learn: how to build only the decided part of a rule (no automatic close)
+    learn: how a by-hand button sits on top of an automatic rule
 
   # Journal and Summary page
   - id: journal.table

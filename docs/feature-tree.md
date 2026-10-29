@@ -5,7 +5,7 @@
 
 Every planned piece of work and what it needs first (ENG-105 to ENG-108), grouped by the week it is due (PRD-054). Pieces flow left to right in time: finishing one unlocks the pieces it points to. Run `/pick-task` to claim one.
 
-**Working** 5 · **In progress** 0 · **Ready** 10 · **Waiting** 66 · **Needs decision** 0
+**Working** 5 · **In progress** 0 · **Ready** 10 · **Waiting** 67 · **Needs decision** 0
 
 Colors: green Working, blue In progress, gold Ready, gray Waiting, red dashed Needs decision.
 
@@ -56,6 +56,7 @@ flowchart LR
     home_progress["home.progress<br/>S · easy"]
     home_quests["home.quests<br/>S · easy"]
     checkin_end_session["checkin.end-session<br/>S · medium"]
+    checkin_open["checkin.open<br/>M · medium"]
     checkin_hall_code["checkin.hall-code<br/>S · medium"]
     checkin_scan["checkin.scan<br/>M · hard"]
     checkin_close["checkin.close<br/>S · easy"]
@@ -148,13 +149,15 @@ flowchart LR
   points_audit_log --> checkin_sessions
   checkin_sessions --> checkin_end_session
   game_state_admin_switch --> checkin_end_session
-  checkin_sessions --> checkin_hall_code
+  checkin_sessions --> checkin_open
+  game_state_admin_switch --> checkin_open
+  checkin_open --> checkin_hall_code
   screen_shell --> checkin_hall_code
   code_my_code --> checkin_hall_code
   checkin_hall_code --> checkin_scan
   connections_scanner_camera --> checkin_scan
   points_ledger --> checkin_scan
-  checkin_end_session --> checkin_close
+  checkin_open --> checkin_close
   checkin_sessions --> journal_table
   journal_table --> journal_write
   points_ledger --> journal_write
@@ -242,7 +245,7 @@ flowchart LR
   classDef decision fill:#fdeeec,stroke:#b42318,stroke-dasharray:4 3,color:#14151a
   class app_foundation,auth_join_login,code_my_code,infra_hosting,screens_skeleton working
   class connections_scanner_camera,connections_table,game_state_core,look_frame,points_audit_log,ready_backups,ready_load_test,ready_logout,ready_rate_limits,staff_accounts ready
-  class admin_audit_view,admin_award_revoke,admin_churches,admin_fix_church,admin_pin_reset,admin_players,blind_box_claim,blind_box_close_redemption,blind_box_math,blind_box_open_box,blind_box_stock,checkin_close,checkin_end_session,checkin_hall_code,checkin_scan,checkin_sessions,connections_icebreaker_answer,connections_icebreaker_question,connections_incoming,connections_points,connections_scan_save,connections_verse_picker,explore_booth,explore_hidden_item,explore_photobooth,explore_places,game_state_admin_switch,game_state_auto_pause,game_state_banner,home_progress,home_quests,journal_list,journal_review,journal_sharing,journal_summary,journal_table,journal_write,leaderboards_churches,leaderboards_in_app,leaderboards_players,look_code,look_components,look_home,look_summary,points_join,points_ledger,points_score_bar,ready_retention,recap_totals,recap_verse,screen_refresh,screen_shell,screen_takeaway_wall,staff_login,staff_manage,staff_screen_mode,usher_player_lookup,usher_scan,wrapped_cards,wrapped_collection,wrapped_journal,wrapped_people,wrapped_play_style,wrapped_save_image,wrapped_together,wrapped_unlock waiting
+  class admin_audit_view,admin_award_revoke,admin_churches,admin_fix_church,admin_pin_reset,admin_players,blind_box_claim,blind_box_close_redemption,blind_box_math,blind_box_open_box,blind_box_stock,checkin_close,checkin_end_session,checkin_hall_code,checkin_open,checkin_scan,checkin_sessions,connections_icebreaker_answer,connections_icebreaker_question,connections_incoming,connections_points,connections_scan_save,connections_verse_picker,explore_booth,explore_hidden_item,explore_photobooth,explore_places,game_state_admin_switch,game_state_auto_pause,game_state_banner,home_progress,home_quests,journal_list,journal_review,journal_sharing,journal_summary,journal_table,journal_write,leaderboards_churches,leaderboards_in_app,leaderboards_players,look_code,look_components,look_home,look_summary,points_join,points_ledger,points_score_bar,ready_retention,recap_totals,recap_verse,screen_refresh,screen_shell,screen_takeaway_wall,staff_login,staff_manage,staff_screen_mode,usher_player_lookup,usher_scan,wrapped_cards,wrapped_collection,wrapped_journal,wrapped_people,wrapped_play_style,wrapped_save_image,wrapped_together,wrapped_unlock waiting
 ```
 
 ## Ready now

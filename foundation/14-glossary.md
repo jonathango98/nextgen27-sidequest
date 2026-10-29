@@ -2,8 +2,8 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.2.0
-- Last updated: 2026-10-27
+- Version: 1.2.1
+- Last updated: 2026-10-28
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -19,7 +19,7 @@ Use these words the same way in code, copy, issues, and PRs.
 | Auto-unlock | A locked account unlocks itself after 60 minutes | SAFE-022 |
 | Blind box | A sealed box with a mystery item, unlocked every 300 points of score. Contents are OPEN | GAME-072, GAME-068 |
 | Booth | A staffed table that gives points once per player, for example the mission booth | GAME-041 |
-| Check-in | Scanning a session's rotating code on the hall screen after the session ends | GAME-020 |
+| Check-in | Scanning a session's rotating code on the hall screen before the session starts | GAME-020, GAME-021 |
 | Church list | The preloaded list of churches players pick from at sign-up | SAFE-002 |
 | Church score | A fair average of points per active player for a church (a shrunk average) | GAME-081, GAME-089 |
 | Claimable blind boxes | Blind boxes earned minus blind boxes already claimed, never below 0 | GAME-074 |
