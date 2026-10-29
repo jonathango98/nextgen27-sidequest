@@ -42,6 +42,7 @@ What the app can do today, grouped by area, in plain words for anyone to read. W
 | 2026-10-26 | `screens.skeleton` | Player screens | Every player screen exists as a plain page, and every button and tab leads to the right next screen. The bottom bar has Home, My Code, and Quests. The final look and the game itself come next |
 | 2026-10-27 | | Game rules | The full game rules are written down, and most open game questions are answered. Prizes and what goes inside the blind boxes are still to be decided |
 | 2026-10-28 | `app.foundation` `infra.hosting` | Behind the scenes | A private test site updates with every change, and each proposed change gets its own preview link. Automatic tests check pages on the iPhone browser engine too. Game numbers live in one settings file, so they're easy to tune after playtests. Volunteers get a map of what's ready to build and a `/pick-task` helper to claim work. Every feature has a due week so all of them are done by January 15, before Playtest 1, and `/pick-task` offers what's due soonest |
+| 2026-10-28 | `points.audit-log` | Audit log | The game has a notebook of important actions, saying who did what, to which record, why, and when. Once written, an entry can't be changed or erased, and it never holds PINs or names. Point awards and admin tools will write to it as they are built |
 
 ### In progress
 
@@ -49,7 +50,6 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| `points.audit-log` A write-once record of every important game event | `feat/points-audit-log` | #47 | 2026-10-28 | Claude Opus 5.5 / @OwenTjandra |
 
 ### Planned
 

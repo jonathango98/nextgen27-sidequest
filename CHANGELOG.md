@@ -22,10 +22,10 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-10-28 · feat/points-audit-log · Claude Opus 5.5 / @OwenTjandra
 
-- What: Claimed `points.audit-log`, an append-only audit log the game writes to on every important event. Nothing in it can be changed or deleted.
-- Why: Picked through `/pick-task`. Every point award, admin action, and most later pieces depend on it.
-- Rule IDs: ARCH-050, DATA-015, ARCH-051, ENG-101
-- Status: Started
+- What: Builds `points.audit-log`. Migration `0002_create_audit_log.sql` adds the `audit_log` table, with checks that allow only known actor types, short action codes, and IDs, plus triggers that refuse any update, delete, or `INSERT OR REPLACE` of a row. `app/services/audit.py` has one `record()` function that writes inside the caller's transaction. The retention cleanup (SAFE-014) deletes by dropping and recreating the delete trigger in one transaction, which a test shows works. Nothing calls `record()` yet. Later pieces such as `points.ledger` and the admin tools will.
+- Why: Picked through `/pick-task`. Every point award, admin action, and 49 later pieces depend on it.
+- Rule IDs: ARCH-050, ARCH-051, DATA-015, DATA-001, DATA-004, SAFE-014, ENG-052, ENG-101, ENG-108
+- Status: Done
 - PR: #47
 
 ---
