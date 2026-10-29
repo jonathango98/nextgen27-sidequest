@@ -22,10 +22,10 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-10-29 · feat/connections-table · Claude Opus 5.5 / @OwenTjandra
 
-- What: Claimed `connections.table`, the tables that remember who met whom and which churches each player has met, built so the same pair can never be saved twice.
+- What: Builds `connections.table`. Migration `0004_create_connection_tables.sql` adds `connection` (each pair stored low id first, unique, low < high, scanner is one of the pair, real players only) and `church_met` (unique per player and church, linked to the connection that earned it). `question_category` stays empty until `connections.icebreaker-question` sets it. Numbered 0004 because 0002 is the audit log (#47) and #49 needs 0003 for game state. No app code uses the tables yet; `connections.scan-save` will.
 - Why: Picked through `/pick-task`. The scanner and the rest of the connections feature build on it.
-- Rule IDs: DATA-020, DATA-021, SAFE-016, ENG-101
-- Status: Started
+- Rule IDs: DATA-020, DATA-021, DATA-001, DATA-003, DATA-004, GAME-011, GAME-013, GAME-014, SAFE-016, ENG-052, ENG-101, ENG-108
+- Status: Done
 - PR: #50
 
 ---
