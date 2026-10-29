@@ -26,6 +26,13 @@ from app.routes.player import (
     wrapped,
 )
 from app.services import churches
+from app.services.game_state import GameNotOn
+
+# API-020: friendly message for each 423 code, from 06-api-and-screens.md section 3.
+GAME_NOT_ON_MESSAGES = {
+    "PAUSED": "The game is paused during the session.",
+    "GAME_OFF": "The game is closed right now.",
+}
 
 
 @asynccontextmanager
@@ -78,6 +85,19 @@ def create_app() -> FastAPI:
                 "message": "This page is out of date. Please reload it and try again.",
             },
             status_code=400,
+        )
+
+    @app.exception_handler(GameNotOn)
+    def game_not_on(request: Request, exc: GameNotOn):
+        # ARCH-041, API-020: 423 is used only for PAUSED and GAME_OFF.
+        return templates.TemplateResponse(
+            request,
+            "partials/error.html",
+            {
+                "error_code": exc.error_code,
+                "message": GAME_NOT_ON_MESSAGES[exc.error_code],
+            },
+            status_code=423,
         )
 
     @app.get("/health", response_class=PlainTextResponse)
