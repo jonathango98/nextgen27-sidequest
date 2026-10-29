@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Picked through `/pick-task`. Every point award, admin action, and most later pieces depend on it.
 - Rule IDs: ARCH-050, DATA-015, ARCH-051, ENG-101
 - Status: Started
-- PR: draft
+- PR: #47
 
 ---
 

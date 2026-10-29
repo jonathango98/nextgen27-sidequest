@@ -49,7 +49,7 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| `points.audit-log` A write-once record of every important game event | `feat/points-audit-log` | draft | 2026-10-28 | Claude Opus 5.5 / @OwenTjandra |
+| `points.audit-log` A write-once record of every important game event | `feat/points-audit-log` | #47 | 2026-10-28 | Claude Opus 5.5 / @OwenTjandra |
 
 ### Planned
 
