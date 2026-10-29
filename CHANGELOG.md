@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Jonathan wants players to check in when they arrive, rewarding being on time.
 - Rule IDs: GAME-021, GAME-024, GAME-026, GAME-027, GAME-028, DATA-014, OPS-002, OPS-006, DEC-057, ENG-087
 - Status: Done
-- PR: draft
+- PR: #45
 
 ---
 
