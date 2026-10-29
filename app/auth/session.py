@@ -43,6 +43,11 @@ def set_session(response: Response, public_id: str) -> None:
     )
 
 
+def clear_session(response: Response) -> None:
+    # Browsers drop the cookie only when these match how it was set.
+    response.delete_cookie(COOKIE, path="/", secure=True, httponly=True, samesite="lax")
+
+
 def session_public_id(request: Request) -> str | None:
     value = request.cookies.get(COOKIE)
     if not value or "." not in value:
