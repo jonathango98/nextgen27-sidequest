@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Picked through `/pick-task`. Protects players after the event (SAFE-014).
 - Rule IDs: SAFE-014, ARCH-052, DATA-015, WRAP-004, ENG-101
 - Status: Started
-- PR: draft
+- PR: #52
 
 ---
 

@@ -53,7 +53,7 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| `ready.retention` Personal data is wiped after the keep-until date | `feat/ready-retention` | draft | 2026-10-29 | Claude Opus 5.5 / @OwenTjandra |
+| `ready.retention` Personal data is wiped after the keep-until date | `feat/ready-retention` | #52 | 2026-10-29 | Claude Opus 5.5 / @OwenTjandra |
 
 ### Planned
 
