@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Due 2026-11-20 and unlocks 6 pieces, including the points ledger.
 - Rule IDs: ARCH-041, ARCH-042, GAME-100, GAME-102, GAME-108, API-020, DATA-013, ENG-101
 - Status: Started
-- PR: draft
+- PR: #49
 
 ## 2026-10-29 · feat/connections-table · Claude Opus 5.5 / @OwenTjandra
 

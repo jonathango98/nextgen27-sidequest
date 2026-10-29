@@ -51,7 +51,7 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| `game-state.core` The game can be on, paused, or off, and earning stops when it is not on | `feat/game-state-core` | draft | 2026-10-29 | Claude Opus 5.5 / @marcjason2012 |
+| `game-state.core` The game can be on, paused, or off, and earning stops when it is not on | `feat/game-state-core` | #49 | 2026-10-29 | Claude Opus 5.5 / @marcjason2012 |
 
 ### Planned
 
