@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Due 2026-12-04 and unlocks 3 pieces: `connections.scan-save`, `checkin.scan`, and `usher.scan`.
 - Rule IDs: ARCH-025, ARCH-004, UI-034, ENG-101
 - Status: Started
-- PR: draft
+- PR: #51
 
 ## 2026-10-29 · feat/game-state-core · Claude Opus 5.5 / @marcjason2012
 
