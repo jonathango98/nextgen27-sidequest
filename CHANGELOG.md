@@ -20,6 +20,16 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-29 · feat/connections-table · Claude Opus 5.5 / @OwenTjandra
+
+- What: Claimed `connections.table`, the tables that remember who met whom and which churches each player has met, built so the same pair can never be saved twice.
+- Why: Picked through `/pick-task`. The scanner and the rest of the connections feature build on it.
+- Rule IDs: DATA-020, DATA-021, SAFE-016, ENG-101
+- Status: Started
+- PR: draft
+
+---
+
 ## 2026-10-28 · feat/ready-logout · Claude Opus 5.5 / @jonathango98
 
 - What: `ready.logout`. `POST /logout` clears the signed session cookie on this phone only and goes to Log in. Home has a settings gear in the top bar (`<details>`, opens without JavaScript) with a red Log out form, CSRF token included, that asks "Log out on this phone?" first (HTMX `hx-confirm`, and without JavaScript it logs out straight away). Tests cover the confirm (Cancel stays logged in), the cookie clearing, player pages needing login after, a second phone staying logged in, the CSRF check, and the button at 360px in Chromium and WebKit.
