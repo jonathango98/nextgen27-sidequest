@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-29 · feat/connections-scanner-camera · Claude Opus 5.5 / @marcjason2012
+
+- What: Claim `connections.scanner-camera` from the feature tree: the Scan page opens the phone camera and reads QR codes, and says so when a code is not a Side Quest code.
+- Why: Due 2026-12-04 and unlocks 3 pieces: `connections.scan-save`, `checkin.scan`, and `usher.scan`.
+- Rule IDs: ARCH-025, ARCH-004, UI-034, ENG-101
+- Status: Started
+- PR: draft
+
 ## 2026-10-29 · feat/game-state-core · Claude Opus 5.5 / @marcjason2012
 
 - What: Builds `game-state.core`. Migration `0003_create_game_state.sql` adds the one-row `game_state` table (on, paused, or off). `app/services/game_state.py` reads the state fresh on every call and `require_game_on` refuses earning with 423 `PAUSED` or `GAME_OFF` and the messages from the API table. The row starts as `on`, since the foundation does not say a start state yet: Jonathan to confirm. `updated_by` has no link to staff until `staff.accounts` exists. Closing sign-up while off is left to `game-state.banner`. Tests use a test-only earning route until `points.ledger` adds real ones.

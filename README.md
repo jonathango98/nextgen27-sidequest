@@ -52,6 +52,7 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
+| `connections.scanner-camera` The Scan page reads QR codes with the phone camera | `feat/connections-scanner-camera` | draft | 2026-10-29 | Claude Opus 5.5 / @marcjason2012 |
 
 ### Planned
 
