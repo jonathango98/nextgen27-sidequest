@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Game day readiness piece from the feature tree, so a shared or borrowed phone can't keep playing as someone else.
 - Rule IDs: ARCH-034, ENG-101, ENG-108
 - Status: Started
-- PR: draft
+- PR: #46
 
 ---
 
