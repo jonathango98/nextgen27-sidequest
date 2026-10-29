@@ -26,6 +26,7 @@ DECISIONS = ROOT / "foundation" / "13-decisions.md"
 MAP_MD = ROOT / "docs" / "feature-tree.md"
 TEMPLATE = Path(__file__).with_name("feature_tree_map.html")
 PAGES_URL = "https://jonathango98.github.io/nextgen27-sidequest/"
+REPO = "jonathango98/nextgen27-sidequest"
 
 LABELS = {
     "working": "Working",
@@ -211,6 +212,7 @@ def render_html(tree, status, open_rules, source):
             if any(r in p["open"] for p in tree["pieces"])
         },
         "source": source,
+        "repo": REPO,
     }
     payload = json.dumps(data, separators=(",", ":")).replace("</", "<\\/")
     return TEMPLATE.read_text().replace("__DATA__", payload)

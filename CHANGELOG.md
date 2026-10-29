@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-29 · feat/tree-live-status · Claude Opus 5.5 / @jonathango98
+
+- What: The feature tree map on GitHub Pages works out each piece's status live in the browser, from the README and OPEN decisions on `main` and from every open PR's README Project status. A piece named in an open PR, and not Working on `main`, shows In progress with "#N" on its box and a link to the PR in the side panel. It uses 2 GitHub API calls per visit. If GitHub can't be reached, the page keeps the status built in when it was published and says so. The workflow is unchanged, and `docs/feature-tree.md` still reads only the README. Browser tests fake GitHub, so they need no network.
+- Why: A claim lives on the PR branch until it merges, so the map showed claimed pieces (`ready.logout` in #46, `points.audit-log` in #47) as Ready and two people could pick the same one.
+- Rule IDs: ENG-101, ENG-107, ENG-108, ENG-109, ENG-110, AI-044
+- Status: Done
+- PR: #48
+
 ## 2026-10-28 · docs/checkin-before-session · Claude Opus 5.5 / @jonathango98
 
 - What: Session check-in moves to before the session. It opens on its own a number of minutes before the start time (set by an admin per session) and closes at the start time. Sessions with no start time get an Open check-in button. End session now only resumes the game, opens takeaways, and closes any open check-in. The hall screen shows a countdown to the close. New Session fields `checkin_open_minutes` and `checkin_opened_at`, new route `/admin/sessions/{id}/open-checkin`, new tree piece `checkin.open`, and `checkin.auto_close_minutes` is dropped from config.
