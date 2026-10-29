@@ -2,8 +2,8 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.2.0
-- Last updated: 2026-10-27
+- Version: 1.3.0
+- Last updated: 2026-10-28
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -19,10 +19,11 @@ This file is for game day and the weeks before it: who does what, what to do whe
 | Developer on call | At least 1 | Watches the server, fixes urgent bugs (no production deploys during live game hours, ARCH-016) |
 
 - **OPS-001** [LOCKED] An admin pauses the game at the start of every session (GAME-101). The timetable schedule (GAME-107) is only a backup, so this is still done by hand.
-- **OPS-002** [LOCKED] When a session ends, an admin presses "End session". That opens check-in and resumes the game (GAME-026). The hall screen then shows the rotating check-in code (GAME-020).
+- **OPS-002** [LOCKED] When a session ends, an admin presses "End session". That resumes the game and opens takeaways for that session (GAME-026). Check-in already happened before the session (GAME-021).
 - **OPS-003** [LOCKED] During breaks, at least 2 ushers work the game booth, with a separate line for blind box claims.
 - **OPS-004** [LOCKED] Blind boxes are pre-packed and sealed before the event.
 - **OPS-005** [PROPOSED] At the end of each game day, an admin sets the game to off. There are no automatic game hours (GAME-106).
+- **OPS-006** [PROPOSED] Before each session, check that the hall screen shows the check-in code. It opens on its own from the session's start time and check-in minutes (GAME-021). For a session with no start time, an admin presses "Open check-in" (GAME-027). The game must be on, or every scan is refused (GAME-102, GAME-108).
 
 ## 2. Usher tasks
 
@@ -40,11 +41,12 @@ This file is for game day and the weeks before it: who does what, what to do whe
 
 | When | Task | Rule |
 |---|---|---|
-| Day 1, before the intro | Check the church list, booths, item numbers, sessions with start times, and staff accounts are loaded. Game state: paused | GAME-110, GAME-107 |
+| Day 1, before the intro | Check the church list, booths, item numbers, sessions with start times and check-in minutes, and staff accounts are loaded. Game state: paused | GAME-110, GAME-107 |
 | Day 1, after the intro | Set the game to on | GAME-104 |
-| Day 2, before the first session | Set the game from off to on. Auto-pause then pauses each session (it never acts while off) | GAME-104, GAME-107 |
+| Day 2, before the first session | Set the game from off to on before the first check-in opens. Auto-pause then pauses each session (it never acts while off) | GAME-104, GAME-107 |
+| Before every session | Check-in opens on its own. No start time: press Open check-in. Check the hall screen shows the code | OPS-006 |
 | Start of every session | Pause | OPS-001 |
-| End of every session | End session (opens check-in, resumes) | OPS-002 |
+| End of every session | End session (resumes, opens takeaways) | OPS-002 |
 | During breaks | Work the review queue. Check unusual activity | SAFE-007, ARCH-062 |
 | Any time | Fix scores with a reason. Reset locked PINs after checking the badge | GAME-111, SAFE-044 |
 | End of each game day | Set the game to off | OPS-005 |

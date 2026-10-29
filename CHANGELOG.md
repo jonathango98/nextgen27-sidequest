@@ -20,6 +20,16 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-28 · docs/checkin-before-session · Claude Opus 5.5 / @jonathango98
+
+- What: Session check-in moves to before the session. It opens on its own a number of minutes before the start time (set by an admin per session) and closes at the start time. Sessions with no start time get an Open check-in button. End session now only resumes the game, opens takeaways, and closes any open check-in. The hall screen shows a countdown to the close. New Session fields `checkin_open_minutes` and `checkin_opened_at`, new route `/admin/sessions/{id}/open-checkin`, new tree piece `checkin.open`, and `checkin.auto_close_minutes` is dropped from config.
+- Why: Jonathan wants players to check in when they arrive, rewarding being on time.
+- Rule IDs: GAME-021, GAME-024, GAME-026, GAME-027, GAME-028, DATA-014, OPS-002, OPS-006, DEC-057, ENG-087
+- Status: Done
+- PR: #45
+
+---
+
 ## 2026-10-28 · docs/build-timeline · Claude Opus 5.5 / @jonathango98
 
 - What: Every feature has a `due` Friday in `feature-tree.yaml`, with a week-by-week table in `12-team-timeline.md` (new PRD-054), so all features are done by 2027-01-15, about a week before the feature complete gate and Playtest 1. Game day readiness moves to January build. `/pick-task` sorts ready pieces by due date, marks late ones, and no longer asks about Claude Pro vs Max (everyone is on Pro). The feature tree map (docs and the interactive page) is laid out by due week, with a By step toggle and Late tags.

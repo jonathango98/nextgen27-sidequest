@@ -2,8 +2,8 @@
 #
 # Status: Active
 # Owner: Jonathan (@jonathango98)
-# Version: 1.2.0
-# Last updated: 2026-10-27
+# Version: 1.3.0
+# Last updated: 2026-10-28
 # Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 #
 # How to read this file
@@ -36,7 +36,6 @@ points:
 checkin:
   tier_size: 10                       # GAME-022 PROPOSED: scans per tier (scans 1 to 10 are tier 1)
   tier_points: [25, 20, 15, 10, 5]    # GAME-022 PROPOSED: points per tier. The last value applies to every scan after.
-  auto_close_minutes: 10              # GAME-024 PROPOSED: check-in stays live this long after the admin ends a session
 
 limits:
   photobooth_per_day: 5               # GAME-042 PROPOSED: photobooth visits that earn points, per player per day

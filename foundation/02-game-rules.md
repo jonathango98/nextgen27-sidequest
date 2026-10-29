@@ -2,8 +2,8 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.1.0
-- Last updated: 2026-10-27
+- Version: 1.2.0
+- Last updated: 2026-10-28
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -85,12 +85,14 @@ Tier size: 10 scans per tier. Config: `checkin.tier_size`.
 ### Check-in
 
 - **GAME-020** [LOCKED] Each session has a check-in QR code. It is shown on a screen inside the hall, not printed. It rotates every 30 seconds like My Code, so a photo of it stops working quickly. Config: `qr.rotation_seconds`.
-- **GAME-021** [LOCKED] The check-in code goes live only when the admin ends the session. Leaving early earns nothing.
+- **GAME-021** [LOCKED] Check-in happens before a session, not after. The check-in code goes live on its own a set number of minutes before the session's start time. An admin sets that number for each session, along with the start time (DATA-014, DEC-057). Arriving early earns the most (GAME-022).
 - **GAME-022** [PROPOSED] The first players to check in earn the most. Points follow the tier table in section 2. Config: `checkin.tier_size`, `checkin.tier_points`.
 - **GAME-023** [LOCKED] Each player can check in once per session.
-- **GAME-024** [PROPOSED] Check-in stays live for 10 minutes after the admin ends the session, then closes on its own. An admin can still close it early by hand (DEC-041). Config: `checkin.auto_close_minutes`.
+- **GAME-024** [PROPOSED] Check-in closes on its own at the session's start time. An admin can still close it early by hand. End session also closes it if it is still open (GAME-026, DEC-057).
 - **GAME-025** [PROPOSED] Scan order is the order in which the server saves check-ins for that session. The 11th saved check-in gets tier 2 points, even if two phones scanned in the same second.
-- **GAME-026** [PROPOSED] The admin action "End session" does two things in one step: it opens check-in for that session and turns the game from paused to on.
+- **GAME-026** [PROPOSED] The admin action "End session" does two things in one step: it turns the game from paused to on, and it lets players write takeaways for that session (GAME-036). It also closes that session's check-in if it is still open. It does not open check-in (DEC-057).
+- **GAME-027** [PROPOSED] A session with no start time has no automatic check-in. An admin opens it by hand with "Open check-in". It stays open until an admin closes it or ends the session (DEC-057).
+- **GAME-028** [PROPOSED] While check-in is open for a session with a start time, the hall screen shows a big countdown to when check-in closes, next to the check-in code. This is the only place a start time shows outside the admin pages (DATA-014). A session opened by hand shows "Check-in closes when the session starts" with no countdown (DEC-057).
 
 ### Journal
 
@@ -208,9 +210,9 @@ All names are fake.
 
 **E3. Same church (GAME-012).** Two players from Example Church A connect. Each earns 2 when they type their answer. No bonus, because their own church is not "new".
 
-**E4. Check-in tiers (GAME-022, GAME-025).** The admin ends Session 3. Test Player C is the 12th check-in the server saves. Player C earns 20 (tier 2).
+**E4. Check-in tiers (GAME-022, GAME-025).** Check-in for Session 3 opens on its own before it starts. Test Player C is the 12th check-in the server saves. Player C earns 20 (tier 2).
 
-**E5. Check-in while paused (GAME-102).** The admin ended Session 3 but then paused again by mistake. Player D scans. The server returns "paused" and saves nothing. Player D scans again after the admin resumes.
+**E5. Check-in while paused (GAME-102).** Check-in for Session 3 is open, but an admin pauses the game early by mistake. Player D scans. The server returns "paused" and saves nothing. Player D scans again after the admin resumes, while check-in is still open.
 
 **E6. Short takeaway (GAME-030).** Player E writes 14 words. The server refuses and says how many more words are needed. Nothing is saved.
 

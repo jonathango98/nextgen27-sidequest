@@ -2,8 +2,8 @@
 
 - Status: PROPOSED (developers confirm at kickoff; constraints marked LOCKED are required whatever the final schema looks like)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.3.0
-- Last updated: 2026-10-27
+- Version: 1.4.0
+- Last updated: 2026-10-28
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -75,11 +75,13 @@ This file lists the tables, their fields, and the database constraints that enfo
 | `id` | integer | Primary key |
 | `public_id` | text | Unique, used in the check-in QR (ARCH-020) |
 | `title` | text | Entered by an admin |
-| `ended_at` | timestamp, nullable | Set by "End session" (GAME-026). Check-in opens then |
-| `checkin_closed_at` | timestamp, nullable | Set when the admin closes check-in (GAME-024) |
-| `starts_at` | timestamp, nullable | Entered by an admin. The server pauses the game then (GAME-107). Admin only (DATA-014) |
+| `ended_at` | timestamp, nullable | Set by "End session" (GAME-026). Takeaways open then |
+| `checkin_closed_at` | timestamp, nullable | Set when an admin closes check-in or ends the session (GAME-024, GAME-026) |
+| `checkin_opened_at` | timestamp, nullable | Set when an admin presses "Open check-in" on a session with no start time (GAME-027) |
+| `starts_at` | timestamp, nullable | Entered by an admin. Check-in closes and the server pauses the game then (GAME-024, GAME-107). Admin only, except the hall countdown (DATA-014) |
+| `checkin_open_minutes` | integer, nullable | Entered by an admin with the start time: check-in opens this many minutes before it (GAME-021). Required when `starts_at` is set |
 
-- **DATA-014** [LOCKED] The Session table holds no room names or places (SAFE-037). It holds a title and an optional start time for auto-pause (GAME-107, DEC-051). Start times are seen only by admins, never by players or on the main screen.
+- **DATA-014** [LOCKED] The Session table holds no room names or places (SAFE-037). It holds a title, an optional start time, and how many minutes before the start check-in opens (GAME-021, GAME-107, DEC-051, DEC-057). Start times are seen only by admins, never by players. The one exception: while check-in is open, the hall screen counts down to the start time (GAME-028).
 
 ### Connection
 
