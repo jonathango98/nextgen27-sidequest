@@ -22,10 +22,10 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-10-29 · feat/game-state-core · Claude Opus 5.5 / @marcjason2012
 
-- What: Claim `game-state.core` from the feature tree: one switch that says if the game is on, paused, or off, so nothing that earns points works when it is not on.
+- What: Builds `game-state.core`. Migration `0002_create_game_state.sql` adds the one-row `game_state` table (on, paused, or off). `app/services/game_state.py` reads the state fresh on every call and `require_game_on` refuses earning with 423 `PAUSED` or `GAME_OFF` and the messages from the API table. The row starts as `on`, since the foundation does not say a start state yet: Jonathan to confirm. `updated_by` has no link to staff until `staff.accounts` exists. Closing sign-up while off is left to `game-state.banner`. Tests use a test-only earning route until `points.ledger` adds real ones.
 - Why: Due 2026-11-20 and unlocks 6 pieces, including the points ledger.
-- Rule IDs: ARCH-041, ARCH-042, GAME-100, GAME-102, GAME-108, API-020, DATA-013, ENG-101
-- Status: Started
+- Rule IDs: ARCH-041, ARCH-042, GAME-100, GAME-102, GAME-108, API-020, DATA-013, AI-050
+- Status: Done
 - PR: #49
 
 ## 2026-10-29 · feat/connections-table · Claude Opus 5.5 / @OwenTjandra
