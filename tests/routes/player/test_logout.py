@@ -126,3 +126,11 @@ def test_arch_034_home_has_log_out_form(phone):
     assert token == client.cookies.get(csrf.COOKIE)
     assert ">Log out</button>" in form
     assert 'hx-confirm="Log out on this phone?"' in form
+
+
+def test_ui_036_log_out_is_in_settings_menu(phone):
+    html = phone().get("/").text
+    menu = html[html.index('<details class="menu">') : html.index("</details>")]
+    assert 'aria-label="Settings"' in menu
+    assert 'action="/logout"' in menu
+    assert html.count('action="/logout"') == 1

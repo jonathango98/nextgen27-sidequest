@@ -29,9 +29,16 @@ def test_arch_034_log_out_from_home_at_min_width(page: Page, live_server, test_d
     page.get_by_role("button", name="Log in").click()
     page.wait_for_url(f"{live_server}/")
 
+    # UI-036: Log out sits in the settings menu, closed until the gear is tapped.
+    settings = page.locator('summary[aria-label="Settings"]')
     log_out = page.get_by_role("button", name="Log out")
+    expect(log_out).to_be_hidden()
+    settings.click()
     expect(log_out).to_be_visible()
-    assert log_out.bounding_box()["height"] >= cfg["ui"]["min_tap_target_px"]
+    tap_min = cfg["ui"]["min_tap_target_px"]
+    assert settings.bounding_box()["height"] >= tap_min
+    assert settings.bounding_box()["width"] >= tap_min
+    assert log_out.bounding_box()["height"] >= tap_min
     assert (
         page.evaluate("document.documentElement.scrollWidth")
         <= cfg["ui"]["min_viewport_px"]

@@ -46,6 +46,57 @@ a {
   margin-right: auto;
 }
 
+/* Settings menu in the top bar (UI-036). UI-003: the gear and each item are big enough taps. */
+.menu {
+  position: relative;
+}
+
+.icon-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--tap-min);
+  height: var(--tap-min);
+  border-radius: 50%;
+  color: var(--color-text);
+  cursor: pointer;
+  list-style: none;
+}
+
+.icon-button::-webkit-details-marker {
+  display: none;
+}
+
+.menu-panel {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 1;
+  width: max-content;
+  padding: var(--space-1);
+  border: thin solid var(--color-text-muted);
+  border-radius: var(--radius);
+  background: var(--color-bg);
+}
+
+.menu-item {
+  display: block;
+  width: 100%;
+  min-height: var(--tap-min);
+  padding: 0 var(--space-5);
+  border: 0;
+  border-radius: var(--radius);
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  background: none;
+  cursor: pointer;
+}
+
+.menu-item-danger {
+  color: var(--color-error);
+}
+
 .score {
   font-size: var(--font-size-score);
   font-weight: 700;

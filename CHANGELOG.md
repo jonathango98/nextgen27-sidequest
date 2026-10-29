@@ -22,9 +22,9 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-10-28 · feat/ready-logout · Claude Opus 5.5 / @jonathango98
 
-- What: `ready.logout`. `POST /logout` clears the signed session cookie on this phone only and goes to Log in. Home has a Log out form with a CSRF token that asks "Log out on this phone?" first (HTMX `hx-confirm`, and without JavaScript it logs out straight away). Tests cover the confirm (Cancel stays logged in), the cookie clearing, player pages needing login after, a second phone staying logged in, the CSRF check, and the button at 360px in Chromium and WebKit.
+- What: `ready.logout`. `POST /logout` clears the signed session cookie on this phone only and goes to Log in. Home has a settings gear in the top bar (`<details>`, opens without JavaScript) with a red Log out form, CSRF token included, that asks "Log out on this phone?" first (HTMX `hx-confirm`, and without JavaScript it logs out straight away). Tests cover the confirm (Cancel stays logged in), the cookie clearing, player pages needing login after, a second phone staying logged in, the CSRF check, and the button at 360px in Chromium and WebKit.
 - Why: Game day readiness piece from the feature tree, so a shared or borrowed phone can't keep playing as someone else.
-- Rule IDs: ARCH-034, ARCH-038, API-002, API-007, ENG-101, ENG-108
+- Rule IDs: ARCH-034, ARCH-038, API-002, API-007, UI-036, DEC-058, ENG-087, ENG-101, ENG-108. Foundation change (UI-036, DEC-058) needs Jonathan's approval
 - Status: Done
 - PR: #46
 
