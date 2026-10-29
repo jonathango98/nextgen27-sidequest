@@ -20,6 +20,16 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-28 · feat/ready-logout · Claude Opus 5.5 / @jonathango98
+
+- What: Claim `ready.logout`, a log out button that ends the session on this phone only.
+- Why: Game day readiness piece from the feature tree, so a shared or borrowed phone can't keep playing as someone else.
+- Rule IDs: ARCH-034, ENG-101, ENG-108
+- Status: Started
+- PR: draft
+
+---
+
 ## 2026-10-28 · feat/points-audit-log · Claude Opus 5.5 / @OwenTjandra
 
 - What: Builds `points.audit-log`. Migration `0002_create_audit_log.sql` adds the `audit_log` table, with checks that allow only known actor types, short action codes, and IDs, plus triggers that refuse any update, delete, or `INSERT OR REPLACE` of a row. `app/services/audit.py` has one `record()` function that writes inside the caller's transaction. The retention cleanup (SAFE-014) deletes by dropping and recreating the delete trigger in one transaction, which a test shows works. Nothing calls `record()` yet. Later pieces such as `points.ledger` and the admin tools will.
