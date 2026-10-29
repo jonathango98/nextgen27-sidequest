@@ -20,6 +20,16 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-29 · feat/ready-retention · Claude Opus 5.5 / @OwenTjandra
+
+- What: Claimed `ready.retention`, a cleanup that deletes every player-linked record once the keep-until date has passed.
+- Why: Picked through `/pick-task`. Protects players after the event (SAFE-014).
+- Rule IDs: SAFE-014, ARCH-052, DATA-015, WRAP-004, ENG-101
+- Status: Started
+- PR: draft
+
+---
+
 ## 2026-10-29 · feat/connections-scanner-camera · Claude Opus 5.5 / @marcjason2012
 
 - What: Builds `connections.scanner-camera`. The Scan page opens the back camera and reads QR codes with the browser's own detector, or `barcode-detector` 3.2.2 (ZXing 3.1.3) where there is none, such as iPhone Safari. The library and its `.wasm` are served from our server, pinned by version, with their MIT licenses. An `SQ1` code (prefix from `qr.format_version`) stops the camera and shows "Got it!"; any other code shows "This isn't a Side Quest code."; a blocked or missing camera shows "No camera" with Try again. 12 tests, including ZXing reading a real `SQ1` QR image. Checked on a real iPhone against a local copy over a hotspot. Android Chrome on a real phone and the Railway preview are not checked yet.
