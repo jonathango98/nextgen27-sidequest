@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-29 · feat/game-state-core · Claude Opus 5.5 / @marcjason2012
+
+- What: Claim `game-state.core` from the feature tree: one switch that says if the game is on, paused, or off, so nothing that earns points works when it is not on.
+- Why: Due 2026-11-20 and unlocks 6 pieces, including the points ledger.
+- Rule IDs: ARCH-041, ARCH-042, GAME-100, GAME-102, GAME-108, API-020, DATA-013, ENG-101
+- Status: Started
+- PR: draft
+
 ## 2026-10-29 · feat/connections-table · Claude Opus 5.5 / @OwenTjandra
 
 - What: Builds `connections.table`. Migration `0004_create_connection_tables.sql` adds `connection` (each pair stored low id first, unique, low < high, scanner is one of the pair, real players only) and `church_met` (unique per player and church, linked to the connection that earned it). `question_category` stays empty until `connections.icebreaker-question` sets it. Numbered 0004 because 0002 is the audit log (#47) and #49 needs 0003 for game state. No app code uses the tables yet; `connections.scan-save` will.
