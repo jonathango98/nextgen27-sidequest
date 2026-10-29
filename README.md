@@ -44,6 +44,7 @@ What the app can do today, grouped by area, in plain words for anyone to read. W
 | 2026-10-28 | `app.foundation` `infra.hosting` | Behind the scenes | A private test site updates with every change, and each proposed change gets its own preview link. Automatic tests check pages on the iPhone browser engine too. Game numbers live in one settings file, so they're easy to tune after playtests. Volunteers get a map of what's ready to build and a `/pick-task` helper to claim work. Every feature has a due week so all of them are done by January 15, before Playtest 1, and `/pick-task` offers what's due soonest |
 | 2026-10-29 | `connections.table` | Meeting people | The game has a place to remember who met whom. The same two people can only ever be saved as a pair once, whoever scans whom, and nobody can connect with themselves. It also remembers which new churches each player has met, so the new church bonus pays once. Scanning comes next |
 | 2026-10-28 | `points.audit-log` | Audit log | The game has a notebook of important actions, saying who did what, to which record, why, and when. Once written, an entry can't be changed or erased, and it never holds PINs or names. Point awards and admin tools will write to it as they are built |
+| 2026-10-29 | `ready.retention` | Protecting players after the event | A cleanup command deletes every player's personal data once the keep-until date has passed (365 days after the event ends, so 6 March 2028). Before that date it refuses and removes nothing. It shows what it would remove first, and only deletes when confirmed. Railway backups and the real data folder are cleared by hand on the same date |
 | 2026-10-29 | `game-state.core` | Game on, paused, or off | The game is always on, paused, or off. While it is paused or off, anything that earns points is refused with a friendly message, and the change applies to the very next tap. Admin buttons to switch it and the pause banner come next |
 | 2026-10-29 | `connections.scanner-camera` | Scanner | The Scan page opens the phone's back camera and reads QR codes, on iPhone Safari too. A Side Quest code shows "Got it!", any other code says it isn't a Side Quest code, and a blocked camera says so with a Try again button. Saving who met whom comes next |
 
@@ -53,7 +54,6 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| `ready.retention` Personal data is wiped after the keep-until date | `feat/ready-retention` | #52 | 2026-10-29 | Claude Opus 5.5 / @OwenTjandra |
 
 ### Planned
 

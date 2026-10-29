@@ -22,10 +22,10 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-10-29 · feat/ready-retention · Claude Opus 5.5 / @OwenTjandra
 
-- What: Claimed `ready.retention`, a cleanup that deletes every player-linked record once the keep-until date has passed.
+- What: Builds `ready.retention`. `app/services/retention.py` deletes every row in the player-linked tables (`DELETE_TABLES`: `audit_log`, `church_met`, `connection`, `player`, children first) in one transaction once the keep-until date has passed, and refuses before it. It removes the audit log's delete trigger, deletes, and restores the trigger before COMMIT (DATA-015), then writes one `retention_cleanup` audit row with totals only. Later runs keep earlier `retention_cleanup` rows, which hold no link to a person. `python -m app.services.retention` reports first and deletes only with `--confirm`. `--as-of` pretends a later date and is refused on Railway. Every table must be listed in `DELETE_TABLES` or `KEEP_TABLES`, and a test fails when a new table is in neither or when a player-linked table is kept. New config value `event.end_date` (PRD-022), with `game-config.yaml` 1.4.0 and `01-product.md` 1.1.1.
 - Why: Picked through `/pick-task`. Protects players after the event (SAFE-014).
-- Rule IDs: SAFE-014, ARCH-052, DATA-015, WRAP-004, ENG-101
-- Status: Started
+- Rule IDs: SAFE-014, ARCH-052, ARCH-053, OPS-042, DATA-015, WRAP-004, PRD-022, GAME-105, ENG-087, ENG-101, ENG-108
+- Status: Done
 - PR: #52
 
 ---
