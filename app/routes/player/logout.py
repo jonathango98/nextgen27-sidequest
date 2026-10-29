@@ -1,7 +1,7 @@
 """Log out on this phone only (ARCH-034). POST /logout only (API-001)."""
 
-from fastapi import APIRouter, Depends
-from fastapi.responses import RedirectResponse
+from fastapi import APIRouter, Depends, Request
+from fastapi.responses import RedirectResponse, Response
 
 from app.auth import csrf
 from app.auth.session import clear_session
@@ -13,8 +13,13 @@ router = APIRouter()
 
 
 @router.post("/logout", dependencies=[Depends(csrf.require_csrf)])
-def logout():
+def logout(request: Request):
     # Clears only this browser's cookie, so the player's other phones stay logged in.
-    response = RedirectResponse(AFTER_LOGOUT, status_code=303)
+    if request.headers.get("HX-Request"):
+        response: Response = Response(
+            status_code=204, headers={"HX-Redirect": AFTER_LOGOUT}
+        )
+    else:
+        response = RedirectResponse(AFTER_LOGOUT, status_code=303)
     clear_session(response)
     return response

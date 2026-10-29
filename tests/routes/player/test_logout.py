@@ -65,9 +65,12 @@ def phone(church_id, fake_pin):
         client.__exit__(None, None, None)
 
 
-def _logout(client, token=None):
+def _logout(client, token=None, htmx=False):
     token = client.cookies.get(csrf.COOKIE) if token is None else token
-    return client.post("/logout", data={"csrf_token": token}, follow_redirects=False)
+    headers = {"HX-Request": "true"} if htmx else {}
+    return client.post(
+        "/logout", data={"csrf_token": token}, headers=headers, follow_redirects=False
+    )
 
 
 def test_arch_034_logout_clears_cookie_and_goes_to_login(phone):
@@ -79,6 +82,14 @@ def test_arch_034_logout_clears_cookie_and_goes_to_login(phone):
     assert set_cookie.startswith(f"{session.COOKIE}=")
     assert "Max-Age=0" in set_cookie
     assert "Path=/" in set_cookie and "Secure" in set_cookie
+    assert session.COOKIE not in client.cookies
+
+
+def test_api_002_htmx_logout_redirects_with_header(phone):
+    client = phone()
+    response = _logout(client, htmx=True)
+    assert response.status_code == 204
+    assert response.headers["hx-redirect"] == "/login"
     assert session.COOKIE not in client.cookies
 
 
@@ -114,3 +125,4 @@ def test_arch_034_home_has_log_out_form(phone):
     token = re.search(r'name="csrf_token" value="([^"]+)"', form).group(1)
     assert token == client.cookies.get(csrf.COOKIE)
     assert ">Log out</button>" in form
+    assert 'hx-confirm="Log out on this phone?"' in form

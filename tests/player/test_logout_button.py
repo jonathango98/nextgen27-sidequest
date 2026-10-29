@@ -36,10 +36,27 @@ def test_arch_034_log_out_from_home_at_min_width(page: Page, live_server, test_d
         page.evaluate("document.documentElement.scrollWidth")
         <= cfg["ui"]["min_viewport_px"]
     )
-    log_out.click()
+    asked = []
 
+    def answer(accept):
+        def handle(dialog):
+            asked.append(dialog.message)
+            dialog.accept() if accept else dialog.dismiss()
+
+        return handle
+
+    # Cancel keeps the player on Home, still logged in.
+    page.once("dialog", answer(accept=False))
+    log_out.click()
+    expect(log_out).to_be_visible()
+    assert page.url == f"{live_server}/"
+    assert session.COOKIE in {c["name"] for c in page.context.cookies()}
+
+    # OK logs out.
+    page.once("dialog", answer(accept=True))
+    log_out.click()
     page.wait_for_url(f"{live_server}/login")
     expect(page.get_by_role("button", name="Log in")).to_be_visible()
-    names = {c["name"] for c in page.context.cookies()}
-    assert session.COOKIE not in names
+    assert session.COOKIE not in {c["name"] for c in page.context.cookies()}
+    assert asked == ["Log out on this phone?"] * 2
     assert errors == []

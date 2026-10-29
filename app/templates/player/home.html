@@ -16,8 +16,8 @@
     <a class="button button-secondary" href="/summary">Read</a>
     <a class="button button-secondary" href="/box">Redeem box</a>
   </nav>
-  {# ARCH-034: logs out this phone only. A plain form, so it works without JavaScript (API-007). #}
-  <form class="form" method="post" action="/logout">
+  {# ARCH-034: logs out this phone only. HTMX asks first. Without JavaScript the plain form still works (API-007). #}
+  <form class="form" method="post" action="/logout" hx-post="/logout" hx-confirm="Log out on this phone?">
     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
     <button class="button button-secondary" type="submit">Log out</button>
   </form>
