@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Backend pieces landed with nothing to tap. `game-state.core` works, but nobody can pause the game until the admin buttons exist. Jonathan wants bigger PRs and more hand testing on phones.
 - Rule IDs: ENG-105, ENG-106, ENG-110, ENG-111, ENG-112, AI-034, ENG-020, ENG-087, DEC-060, AI-044. Protected files changed, needs Jonathan's approval (ENG-080)
 - Status: Done
-- PR: draft
+- PR: #59
 
 ---
 
