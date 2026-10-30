@@ -45,6 +45,7 @@ What the app can do today, grouped by area, in plain words for anyone to read. W
 | 2026-10-29 | `connections.table` | Meeting people | The game has a place to remember who met whom. The same two people can only ever be saved as a pair once, whoever scans whom, and nobody can connect with themselves. It also remembers which new churches each player has met, so the new church bonus pays once. Scanning comes next |
 | 2026-10-28 | `points.audit-log` | Audit log | The game has a notebook of important actions, saying who did what, to which record, why, and when. Once written, an entry can't be changed or erased, and it never holds PINs or names. Point awards and admin tools will write to it as they are built |
 | 2026-10-29 | `game-state.core` | Game on, paused, or off | The game is always on, paused, or off. While it is paused or off, anything that earns points is refused with a friendly message, and the change applies to the very next tap. Admin buttons to switch it and the pause banner come next |
+| 2026-10-29 | `connections.scanner-camera` | Scanner | The Scan page opens the phone's back camera and reads QR codes, on iPhone Safari too. A Side Quest code shows "Got it!", any other code says it isn't a Side Quest code, and a blocked camera says so with a Try again button. Saving who met whom comes next |
 
 ### In progress
 
@@ -52,7 +53,6 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| `connections.scanner-camera` The Scan page reads QR codes with the phone camera | `feat/connections-scanner-camera` | #51 | 2026-10-29 | Claude Opus 5.5 / @marcjason2012 |
 
 ### Planned
 
