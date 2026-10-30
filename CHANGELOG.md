@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-30 · feat/points-score · Claude Opus 5.5 / @marcjason2012
+
+- What: Claimed `points.score`. New players will get their joining points once, and the bar at the top of every player page will show their real score.
+- Why: Next ready piece in the feature tree, due 2026-11-20. Players can't see any points yet.
+- Rule IDs: UI-030, GAME-003, DATA-030, GAME-040, GAME-044, ENG-101, ENG-108
+- Status: Started
+- PR: draft
+
 ## 2026-10-30 · chore/tree-map-zoom · Claude Opus 5.5 / @jonathango98
 
 - What: The feature tree map page can zoom. Zoom out, zoom in, and Fit buttons sit next to the layout menu, Ctrl or ⌘ + scroll (and trackpad pinch) zooms around the cursor, and two fingers pinch-zoom on a phone. Test `test_eng_110_map_zooms_in_out_and_fits`.
