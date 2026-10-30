@@ -57,6 +57,11 @@ def test_ui_030_each_page_marks_its_tab(client, path, tab):
     assert html.count('aria-current="page"') == 1
 
 
+@pytest.mark.parametrize("path", PAGES)
+def test_ui_035_each_page_has_at_most_one_main_button(client, path):
+    assert len(re.findall(r'class="button"', client.get(path).text)) <= 1
+
+
 @pytest.mark.parametrize("path", [p for p in TABBED_PAGES if p != "/"])
 def test_ui_030_other_pages_show_score_in_top_bar(client, path):
     assert '<span class="score">120</span>' in client.get(path).text

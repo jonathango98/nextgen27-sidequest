@@ -105,9 +105,11 @@ a {
   z-index: 1;
   width: max-content;
   padding: var(--space-1);
-  border: thin solid var(--color-text-muted);
   border-radius: var(--radius);
-  background: var(--color-bg);
+  background: var(--color-surface);
+  -webkit-backdrop-filter: var(--glass-filter);
+  backdrop-filter: var(--glass-filter);
+  box-shadow: var(--shadow-glass);
 }
 
 .menu-item {
@@ -156,6 +158,12 @@ h1 {
   margin: 0 0 var(--space-4);
 }
 
+h2 {
+  font-family: var(--font-family-display);
+  font-weight: 400;
+  margin: 0 0 var(--space-2);
+}
+
 /* Bottom bar: Home, My Code, Quests on frosted glass (UI-003: in the lower half, big tap targets) */
 .bottom-bar {
   position: sticky;
@@ -196,24 +204,42 @@ h1 {
 }
 
 /* Components (07 section 3) */
+
+/* Main button: filled black, at most one per screen (UI-035). Serif label, full width. */
 .button {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
   width: 100%;
-  min-height: var(--tap-min);
-  padding: var(--space-3) var(--space-4);
-  border: medium solid var(--color-primary);
-  border-radius: var(--radius);
-  font: inherit;
-  font-weight: 600;
+  min-height: var(--button-min);
+  padding: var(--space-2) var(--space-5);
+  border: 0;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-button);
+  font-weight: 400;
+  line-height: 1.2;
   text-align: center;
   text-decoration: none;
-  color: var(--color-bg);
-  background: var(--color-primary);
+  color: var(--color-on-primary);
+  background: var(--gradient-primary);
+  box-shadow: var(--shadow-primary);
+  cursor: pointer;
 }
 
+/* Everything else is frosted white (UI-035) */
 .button-secondary {
-  color: var(--color-primary);
-  background: var(--color-bg);
+  color: var(--color-text);
+  background: var(--color-surface);
+  -webkit-backdrop-filter: var(--glass-filter);
+  backdrop-filter: var(--glass-filter);
+  box-shadow: var(--shadow-glass);
+}
+
+/* Buttons respond to taps */
+.button:active:not(:disabled) {
+  transform: scale(var(--press-scale));
 }
 
 /* display: block above would otherwise show a button marked hidden */
@@ -227,10 +253,57 @@ h1 {
   cursor: not-allowed;
 }
 
+/* Frosted glass card with a white top highlight and a soft two-layer shadow */
 .card {
   padding: var(--space-4);
   border-radius: var(--radius);
   background: var(--color-surface);
+  -webkit-backdrop-filter: var(--glass-filter);
+  backdrop-filter: var(--glass-filter);
+  box-shadow: var(--shadow-glass);
+}
+
+.card > :last-child {
+  margin-bottom: 0;
+}
+
+/* Points pill: gold is for points only, for example "+20" */
+.pill {
+  display: inline-block;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-family);
+  font-size: var(--font-size-small);
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--color-text);
+  background: var(--color-gold);
+}
+
+/* Box progress bar: always shows the numbers next to the bar (UI-051) */
+.progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--font-size-small);
+  font-weight: 600;
+}
+
+.progress-track {
+  height: var(--progress-height);
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: var(--color-track);
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--color-primary);
 }
 
 /* A column of buttons with space between them */
@@ -262,7 +335,7 @@ h1 {
   border-radius: var(--radius);
   font: inherit;
   color: var(--color-text);
-  background: var(--color-bg);
+  background: var(--color-surface-solid); /* text fields stay solid white (07 section 2) */
 }
 
 /* Safari ignores min-height on a native select, so draw it ourselves (UI-003). */
@@ -304,16 +377,18 @@ h1 {
   width: var(--space-5);
   height: var(--space-5);
   margin: 0;
+  accent-color: var(--color-primary);
 }
 
 .form .button {
   margin-top: var(--space-4);
 }
 
+/* Helper text sits on the background, and muted gray is for white or glass only (07 section 2), so it is black. */
 .hint {
   margin: 0 0 var(--space-2);
   font-size: var(--font-size-small);
-  color: var(--color-text-muted);
+  color: var(--color-text);
 }
 
 [role="alert"] {
@@ -330,7 +405,7 @@ h1 {
   width: 100%;
   max-width: 60vh;
   margin: 0 auto;
-  background: var(--color-bg);
+  background: var(--color-surface-solid);
 }
 
 .qr-panel svg {
@@ -343,7 +418,7 @@ h1 {
   margin: var(--space-4) 0 0;
   font-size: var(--font-size-small);
   text-align: center;
-  color: var(--color-text-muted);
+  color: var(--color-text); /* on the background, like .hint */
 }
 
 /* Scanner frame: camera view with a square guide and one line of help text (07 section 3) */
@@ -376,7 +451,7 @@ h1 {
   margin: var(--space-2) 0 var(--space-4);
   font-size: var(--font-size-small);
   text-align: center;
-  color: var(--color-text-muted);
+  color: var(--color-text); /* on the background, like .hint */
 }
 
 /* UI-034: a big clear result */

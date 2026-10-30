@@ -4,10 +4,12 @@ import socket
 import subprocess
 import threading
 import time
+from pathlib import Path
 
 import pytest
 import uvicorn
 from fastapi import Request
+from fastapi.responses import HTMLResponse
 
 from app.auth import session
 from app.auth.current import CurrentPlayer, get_current_player
@@ -23,6 +25,7 @@ FAKE_KEY = "test-only-fake-signing-key"
 FAKE_SESSION_KEY = "test-only-fake-session-key"  # never a real key (SAFE-030)
 FAKE_START = 1_800_000_000  # fixed clock, not a game number
 VIEWPORT_HEIGHT = 740
+COMPONENTS = Path(__file__).with_name("components.html")
 
 
 def _frame_app():
@@ -39,6 +42,23 @@ def _frame_app():
     def frame(request: Request):
         return templates.TemplateResponse(
             request, "player/base.html", {"score": FAKE_SCORE}
+        )
+
+    # Test-only page with every look.base component (07 section 3). Not in the real app (API-001).
+    @app.get("/_test/components")
+    def components():
+        cfg = app.state.config
+        milestone = cfg["blind_box"]["milestone_points"]
+        progress = FAKE_SCORE % milestone
+        page = templates.env.from_string(COMPONENTS.read_text(encoding="utf-8"))
+        return HTMLResponse(
+            page.render(
+                score=FAKE_SCORE,
+                pill_points=cfg["points"]["journal_takeaway"],
+                milestone=milestone,
+                progress=progress,
+                percent=progress * 100 // milestone,
+            )
         )
 
     return app
