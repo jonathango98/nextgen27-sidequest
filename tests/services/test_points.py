@@ -6,11 +6,12 @@ import pytest
 from app.config import load_config
 from app.db import connect, migrate
 from app.services.game_state import GameNotOn, set_state
-from app.services.points import AlreadyAwarded, award, score
+from app.services.points import AlreadyAwarded, award, award_join, score
 
 FAKE_PIN_HASH = "not-a-real-hash"  # fake data (ENG-047)
-# A real amount from config, never a hardcoded game number (AI-013).
+# Real amounts from config, never a hardcoded game number (AI-013).
 AMOUNT = load_config()["points"]["connect_other_church"]
+JOIN_AMOUNT = load_config()["points"]["join"]
 SOURCE = {"source_type": "connection", "source_id": 1}
 
 
@@ -165,6 +166,65 @@ def test_data_027_system_award_must_name_its_record(conn, player):
             "INSERT INTO point_ledger (player_id, amount, reason_code) VALUES (?, ?, 'join')",
             (player, AMOUNT),
         )
+
+
+def _join(conn, player, while_paused=True):
+    return award_join(
+        conn, player_id=player, amount=JOIN_AMOUNT, while_paused=while_paused
+    )
+
+
+def test_game_040_join_points_saved_with_audit_row(conn, player):
+    ledger_id = _join(conn, player)
+    row = conn.execute(
+        "SELECT * FROM point_ledger WHERE id = ?", (ledger_id,)
+    ).fetchone()
+    assert (row["reason_code"], row["source_type"]) == ("join", "player")
+    assert score(conn, player) == JOIN_AMOUNT
+    assert _count(conn, "audit_log") == 1
+
+
+def test_game_040_join_points_paid_once(conn, player):
+    _join(conn, player)
+    with pytest.raises(AlreadyAwarded):
+        _join(conn, player)
+    assert score(conn, player) == JOIN_AMOUNT
+
+
+def test_game_044_join_points_paid_while_paused(conn, player):
+    set_state(conn, "paused")
+    _join(conn, player)
+    assert score(conn, player) == JOIN_AMOUNT
+
+
+def test_game_044_only_join_points_pay_while_paused(conn, player):
+    set_state(conn, "paused")
+    _join(conn, player)
+    with pytest.raises(GameNotOn):
+        _give(conn, player)
+    assert score(conn, player) == JOIN_AMOUNT
+
+
+def test_game_044_no_join_points_while_paused_when_config_says_no(conn, player):
+    set_state(conn, "paused")
+    assert _join(conn, player, while_paused=False) is None
+    assert _count(conn, "point_ledger") == 0
+    assert _count(conn, "audit_log") == 0
+
+
+@pytest.mark.parametrize("while_paused", [True, False])
+def test_game_108_join_points_refused_while_off(conn, player, while_paused):
+    set_state(conn, "off")
+    with pytest.raises(GameNotOn) as refused:
+        _join(conn, player, while_paused=while_paused)
+    assert refused.value.error_code == "GAME_OFF"
+    assert _count(conn, "point_ledger") == 0
+
+
+@pytest.mark.parametrize("amount", [0, -JOIN_AMOUNT])
+def test_game_004_join_points_must_be_positive(conn, player, amount):
+    with pytest.raises(ValueError):
+        award_join(conn, player_id=player, amount=amount, while_paused=True)
 
 
 def test_arch_040_award_joins_callers_transaction(conn, player):

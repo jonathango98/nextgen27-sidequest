@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-30 · feat/points-score · Claude Opus 5.5 / @marcjason2012
+
+- What: Builds `points.score`. Sign-up saves the player and their join points in one transaction, through a new `points.award_join`, the only award allowed while paused. Every player page now shows the real score from the ledger. While the game is off, `POST /join` refuses with `GAME_OFF` on the form and saves nothing. If `join.points_while_paused` is turned off, a player who joins during a pause gets no join points, then or later. `create_player` now takes the config, and the PIN is hashed before the write lock.
+- Why: Due 2026-11-20. Players couldn't see any points yet, because the score was a placeholder 0.
+- Rule IDs: UI-030, GAME-003, GAME-004, DATA-027, DATA-030, GAME-040, GAME-044, GAME-102, GAME-108, API-020, ARCH-013, ARCH-040, ARCH-041, AI-013, AI-041, UI-032, SAFE-016, SAFE-021, ENG-101, ENG-108, ENG-110
+- Status: Done
+- PR: #61
+
 ## 2026-10-30 · chore/tree-map-zoom · Claude Opus 5.5 / @jonathango98
 
 - What: The feature tree map page can zoom. Zoom out, zoom in, and Fit buttons sit next to the layout menu, Ctrl or ⌘ + scroll (and trackpad pinch) zooms around the cursor, and two fingers pinch-zoom on a phone. Test `test_eng_110_map_zooms_in_out_and_fits`.

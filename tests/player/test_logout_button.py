@@ -19,7 +19,7 @@ def test_arch_034_log_out_from_home_at_min_width(
     conn.execute("INSERT OR IGNORE INTO church (name) VALUES (?)", (CHURCH,))
     church = conn.execute("SELECT id FROM church WHERE name = ?", (CHURCH,)).fetchone()
     signup.create_player(
-        conn, signup.Details("Test", last_name, church["id"], False), pin
+        conn, signup.Details("Test", last_name, church["id"], False), pin, cfg
     )
     conn.close()
     errors = []

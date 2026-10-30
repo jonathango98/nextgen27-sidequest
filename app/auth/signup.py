@@ -6,6 +6,8 @@ import string
 from dataclasses import dataclass
 
 from app.auth import pin as pins
+from app.services import points
+from app.services.game_state import GAME_NOT_ON_MESSAGES, GameNotOn
 
 # Not game numbers: input limits that keep junk out of the database.
 NAME_MAX_CHARS = 50
@@ -101,15 +103,42 @@ def check_pin(form: dict[str, str], digits: int) -> str:
     return pin
 
 
-def create_player(conn: sqlite3.Connection, d: Details, pin: str) -> str:
-    """Saves the player and returns their public ID."""
+def create_player(conn: sqlite3.Connection, d: Details, pin: str, config: dict) -> str:
+    """Saves the player and their join points together, and returns their public ID."""
+    # Hash first: it is slow on purpose, and the lock below would make other joiners wait.
     pin_hash = pins.hash_pin(pin)
+    # ARCH-013: IMMEDIATE takes the write lock first, so two sign-ups queue instead of racing.
+    conn.execute("BEGIN IMMEDIATE")
+    try:
+        public_id, player_id = _insert_player(conn, d, pin_hash)
+        points.award_join(
+            conn,
+            player_id=player_id,
+            amount=config["points"]["join"],
+            while_paused=config["join"]["points_while_paused"],
+        )
+    except GameNotOn as error:
+        conn.execute("ROLLBACK")
+        # GAME-108: sign-up is closed while the game is off, and nothing is saved.
+        raise SignupError(
+            423, error.error_code, GAME_NOT_ON_MESSAGES[error.error_code]
+        ) from error
+    except BaseException:
+        conn.execute("ROLLBACK")
+        raise
+    conn.execute("COMMIT")
+    return public_id
+
+
+def _insert_player(
+    conn: sqlite3.Connection, d: Details, pin_hash: str
+) -> tuple[str, int]:
     while True:
         public_id = "".join(
             secrets.choice(PUBLIC_ID_CHARS) for _ in range(PUBLIC_ID_LENGTH)
         )
         try:
-            conn.execute(
+            player_id = conn.execute(
                 "INSERT INTO player"
                 " (public_id, first_name, last_name, church_id, is_under_18, pin_hash)"
                 " VALUES (?, ?, ?, ?, ?, ?)",
@@ -121,8 +150,8 @@ def create_player(conn: sqlite3.Connection, d: Details, pin: str) -> str:
                     int(d.is_under_18),
                     pin_hash,
                 ),
-            )
-            return public_id
+            ).lastrowid
+            return public_id, player_id
         except sqlite3.IntegrityError as error:
             if "player.public_id" in str(error):
                 continue  # DATA-003: astronomically rare, pick another

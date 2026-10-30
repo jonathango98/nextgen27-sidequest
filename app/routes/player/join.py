@@ -74,9 +74,10 @@ def join_submit(request: Request, conn: Db, form: Form):
     if form.get("step") != "pin":
         return _render(request, conn, "pin", kept)
 
+    config = request.app.state.config
     try:
-        pin = signup.check_pin(form, request.app.state.config["auth"]["pin_digits"])
-        public_id = signup.create_player(conn, details, pin)
+        pin = signup.check_pin(form, config["auth"]["pin_digits"])
+        public_id = signup.create_player(conn, details, pin, config)
     except signup.SignupError as error:
         return _render(
             request,
@@ -86,7 +87,7 @@ def join_submit(request: Request, conn: Db, form: Form):
             error,
         )
 
-    # GAME-040 join points wait for the points service (AI-041). POST /join logs the player in.
+    # POST /join logs the player in.
     if request.headers.get("HX-Request"):
         response: Response = Response(
             status_code=204, headers={"HX-Redirect": AFTER_JOIN}
