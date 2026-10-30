@@ -54,6 +54,7 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
+| `points.ledger` Every point is given out in one place, once, and never while the game is paused | `feat/points-ledger` | draft | 2026-10-29 | Claude Opus 5.5 / @marcjason2012 |
 
 ### Planned
 
