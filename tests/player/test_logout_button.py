@@ -8,14 +8,18 @@ from tests.conftest import make_fake_pin
 CHURCH = "Example Church A"  # fake data (ENG-047)
 
 
-def test_arch_034_log_out_from_home_at_min_width(page: Page, live_server, test_db_path):
+def test_arch_034_log_out_from_home_at_min_width(
+    page: Page, live_server, test_db_path, browser_name
+):
+    # Each browser needs its own player, or the second is refused as NAME_TAKEN (DATA-016, issue #53).
+    last_name = f"Browser Player 3 {browser_name}"
     cfg = load_config()
     pin = make_fake_pin(cfg["auth"]["pin_digits"])
     conn = connect(test_db_path)
     conn.execute("INSERT OR IGNORE INTO church (name) VALUES (?)", (CHURCH,))
     church = conn.execute("SELECT id FROM church WHERE name = ?", (CHURCH,)).fetchone()
     signup.create_player(
-        conn, signup.Details("Test", "Browser Player 3", church["id"], False), pin
+        conn, signup.Details("Test", last_name, church["id"], False), pin
     )
     conn.close()
     errors = []
@@ -23,7 +27,7 @@ def test_arch_034_log_out_from_home_at_min_width(page: Page, live_server, test_d
 
     page.goto(f"{live_server}/login")
     page.get_by_label("First name").fill("Test")
-    page.get_by_label("Last name").fill("Browser Player 3")
+    page.get_by_label("Last name").fill(last_name)
     page.get_by_label("Church").select_option(label=CHURCH)
     page.get_by_label("PIN").fill(pin)
     page.get_by_role("button", name="Log in").click()
