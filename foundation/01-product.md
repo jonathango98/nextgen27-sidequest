@@ -2,7 +2,7 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.1.1
+- Version: 1.2.0
 - Last updated: 2026-10-29
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
