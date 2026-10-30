@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Ready in the feature tree, due 2026-11-27, and unlocks `look.screens`.
 - Rule IDs: UI-008, UI-009, UI-030, DEC-035, DEC-036, UI-035, UI-051, ENG-101
 - Status: Started
-- PR: draft
+- PR: #62
 
 ## 2026-10-30 · chore/tree-map-zoom · Claude Opus 5.5 / @jonathango98
 

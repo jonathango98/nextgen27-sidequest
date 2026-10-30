@@ -55,7 +55,7 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| `look.base` Every player screen gets the chosen look, with shared buttons, cards and bars | `feat/look-base` | draft | 2026-10-30 | Claude Opus 5.5 / @chrnso |
+| `look.base` Every player screen gets the chosen look, with shared buttons, cards and bars | `feat/look-base` | #62 | 2026-10-30 | Claude Opus 5.5 / @chrnso |
 
 ### Planned
 
