@@ -16,7 +16,7 @@ from app.services.game_state import (
     set_state,
 )
 
-MIGRATION = "0002_create_game_state.sql"
+MIGRATION = "0003_create_game_state.sql"
 
 
 @pytest.fixture
