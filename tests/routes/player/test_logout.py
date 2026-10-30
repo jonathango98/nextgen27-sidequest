@@ -4,6 +4,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.auth import csrf, session, signup
+from app.config import load_config
 from app.db import connect
 from app.main import create_app
 from app.services import qr
@@ -31,7 +32,7 @@ def church_id(env, fake_pin):
             "INSERT INTO church (name) VALUES (?)", (CHURCH,)
         ).lastrowid
         details = signup.Details("Test", "Player 1", church, False)
-        signup.create_player(conn, details, fake_pin)
+        signup.create_player(conn, details, fake_pin, load_config())
         conn.close()
     return church
 

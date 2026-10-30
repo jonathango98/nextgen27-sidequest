@@ -6,6 +6,7 @@ from fastapi import Request
 
 from app.auth.session import session_public_id
 from app.db import connect
+from app.services import points
 
 
 class LoginRequired(Exception):
@@ -25,11 +26,13 @@ def get_current_player(request: Request) -> CurrentPlayer:
     conn = connect(request.app.state.db_path)
     try:
         row = conn.execute(
-            "SELECT public_id FROM player WHERE public_id = ?", (public_id,)
+            "SELECT id, public_id FROM player WHERE public_id = ?", (public_id,)
         ).fetchone()
+        if row is None:
+            raise LoginRequired
+        # DATA-030: score is the PointLedger sum, read fresh on every page.
+        return CurrentPlayer(
+            public_id=row["public_id"], score=points.score(conn, row["id"])
+        )
     finally:
         conn.close()
-    if row is None:
-        raise LoginRequired
-    # DATA-030: score is the PointLedger sum. That table comes with the points service (ARCH-040).
-    return CurrentPlayer(public_id=row["public_id"], score=0)

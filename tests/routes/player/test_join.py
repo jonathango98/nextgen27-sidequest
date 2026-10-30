@@ -3,10 +3,13 @@ import re
 import pytest
 from fastapi.testclient import TestClient
 
-from app.auth import csrf, session
+from app.auth import csrf, session, signup
+from app.config import load_config
 from app.db import connect
 from app.main import create_app
 from app.services import qr
+from app.services.game_state import set_state
+from app.services.points import award
 from tests.conftest import make_fake_pin
 
 # Fake data only (ENG-047, SAFE-030).
@@ -54,6 +57,11 @@ def details(church_a):
         "church_id": church_a,
         "age_18_plus": "yes",
     }
+
+
+@pytest.fixture
+def join_points():
+    return load_config()["points"]["join"]  # AI-013: never hardcode a game number
 
 
 def _post(client, data, htmx=False):
@@ -298,3 +306,161 @@ def test_api_007_back_works_without_javascript(client, details, db_path):
     assert response.status_code == 200
     assert 'value="Player 1"' in response.text
     assert _players(db_path) == []
+
+
+def _join(client, details, pin, htmx=False):
+    data = {"step": "pin", **details, "pin": pin, "pin_again": pin}
+    return _post(client, data, htmx=htmx)
+
+
+def _ledger(db_path):
+    conn = connect(db_path)
+    rows = conn.execute("SELECT * FROM point_ledger").fetchall()
+    conn.close()
+    return rows
+
+
+def _set_state(db_path, state):
+    conn = connect(db_path)
+    set_state(conn, state)
+    conn.close()
+
+
+def test_game_040_join_pays_configured_points_once(
+    client, details, fake_pin, db_path, join_points
+):
+    _join(client, details, fake_pin)
+    [row] = _ledger(db_path)
+    assert row["amount"] == join_points
+    assert row["player_id"] == _players(db_path)[0]["id"]
+
+
+def test_game_040_refused_second_join_pays_nothing(client, details, fake_pin, db_path):
+    _join(client, details, fake_pin)
+    client.cookies.delete(session.COOKIE)
+    assert _join(client, details, fake_pin).status_code == 409
+    assert len(_ledger(db_path)) == 1
+
+
+def test_game_044_join_paid_while_paused(
+    client, details, fake_pin, db_path, join_points
+):
+    _set_state(db_path, "paused")
+    assert _join(client, details, fake_pin).status_code == 303
+    assert [row["amount"] for row in _ledger(db_path)] == [join_points]
+
+
+def test_game_102_join_still_works_when_config_says_no_points_while_paused(
+    client, details, fake_pin, db_path
+):
+    config = client.app.state.config
+    client.app.state.config = {**config, "join": {"points_while_paused": False}}
+    _set_state(db_path, "paused")
+    assert _join(client, details, fake_pin).status_code == 303
+    assert len(_players(db_path)) == 1
+    assert _ledger(db_path) == []
+
+
+def test_game_108_join_refused_while_off_saves_nothing(
+    client, details, fake_pin, db_path
+):
+    _set_state(db_path, "off")
+    response = _join(client, details, fake_pin, htmx=True)
+    assert response.status_code == 423
+    assert _error_code(response) == "GAME_OFF"
+    assert session.COOKIE not in response.headers.get("set-cookie", "")
+    assert _players(db_path) == []
+    assert _ledger(db_path) == []
+
+
+def test_ui_032_typed_values_stay_when_join_refused_while_off(
+    client, details, fake_pin, db_path
+):
+    _set_state(db_path, "off")
+    response = _join(client, details, fake_pin, htmx=True)
+    assert 'value="Test"' in response.text and 'value="Player 1"' in response.text
+    assert fake_pin not in response.text  # SAFE-021
+
+
+def test_arch_040_failed_points_award_saves_no_player(
+    client, details, fake_pin, db_path
+):
+    # The player and their points save together, or neither does.
+    config = client.app.state.config
+    conn = connect(db_path)
+    d = signup.Details("Test", "Player 2", int(details["church_id"]), False)
+    bad = {**config, "points": {**config["points"], "join": 0}}
+    with pytest.raises(ValueError):
+        signup.create_player(conn, d, fake_pin, bad)
+    assert not conn.in_transaction
+    conn.close()
+    assert _players(db_path) == []
+
+
+def test_arch_013_pin_hashed_before_taking_the_write_lock(
+    client, details, fake_pin, db_path, monkeypatch
+):
+    conn = connect(db_path)
+    seen = []
+    real_hash = signup.pins.hash_pin
+
+    def spy(pin):
+        seen.append(conn.in_transaction)
+        return real_hash(pin)
+
+    monkeypatch.setattr(signup.pins, "hash_pin", spy)
+    d = signup.Details("Test", "Player 2", int(details["church_id"]), False)
+    signup.create_player(conn, d, fake_pin, client.app.state.config)
+    conn.close()
+    assert seen == [False]
+
+
+@pytest.mark.parametrize("path", ["/code", "/quests", "/box", "/journal"])
+def test_ui_030_top_bar_shows_real_score(client, details, fake_pin, join_points, path):
+    _join(client, details, fake_pin)
+    assert f'<span class="score">{join_points}</span>' in client.get(path).text
+
+
+def test_data_030_home_shows_real_score(client, details, fake_pin, join_points):
+    _join(client, details, fake_pin)
+    assert f"<h1>{join_points} points</h1>" in client.get("/").text
+
+
+def test_data_030_score_is_read_from_the_ledger_each_time(
+    client, details, fake_pin, db_path, join_points
+):
+    _join(client, details, fake_pin)
+    assert f"<h1>{join_points} points</h1>" in client.get("/").text
+    conn = connect(db_path)
+    award(
+        conn,
+        player_id=_players(db_path)[0]["id"],
+        reason_code="connect_other_church",
+        amount=join_points,
+        source_type="connection",
+        source_id=1,
+    )
+    conn.close()
+    assert f"<h1>{2 * join_points} points</h1>" in client.get("/").text
+
+
+def test_game_040_logging_in_and_refreshing_do_not_add_points(
+    client, details, fake_pin, db_path, join_points
+):
+    _join(client, details, fake_pin)
+    client.cookies.delete(session.COOKIE)
+    response = client.post(
+        "/login",
+        data={
+            "csrf_token": client.cookies.get(csrf.COOKIE),
+            "first_name": details["first_name"],
+            "last_name": details["last_name"],
+            "church_id": details["church_id"],
+            "pin": fake_pin,
+        },
+        follow_redirects=False,
+    )
+    assert response.status_code == 303
+    for _ in range(3):
+        assert f"<h1>{join_points} points</h1>" in client.get("/").text
+    assert len(_ledger(db_path)) == 1
