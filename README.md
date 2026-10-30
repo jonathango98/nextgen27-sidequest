@@ -47,6 +47,7 @@ What the app can do today, grouped by area, in plain words for anyone to read. W
 | 2026-10-29 | `ready.retention` | Protecting players after the event | A cleanup command deletes every player's personal data once the keep-until date has passed. That date is a set number of days after the event ends, and both live in the game settings file. Before that date it refuses and removes nothing. It shows what it would remove first, and only deletes when confirmed. Deleted data can't be recovered from the database file afterwards. Then it lists the steps to do by hand on the same day: Railway backups, server logs, the real data folder, and staff accounts |
 | 2026-10-29 | `game-state.core` | Game on, paused, or off | The game is always on, paused, or off. While it is paused or off, anything that earns points is refused with a friendly message, and the change applies to the very next tap. Admin buttons to switch it and the pause banner come next |
 | 2026-10-29 | `connections.scanner-camera` | Scanner | The Scan page opens the phone's back camera and reads QR codes, on iPhone Safari too. A Side Quest code shows "Got it!", any other code says it isn't a Side Quest code, and a blocked camera says so with a Try again button. Saving who met whom comes next |
+| 2026-10-29 | `staff.accounts` | Staff accounts | The game has a safe place for usher and admin accounts. Each person gets their own, with a password that is stored so nobody can read it, and an account can be switched off. A setup command makes the very first admin from a password kept on the server; running it again changes nothing. Logging in as staff comes next |
 
 ### In progress
 
@@ -54,7 +55,6 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| `staff.accounts` Safe accounts for ushers and admins | `feat/staff-accounts` | #57 | 2026-10-29 | Claude Opus 5.5 / @OwenTjandra |
 
 ### Planned
 

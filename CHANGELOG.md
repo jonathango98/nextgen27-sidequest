@@ -22,10 +22,10 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-10-29 · feat/staff-accounts · Claude Opus 5.5 / @OwenTjandra
 
-- What: Claims `staff.accounts`: a staff account table added by a numbered SQL migration, with passwords stored so nobody can read them, and a server command to create the first admin from an environment variable, run safely more than once.
+- What: Builds `staff.accounts`. Migration `0005_create_staff_account.sql` adds `staff_account` (05-data-model.md StaffAccount): `username` unique ignoring case, `role` only `usher` or `admin` (the screen role is a device mode, ARCH-037), `is_active`, `created_at`. `app/auth/password.py` hashes passwords with `hashlib.scrypt`, n=2**16, r=8, p=1 (64 MB, about 80 ms on a laptop), stronger than the PIN hash because a password has far more values; parameters are saved in the hash so they can change later. `app/services/staff.py` has `create_account`, which never changes an existing account, and `python -m app.services.staff create-admin <username>`, which reads the password only from `SQ_FIRST_ADMIN_PASSWORD` and never prints it or the hash. Running it twice makes one admin. `staff_account` is in retention's `KEEP_TABLES`, since staff are switched off by hand (OPS-042). Not in this PR: a minimum password length (no config value yet, needs Jonathan), the `game_state.updated_by` foreign key to staff (needs a table rebuild), and an audit row for the setup command (no staff actor exists before it runs).
 - Why: Picked through `/pick-task`. Due 2026-11-20 and unlocks `staff.login`, which most admin, usher, and check-in pieces wait on.
-- Rule IDs: ARCH-035, ARCH-036, ARCH-030, ENG-101
-- Status: Started
+- Rule IDs: ARCH-030, ARCH-035, ARCH-036, OPS-042, SAFE-030, ENG-101, ENG-108
+- Status: Done
 - PR: #57
 
 ---
