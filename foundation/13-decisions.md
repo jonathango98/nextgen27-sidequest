@@ -2,7 +2,7 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.22.0
+- Version: 1.23.0
 - Last updated: 2026-10-29
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -78,6 +78,7 @@ Sources, in order of precedence:
 | DEC-056 | 2026-10-28 | Build timeline: every feature has a due Friday in `feature-tree.yaml`, and all of them are done by 2027-01-15, about a week before the feature complete gate and Playtest 1 (PRD-054). Game day readiness (`ready`) moves from Before Playtest 2 to January build. `/pick-task` offers the pieces due soonest first, and a piece is due by the earliest due date of anything that needs it. Everyone is assumed to be on Claude Pro, so `/pick-task` no longer asks which plan | Finishing early leaves late January for fixes, not building. Due dates follow the order pieces need each other, spread evenly over 9 build weeks with the holiday break skipped (ENG-072). They do not model how many people are free | Jonathan (2026-10-28) |
 | DEC-057 | 2026-10-28 | Check-in moves to before a session. It opens on its own a number of minutes before the start time, set by an admin for each session, and closes at the start time (GAME-021, GAME-024). A session with no start time gets an "Open check-in" button (GAME-027). End session no longer opens check-in. It resumes the game, opens takeaways, and closes check-in if still open (GAME-026). The hall screen counts down to the close, the only place a start time shows outside admin pages (GAME-028, bends DATA-014). Replaces the 10-minute close from DEC-041 and drops `checkin.auto_close_minutes`. New Session fields `checkin_open_minutes` and `checkin_opened_at`, new OPS-006 | Rewards arriving on time, and first-come tiers now reward being early. Trade-off: check-in no longer rewards staying to the end, though takeaways still need the session to end (GAME-036) | Jonathan (2026-10-28) |
 | DEC-058 | 2026-10-29 | Log out lives in a settings menu on Home: a gear in the top bar opens a small menu whose only item is Log out, in red. Tapping it asks "Log out on this phone?" before signing out this phone only (UI-036, ARCH-034) | A lone Log out button on Home was easy to tap by mistake next to the main actions. The gear keeps it out of the way and leaves room for later settings. The menu uses `<details>`, so it opens without JavaScript (API-007) | Jonathan (2026-10-29, PR #46) |
+| DEC-059 | 2026-10-29 | The data retention date counts from the last day of the event: `event.end_date` + `data.retention_days_after_event`, in the venue timezone (PRD-022, SAFE-014, GAME-105). `event.end_date` joins `game-config.yaml` as PROPOSED at 2027-03-07. Wrapped closes on the same date (WRAP-004) | SAFE-014 said "365 days after the event" without saying which day, and no date was in config for the cleanup to count from. One config value keeps the cleanup and Wrapped on the same date, and a moved event is a one-line change | Owen (@OwenTjandra), PR #52 review. Needs Jonathan's approval |
 
 ## 2. Resolved conflicts
 

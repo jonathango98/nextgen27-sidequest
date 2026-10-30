@@ -2,8 +2,8 @@
 #
 # Status: Active
 # Owner: Jonathan (@jonathango98)
-# Version: 1.3.0
-# Last updated: 2026-10-28
+# Version: 1.4.0
+# Last updated: 2026-10-29
 # Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 #
 # How to read this file
@@ -94,8 +94,11 @@ wrapped:
   church_recap: true                  # WRAP-030 PROPOSED: church counts on card 6 for every player, no new login
   play_style_tie_order: [connector, explorer, journalist]  # WRAP-017 PROPOSED: play style tie order
 
+event:
+  end_date: "2027-03-07"              # PRD-022 PROPOSED: last day of the event, in the venue timezone (organizers)
+
 data:
-  retention_days_after_event: 365     # SAFE-014 PROPOSED: how long names, answers, and takeaways are kept (leadership)
+  retention_days_after_event: 365     # SAFE-014 PROPOSED: how long names, answers, and takeaways are kept, counted from event.end_date (leadership)
 
 features:
   midday_challenge: false             # GAME-120 PROPOSED: parked design, not in v1 (conflict C1)

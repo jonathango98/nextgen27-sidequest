@@ -10,8 +10,10 @@ from fastapi import Request, Response
 KEY_ENV = "SQ_SESSION_KEY"
 # __Host- makes browsers require Secure and Path=/, and refuse a Domain, so no other site can set it.
 COOKIE = "__Host-sq_session"
-# ARCH-034: at least until Wrapped closes. The retention date is OPEN (SAFE-014), so use the
-# longest lifetime browsers allow, 400 days. Not a game number.
+# ARCH-034: at least until Wrapped closes on the retention date (WRAP-004, SAFE-014 PROPOSED:
+# event.end_date + data.retention_days_after_event). 400 days, the longest browsers allow, outlasts
+# that for any login up to the last day; a test checks it. After the cleanup the player row is gone,
+# so a leftover cookie just asks to log in. Not a game number.
 MAX_AGE_SECONDS = 400 * 24 * 60 * 60
 
 
