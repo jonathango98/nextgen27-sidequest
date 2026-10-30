@@ -20,6 +20,7 @@ from app.routes.player import (
     join,
     journal,
     login,
+    logout,
     quests,
     scan,
     wrapped,
@@ -50,6 +51,7 @@ def create_app() -> FastAPI:
     app.include_router(code.router)
     app.include_router(join.router)
     app.include_router(login.router)
+    app.include_router(logout.router)
     # Screen skeleton (UI-030): plain pages, no game logic yet.
     for module in (home, scan, quests, journal, box, wrapped):
         app.include_router(module.router)

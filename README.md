@@ -21,7 +21,7 @@ The app is built by a small volunteer team. It is not built yet. This repo curre
 
 ## Project status
 
-Status last updated: 2026-10-28 by Claude Opus 5.5 / @OwenTjandra
+Status last updated: 2026-10-29 by Claude Opus 5.5 / @jonathango98
 
 **Before you start anything**, check that nobody else is on it. A branch only shows up here after it merges, so also run:
 
@@ -37,7 +37,7 @@ What the app can do today, grouped by area, in plain words for anyone to read. W
 
 | Updated | Pieces | Area | What works today |
 |---|---|---|---|
-| 2026-10-24 | `auth.join-login` | Joining and logging in | Players join with their name, church, a PIN, and an "Are you 18 or older?" question. They can log in again on another phone. Too many wrong PINs lock the account |
+| 2026-10-28 | `auth.join-login` `ready.logout` | Joining and logging in | Players join with their name, church, a PIN, and an "Are you 18 or older?" question. They can log in again on another phone. Too many wrong PINs lock the account. A settings gear on Home has Log out, which asks to confirm, then signs out that phone only, so the next person who picks it up can't play as them |
 | 2026-10-23 | `code.my-code` | Personal QR code | Each player has their own QR code on the My Code screen. It keeps changing, so a screenshot can't be passed around |
 | 2026-10-26 | `screens.skeleton` | Player screens | Every player screen exists as a plain page, and every button and tab leads to the right next screen. The bottom bar has Home, My Code, and Quests. The final look and the game itself come next |
 | 2026-10-27 | | Game rules | The full game rules are written down, and most open game questions are answered. Prizes and what goes inside the blind boxes are still to be decided |
