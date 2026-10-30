@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-30 · feat/look-base · Claude Opus 5.5 / @chrnso
+
+- What: Claims `look.base`: the frame around every player screen in the chosen design (score bar, bottom bar, glowing grainy background) and shared buttons, cards and progress bars.
+- Why: Ready in the feature tree, due 2026-11-27, and unlocks `look.screens`.
+- Rule IDs: UI-008, UI-009, UI-030, DEC-035, DEC-036, UI-035, UI-051, ENG-101
+- Status: Started
+- PR: draft
+
 ## 2026-10-30 · chore/tree-map-zoom · Claude Opus 5.5 / @jonathango98
 
 - What: The feature tree map page can zoom. Zoom out, zoom in, and Fit buttons sit next to the layout menu, Ctrl or ⌘ + scroll (and trackpad pinch) zooms around the cursor, and two fingers pinch-zoom on a phone. Test `test_eng_110_map_zooms_in_out_and_fits`.
