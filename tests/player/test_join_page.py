@@ -70,7 +70,7 @@ def test_arch_032_login_flow_at_min_width(
         "SELECT id FROM church WHERE name = ?", (CHURCHES[0],)
     ).fetchone()
     signup.create_player(
-        conn, signup.Details("Test", last_name, church["id"], False), pin
+        conn, signup.Details("Test", last_name, church["id"], False), pin, cfg
     )
     conn.close()
     errors = []

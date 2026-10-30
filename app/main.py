@@ -26,13 +26,7 @@ from app.routes.player import (
     wrapped,
 )
 from app.services import churches
-from app.services.game_state import GameNotOn
-
-# API-020: friendly message for each 423 code, from 06-api-and-screens.md section 3.
-GAME_NOT_ON_MESSAGES = {
-    "PAUSED": "The game is paused during the session.",
-    "GAME_OFF": "The game is closed right now.",
-}
+from app.services.game_state import GAME_NOT_ON_MESSAGES, GameNotOn
 
 
 @asynccontextmanager

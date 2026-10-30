@@ -7,16 +7,14 @@ they read from game-config.yaml (AI-013). This service never trusts a number fro
 import sqlite3
 
 from app.services import audit
-from app.services.game_state import require_game_on
+from app.services.game_state import current_state, require_game_on
 
 
 class AlreadyAwarded(Exception):
     """This record already paid this player (DATA-027). Routes map it to their own 409 code."""
 
 
-def _award(conn, player_id, reason_code, amount, source_type, source_id) -> int:
-    # ARCH-041, ARCH-042: read the state inside the transaction that saves the award.
-    require_game_on(conn)
+def _save_award(conn, player_id, reason_code, amount, source_type, source_id) -> int:
     try:
         ledger_id = conn.execute(
             "INSERT INTO point_ledger"
@@ -40,6 +38,27 @@ def _award(conn, player_id, reason_code, amount, source_type, source_id) -> int:
     return ledger_id
 
 
+def _award(conn, player_id, reason_code, amount, source_type, source_id) -> int:
+    # ARCH-041, ARCH-042: read the state inside the transaction that saves the award.
+    require_game_on(conn)
+    return _save_award(conn, player_id, reason_code, amount, source_type, source_id)
+
+
+def _in_transaction(conn, write):
+    # Inside the caller's transaction, join it. Otherwise open and commit our own.
+    if conn.in_transaction:
+        return write()
+    # ARCH-013: IMMEDIATE takes the write lock first, so two awards queue instead of racing.
+    conn.execute("BEGIN IMMEDIATE")
+    try:
+        result = write()
+    except BaseException:
+        conn.execute("ROLLBACK")
+        raise
+    conn.execute("COMMIT")
+    return result
+
+
 def award(
     conn: sqlite3.Connection,
     *,
@@ -58,17 +77,34 @@ def award(
     """
     if amount <= 0:
         raise ValueError("System awards are positive (GAME-004)")
-    if conn.in_transaction:
-        return _award(conn, player_id, reason_code, amount, source_type, source_id)
-    # ARCH-013: IMMEDIATE takes the write lock first, so two awards queue instead of racing.
-    conn.execute("BEGIN IMMEDIATE")
-    try:
-        ledger_id = _award(conn, player_id, reason_code, amount, source_type, source_id)
-    except BaseException:
-        conn.execute("ROLLBACK")
-        raise
-    conn.execute("COMMIT")
-    return ledger_id
+    return _in_transaction(
+        conn,
+        lambda: _award(conn, player_id, reason_code, amount, source_type, source_id),
+    )
+
+
+def award_join(
+    conn: sqlite3.Connection, *, player_id: int, amount: int, while_paused: bool
+) -> int | None:
+    """Give a player their join points once (GAME-040) and return the ledger row id.
+
+    The only earning allowed while paused (GAME-044, GAME-102, API-020), so its reason and
+    source are fixed here and no other quest can use it to get around a pause. If
+    join.points_while_paused is turned off, it pays nothing during a pause and returns None,
+    because sign-up stays open (GAME-102). Raises GameNotOn while the game is off (GAME-108).
+    """
+    if amount <= 0:
+        raise ValueError("System awards are positive (GAME-004)")
+
+    def write():
+        state = current_state(conn)
+        if state == "paused" and not while_paused:
+            return None
+        if state != "paused":
+            require_game_on(conn)
+        return _save_award(conn, player_id, "join", amount, "player", player_id)
+
+    return _in_transaction(conn, write)
 
 
 def score(conn: sqlite3.Connection, player_id: int) -> int:

@@ -4,6 +4,11 @@ import sqlite3
 
 # API-020: the error code for each state that refuses earning actions.
 REFUSED = {"paused": "PAUSED", "off": "GAME_OFF"}
+# API-020: friendly message for each 423 code, from 06-api-and-screens.md section 3.
+GAME_NOT_ON_MESSAGES = {
+    "PAUSED": "The game is paused during the session.",
+    "GAME_OFF": "The game is closed right now.",
+}
 
 
 class GameNotOn(Exception):
