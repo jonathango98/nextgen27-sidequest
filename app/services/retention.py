@@ -21,7 +21,7 @@ from app.services import churches
 from app.services.audit import record
 
 # Every table holding player-linked data, children before the tables they point to.
-DELETE_TABLES = ("audit_log", "church_met", "connection", "player")
+DELETE_TABLES = ("audit_log", "church_met", "connection", "point_ledger", "player")
 
 # Earlier cleanup notes hold totals only, with no link to a person, so later runs keep them.
 KEEP_ROWS = {"audit_log": "action <> 'retention_cleanup'"}

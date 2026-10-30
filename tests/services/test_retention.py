@@ -68,6 +68,11 @@ def filled(conn):
         "INSERT INTO church_met (player_id, church_id, connection_id) VALUES (?, ?, ?)",
         (players[0], churches[1], connection),
     )
+    conn.execute(
+        "INSERT INTO point_ledger (player_id, amount, reason_code, source_type, source_id)"
+        " VALUES (?, 1, 'test_award', 'connection', ?)",
+        (players[0], connection),
+    )
     record(
         conn,
         actor_type="admin",
@@ -134,8 +139,14 @@ def test_safe_014_cleanup_refuses_before_retention_date(filled, cfg):
 
 def test_safe_014_cleanup_deletes_player_data_on_the_date(filled, cfg):
     removed = run(filled, retention_date(cfg), cfg)
-    assert removed == {"audit_log": 1, "church_met": 1, "connection": 1, "player": 2}
-    for table in ("player", "connection", "church_met"):
+    assert removed == {
+        "audit_log": 1,
+        "church_met": 1,
+        "connection": 1,
+        "point_ledger": 1,
+        "player": 2,
+    }
+    for table in ("player", "connection", "church_met", "point_ledger"):
         assert _count(filled, table) == 0
     assert _count(filled, "church") == 2  # kept: not personal data
 
