@@ -50,6 +50,41 @@ def test_ui_030_frame_has_no_console_errors(page: Page, live_server):
     assert problems == []
 
 
+def _layer_style(page: Page, pseudo: str):
+    return page.evaluate(
+        """(pseudo) => {
+            const s = getComputedStyle(document.body, pseudo);
+            return {position: s.position, pointerEvents: s.pointerEvents,
+                    zIndex: s.zIndex, image: s.backgroundImage};
+        }""",
+        pseudo,
+    )
+
+
+def test_ui_008_background_is_decoration_only(page: Page, live_server):
+    page.goto(f"{live_server}/_test/frame")
+    streaks = _layer_style(page, "::before")
+    grain = _layer_style(page, "::after")
+    # Drawn by CSS behind the page, so it never catches a tap or reaches a screen reader.
+    for layer in (streaks, grain):
+        assert layer["position"] == "fixed"
+        assert layer["pointerEvents"] == "none"
+        assert layer["zIndex"] == "-1"
+    assert "radial-gradient" in streaks["image"]
+    assert "data:image/svg+xml" in grain["image"]
+
+
+def test_dec_036_background_downloads_no_image_file(page: Page, live_server):
+    images = []
+    page.on(
+        "request",
+        lambda r: images.append(r.url) if r.resource_type == "image" else None,
+    )
+    page.goto(f"{live_server}/_test/frame")
+    page.wait_for_load_state("networkidle")
+    assert [url for url in images if not url.startswith("data:")] == []
+
+
 def test_ui_030_scan_is_not_a_tab(page: Page, live_server):
     page.goto(f"{live_server}/_test/frame")
     nav = page.get_by_role("navigation", name="Main")

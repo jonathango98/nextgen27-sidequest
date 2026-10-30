@@ -38,6 +38,20 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 2px 4px rgba(30, 26, 28, 0.12),
     0 16px 32px -10px rgba(30, 26, 28, 0.45);
 
+  /* Bloom streaks behind every phone page (UI-008), placed as in the Mix Home mockup. Top layer first.
+     The layer is drawn 150% of the screen (--bloom-overhang on each side) so its tilted edges stay
+     off screen, and these positions are scaled to match. */
+  --bloom-streaks:
+    radial-gradient(24% 6.7% at 78% 28.3%, var(--color-bloom-sky), transparent),
+    radial-gradient(38.7% 9.3% at 29.3% 80.7%, var(--color-bloom-leaf), transparent),
+    radial-gradient(24% 6.7% at 70.7% 62.7%, var(--color-bloom-magenta), transparent),
+    radial-gradient(42.7% 16% at 72% 64%, var(--color-bloom-pink), transparent),
+    radial-gradient(28% 6.7% at 29.3% 37.3%, var(--color-bloom-marigold), transparent),
+    radial-gradient(40.7% 12.7% at 26% 38%, var(--color-bloom-orange), transparent),
+    radial-gradient(40.7% 10.7% at 64.7% 15%, var(--color-bloom-leaf), transparent);
+  --bloom-overhang: -25%;
+  --bloom-angle: -14deg;
+
   /* Film grain: one tiny noise texture generated here, no image file to download (DEC-036) */
   --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   --grain-opacity: 0.35;
