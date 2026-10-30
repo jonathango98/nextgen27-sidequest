@@ -54,7 +54,7 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| `staff.accounts` Safe accounts for ushers and admins | `feat/staff-accounts` | draft | 2026-10-29 | Claude Opus 5.5 / @OwenTjandra |
+| `staff.accounts` Safe accounts for ushers and admins | `feat/staff-accounts` | #57 | 2026-10-29 | Claude Opus 5.5 / @OwenTjandra |
 
 ### Planned
 

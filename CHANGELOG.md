@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Picked through `/pick-task`. Due 2026-11-20 and unlocks `staff.login`, which most admin, usher, and check-in pieces wait on.
 - Rule IDs: ARCH-035, ARCH-036, ARCH-030, ENG-101
 - Status: Started
-- PR: draft
+- PR: #57
 
 ---
 
