@@ -110,3 +110,36 @@ def test_eng_107_map_keeps_built_status_when_github_is_down(page: Page, map_page
     page.goto(url)
     expect(page.locator("#live")).to_contain_text("Couldn't reach GitHub")
     expect(node(page, ready[0])).to_have_class(re.compile(r"\bready\b"))
+
+
+def test_eng_110_map_zooms_in_out_and_fits(page: Page, map_page):
+    url, _, _ = map_page
+    fake_github(page, MAIN_README, "")
+    errors = []
+    page.on("console", lambda m: m.type == "error" and errors.append(m.text))
+    page.set_viewport_size({"width": 360, "height": 800})
+    page.goto(url)
+    level, tree_map = page.locator("#zoom-level"), page.locator("#map")
+    expect(level).to_have_text("100%")
+    start = tree_map.bounding_box()["width"]
+
+    page.get_by_role("button", name="Zoom in").click()
+    expect(level).to_have_text("125%")
+    assert tree_map.bounding_box()["width"] > start
+
+    page.get_by_role("button", name="Fit the whole tree").click()
+    assert page.evaluate(
+        "() => { const b = document.getElementById('mapbox');"
+        " return b.scrollWidth <= b.clientWidth && b.scrollHeight <= b.clientHeight; }"
+    )
+    expect(page.get_by_role("button", name="Zoom out")).to_be_disabled()
+
+    fitted = level.inner_text()
+    box = page.locator("#mapbox").bounding_box()
+    page.mouse.move(box["x"] + box["width"] / 2, box["y"] + box["height"] / 2)
+    page.keyboard.down("Control")
+    page.mouse.wheel(0, -300)
+    page.keyboard.up("Control")
+    expect(level).not_to_have_text(fitted)
+    expect(page.get_by_role("button", name="Zoom out")).to_be_enabled()
+    assert errors == []

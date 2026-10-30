@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-30 · chore/tree-map-zoom · Claude Opus 5.5 / @jonathango98
+
+- What: The feature tree map page can zoom. Zoom out, zoom in, and Fit buttons sit next to the layout menu, Ctrl or ⌘ + scroll (and trackpad pinch) zooms around the cursor, and two fingers pinch-zoom on a phone. Test `test_eng_110_map_zooms_in_out_and_fits`.
+- Why: Jonathan wants to zoom in and out of the tree. It is too wide to see at once.
+- Rule IDs: ENG-110, ENG-109, AI-044
+- Status: Done
+- PR: #60
+
 ## 2026-10-30 · docs/feature-tree-slices · Claude Opus 5.5 / @jonathango98
 
 - What: The feature tree is now built from slices (ENG-111): each piece that changes the server also builds the screen that shows it. The 66 pieces nobody had started are merged into 32, so the tree goes from 77 pieces to 43. A new size L (three to four sessions) is the cap (ENG-106). `try_it` is now numbered steps, and a person runs every step on the PR preview, on a real phone for player pages, before the PR leaves draft (ENG-112). AI-034, ENG-020, `AGENTS.md`, `CONTRIBUTING.md`, the PR template, `/pick-task`, `unlocked.py`, and the map all say the same. Working and In progress pieces (`staff.accounts`, `staff.login`) keep their IDs.
