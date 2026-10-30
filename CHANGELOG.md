@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Picked by Owen after `staff.accounts`. Due 2026-11-20 and unlocks the admin, usher, check-in, and game switch pieces.
 - Rule IDs: ARCH-035, ARCH-036, API-020, ENG-101
 - Status: Started
-- PR: draft
+- PR: #58
 
 ---
 
