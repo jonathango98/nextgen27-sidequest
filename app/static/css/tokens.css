@@ -64,6 +64,7 @@
   --font-size-h1: 38px;
   --font-size-score: 34px;
   --font-size-score-hero: 128px;
+  --font-size-brand: 22px; /* "Side Quest" in the top bar, from the Mix mockup */
 
   /* Spacing */
   --space-1: 4px;
@@ -77,5 +78,7 @@
   --radius-pill: 999px;
   --radius-tab: 18px;
   --blur-glass: 18px;
+  --glass-filter: blur(var(--blur-glass)) saturate(1.4);
   --tap-min: 48px; /* UI-003: must match ui.min_tap_target_px in game-config.yaml */
+  --tab-min: 60px; /* bottom bar tabs (07 section 3) */
 }

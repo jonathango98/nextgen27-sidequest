@@ -1,3 +1,5 @@
+import re
+
 import pytest
 from fastapi.testclient import TestClient
 
@@ -19,6 +21,14 @@ TABBED_PAGES = {
 }
 PAGES = (*TABBED_PAGES, "/wrapped")
 TAB_HREFS = {"Home": "/", "My Code": "/code", "Quests": "/quests"}
+
+
+def current_tab(href, label):
+    # The current tab's link, with its icon before the label (07 section 3).
+    return re.compile(
+        rf'<a href="{re.escape(href)}" aria-current="page">(?:(?!</a>).)*?{re.escape(label)}\s*</a>',
+        re.DOTALL,
+    )
 
 
 @pytest.fixture
@@ -43,7 +53,7 @@ def test_ui_030_skeleton_pages_load(client, path):
 @pytest.mark.parametrize(("path", "tab"), TABBED_PAGES.items())
 def test_ui_030_each_page_marks_its_tab(client, path, tab):
     html = client.get(path).text
-    assert f'<a href="{TAB_HREFS[tab]}" aria-current="page">{tab}</a>' in html
+    assert current_tab(TAB_HREFS[tab], tab).search(html)
     assert html.count('aria-current="page"') == 1
 
 
