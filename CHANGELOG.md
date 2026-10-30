@@ -22,7 +22,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-10-29 · test/53-join-tests-both-browsers · Claude Opus 5.5 / @marcjason2012
 
-- What: The join and login browser tests add the browser's name to the fake last name ("Browser Player 1 webkit"), so `pytest tests/player --browser chromium --browser webkit` passes in one command. Only `tests/player/test_join_page.py` changes.
+- What: The join and login browser tests add the browser's name to the fake last name ("Browser Player 1 webkit"), so `pytest tests/player --browser chromium --browser webkit` passes in one command. The logout test from #46 had the same problem and gets the same fix. Only `tests/player/test_join_page.py` and `tests/player/test_logout_button.py` change.
 - Why: Issue #53. The test database lasts the whole run, so the second browser signed up the same name and got NAME_TAKEN, which is correct app behavior (DATA-016). The browser check asks for WebKit runs too (AI-044).
 - Rule IDs: ENG-109, ENG-047, DATA-016, AI-044
 - Status: Done
