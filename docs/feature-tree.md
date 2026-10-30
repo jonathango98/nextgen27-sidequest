@@ -5,7 +5,7 @@
 
 Every planned piece of work and what it needs first (ENG-105 to ENG-108), grouped by the week it is due (PRD-054). Pieces flow left to right in time: finishing one unlocks the pieces it points to. Run `/pick-task` to claim one.
 
-**Working** 11 · **In progress** 1 · **Ready** 7 · **Waiting** 63 · **Needs decision** 0
+**Working** 12 · **In progress** 0 · **Ready** 11 · **Waiting** 59 · **Needs decision** 0
 
 Colors: green Working, blue In progress, gold Ready, gray Waiting, red dashed Needs decision.
 
@@ -243,22 +243,29 @@ flowchart LR
   classDef ready fill:#fff4d6,stroke:#a87400,stroke-width:3px,color:#14151a
   classDef waiting fill:#f1f0eb,stroke:#c3c0b6,color:#545a66
   classDef decision fill:#fdeeec,stroke:#b42318,stroke-dasharray:4 3,color:#14151a
-  class app_foundation,auth_join_login,code_my_code,connections_scanner_camera,connections_table,game_state_core,infra_hosting,points_audit_log,ready_logout,ready_retention,screens_skeleton working
-  class points_ledger in_progress
-  class connections_scan_save,game_state_banner,look_frame,ready_backups,ready_load_test,ready_rate_limits,staff_accounts ready
-  class admin_audit_view,admin_award_revoke,admin_churches,admin_fix_church,admin_pin_reset,admin_players,blind_box_claim,blind_box_close_redemption,blind_box_math,blind_box_open_box,blind_box_stock,checkin_close,checkin_end_session,checkin_hall_code,checkin_open,checkin_scan,checkin_sessions,connections_icebreaker_answer,connections_icebreaker_question,connections_incoming,connections_points,connections_verse_picker,explore_booth,explore_hidden_item,explore_photobooth,explore_places,game_state_admin_switch,game_state_auto_pause,home_progress,home_quests,journal_list,journal_review,journal_sharing,journal_summary,journal_table,journal_write,leaderboards_churches,leaderboards_in_app,leaderboards_players,look_code,look_components,look_home,look_summary,points_join,points_score_bar,recap_totals,recap_verse,screen_refresh,screen_shell,screen_takeaway_wall,staff_login,staff_manage,staff_screen_mode,usher_player_lookup,usher_scan,wrapped_cards,wrapped_collection,wrapped_journal,wrapped_people,wrapped_play_style,wrapped_save_image,wrapped_together,wrapped_unlock waiting
+  class app_foundation,auth_join_login,code_my_code,connections_scanner_camera,connections_table,game_state_core,infra_hosting,points_audit_log,points_ledger,ready_logout,ready_retention,screens_skeleton working
+  class blind_box_math,connections_scan_save,game_state_banner,home_quests,look_frame,points_join,points_score_bar,ready_backups,ready_load_test,ready_rate_limits,staff_accounts ready
+  class admin_audit_view,admin_award_revoke,admin_churches,admin_fix_church,admin_pin_reset,admin_players,blind_box_claim,blind_box_close_redemption,blind_box_open_box,blind_box_stock,checkin_close,checkin_end_session,checkin_hall_code,checkin_open,checkin_scan,checkin_sessions,connections_icebreaker_answer,connections_icebreaker_question,connections_incoming,connections_points,connections_verse_picker,explore_booth,explore_hidden_item,explore_photobooth,explore_places,game_state_admin_switch,game_state_auto_pause,home_progress,journal_list,journal_review,journal_sharing,journal_summary,journal_table,journal_write,leaderboards_churches,leaderboards_in_app,leaderboards_players,look_code,look_components,look_home,look_summary,recap_totals,recap_verse,screen_refresh,screen_shell,screen_takeaway_wall,staff_login,staff_manage,staff_screen_mode,usher_player_lookup,usher_scan,wrapped_cards,wrapped_collection,wrapped_journal,wrapped_people,wrapped_play_style,wrapped_save_image,wrapped_together,wrapped_unlock waiting
 ```
 
 ## Ready now
 
 - `staff.accounts`: A safe place to keep the accounts of ushers and admins, with passwords nobody can read. Also a way to make the very first admin when the game is set up. (M, hard, backend, due fri nov 20)
   - Try it: On a local run, set the first admin's password in the environment and run the create-admin server command named in the PR. You should see a message that the admin was made, and the password should not show up anywhere in the output. Try to break it by running the command twice, you should not get two copies of the same admin.
+- `points.score-bar`: The bar at the top of every player page now shows the player's real score. It matches what the game has written down. (S, easy, player-app, due fri nov 20)
+  - Try it: Join as Test Player 1 on one phone and look at the top bar, then earn points any way the build allows and open another page. The number should be the same on every page and match the real total. Try to break it by refreshing a few times, the score should not change by itself.
+- `points.join`: When a new player signs up, they get the points for joining the game, one time only. (S, medium, backend, due fri nov 20)
+  - Try it: On a local run or PR preview, sign up as Test Player 1, you should see the points for joining in the score bar. Log out and log in again, the score should not go up a second time. Run `pytest -k game_040` to check the same thing.
 - `look.frame`: The frame around every player screen in the chosen design, with the score bar on top, the buttons at the bottom, and a glowing, grainy background. (M, easy, design, due fri nov 27)
   - Try it: Open Home, My Code and Quests at 360px wide. The top bar, bottom bar and background should look the same on each, with no sideways scrolling or console errors.
 - `game-state.banner`: A friendly note at the top of every player page when the game is paused. When the game is off, the sign-up page tells new players that it is closed. (S, easy, player-app, due fri dec 4)
   - Try it: On a local run or PR preview, join as Test Player 1 and pause the game, then open Home, My Code and Quests, you should see a short paused note on each page. Switch the game off and open the sign-up page in a new private tab, you should see that sign-up is closed.
 - `connections.scan-save`: When one player scans another player's code, the game saves that they met. It says no if you scan yourself, scan an old code, or scan someone you already met. (M, hard, backend, due fri dec 4)
   - Try it: Join as Test Player 1 and Test Player 2 on two phones, then scan Test Player 2's My Code from Test Player 1. You should see that they met. Scan again, scan your own code, or wait for a code to run out, each should be refused with a clear message.
+- `home.quests`: A Quests page that lists every quest and how many points each one gives. (S, easy, player-app, due fri dec 11)
+  - Try it: Join as Test Player 1 and open Quests on a phone. Every quest should show with its points. Change one points number in game-config.yaml, restart, and the page should show the new number without touching any page file.
+- `blind-box.math`: The rule that works out how many blind boxes a player has earned and how many they can still collect. (S, easy, backend, due fri dec 11)
+  - Try it: Run `pytest -k game_070` and `pytest -k game_071`. Every test should pass, including the worked examples from the game rules. Try a player who already collected all their boxes and check that the count of boxes left to collect is zero.
 - `ready.rate-limits`: Stops someone from trying to log in or sign up too many times too fast from the same place. This makes guessing someone's PIN much harder. (M, hard, backend, due fri jan 8)
   - Try it: On a local run or PR preview, type a wrong PIN for the log in over and over, quickly, using different Test Players. After too many tries you should get a slow down message instead of a normal wrong PIN message. Wait a bit and check log in works again, and never do this on production.
 - `ready.backups`: Railway makes safe copies of the game's data on a schedule, and we prove a copy can bring everything back if something goes wrong. (M, hard, infra, due fri jan 8)
@@ -268,7 +275,7 @@ flowchart LR
 
 ## In progress
 
-- `points.ledger`: The one place where every point is given out. It checks the game is not paused, no limit is passed, and nobody gets the same points twice, then writes it down.
+- None
 
 ## Needs a decision
 

@@ -22,10 +22,10 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-10-29 · feat/points-ledger · Claude Opus 5.5 / @marcjason2012
 
-- What: Claim `points.ledger` from the feature tree: the one points service that checks the game state, limits, and duplicates in one transaction, then writes the ledger row and an audit row.
+- What: Builds `points.ledger`. Migration `0005_create_point_ledger.sql` adds `point_ledger` from the PointLedger spec, with a unique index so a system award for the same record pays once (DATA-027), and checks that system awards are positive and name their record (GAME-004). `app/services/points.py` has `award()`, which checks the game state, writes the ledger row and an audit row in one transaction, and joins the caller's transaction when there is one, and `score()`, the ledger sum (DATA-030). The data cleanup now deletes `point_ledger` before `player` (SAFE-014). Amounts come from callers reading `game-config.yaml`. The photobooth per-day limit, join points while paused, manual awards, and showing the real score are left to their own pieces.
 - Why: Due 2026-11-20 and unlocks 14 pieces, more than any other ready piece.
-- Rule IDs: ARCH-040, AI-040, AI-041, GAME-002, GAME-003, GAME-004, GAME-005, DATA-027, DATA-030, ENG-101
-- Status: Started
+- Rule IDs: ARCH-040, ARCH-041, AI-040, AI-041, GAME-002, GAME-003, GAME-004, GAME-005, DATA-027, DATA-030, SAFE-014, AI-050
+- Status: Done
 - PR: #56
 
 ## 2026-10-29 · feat/ready-retention · Claude Opus 5.5 / @OwenTjandra
