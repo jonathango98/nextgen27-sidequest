@@ -1,5 +1,6 @@
 -- StaffAccount (05-data-model.md section 2, staff.accounts).
 -- Timestamps are UTC ISO 8601 text (DATA-004). Booleans are 0 or 1.
+-- Numbered 0006: 0005 is the point ledger (points.ledger, PR #56).
 
 -- ARCH-036: one personal account per usher or admin, no shared logins. Usernames ignore case,
 -- so "Test-Admin" and "test-admin" can't both exist.
