@@ -85,7 +85,9 @@ def main():
                     f"  {n}. {p['id']} | {p['size']}, {p['level']}, {p['area']}{safety} | {when(p['id'])} | unlocks {unlocks[p['id']]}"
                 )
                 print(f"     {p['what']}")
-                print(f"     try it: {p['try_it']}")
+                print("     try it:")
+                for i, step in enumerate(p["try_it"], 1):
+                    print(f"       {i}. {step}")
         return
 
     print(f"READY ({len(ready)})")
@@ -95,7 +97,9 @@ def main():
             f"- {p['id']} | {p['size']}, {p['level']}, {p['area']}{safety} | {when(p['id'])} | unlocks {unlocks[p['id']]}"
         )
         print(f"  what: {p['what']}")
-        print(f"  try it: {p['try_it']}")
+        print("  try it:")
+        for i, step in enumerate(p["try_it"], 1):
+            print(f"    {i}. {step}")
         print(f"  learn: {p['learn']}")
         print(f"  rules: {', '.join(p['rules'])}")
     print(

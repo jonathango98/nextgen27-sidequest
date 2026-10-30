@@ -53,12 +53,18 @@ def test_eng_105_rule_ids_are_defined_in_the_foundation():
 def test_eng_105_every_piece_says_what_and_how_to_try_it():
     for p in _tree()["pieces"]:
         assert p["what"].strip(), p["id"]
-        assert p["try_it"].strip(), p["id"]
+        assert p["try_it"], p["id"]
+        assert all(isinstance(s, str) and s.strip() for s in p["try_it"]), p["id"]
 
 
-def test_eng_106_every_piece_is_size_s_or_m():
+def test_eng_106_every_piece_is_size_s_m_or_l():
     for p in _tree()["pieces"]:
-        assert p["size"] in {"S", "M"}, p["id"]
+        assert p["size"] in {"S", "M", "L"}, p["id"]
+
+
+def test_eng_112_every_piece_has_numbered_hand_test_steps():
+    for p in _tree()["pieces"]:
+        assert isinstance(p["try_it"], list) and len(p["try_it"]) >= 2, p["id"]
 
 
 def test_eng_107_piece_is_ready_only_when_needs_are_working_and_not_locked():

@@ -2,8 +2,8 @@
 
 - Status: LOCKED
 - Owner: Jonathan (@jonathango98)
-- Version: 1.4.0
-- Last updated: 2026-10-23
+- Version: 1.5.0
+- Last updated: 2026-10-30
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -91,7 +91,7 @@ git switch -c <type>/<short-slug>   # types: feat fix chore docs test refactor
 
 - Small commits that each pass tests, with clear messages. The PR title uses Conventional Commits. (AI-032)
 - Before every commit, run the formatter, the linter, and the tests, plus the browser check for page changes (AI-044). Then check `git status` and `git diff --staged` for forbidden files. (AI-033)
-- Open a draft early. Fill in the short template: what and why (with rule IDs) and how to test. (AI-034)
+- Open a draft early. Fill in the short template: what and why (with rule IDs) and how to test. For a tree piece, list its `try_it` steps as a checklist. A person runs every step on the PR preview, on a real phone for player pages, before the PR leaves draft. Never tick a step yourself. (AI-034, ENG-112)
 - Rebase on `main` to stay current. `--force-with-lease` only on your own branch after a rebase. Never plain `--force`. (AI-035)
 - Never:
   - use `--no-verify`

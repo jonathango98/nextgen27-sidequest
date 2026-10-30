@@ -21,7 +21,7 @@ def set_state(
     conn: sqlite3.Connection, state: str, updated_by: int | None = None
 ) -> None:
     # The check constraint refuses any state not in game.states (DATA-013).
-    # The admin buttons and their audit row come with game-state.admin-switch (ARCH-050).
+    # The admin buttons and their audit row come with game-state.controls (ARCH-050).
     conn.execute(
         "UPDATE game_state SET state = ?, updated_by = ?,"
         " updated_at = strftime('%Y-%m-%dT%H:%M:%SZ', 'now') WHERE id = 1",

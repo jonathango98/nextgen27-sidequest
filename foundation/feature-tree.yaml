@@ -2,21 +2,24 @@
 #
 # Status: Active
 # Owner: Jonathan (@jonathango98)
-# Version: 1.5.0
-# Last updated: 2026-10-28
+# Version: 2.0.0
+# Last updated: 2026-10-30
 # Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 #
-# How to read this file (rules in 16-feature-tree.md, ENG-105 to ENG-109)
-# - A piece is one branch, one PR. Its id looks like "points.ledger".
+# How to read this file (rules in 16-feature-tree.md, ENG-105 to ENG-112)
+# - A piece is one branch, one PR. Its id looks like "points.score".
+# - A piece is a slice: if it changes what the server does, it also builds the screen that shows it,
+#   so someone can try it on a phone (ENG-111).
 # - what: what the piece does, in words a 10-year-old understands. The rules list has the details.
-# - try_it: what to test by hand once it's built, so you know it works. Never a game number (AI-013).
+# - try_it: numbered steps to test by hand on the PR preview, on a phone for player pages. A person runs
+#   every step before the PR leaves draft (ENG-112). Never a game number (AI-013).
 # - This file holds the plan only. Live status is in the README Project status (ENG-100).
 #   A piece is Working when its id is in the README Working table, or in already_working below.
 # - A piece is unlocked when every id in "needs" is Working and no rule in "open" is still
 #   listed in 13-decisions.md section 3 (AI-003).
 # - due (on each feature): the Friday every piece of the feature should be Working by (PRD-054).
 #   A piece other pieces need is due by the earliest due date among them. /pick-task works this out.
-# - size: S fits one agent session. M takes about two sessions. Nothing is bigger (ENG-106).
+# - size: S fits one agent session. M takes about two. L takes three to four. Nothing is bigger (ENG-106).
 # - level: how much coding experience it takes (easy, medium, hard).
 # - area: backend, player-app, admin-screens, design, infra (labels in 09 section 5).
 # - safety_review: true means the PR needs the safety-review label and a second reviewer (SAFE-016).
@@ -110,7 +113,10 @@ pieces:
   - id: staff.accounts
     feature: staff
     what: A safe place to keep the accounts of ushers and admins, with passwords nobody can read. Also a way to make the very first admin when the game is set up.
-    try_it: On a local run, set the first admin's password in the environment and run the create-admin server command named in the PR. You should see a message that the admin was made, and the password should not show up anywhere in the output. Try to break it by running the command twice, you should not get two copies of the same admin.
+    try_it:
+      - On a local run, set the first admin's password in the environment and run the create-admin server command named in the PR.
+      - You should see a message that the admin was made, and the password should not show up anywhere in the output.
+      - Try to break it by running the command twice, you should not get two copies of the same admin.
     needs: [app.foundation]
     open: []
     area: backend
@@ -122,7 +128,10 @@ pieces:
   - id: staff.login
     feature: staff
     what: A login page for ushers and admins. Each staff page checks who you are and turns you away if your job is the wrong one.
-    try_it: Open the staff login page on a local run and log in as the first admin, you should land on an admin page. Then log in as Test Usher and open an admin page, you should be told you are not allowed. Also try opening a staff page while logged out, you should be sent to log in.
+    try_it:
+      - Open the staff login page on a local run and log in as the first admin, you should land on an admin page.
+      - Then log in as Test Usher and open an admin page, you should be told you are not allowed.
+      - Also try opening a staff page while logged out, you should be sent to log in.
     needs: [staff.accounts]
     open: []
     area: backend
@@ -131,36 +140,16 @@ pieces:
     safety_review: true
     rules: [ARCH-035, ARCH-036, API-020]
     learn: how one check protects every usher and admin page
-  - id: staff.manage
-    feature: staff
-    what: An admin page where an admin can add a new usher or screen account and switch one off. Every change is written in the game's notebook.
-    try_it: Log in as an admin, add an account called Test Usher, then log in as Test Usher on another phone, you should get in. Switch that account off and try again, the login should now be refused. Try to break it by opening this page as Test Usher, you should be turned away.
-    needs: [staff.login, points.audit-log]
-    open: []
-    area: admin-screens
-    size: S
-    level: medium
-    safety_review: true
-    rules: [ARCH-036, GAME-110, ARCH-050]
-    learn: how an admin form writes an audit row
-  - id: staff.screen-mode
-    feature: staff
-    what: An admin can set up a big main screen so it can only show the screens meant for everyone to see. Nothing private can show up on it.
-    try_it: Log in as an admin on a laptop, switch it to screen mode, then open a main screen page, you should see it. Now try to open an admin page or a player's private page in the same browser, you should be refused.
-    needs: [staff.login]
-    open: []
-    area: admin-screens
-    size: S
-    level: medium
-    safety_review: true
-    rules: [ARCH-037]
-    learn: how a limited session differs from a full login
 
   # Game states and pause
   - id: game-state.core
     feature: game-state
     what: One big switch that says if the game is on, paused, or off. When it is paused or off, nothing that earns points is allowed to work.
-    try_it: Run `pytest -k game_100` (or the game state tests named in the PR). With the game on, an earning action should work. With the game set to paused or off, the same action should be refused with the paused or game off answer. Try to break it by switching the game state in the test and trying again right away, the new state should apply to the very next request.
+    try_it:
+      - Run `pytest -k game_100` (or the game state tests named in the PR).
+      - With the game on, an earning action should work.
+      - With the game set to paused or off, the same action should be refused with the paused or game off answer.
+      - Try to break it by switching the game state in the test and trying again right away, the new state should apply to the very next request.
     needs: [app.foundation]
     open: []
     area: backend
@@ -169,35 +158,31 @@ pieces:
     safety_review: false
     rules: [ARCH-041, ARCH-042, GAME-100, GAME-102, GAME-108, API-020, DATA-013]
     learn: how one shared switch changes what every route allows
-  - id: game-state.banner
+  - id: game-state.controls
     feature: game-state
-    what: A friendly note at the top of every player page when the game is paused. When the game is off, the sign-up page tells new players that it is closed.
-    try_it: On a local run or PR preview, join as Test Player 1 and pause the game, then open Home, My Code and Quests, you should see a short paused note on each page. Switch the game off and open the sign-up page in a new private tab, you should see that sign-up is closed.
-    needs: [game-state.core]
-    open: []
-    area: player-app
-    size: S
-    level: easy
-    safety_review: false
-    rules: [UI-033, GAME-108]
-    learn: how a shared template partial shows on every page
-  - id: game-state.admin-switch
-    feature: game-state
-    what: Buttons for an admin to start the game, pause it, or turn it off. Each press is written in the game's notebook.
-    try_it: Log in as an admin and press Pause, the page should show the new state without a full reload. Open a player page as Test Player 1 on another phone, you should see the paused note. Try to break it by pressing a button as Test Usher, you should be refused.
+    what: Buttons for an admin to start the game, pause it, or turn it off, and a friendly note on every player page while it is paused. When the game is off, the sign-up page says it is closed. Each button press is written in the game's notebook.
+    try_it:
+      - On the PR preview, log in as Test Admin on a laptop and press Pause. The page should show the new state without a full reload.
+      - On a phone, join as Test Player 1 and open Home, My Code and Quests. Each page should show a short paused note.
+      - Press Start as Test Admin and reload the phone. The note should be gone.
+      - Press Off, then open the sign-up page in a new private tab on the phone. It should say sign-up is closed.
+      - "Try to break it: log in as Test Usher and press a game button. You should be refused."
     needs: [game-state.core, staff.login, points.audit-log]
     open: []
     area: admin-screens
-    size: S
+    size: M
     level: medium
     safety_review: true
-    rules: [GAME-101, GAME-104, GAME-110, OPS-001, ARCH-050]
-    learn: how an HTMX button posts to the server and swaps part of the page
+    rules: [GAME-101, GAME-104, GAME-110, OPS-001, ARCH-050, UI-033, GAME-108]
+    learn: how an HTMX button changes what every player page shows
   - id: game-state.auto-pause
     feature: game-state
     what: An admin types in when each session starts, and the game pauses by itself at that time if it is on. It never turns on a game that is off, and never un-pauses it.
-    try_it: As an admin, add a session whose start time is a minute or two from now, with the game on. Wait for that time and refresh a player page, you should see the paused note. Try to break it by setting the game to off before the time arrives, it should stay off and not become paused.
-    needs: [checkin.sessions, game-state.admin-switch]
+    try_it:
+      - As an admin, add a session whose start time is a minute or two from now, with the game on.
+      - Wait for that time and refresh a player page, you should see the paused note.
+      - Try to break it by setting the game to off before the time arrives, it should stay off and not become paused.
+    needs: [checkin.sessions, game-state.controls]
     open: []
     area: backend
     size: M
@@ -210,7 +195,10 @@ pieces:
   - id: points.audit-log
     feature: points
     what: A notebook the game writes in every time something important happens. Nobody can erase or change what's written.
-    try_it: Run `pytest -k audit` (or the test names in the PR). You should see that writing a note works and that trying to change or delete a note fails. Also check that the notes never contain PINs, secret answers, or other private words.
+    try_it:
+      - Run `pytest -k audit` (or the test names in the PR).
+      - You should see that writing a note works and that trying to change or delete a note fails.
+      - Also check that the notes never contain PINs, secret answers, or other private words.
     needs: [app.foundation]
     open: []
     area: backend
@@ -222,7 +210,10 @@ pieces:
   - id: points.ledger
     feature: points
     what: The one place where every point is given out. It checks the game is not paused, no limit is passed, and nobody gets the same points twice, then writes it down.
-    try_it: Run `pytest -k points` and expect every test to pass. The tests should show that a good award is saved once, an award while paused is refused, and an award repeated by mistake is not given twice. Try to break it with two awards sent at the same moment, the player should still get the points only once.
+    try_it:
+      - Run `pytest -k points` and expect every test to pass.
+      - The tests should show that a good award is saved once, an award while paused is refused, and an award repeated by mistake is not given twice.
+      - Try to break it with two awards sent at the same moment, the player should still get the points only once.
     needs: [points.audit-log, game-state.core]
     open: []
     area: backend
@@ -231,36 +222,31 @@ pieces:
     safety_review: false
     rules: [ARCH-040, AI-040, AI-041, GAME-002, GAME-003, GAME-004, GAME-005, DATA-027, DATA-030]
     learn: how a database transaction keeps points correct when two phones tap at once
-  - id: points.score-bar
+  - id: points.score
     feature: points
-    what: The bar at the top of every player page now shows the player's real score. It matches what the game has written down.
-    try_it: Join as Test Player 1 on one phone and look at the top bar, then earn points any way the build allows and open another page. The number should be the same on every page and match the real total. Try to break it by refreshing a few times, the score should not change by itself.
-    needs: [points.ledger]
-    open: []
-    area: player-app
-    size: S
-    level: easy
-    safety_review: false
-    rules: [UI-030, GAME-003, DATA-030]
-    learn: how a page reads a total from the server
-  - id: points.join
-    feature: points
-    what: When a new player signs up, they get the points for joining the game, one time only.
-    try_it: On a local run or PR preview, sign up as Test Player 1, you should see the points for joining in the score bar. Log out and log in again, the score should not go up a second time. Run `pytest -k game_040` to check the same thing.
+    what: When a new player signs up, they get the points for joining the game, one time only. The bar at the top of every player page shows the player's real score.
+    try_it:
+      - On the PR preview, join as Test Player 1 on a phone. The score bar should show the points for joining.
+      - Open Home, My Code and Quests. The score should be the same on every page.
+      - Log out and log in again. The score should not go up a second time.
+      - Refresh a few times. The score should not change by itself.
     needs: [points.ledger]
     open: [GAME-044]
-    area: backend
-    size: S
+    area: player-app
+    size: M
     level: medium
     safety_review: true
-    rules: [GAME-040, GAME-044]
-    learn: how a quest calls the points service
+    rules: [UI-030, GAME-003, DATA-030, GAME-040, GAME-044]
+    learn: how a quest calls the points service and a page reads the total
 
   # Scanner and connections, with icebreaker
   - id: connections.table
     feature: connections
     what: The game's memory for who met whom and which churches each person has met. It is built so the same two people can never be saved as a pair twice.
-    try_it: Run the server's migration step on a fresh local database, then `pytest -k connection`. You should see the new tables created and the tests pass. Try to break it by saving the same pair twice, even in the opposite order, the second one should be refused.
+    try_it:
+      - Run the server's migration step on a fresh local database, then `pytest -k connection`.
+      - You should see the new tables created and the tests pass.
+      - Try to break it by saving the same pair twice, even in the opposite order, the second one should be refused.
     needs: [app.foundation]
     open: []
     area: backend
@@ -272,7 +258,10 @@ pieces:
   - id: connections.scanner-camera
     feature: connections
     what: The Scan page opens the phone's camera and reads QR codes. If it is not a Side Quest code, it says so.
-    try_it: On a real phone with a PR preview, join as Test Player 1, open Scan and allow the camera. Point it at a Side Quest code, you should see it read the code. Point it at any other QR code, you should see a message that it is not a Side Quest code.
+    try_it:
+      - On a real phone with a PR preview, join as Test Player 1, open Scan and allow the camera.
+      - Point it at a Side Quest code, you should see it read the code.
+      - Point it at any other QR code, you should see a message that it is not a Side Quest code.
     needs: [screens.skeleton]
     open: []
     area: player-app
@@ -281,71 +270,48 @@ pieces:
     safety_review: false
     rules: [ARCH-025, ARCH-004, UI-034]
     learn: how a phone browser reads a QR code with the camera
-  - id: connections.scan-save
+  - id: connections.meet
     feature: connections
-    what: When one player scans another player's code, the game saves that they met. It says no if you scan yourself, scan an old code, or scan someone you already met.
-    try_it: Join as Test Player 1 and Test Player 2 on two phones, then scan Test Player 2's My Code from Test Player 1. You should see that they met. Scan again, scan your own code, or wait for a code to run out, each should be refused with a clear message.
+    what: When one player scans another player's code, the game saves that they met and both phones show the same fun question to talk about, like a favorite food. The scanned player's My Code page shows a note without them tapping anything. It says no if you scan yourself, scan an old code, or scan someone you already met.
+    try_it:
+      - On the PR preview, join as Test Player 1 and Test Player 2 on two phones.
+      - Open My Code on Test Player 2's phone, then scan it from Test Player 1's Scan page. Test Player 1's phone should show Test Player 2's name, church and a question.
+      - Within a few seconds, Test Player 2's phone should show a note and the very same question, without tapping anything.
+      - Scan the same code again. It should say you already met, with no new question and no second note.
+      - "Try to break it: scan your own code, then a screenshot of an old code. Each should be refused with a clear message."
     needs: [connections.table, connections.scanner-camera, code.my-code]
-    open: []
-    area: backend
-    size: M
-    level: hard
-    safety_review: true
-    rules: [GAME-013, GAME-014, ARCH-026, API-020]
-    learn: how the server checks a signed, time-limited code
-  - id: connections.incoming
-    feature: connections
-    what: Your My Code page shows a note when someone scans you, without you tapping anything.
-    try_it: Open My Code as Test Player 2 on one phone, then scan that code from Test Player 1 on another phone. Within a few seconds the first phone should show that someone scanned them. Try to break it by scanning again, the note should not show up twice for the same pair.
-    needs: [connections.scan-save]
-    open: []
-    area: player-app
-    size: S
-    level: medium
-    safety_review: false
-    rules: [API-030, API-032]
-    learn: how HTMX polling updates part of a page
-  - id: connections.points
-    feature: connections
-    what: Each player gets points for meeting someone when they save their friend's answer. Friends from the same church get fewer points, and meeting a new church gives a bonus. The points service gives them out.
-    try_it: "Run `pytest -k 'game_010 or game_011 or game_012 or game_018'` and expect the worked examples from the rules to pass. By hand, connect Test Player 1 from Example Church A with Test Player 2 from Example Church B, then save an answer on Test Player 1's phone. Only Test Player 1's score should go up, by the connection points plus the new church bonus in game-config.yaml. Then connect two players from the same church, they should get the smaller same-church points."
-    needs: [connections.scan-save, points.ledger]
-    open: [GAME-016]
-    area: backend
-    size: M
-    level: hard
-    safety_review: false
-    rules: [GAME-010, GAME-011, GAME-012, GAME-018]
-    learn: how worked examples in the rules become tests
-  - id: connections.icebreaker-question
-    feature: connections
-    what: After a scan, both phones show the same fun question to talk about, like a favorite food.
-    try_it: Scan between Test Player 1 and Test Player 2 on two phones. Both phones should show the friend's name and church, and the very same question. Try to break it by scanning the same pair again, they should not get a new question.
-    needs: [connections.scan-save]
     open: [GAME-019]
     area: player-app
-    size: S
-    level: medium
-    safety_review: false
-    rules: [GAME-017, SAFE-043]
-    learn: how two players see the same thing from one saved record
-  - id: connections.icebreaker-answer
-    feature: connections
-    what: Each player can type in the answer their new friend gave. Only those two players can ever see it.
-    try_it: After a scan, type an answer for Test Player 2 on Test Player 1's phone, you should see it saved. Log in as Test Usher or an admin and look for that answer, it should not appear anywhere. Try to break it by logging in as Test Player 3 and opening that connection, you should be refused.
-    needs: [connections.icebreaker-question]
-    open: [GAME-015, GAME-019]
-    area: player-app
-    size: M
+    size: L
     level: hard
     safety_review: true
-    rules: [GAME-015, SAFE-006]
-    learn: how to keep private data visible to exactly two people
+    rules: [GAME-013, GAME-014, ARCH-026, API-020, API-030, API-032, GAME-017, SAFE-043]
+    learn: how the server checks a signed, time-limited code and how HTMX polling updates a page
+  - id: connections.answers
+    feature: connections
+    what: Each player can type in the answer their new friend gave, and gets points for meeting someone when they save it. Only those two players can ever see the answer. Friends from the same church get fewer points, and meeting a new church gives a bonus.
+    try_it:
+      - On the PR preview, connect Test Player 1 from Example Church A with Test Player 2 from Example Church B on two phones.
+      - On Test Player 1's phone, type Test Player 2's answer and save. It should show as saved, and only Test Player 1's score should go up.
+      - Connect two players from the same church and save an answer. They should get the smaller same-church points.
+      - "Try to break it: log in as Test Player 3 and open that connection. You should be refused."
+      - Run `pytest -k 'game_010 or game_011 or game_012 or game_018'`. The worked examples from the rules should pass.
+    needs: [connections.meet, points.ledger]
+    open: [GAME-015, GAME-019, GAME-016]
+    area: player-app
+    size: L
+    level: hard
+    safety_review: true
+    rules: [GAME-015, SAFE-006, GAME-010, GAME-011, GAME-012, GAME-018]
+    learn: how to keep private data visible to exactly two people, and how worked examples become tests
   - id: connections.verse-picker
     feature: connections
     what: When the question is about a favorite verse, players choose the book, chapter and verse from lists instead of typing. It saves as something like John 3:16.
-    try_it: Scan between two test players until you get the favorite verse question. Choose a book, chapter and verse from the lists, you should see it saved in the usual form. Try to break it by picking a chapter that is too high for that book, the lists should not let you.
-    needs: [connections.icebreaker-answer]
+    try_it:
+      - Scan between two test players until you get the favorite verse question.
+      - Choose a book, chapter and verse from the lists, you should see it saved in the usual form.
+      - Try to break it by picking a chapter that is too high for that book, the lists should not let you.
+    needs: [connections.answers]
     open: []
     area: player-app
     size: S
@@ -355,371 +321,223 @@ pieces:
     learn: how a fixed list of choices keeps data clean enough to match
 
   # Mix look on player screens
-  - id: look.frame
+  - id: look.base
     feature: look
-    what: The frame around every player screen in the chosen design, with the score bar on top, the buttons at the bottom, and a glowing, grainy background.
-    try_it: Open Home, My Code and Quests at 360px wide. The top bar, bottom bar and background should look the same on each, with no sideways scrolling or console errors.
+    what: The frame around every player screen in the chosen design, with the score bar on top, the buttons at the bottom, and a glowing, grainy background. Also building blocks like buttons, cards and progress bars, ready for every screen to reuse.
+    try_it:
+      - On a phone, or a browser 360px wide, open Home, My Code and Quests. The top bar, bottom bar and background should look the same on each.
+      - Open the page that shows the components. Each button, card and bar should match the mockup, and buttons should respond to taps.
+      - Check every page for sideways scrolling and red errors in the browser console. There should be none.
     needs: [screens.skeleton]
     open: []
     area: design
-    size: M
+    size: L
     level: easy
     safety_review: false
-    rules: [UI-008, UI-009, UI-030, DEC-035, DEC-036]
-    learn: how design tokens in CSS keep every screen consistent
-  - id: look.components
+    rules: [UI-008, UI-009, UI-030, DEC-035, DEC-036, UI-035, UI-051]
+    learn: how design tokens and template partials keep every screen consistent
+  - id: look.screens
     feature: look
-    what: Building blocks like buttons, cards and progress bars in the chosen design, ready for every screen to reuse.
-    try_it: Open the page that shows the components at 360px wide. Each button, card and bar should match the mockup, and tapping buttons should work. There should be no console errors.
-    needs: [look.frame]
+    what: The Home, My Code and shared notes pages made to look like the chosen design. Home and the notes page use pretend numbers and fake note cards for now.
+    try_it:
+      - Open Home as Test Player 1 on a phone, or a browser 360px wide. It should match the mockup, with nothing spilling off the side.
+      - Open My Code. The QR panel and the black Scan button should match the mockup and fit on screen, and Scan should open the scanner.
+      - Open the summary page. The fake cards should match the mockup, with text wrapping and nothing cut off.
+      - Check the browser console on each page. There should be no red errors.
+    needs: [look.base]
     open: []
     area: design
-    size: S
+    size: L
     level: easy
     safety_review: false
-    rules: [UI-035, UI-051]
-    learn: how one template partial becomes a reusable component
-  - id: look.home
-    feature: look
-    what: The Home screen made to look like the chosen design, with pretend numbers for now.
-    try_it: Open Home on a phone or a browser 360px wide. It should match the mockup, nothing should spill off the side, and there should be no red errors in the browser console.
-    needs: [look.components]
-    open: []
-    area: design
-    size: S
-    level: easy
-    safety_review: false
-    rules: [UI-036, DEC-037]
-    learn: how to turn a mockup into a page at 360px
-  - id: look.code
-    feature: look
-    what: The My Code screen made to look like the chosen design, with the QR code and a black Scan button.
-    try_it: Open My Code at 360px wide as Test Player 1. The QR panel and the black Scan button should match the mockup and fit on screen, the Scan button should open the scanner, and there should be no console errors.
-    needs: [look.components]
-    open: []
-    area: design
-    size: S
-    level: easy
-    safety_review: false
-    rules: [UI-037, DEC-037]
-    learn: how to turn a mockup into a page at 360px
-  - id: look.summary
-    feature: look
-    what: The page of shared notes made to look like the chosen design, filled with fake note cards.
-    try_it: Open the summary page at 360px wide. The fake cards should match the mockup, text should wrap with nothing cut off, and there should be no console errors.
-    needs: [look.components]
-    open: []
-    area: design
-    size: S
-    level: easy
-    safety_review: false
-    rules: [UI-038, DEC-037]
+    rules: [UI-036, DEC-037, UI-037, UI-038]
     learn: how to turn a mockup into a page at 360px
 
   # Home and Quests pages
-  - id: home.progress
+  - id: home.pages
     feature: home
-    what: Home shows the player's real score and how close they are to the next blind box.
-    try_it: Join as Test Player 1 and see the starting score on Home. Earn points (like a check-in) and refresh, the score and the progress bar should go up. Try a brand new player, it should show zero without breaking.
-    needs: [points.ledger, blind-box.math]
-    open: []
-    area: player-app
-    size: S
-    level: easy
-    safety_review: false
-    rules: [GAME-070, GAME-071, UI-036, UI-051]
-    learn: how a page reads computed numbers from a service
-  - id: home.quests
-    feature: home
-    what: A Quests page that lists every quest and how many points each one gives.
-    try_it: Join as Test Player 1 and open Quests on a phone. Every quest should show with its points. Change one points number in game-config.yaml, restart, and the page should show the new number without touching any page file.
+    what: Home shows the player's real score and how close they are to the next blind box. A Quests page lists every quest and how many points it gives. An Open Box page shows how many blind boxes the player can collect and how to go and get them.
+    try_it:
+      - On the PR preview, join as a brand new Test Player 1. Home should show the starting score and the progress bar without breaking.
+      - Earn points, for example with a scan, and refresh Home. The score and the progress bar should go up.
+      - Open Quests. Every quest should show with its points.
+      - Tap Open Box. It should show how many boxes you can collect and clear steps for the game booth. It should never say how many boxes are left in total, and tapping it should not use up a box.
+      - On a local run, change one points number in game-config.yaml and restart. Quests should show the new number without touching any page file.
+      - Run `pytest -k 'game_070 or game_071'`. The worked examples from the rules should pass.
     needs: [points.ledger]
     open: []
     area: player-app
-    size: S
+    size: L
     level: easy
     safety_review: false
-    rules: [AI-013, ENG-031]
-    learn: why game numbers come from config and never from the template
+    rules: [GAME-070, GAME-071, GAME-074, DATA-031, GAME-073, GAME-077, UI-036, UI-051, AI-013, ENG-031]
+    learn: how a page reads computed numbers from a service, and why game numbers come from config
 
   # Session check-in
   - id: checkin.sessions
     feature: checkin
-    what: A list of the conference sessions, and an admin page to add one with a title, an optional start time, and how many minutes before the start check-in opens.
-    try_it: Log in as a Test Admin, add a session called Example Session 1 with a start time and check-in minutes, and edit its title. It should show in the list after a refresh. Run `pytest -k checkin` and expect it to pass.
-    needs: [staff.login, points.audit-log]
+    what: A list of the conference sessions, and an admin page to add one with a title, an optional start time, and how many minutes before the start check-in opens. An End session button turns the game back on and lets players write takeaways for that session.
+    try_it:
+      - On the PR preview, log in as Test Admin and add Example Session 1 with a start time and check-in minutes. Edit its title. It should show in the list after a refresh.
+      - Pause the game, then press End session on Example Session 1. The game should be on again.
+      - Press End session again. Nothing should break.
+      - "Try to break it: open the page as Test Usher. You should be refused."
+    needs: [staff.login, points.audit-log, game-state.controls]
     open: []
     area: admin-screens
-    size: M
+    size: L
     level: medium
     safety_review: true
-    rules: [DATA-014, DATA-022, GAME-021, GAME-110]
-    learn: how an admin list page adds and edits rows
-  - id: checkin.end-session
+    rules: [DATA-014, DATA-022, GAME-021, GAME-110, GAME-026, OPS-002]
+    learn: how an admin list page adds rows, and how one button changes two things in one transaction
+  - id: checkin.window
     feature: checkin
-    what: An admin button that ends a session. It turns the game back on and lets players write takeaways for that session.
-    try_it: Log in as a Test Admin with the game paused and press End session on Example Session 1. The game should now be on and Journal should offer that session. Pressing it again should not break anything.
-    needs: [checkin.sessions, game-state.admin-switch]
+    what: Check-in opens on its own a few minutes before a session starts and closes when it starts. A session with no start time gets an Open check-in button. An admin can also close check-in for any session whenever they choose.
+    try_it:
+      - On the PR preview, log in as Test Admin and give Example Session 1 a start time a few minutes away with 2 check-in minutes. The session should show check-in open 2 minutes before, and closed at the start time.
+      - Add Example Session 2 with no start time and press Open check-in. It should open right away.
+      - Press the close button on Example Session 2. It should show closed.
+      - "Try to break it: press the buttons as Test Usher. You should be refused."
+    needs: [checkin.sessions, game-state.controls]
     open: []
     area: admin-screens
-    size: S
-    level: medium
-    safety_review: true
-    rules: [GAME-026, OPS-002]
-    learn: how one button changes two things in one transaction
-  - id: checkin.open
-    feature: checkin
-    what: Check-in opens on its own a few minutes before a session starts and closes when it starts. A session with no start time gets an Open check-in button instead.
-    try_it: Log in as a Test Admin and give Example Session 1 a start time a few minutes away with 2 check-in minutes. Check-in should open on its own 2 minutes before and close at the start time. Add Example Session 2 with no start time and press Open check-in, it should open right away.
-    needs: [checkin.sessions, game-state.admin-switch]
-    open: []
-    area: backend
-    size: M
+    size: L
     level: medium
     safety_review: true
     rules: [GAME-021, GAME-024, GAME-027, OPS-006]
-    learn: how the server works out if something is open from stored times, not from a timer
-  - id: checkin.hall-code
+    learn: how the server works out if something is open from stored times, and how a by-hand button sits on top of that rule
+  - id: checkin.hall
     feature: checkin
-    what: The big hall screen shows a check-in code that keeps changing, so a photo of it soon stops working, and a big countdown to when check-in closes.
-    try_it: Open the main screen for a session whose check-in is open and watch the code. It should change on its own after a short wait, and the countdown should tick down to the start time. Try to break it by scanning an old code you saved, which should be refused.
-    needs: [checkin.open, screen.shell, code.my-code]
+    what: The big hall screen shows a check-in code that keeps changing, so a photo of it soon stops working, and a big countdown to when check-in closes. A player scans it to check in, and the first players to check in get the most points.
+    try_it:
+      - On the PR preview, open the main screen on a laptop for a session whose check-in is open. The code should change on its own after a short wait, and the countdown should tick down.
+      - On a phone, scan the hall code as Test Player 1. You should see a points message, and the score should go up.
+      - Scan again. You should get no new points.
+      - "Try to break it: scan a photo of an old code, then scan after check-in closes. Both should be refused."
+    needs: [checkin.window, screen.main, code.my-code, connections.scanner-camera, points.ledger]
     open: []
     area: admin-screens
-    size: S
-    level: medium
-    safety_review: true
-    rules: [GAME-020, GAME-028, DEC-013]
-    learn: how the QR service makes a different kind of code
-  - id: checkin.scan
-    feature: checkin
-    what: A player scans the code on the hall screen to check in. The first players to check in get the most points.
-    try_it: Join as Test Player 1 on one phone and scan the hall code of a session that is open. You should see a points message. Try to break it by scanning again (no new points) and by scanning before check-in is open (refused).
-    needs: [checkin.hall-code, connections.scanner-camera, points.ledger]
-    open: []
-    area: backend
-    size: M
+    size: L
     level: hard
-    safety_review: false
-    rules: [GAME-022, GAME-023, GAME-025]
-    learn: how save order decides tiers when many phones scan at once
-  - id: checkin.close
-    feature: checkin
-    what: An admin button that stops check-in for a session whenever they choose.
-    try_it: Log in as a Test Admin, press Open check-in on Example Session 2 (no start time), then press the close button. Now Test Player 1 scanning the hall code should be refused.
-    needs: [checkin.open]
-    open: []
-    area: admin-screens
-    size: S
-    level: easy
     safety_review: true
-    rules: [GAME-024]
-    learn: how a by-hand button sits on top of an automatic rule
+    rules: [GAME-020, GAME-028, DEC-013, GAME-022, GAME-023, GAME-025]
+    learn: how the QR service makes a different kind of code, and how save order decides tiers when many phones scan at once
 
   # Journal and Summary page
-  - id: journal.table
+  - id: journal.notes
     feature: journal
-    what: A safe place in the database to keep players' notes. It goes in its own change because it holds writing from young people.
-    try_it: Run `pytest -k journal` and expect it to pass. Start the app on an empty database, it should start with no errors.
-    needs: [checkin.sessions]
-    open: []
-    area: backend
-    size: S
-    level: medium
-    safety_review: true
-    rules: [DATA-023, SAFE-016]
-    learn: why tables that hold minors' writing get their own review
-  - id: journal.write
-    feature: journal
-    what: Lets a player write a private note about what they learned in a session that has finished. They get points once for each session, but not while the game is paused.
-    try_it: Join as Test Player 1, open Journal for an ended session, and send a note with too few words, you should see a friendly message. Then send a long enough note, you should get the points once. Try to break it by writing a second note for the same session (no new points) and by pausing the game first (it should say no).
-    needs: [journal.table, points.ledger, checkin.end-session]
+    what: A safe place to keep players' notes, and a way for a player to write a private note about what they learned in a session that has finished. They get points once for each session, and they can see a list of the notes they wrote themselves.
+    try_it:
+      - On the PR preview, end Example Session 1 as Test Admin. Then join as Test Player 1 on a phone and open Journal. It should offer that session.
+      - Send a note with too few words. You should see a friendly message.
+      - Send a long enough note. You should get the points once, and the note should show in your list.
+      - Write a second note for the same session. You should get no new points.
+      - Pause the game and try to write a note. It should say no.
+      - Write a note as Test Player 2 on another phone. Each phone should list only its own notes.
+    needs: [checkin.sessions, points.ledger]
     open: []
     area: player-app
-    size: M
+    size: L
     level: medium
     safety_review: true
-    rules: [GAME-030, GAME-032, GAME-033, GAME-034, GAME-036]
-    learn: how a form is checked on the server and shows friendly errors
-  - id: journal.list
+    rules: [DATA-023, SAFE-016, GAME-030, GAME-032, GAME-033, GAME-034, GAME-036, GAME-031, SAFE-017]
+    learn: how a form is checked on the server, and why tables that hold minors' writing get their own review
+  - id: journal.share-review
     feature: journal
-    what: A page where a player sees the notes they wrote themselves.
-    try_it: Join as Test Player 1 and Test Player 2 on two phones, and write a note on each. Each phone should list only its own notes. Never should one player see the other's note.
-    needs: [journal.write]
-    open: []
-    area: player-app
-    size: S
-    level: easy
-    safety_review: true
-    rules: [GAME-031, SAFE-017]
-    learn: how a page shows only the signed-in player's data
-  - id: journal.sharing
-    feature: journal
-    what: Lets a player pick who can read a note, only me, shared with my name, or shared without my name. The form says in plain words who can see it.
-    try_it: As Test Player 1, write a note and try each choice. The form should say that anonymous hides your name from players but organizers can still see it. A private note should never show for other players.
-    needs: [journal.write]
-    open: []
-    area: player-app
-    size: S
-    level: medium
-    safety_review: true
-    rules: [GAME-031, SAFE-009, UI-031]
-    learn: how a privacy choice is saved and respected
-  - id: journal.review
-    feature: journal
-    what: A page where admins read notes that players chose to share, and approve, reject, or hide them. Each choice is written down.
-    try_it: Share a note as Test Player 1, then log in as a Test Admin and approve it. Players should see it only after approval. Try rejecting or hiding another one, it should vanish for players and the choice should be recorded.
-    needs: [journal.sharing, staff.login, points.audit-log]
+    what: "A player picks who can read a note: only me, shared with my name, or shared without my name. Admins read the shared notes and approve, reject, or hide them, and signed-in players read the approved ones on the summary page."
+    try_it:
+      - As Test Player 1 on the PR preview, write a note and look at the sharing choices. The form should say that anonymous hides your name from players but organizers can still see it.
+      - Share one note with your name and keep another one private.
+      - Open the summary as Test Player 2. Neither note should show yet.
+      - Log in as Test Admin, approve the shared note, and reject another shared one. Test Player 2's summary should now show only the approved note, and each choice should be recorded.
+      - "Try to break it: check the private note never shows for other players, and open the summary while logged out. It should send you to log in."
+    needs: [journal.notes, staff.login, points.audit-log]
     open: []
     area: admin-screens
-    size: M
+    size: L
     level: hard
     safety_review: true
-    rules: [SAFE-007, SAFE-008, SAFE-040, SAFE-041, SAFE-042]
+    rules: [GAME-031, SAFE-009, UI-031, SAFE-007, SAFE-008, SAFE-040, SAFE-041, SAFE-042, SAFE-017, UI-038]
     learn: how moderation keeps minors safe before anything is public
-  - id: journal.summary
-    feature: journal
-    what: A page where signed-in players read the shared notes that admins approved.
-    try_it: As Test Player 1, open the summary. You should see only approved notes. Try to break it by opening the page while logged out, it should send you to log in, and a note waiting for review should not appear.
-    needs: [journal.review]
-    open: []
-    area: player-app
-    size: S
-    level: medium
-    safety_review: true
-    rules: [SAFE-017, UI-038]
-    learn: how a query shows only approved rows
 
   # Explore
-  - id: explore.places
+  - id: explore.booths
     feature: explore
-    what: Lists of the booths and the hidden item numbers that admins fill in before the event. It never saves where the items are hidden.
-    try_it: Log in as a Test Admin, add Example Booth A and a hidden item number, and check both show in their lists. Look through the page and the saved data, you should find no spot or place for any item.
-    needs: [staff.login, points.audit-log]
+    what: Lists of the booths and the hidden item numbers that admins fill in before the event. It never saves where the items are hidden. An usher records that a player visited a booth, and the player gets points, once for each booth.
+    try_it:
+      - On the PR preview, log in as Test Admin and add Example Booth A, Example Booth B and a hidden item number. Both lists should show them.
+      - Look through the page and the form. There should be no spot for where an item is hidden.
+      - As Test Usher on a phone, scan Test Player 1's My Code at Example Booth A. Test Player 1's score should go up.
+      - Scan again at Example Booth A. It should be refused with no extra points. Example Booth B should still work.
+    needs: [staff.login, points.audit-log, usher.console, points.ledger]
     open: []
+    area: admin-screens
+    size: L
+    level: medium
+    safety_review: true
+    rules: [GAME-110, DATA-024, DATA-025, SAFE-010, GAME-041]
+    learn: how to keep secret game data out of the database, and how a constraint enforces once per booth
+  - id: explore.items
+    feature: explore
+    what: An usher records that a player turned in a hidden item, which only the first player can do. An usher also records photobooth visits, which give points up to a limit each day.
+    try_it:
+      - As Test Usher on the PR preview, record test item number 1 for Test Player 1. The score should go up.
+      - Record the same number for Test Player 2. It should be refused with a clear message.
+      - Scan Test Player 1's My Code at the photobooth. The score should go up.
+      - Keep scanning until the daily limit. The next try should be refused with a clear message.
+    needs: [usher.console, explore.booths, points.ledger]
+    open: [GAME-105]
     area: admin-screens
     size: M
     level: medium
-    safety_review: true
-    rules: [GAME-110, DATA-024, DATA-025, SAFE-010]
-    learn: how to keep secret game data out of the database and the repo
-  - id: explore.booth
-    feature: explore
-    what: An usher records that a player visited a booth, and the player gets points. Each booth counts once for each player.
-    try_it: As Test Usher, scan Test Player 1's My Code at Example Booth A and check the points go up. Scan again at the same booth, it should be refused with no extra points. Another booth should still work.
-    needs: [usher.scan, explore.places, points.ledger]
-    open: []
-    area: admin-screens
-    size: S
-    level: medium
     safety_review: false
-    rules: [GAME-041, DATA-024]
-    learn: how a database constraint enforces "once per booth"
-  - id: explore.hidden-item
-    feature: explore
-    what: An usher records that a player turned in a hidden item. Each item can only be turned in once, by the first player.
-    try_it: As Test Usher, record test item number 1 for Test Player 1, and check the points go up. Then try the same number for Test Player 2, it should be refused with a clear message.
-    needs: [usher.scan, explore.places, points.ledger]
-    open: []
-    area: admin-screens
-    size: S
-    level: medium
-    safety_review: false
-    rules: [GAME-043, DATA-025, SAFE-010, SAFE-026]
-    learn: how the second claim on the same item gets a clear refusal
-  - id: explore.photobooth
-    feature: explore
-    what: An usher records that a player visited the photobooth, and the player gets points, up to a limit each day.
-    try_it: As Test Usher, scan Test Player 1's My Code at the photobooth and check the points go up. Keep going until the daily limit, then the next try should be refused with a clear message.
-    needs: [usher.scan, points.ledger]
-    open: [GAME-105]
-    area: admin-screens
-    size: S
-    level: medium
-    safety_review: false
-    rules: [GAME-042, DATA-028]
-    learn: how a daily limit depends on the venue timezone
+    rules: [GAME-043, DATA-025, SAFE-010, SAFE-026, GAME-042, DATA-028]
+    learn: how a second claim gets a clear refusal, and how a daily limit depends on the venue timezone
 
   # Usher console
-  - id: usher.scan
+  - id: usher.console
     feature: usher
-    what: A helper page for ushers. They scan a player's code with their phone camera to pick which player they are helping.
-    try_it: Log in as Test Usher on a phone, open the usher page, and scan Test Player 1's My Code. You should see Test Player 1's first name and church. Then try logging in as Test Player 1 and opening the usher page, which should be refused.
+    what: A helper page for ushers. They scan a player's code with their phone camera to pick which player they are helping, or find them by typing their name if the player's phone is dead.
+    try_it:
+      - On the PR preview, log in as Test Usher on a phone and open the usher page.
+      - Scan Test Player 1's My Code. You should see Test Player 1's first name and church.
+      - Search for Test Player 1 by name and pick them. You should see only what an usher needs, with no PIN or full last name.
+      - "Try to break it: log in as Test Player 1 and open the usher page. You should be refused."
     needs: [staff.login, connections.scanner-camera, code.my-code]
     open: []
     area: admin-screens
-    size: M
+    size: L
     level: medium
     safety_review: true
-    rules: [GAME-112, ARCH-025]
-    learn: how a staff page reuses the player scanner
-  - id: usher.player-lookup
-    feature: usher
-    what: If a player's phone is dead, an usher can find them by typing their name instead of scanning.
-    try_it: Log in as Test Usher, search for Test Player 1 by name, and pick them. You should see only what an usher needs, such as first name and church, and no PIN or full last name. Try the same page as Test Player 1 and it should be refused.
-    needs: [usher.scan]
-    open: []
-    area: admin-screens
-    size: S
-    level: medium
-    safety_review: true
-    rules: [GAME-113, SAFE-004, SAFE-028]
-    learn: how to show staff only the fields they need
+    rules: [GAME-112, ARCH-025, GAME-113, SAFE-004, SAFE-028]
+    learn: how a staff page reuses the player scanner and shows staff only the fields they need
 
   # Blind boxes (Open Box)
-  - id: blind-box.math
+  - id: blind-box.handout
     feature: blind-box
-    what: The rule that works out how many blind boxes a player has earned and how many they can still collect.
-    try_it: Run `pytest -k game_070` and `pytest -k game_071`. Every test should pass, including the worked examples from the game rules. Try a player who already collected all their boxes and check that the count of boxes left to collect is zero.
-    needs: [points.ledger]
-    open: []
-    area: backend
-    size: S
-    level: easy
-    safety_review: false
-    rules: [GAME-070, GAME-071, GAME-074, DATA-031]
-    learn: how to test a small pure function with the worked examples
-  - id: blind-box.open-box
-    feature: blind-box
-    what: A page that shows a player how many blind boxes they can collect and how to go and get them.
-    try_it: Log in as Test Player 1 and tap Open Box. You should see how many boxes can be collected and clear steps for going to the game booth. Check that the page never says how many boxes are left in total, and that tapping Open Box does not use up a box.
-    needs: [blind-box.math]
-    open: []
-    area: player-app
-    size: S
-    level: easy
-    safety_review: false
-    rules: [GAME-073, GAME-077]
-    learn: how a page explains a real-world step clearly
-  - id: blind-box.claim
-    feature: blind-box
-    what: An usher hands a player a blind box and the game remembers it, so the same box is never given twice.
-    try_it: Log in as Test Usher, scan Test Player 1's code after they have reached a box milestone, and save the claim. Test Player 1's phone should now show one fewer box to collect. Then pause the game as Test Admin and try again, which should be refused, and try claiming more boxes than the player has earned, which should also be refused.
-    needs: [usher.scan, blind-box.math, game-state.core]
+    what: An usher hands a player a blind box and the game remembers it, so the same box is never given twice. When all the blind boxes have been given out, the game stops letting anyone collect more.
+    try_it:
+      - On the PR preview, after Test Player 1 reaches a box milestone, log in as Test Usher, scan their code and save the claim.
+      - Test Player 1's Open Box page should show one fewer box to collect.
+      - Try to claim more boxes than the player has earned. It should be refused.
+      - Pause the game as Test Admin and try again. It should be refused.
+      - On a local run, set the stock in the test config to a tiny number and claim until it is used up. The next claim should be refused with a friendly message, and the phone should still show no count of boxes left.
+    needs: [usher.console, home.pages, game-state.core]
     open: []
     area: admin-screens
-    size: M
+    size: L
     level: medium
     safety_review: true
-    rules: [GAME-073, GAME-075, GAME-102, DATA-026, DATA-029]
+    rules: [GAME-073, GAME-075, GAME-102, DATA-026, DATA-029, GAME-076]
     learn: how to stop two ushers from claiming the same blind box at once
-  - id: blind-box.stock
-    feature: blind-box
-    what: When all the blind boxes have been given out, the game stops letting anyone collect more.
-    try_it: Run `pytest -k game_076`. It should pass. On a local run, set the stock in the test config to a tiny number, claim until it is used up, and the next claim should be refused with a friendly message. Check that the phone still shows no count of boxes left.
-    needs: [blind-box.claim]
-    open: []
-    area: backend
-    size: S
-    level: medium
-    safety_review: false
-    rules: [GAME-076]
-    learn: how a config value turns a check on
   - id: blind-box.close-redemption
     feature: blind-box
     what: On Sunday the game is off, but players can still collect their blind boxes until an admin presses a button to close collecting.
-    try_it: With the game set to off, log in as Test Usher and claim a box for Test Player 1, which should work. Then log in as Test Admin, tap Close redemption, and try another claim, which should now be refused. Also check that points still cannot be earned while the game is off.
-    needs: [blind-box.claim, game-state.admin-switch]
+    try_it:
+      - With the game set to off, log in as Test Usher and claim a box for Test Player 1, which should work.
+      - Then log in as Test Admin, tap Close redemption, and try another claim, which should now be refused.
+      - Also check that points still cannot be earned while the game is off.
+    needs: [blind-box.handout, game-state.controls]
     open: []
     area: admin-screens
     size: M
@@ -729,35 +547,30 @@ pieces:
     learn: how one narrow exception is added to a rule without weakening it
 
   # Leaderboards and church score
-  - id: leaderboards.players
+  - id: leaderboards.screen
     feature: leaderboards
-    what: A list of the top players for the big screen. It shows only a first name, last initial and church.
-    try_it: Open the main screen page on a laptop between sessions. You should see players ranked from highest score, each with first name, last initial and church only. Check that no PIN, full last name or other private detail shows, and that nothing shows while the game is paused.
-    needs: [points.ledger, screen.shell]
-    open: [GAME-083, GAME-084, GAME-088]
+    what: "Lists for the big screen: the top players, and churches ranked by a fair average so a small church can beat a big one. Players show only a first name, last initial and church."
+    try_it:
+      - On the PR preview, make a few test players in Example Church A and Example Church B with different scores.
+      - Open the main screen on a laptop between sessions. Players should be ranked from highest score, with first name, last initial and church only.
+      - Churches should be ranked by the average per player, not the total. Give one test player many points and check their church does not jump ahead on its own.
+      - Pause the game. Only the holding message should show.
+    needs: [points.ledger, screen.main]
+    open: [GAME-083, GAME-084, GAME-088, GAME-089, GAME-082]
     area: admin-screens
-    size: M
+    size: L
     level: medium
     safety_review: true
-    rules: [GAME-086, GAME-087, SAFE-004, SAFE-019]
+    rules: [GAME-086, GAME-087, SAFE-004, SAFE-019, GAME-081]
     learn: how to rank players fairly and show only safe fields
-  - id: leaderboards.churches
-    feature: leaderboards
-    what: A list of churches ranked by a fair average, so a small church can beat a big one.
-    try_it: Open the main screen page between sessions with players from Example Church A and Example Church B. Churches should be ranked by the average per player, not the total. Add one very active Test Player and check that it does not let their church jump ahead on its own.
-    needs: [points.ledger, screen.shell]
-    open: [GAME-089, GAME-082]
-    area: admin-screens
-    size: M
-    level: medium
-    safety_review: true
-    rules: [GAME-081, GAME-087]
-    learn: how an average changes with who counts as a player
   - id: leaderboards.in-app
     feature: leaderboards
     what: An optional switch that lets a player see a leaderboard or their own rank on their phone. It stays off unless the team decides to use it.
-    try_it: Log in as Test Player 1 on a phone with the switch off. You should see only your own points and no leaderboard or rank. Turn the switch on in the local config, reload, and the leaderboard or rank should appear.
-    needs: [leaderboards.players]
+    try_it:
+      - Log in as Test Player 1 on a phone with the switch off.
+      - You should see only your own points and no leaderboard or rank.
+      - Turn the switch on in the local config, reload, and the leaderboard or rank should appear.
+    needs: [leaderboards.screen]
     open: [GAME-085]
     area: player-app
     size: S
@@ -769,44 +582,29 @@ pieces:
   # Admin console
   - id: admin.players
     feature: admin
-    what: Admins can search for a player and see their account details. Last names are shown to staff only.
-    try_it: Log in as Test Admin, search for Test Player 1, and open them. You should see their account details including last name. Log in as Test Usher and open the same page, which should be refused, and check the leaderboard never shows the full last name.
-    needs: [staff.login]
+    what: Admins can search for a player and see their account details, give them a fresh PIN after checking their badge, and change their church if they picked the wrong one at sign-up. Last names are shown to staff only, and every change is written down.
+    try_it:
+      - On a phone, lock Test Player 1 out by typing the wrong PIN several times.
+      - On the PR preview, log in as Test Admin, search for Test Player 1 and open them. You should see their account details, including last name.
+      - Reset their PIN. Test Player 1 should now log in with the new PIN.
+      - Change their church from Example Church A to Example Church B. The player's phone should show the new church.
+      - "Try to break it: open the same pages as Test Usher. You should be refused."
+    needs: [staff.login, points.audit-log]
     open: []
     area: admin-screens
-    size: S
+    size: L
     level: medium
     safety_review: true
-    rules: [GAME-110, SAFE-004, SAFE-028]
-    learn: how a search page works with HTMX
-  - id: admin.pin-reset
-    feature: admin
-    what: An admin can give a player a fresh PIN after checking their badge, and the game writes down who did it.
-    try_it: Lock Test Player 1 out by typing the wrong PIN several times. Log in as Test Admin, find Test Player 1, and reset their PIN. Test Player 1 should now be able to log in with the new PIN. Try it as Test Usher, which should be refused, and check the reset shows in the log.
-    needs: [admin.players, points.audit-log]
-    open: []
-    area: admin-screens
-    size: S
-    level: medium
-    safety_review: true
-    rules: [SAFE-023, SAFE-044, DEC-004, ARCH-050]
-    learn: how account recovery stays safe without email
-  - id: admin.fix-church
-    feature: admin
-    what: An admin can change a player's church if they picked the wrong one at sign-up.
-    try_it: Log in as Test Admin, find Test Player 1, and change their church from Example Church A to Example Church B. The player's church should update everywhere, including the church leaderboard. Try it as Test Usher, which should be refused, and check the change shows in the log.
-    needs: [admin.players, points.audit-log]
-    open: []
-    area: admin-screens
-    size: S
-    level: easy
-    safety_review: true
-    rules: [DATA-012, ARCH-050]
-    learn: how a small admin fix writes an audit row
+    rules: [GAME-110, SAFE-004, SAFE-028, SAFE-023, SAFE-044, DEC-004, ARCH-050, DATA-012]
+    learn: how an admin search page works with HTMX and writes an audit row for each fix
   - id: admin.award-revoke
     feature: admin
     what: An admin can add or take away points by hand, and must always write a reason. This also covers entries from the paper backup.
-    try_it: Log in as Test Admin, find Test Player 1, and award points with a reason, then revoke some with a reason. The score on the player's phone should change each time. Try leaving the reason empty, which should be refused, and try taking away more than the player has, which should also be refused. Do this while the game is paused and it should still work.
+    try_it:
+      - Log in as Test Admin, find Test Player 1, and award points with a reason, then revoke some with a reason.
+      - The score on the player's phone should change each time.
+      - Try leaving the reason empty, which should be refused, and try taking away more than the player has, which should also be refused.
+      - Do this while the game is paused and it should still work.
     needs: [admin.players, points.ledger]
     open: []
     area: admin-screens
@@ -815,23 +613,30 @@ pieces:
     safety_review: true
     rules: [GAME-103, GAME-111, GAME-114, ARCH-081]
     learn: how the one points service handles admin awards too
-  - id: admin.churches
+  - id: admin.setup
     feature: admin
-    what: Admins can add, rename or hide churches in the list that players choose from when they sign up.
-    try_it: Log in as Test Admin, add Example Church C, then open the sign-up page and check it appears in the list. Rename it and check the new name shows. Try the page as Test Usher, which should be refused.
+    what: An admin page to add a new usher or screen account and switch one off, and to add, rename or hide churches in the list players choose from at sign-up. Every change is written in the game's notebook.
+    try_it:
+      - On the PR preview, log in as Test Admin and add an account called Test Usher. Log in as Test Usher on another phone. You should get in.
+      - Switch Test Usher off and try again. The login should be refused.
+      - Add Example Church C, then open the sign-up page in a private tab. It should be in the list. Rename it and check the new name shows.
+      - "Try to break it: open these pages as Test Usher. You should be turned away."
     needs: [staff.login, points.audit-log]
     open: []
     area: admin-screens
-    size: S
+    size: M
     level: medium
     safety_review: true
-    rules: [SAFE-002, GAME-110]
-    learn: how an admin edits a list that sign-up depends on
+    rules: [ARCH-036, GAME-110, ARCH-050, SAFE-002]
+    learn: how an admin form writes an audit row
   - id: admin.audit-view
     feature: admin
     what: A page where admins can read the game's notebook of important events and spot odd activity that might be cheating.
-    try_it: Do a few actions such as a PIN reset and a points award, then log in as Test Admin and open the log page. You should see each action with who did it and when. Try the page as Test Usher or Test Player 1, which should be refused.
-    needs: [staff.login, points.audit-log, connections.scan-save]
+    try_it:
+      - Do a few actions such as a PIN reset and a points award, then log in as Test Admin and open the log page.
+      - You should see each action with who did it and when.
+      - Try the page as Test Usher or Test Player 1, which should be refused.
+    needs: [staff.login, points.audit-log, connections.meet]
     open: []
     area: admin-screens
     size: M
@@ -841,85 +646,67 @@ pieces:
     learn: how to spot cheating patterns with a query
 
   # Main screen views
-  - id: screen.shell
+  - id: screen.main
     feature: screen
-    what: The big-screen page for the room, with a dark look that is easy to read from far away. It shows a waiting message while the game is paused.
-    try_it: Log in as the screen account and open the main screen on a laptop at full size. You should see a dark page with big readable text. Pause the game as Test Admin and reload, and you should see a calm holding message with no leaderboard.
-    needs: [staff.screen-mode, game-state.core]
-    open: []
-    area: admin-screens
-    size: M
-    level: medium
-    safety_review: true
-    rules: [UI-040, UI-041, UI-042, UI-043]
-    learn: how a big-screen layout differs from a phone layout
-  - id: screen.refresh
-    feature: screen
-    what: The big screen updates by itself, so nobody has to reload it.
-    try_it: Open the main screen on a laptop. On another device, pause the game as Test Admin and wait a little. The screen should switch to the holding view by itself without you touching it. Then resume and check it comes back on its own.
-    needs: [screen.shell]
+    what: The big-screen page for the room, with a dark look that is easy to read from far away. An admin sets up the screen so it can only show pages meant for everyone. It shows a waiting message while the game is paused, and it updates by itself.
+    try_it:
+      - On the PR preview, log in as Test Admin on a laptop and switch it to screen mode. The main screen should open as a dark page with big readable text.
+      - In the same browser, try to open an admin page or a player's private page. You should be refused.
+      - On a phone, pause the game as Test Admin. After a short wait, the main screen should switch to the holding message by itself.
+      - Resume the game. The screen should come back on its own.
+    needs: [staff.login, game-state.core, game-state.controls]
     open: [API-031]
     area: admin-screens
-    size: S
-    level: medium
-    safety_review: false
-    rules: [API-031, ARCH-074]
-    learn: how HTMX polling keeps a screen live
-  - id: screen.takeaway-wall
-    feature: screen
-    what: The big screen shows takeaways that players shared and an admin has approved. Only approved ones ever appear.
-    try_it: As Test Player 1, share a takeaway, then approve it as Test Admin. Open the main screen between sessions and it should show with first name and church, or Anonymous if chosen. Check that a takeaway that is not approved never shows, and nothing shows while the game is paused.
-    needs: [screen.shell, journal.review]
-    open: []
-    area: admin-screens
-    size: S
+    size: L
     level: medium
     safety_review: true
-    rules: [SAFE-018, DEC-008]
-    learn: how a public screen shows only approved posts
+    rules: [ARCH-037, UI-040, UI-041, UI-042, UI-043, API-031, ARCH-074]
+    learn: how a big-screen layout differs from a phone layout, and how HTMX polling keeps it live
 
   # Wrapped cards
-  - id: wrapped.unlock
-    feature: wrapped
-    what: An admin presses a button to open Wrapped, your personal story of the conference. Until then, players see a note saying when it will open.
-    try_it: On a local run or PR preview, log in as Test Player 1 and open Wrapped. You should see the note about when it unlocks. Then log in as an admin, unlock it, and reload on the phone to see Wrapped open. Try to break it by typing the Wrapped address on a phone before it is unlocked, and check you still only see the note.
-    needs: [game-state.core, staff.login, points.audit-log]
-    open: []
-    area: admin-screens
-    size: S
-    level: medium
-    safety_review: true
-    rules: [WRAP-002]
-    learn: how a stored switch gates a page
   - id: wrapped.cards
     feature: wrapped
-    what: Cards you swipe through like a little story, starting with a Welcome card. If your phone is set to cut down on motion, the cards change without sliding.
-    try_it: On a phone, open Wrapped as Test Player 1 and swipe left and right through the cards. You should land on the Welcome card first and be able to move back and forth. Then turn on Reduce Motion in the phone settings and reload, and the cards should switch without any sliding or zooming.
-    needs: [wrapped.unlock, look.components]
+    what: An admin presses a button to open Wrapped, your personal story of the conference. Until then, players see a note saying when it will open. Once open, it's cards you swipe through like a little story, starting with a Welcome card.
+    try_it:
+      - On a phone at the PR preview, log in as Test Player 1 and open Wrapped. You should see the note about when it unlocks.
+      - Type the address of a Wrapped card directly. You should still see only the note.
+      - Log in as Test Admin and unlock Wrapped, then reload the phone. You should land on the Welcome card.
+      - Swipe left and right. You should move back and forth through the cards.
+      - Turn on Reduce Motion in the phone settings and reload. The cards should change with no sliding or zooming.
+    needs: [game-state.core, staff.login, points.audit-log, look.base]
     open: []
     area: player-app
-    size: M
+    size: L
     level: medium
-    safety_review: false
-    rules: [WRAP-010, UI-055]
-    learn: how to build swipe cards that still work with reduce motion
-  - id: wrapped.people
+    safety_review: true
+    rules: [WRAP-002, WRAP-010, UI-055]
+    learn: how a stored switch gates a page, and how swipe cards still work with reduce motion
+  - id: wrapped.stat-cards
     feature: wrapped
-    what: A card that shows how many people you met at the conference. It does not show where they are from.
-    try_it: Use Test Player 1 and Test Player 2 to scan each other, then open Wrapped on Test Player 1's phone and swipe to the people card. It should show that you met one person. Try to break it by scanning the same person twice, and the number should not go up.
-    needs: [wrapped.cards, connections.scan-save]
-    open: []
+    what: "Four more Wrapped cards: how many people you met, how many takeaways you wrote and for how many sessions (never your words), your play style like Connector or Explorer with how many blind boxes you earned, and how many people from other churches you met with how your church is doing."
+    try_it:
+      - On the PR preview, connect Test Player 1 from Example Church A with Test Player 2 from Example Church B, and write a takeaway as Test Player 1.
+      - Open Wrapped on Test Player 1's phone. The people card should say you met one person. Scan the same person again, and it should not go up.
+      - The journal card should show your counts and none of your words.
+      - The play style card should name the connection style.
+      - The together card should count the cross-church connection and show the church number.
+      - "Try to break it: open Wrapped as a brand new test player with no points. Every card should open with something friendly and no errors."
+    needs: [wrapped.cards, connections.meet, journal.notes, home.pages]
+    open: [WRAP-017, GAME-089]
     area: player-app
-    size: S
+    size: L
     level: medium
-    safety_review: false
-    rules: [WRAP-010]
-    learn: how to count from your own connection rows
+    safety_review: true
+    rules: [WRAP-010, WRAP-013, WRAP-017, GAME-081]
+    learn: how cards count from the player's own rows
   - id: wrapped.collection
     feature: wrapped
     what: A card showing the Bible verses and food answers you collected from the people you met. It shows the verse that came up most, and never shows anyone else's private answers.
-    try_it: Make two connections for Test Player 1 where each friend's verse is typed in, using the same verse once and a different verse once. Open the collection card and check the repeated verse shows as the top one. Try to break it by logging in as Test Player 3, who met nobody, and check that card shows nothing from Test Player 1.
-    needs: [wrapped.cards, connections.icebreaker-answer]
+    try_it:
+      - Make two connections for Test Player 1 where each friend's verse is typed in, using the same verse once and a different verse once.
+      - Open the collection card and check the repeated verse shows as the top one.
+      - Try to break it by logging in as Test Player 3, who met nobody, and check that card shows nothing from Test Player 1.
+    needs: [wrapped.cards, connections.answers]
     open: [WRAP-012]
     area: player-app
     size: M
@@ -927,46 +714,13 @@ pieces:
     safety_review: true
     rules: [WRAP-012, SAFE-006]
     learn: how to group answers without exposing anyone else's
-  - id: wrapped.journal
-    feature: wrapped
-    what: A card about your journal. It shows how many takeaways you wrote and how many sessions you wrote them for. It does not show your words.
-    try_it: As Test Player 1, write a few takeaways in the journal, some private and some shared. Open Wrapped and look at the journal card. It should show your counts and no text from what you wrote.
-    needs: [wrapped.cards, journal.write]
-    open: []
-    area: player-app
-    size: S
-    level: medium
-    safety_review: true
-    rules: [WRAP-013]
-    learn: how a card picks one quote from the player's own takeaways
-  - id: wrapped.play-style
-    feature: wrapped
-    what: A card that tells you your play style, like Connector or Explorer, by looking at what kinds of things earned you points. It also shows how many blind boxes you earned.
-    try_it: Give Test Player 1 mostly connections and almost nothing else, then open the play style card. It should name the connection style. Try to break it with a Test Player that has no points, and check the card still opens without an error and shows something friendly.
-    needs: [wrapped.cards, blind-box.math]
-    open: [WRAP-017]
-    area: player-app
-    size: S
-    level: medium
-    safety_review: false
-    rules: [WRAP-010, WRAP-017]
-    learn: how to group ledger rows by category
-  - id: wrapped.together
-    feature: wrapped
-    what: A card about us all together. It shows how many people from other churches you met and how your church is doing compared with the others.
-    try_it: Connect Test Player 1 from Example Church A with Test Player 2 from Example Church B. Open the together card for Test Player 1 and check it counts that cross-church connection and shows the church number. Try to break it with a player whose church has only one person, and check the card still opens.
-    needs: [wrapped.cards, connections.scan-save]
-    open: [GAME-089]
-    area: player-app
-    size: S
-    level: medium
-    safety_review: false
-    rules: [WRAP-010, GAME-081]
-    learn: how a card combines personal and conference numbers
   - id: wrapped.save-image
     feature: wrapped
     what: A button that saves a card as a picture you can keep or share. The picture shows only your first name and your own numbers, never other people's names.
-    try_it: On a phone, open a Wrapped card as Test Player 1 and tap the save button. The picture should land on the phone with the player's first name and their numbers. Try to break it by checking the picture for a friend's name or a verse, and neither should be there.
+    try_it:
+      - On a phone, open a Wrapped card as Test Player 1 and tap the save button.
+      - The picture should land on the phone with the player's first name and their numbers.
+      - Try to break it by checking the picture for a friend's name or a verse, and neither should be there.
     needs: [wrapped.cards]
     open: [WRAP-033]
     area: player-app
@@ -977,36 +731,32 @@ pieces:
     learn: how an image is made from a page
 
   # Conference recap screen
-  - id: recap.totals
+  - id: recap.screen
     feature: recap
-    what: A summary on the big screen for everyone to see on Sunday. It shows how many connections were made, how many church pairs met, and how many takeaways were shared, with no names.
-    try_it: Open the main screen recap on a laptop. Make a few test connections and takeaways, then reload and check the totals went up. Look closely at the screen, and no person's name should show anywhere.
-    needs: [screen.shell, connections.scan-save, journal.review]
-    open: []
-    area: admin-screens
-    size: S
-    level: medium
-    safety_review: true
-    rules: [WRAP-020, WRAP-021, WRAP-022]
-    learn: how to count church pairs from connections
-  - id: recap.verse
-    feature: recap
-    what: The Bible verse that people collected the most, shown on the big screen recap.
-    try_it: Make several test connections where the same verse is typed in for most of them. Open the main screen recap and check that verse shows as the most collected. Try to break it with a tie between two verses, and check the screen still shows one verse.
-    needs: [recap.totals, connections.icebreaker-answer]
+    what: Big-screen views for everyone. The takeaway wall shows takeaways players shared that an admin approved. The Sunday recap shows how many connections were made, how many church pairs met, how many takeaways were shared, and the Bible verse people collected most, with no names.
+    try_it:
+      - As Test Player 1 on the PR preview, share a takeaway, then approve it as Test Admin.
+      - Open the main screen between sessions. The takeaway should show with first name and church, or Anonymous if chosen. A takeaway that is not approved should never show.
+      - Make a few test connections where most friends' verses are the same. Open the recap. The totals should go up, and that verse should show as the most collected.
+      - Look closely at the recap. No person's name should show anywhere.
+      - Pause the game. Nothing from players should show.
+    needs: [screen.main, connections.meet, journal.share-review, connections.answers]
     open: [WRAP-012]
     area: admin-screens
-    size: S
+    size: L
     level: medium
-    safety_review: false
-    rules: [WRAP-020, WRAP-012]
-    learn: how a total depends on how answers are matched
+    safety_review: true
+    rules: [WRAP-020, WRAP-021, WRAP-022, WRAP-012, SAFE-018, DEC-008]
+    learn: how a public screen shows only approved posts and counts without naming anyone
 
   # Game day readiness
   - id: ready.logout
     feature: ready
     what: A way to sign out on this phone only, so the next person who picks it up cannot be you.
-    try_it: On a phone, log in as Test Player 1, tap log out, then try to open a player page. You should be sent back to the log in or join page. Try to break it by logging in on a second phone first, and check that one stays signed in after the first phone logs out.
+    try_it:
+      - On a phone, log in as Test Player 1, tap log out, then try to open a player page.
+      - You should be sent back to the log in or join page.
+      - Try to break it by logging in on a second phone first, and check that one stays signed in after the first phone logs out.
     needs: [auth.join-login]
     open: []
     area: backend
@@ -1018,7 +768,10 @@ pieces:
   - id: ready.rate-limits
     feature: ready
     what: Stops someone from trying to log in or sign up too many times too fast from the same place. This makes guessing someone's PIN much harder.
-    try_it: On a local run or PR preview, type a wrong PIN for the log in over and over, quickly, using different Test Players. After too many tries you should get a slow down message instead of a normal wrong PIN message. Wait a bit and check log in works again, and never do this on production.
+    try_it:
+      - On a local run or PR preview, type a wrong PIN for the log in over and over, quickly, using different Test Players.
+      - After too many tries you should get a slow down message instead of a normal wrong PIN message.
+      - Wait a bit and check log in works again, and never do this on production.
     needs: [auth.join-login]
     open: [ARCH-031]
     area: backend
@@ -1030,7 +783,10 @@ pieces:
   - id: ready.backups
     feature: ready
     what: Railway makes safe copies of the game's data on a schedule, and we prove a copy can bring everything back if something goes wrong.
-    try_it: On staging, never production, make a Railway backup, then join as Test Player 9 and restore the backup. Test Player 1 should still log in and Test Player 9 should be gone, which proves the restore worked. Write down how long the restore took.
+    try_it:
+      - On staging, never production, make a Railway backup, then join as Test Player 9 and restore the backup.
+      - Test Player 1 should still log in and Test Player 9 should be gone, which proves the restore worked.
+      - Write down how long the restore took.
     needs: [app.foundation]
     open: [ARCH-053]
     area: infra
@@ -1042,7 +798,10 @@ pieces:
   - id: ready.load-test
     feature: ready
     what: A test that pretends hundreds of phones join the game at the same moment, to see if the app stays fast enough on staging.
-    try_it: Run the load test command against staging, never production, and wait for it to finish. It should print a summary showing how fast the pages answered and whether any failed. Check the staging app still opens normally on a phone afterward.
+    try_it:
+      - Run the load test command against staging, never production, and wait for it to finish.
+      - It should print a summary showing how fast the pages answered and whether any failed.
+      - Check the staging app still opens normally on a phone afterward.
     needs: [auth.join-login]
     open: [ARCH-072]
     area: infra
@@ -1054,7 +813,11 @@ pieces:
   - id: ready.retention
     feature: ready
     what: A cleanup that wipes everyone's personal data once the keep-until date has passed, so players are protected after the event.
-    try_it: Run the cleanup on staging or a local copy, never on production data, with the date set to just after the keep-until date. It should report what it removed. Then try to log in as Test Player 1 and check that player is gone. Also run it before the date and check nothing is removed.
+    try_it:
+      - Run the cleanup on staging or a local copy, never on production data, with the date set to just after the keep-until date.
+      - It should report what it removed.
+      - Then try to log in as Test Player 1 and check that player is gone.
+      - Also run it before the date and check nothing is removed.
     needs: [points.audit-log]
     open: [SAFE-014]
     area: backend

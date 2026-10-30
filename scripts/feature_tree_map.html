@@ -65,6 +65,8 @@ h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(28px, 
 .sw-decision { background: var(--decision-bg); border-color: var(--decision); border-style: dashed; }
 select { font: 500 13px var(--font-body); color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; }
 .hint { color: var(--muted); font-size: 13px; }
+.steps { margin: 0; padding-left: 20px; }
+.steps li + li { margin-top: 4px; }
 
 .main { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 16px; align-items: start; }
 @media (max-width: 900px) { .main { grid-template-columns: minmax(0, 1fr); } }
@@ -323,13 +325,13 @@ function select(id) {
       <p class="hint">${why}</p>
       <dl>
         <dt>Due</dt><dd>${dueLabel(DUE[p.id]).slice(4)}${late(p) ? ' <span class="late" style="color:var(--decision);font-weight:600">(late)</span>' : ''}</dd>
-        <dt>Size</dt><dd>${p.size === 'S' ? 'S, one session' : 'M, about two sessions'}</dd>
+        <dt>Size</dt><dd>${{S: 'S, one session', M: 'M, about two sessions', L: 'L, three to four sessions'}[p.size]}</dd>
         <dt>Level</dt><dd>${p.level}</dd>
         <dt>Area</dt><dd>${p.area}</dd>
         <dt>Review</dt><dd>${p.safety_review ? 'Needs safety review' : 'Normal review'}</dd>
         <dt>Rules</dt><dd class="mono" style="font-size:12.5px">${p.rules.join(', ')}</dd>
       </dl>
-      <div class="sect"><h3>Try it when it's done</h3><p>${p.try_it.replace(/`([^`]+)`/g, '<code class="mono">$1</code>')}</p></div>
+      <div class="sect"><h3>Try it by hand when it's done</h3><ol class="steps">${p.try_it.map(t => `<li>${t.replace(/`([^`]+)`/g, '<code class="mono">$1</code>')}</li>`).join('')}</ol></div>
       <div class="sect"><h3>You'll learn</h3><p>${p.learn}</p></div>
       ${p.open.some(r => OPEN.has(r)) ? `<div class="sect"><h3>Waiting on a decision</h3>${p.open.filter(r => OPEN.has(r)).map(r => `<div class="open"><b>${r}</b> ${DATA.open[r] ? `${DATA.open[r].q}<br><span class="hint">Owner: ${DATA.open[r].owner}</span>` : 'Still OPEN in foundation/13-decisions.md.'}</div>`).join('')}</div>` : ''}
       <div class="sect"><h3>Needs first</h3>${linkList(p.needs, true)}</div>

@@ -9,12 +9,13 @@ Keep it short. Write "N/A" where something does not apply.
 
 ## How to test
 
-<!-- Steps a reviewer can follow. Use fake data only (Test Player 1, Example Church A). -->
+<!-- For a tree piece, copy its try_it steps from foundation/feature-tree.yaml. Run each one on the PR preview, on a real phone for player pages, and tick it before marking ready (ENG-112). Use fake data only (Test Player 1, Example Church A). -->
 
-1.
+- [ ] 1.
 
 ## Before review
 
+- [ ] Every How to test step was run by hand on the PR preview (ENG-112).
 - [ ] `CHANGELOG.md` entry added and README Project status updated (ENG-100 to ENG-104).
 - [ ] No secrets, real attendee data, or DB files.
 - [ ] `safety-review` label added if this touches sign-up, PIN or login, roles, admin controls, or minors' data.
