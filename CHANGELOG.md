@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: The browser check asks for the scanner, My Code, and camera screens to run in WebKit too (AI-044).
 - Rule IDs: ENG-109, ENG-047, DATA-016, ENG-101
 - Status: Started
-- PR: draft
+- PR: #54
 
 ## 2026-10-29 · feat/connections-table · Claude Opus 5.5 / @OwenTjandra
 
