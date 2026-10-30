@@ -16,7 +16,15 @@ def _seed_churches(db_path):
     conn.close()
 
 
-def test_safe_002_join_flow_at_min_width(page: Page, live_server, test_db_path):
+def _last_name(number, browser_name):
+    # The test database lasts the whole run, so each browser needs its own
+    # player or the second one is refused as NAME_TAKEN (DATA-016, issue #53).
+    return f"Browser Player {number} {browser_name}"
+
+
+def test_safe_002_join_flow_at_min_width(
+    page: Page, live_server, test_db_path, browser_name
+):
     _seed_churches(test_db_path)
     cfg = load_config()
     pin = make_fake_pin(cfg["auth"]["pin_digits"])
@@ -25,7 +33,7 @@ def test_safe_002_join_flow_at_min_width(page: Page, live_server, test_db_path):
 
     page.goto(f"{live_server}/join")
     page.get_by_label("First name").fill("Test")
-    page.get_by_label("Last name").fill("Browser Player 1")
+    page.get_by_label("Last name").fill(_last_name(1, browser_name))
     page.get_by_label("Church").select_option(label=CHURCHES[1])
     page.get_by_label("No").check()
     for field in (page.get_by_label("Church"), page.get_by_role("button", name="Next")):
@@ -50,8 +58,11 @@ def test_safe_002_join_flow_at_min_width(page: Page, live_server, test_db_path):
     assert errors == []
 
 
-def test_arch_032_login_flow_at_min_width(page: Page, live_server, test_db_path):
+def test_arch_032_login_flow_at_min_width(
+    page: Page, live_server, test_db_path, browser_name
+):
     _seed_churches(test_db_path)
+    last_name = _last_name(2, browser_name)
     cfg = load_config()
     pin = make_fake_pin(cfg["auth"]["pin_digits"])
     conn = connect(test_db_path)
@@ -59,7 +70,7 @@ def test_arch_032_login_flow_at_min_width(page: Page, live_server, test_db_path)
         "SELECT id FROM church WHERE name = ?", (CHURCHES[0],)
     ).fetchone()
     signup.create_player(
-        conn, signup.Details("Test", "Browser Player 2", church["id"], False), pin
+        conn, signup.Details("Test", last_name, church["id"], False), pin
     )
     conn.close()
     errors = []
@@ -67,7 +78,7 @@ def test_arch_032_login_flow_at_min_width(page: Page, live_server, test_db_path)
 
     page.goto(f"{live_server}/login")
     page.get_by_label("First name").fill("Test")
-    page.get_by_label("Last name").fill("Browser Player 2")
+    page.get_by_label("Last name").fill(last_name)
     page.get_by_label("Church").select_option(label=CHURCHES[0])
     page.get_by_label("PIN").fill(pin)
     assert (
