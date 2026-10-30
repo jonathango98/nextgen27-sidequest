@@ -178,7 +178,8 @@ def render_markdown(tree, status, open_rules):
             lambda p: (
                 f"{p['what']} ({p['size']}, {p['level']}, {p['area']}, "
                 f"{due_label(due[p['id']]).lower()})"
-                f"\n  - Try it: {p['try_it']}"
+                "\n  - Try it:"
+                + "".join(f"\n    {i}. {step}" for i, step in enumerate(p["try_it"], 1))
             ),
         ),
         "",

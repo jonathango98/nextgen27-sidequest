@@ -20,6 +20,16 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-30 · docs/feature-tree-slices · Claude Opus 5.5 / @jonathango98
+
+- What: The feature tree is now built from slices (ENG-111): each piece that changes the server also builds the screen that shows it. The 66 pieces nobody had started are merged into 32, so the tree goes from 77 pieces to 43. A new size L (three to four sessions) is the cap (ENG-106). `try_it` is now numbered steps, and a person runs every step on the PR preview, on a real phone for player pages, before the PR leaves draft (ENG-112). AI-034, ENG-020, `AGENTS.md`, `CONTRIBUTING.md`, the PR template, `/pick-task`, `unlocked.py`, and the map all say the same. Working and In progress pieces (`staff.accounts`, `staff.login`) keep their IDs.
+- Why: Backend pieces landed with nothing to tap. `game-state.core` works, but nobody can pause the game until the admin buttons exist. Jonathan wants bigger PRs and more hand testing on phones.
+- Rule IDs: ENG-105, ENG-106, ENG-110, ENG-111, ENG-112, AI-034, ENG-020, ENG-087, DEC-060, AI-044. Protected files changed, needs Jonathan's approval (ENG-080)
+- Status: Done
+- PR: #59
+
+---
+
 ## 2026-10-29 · feat/points-ledger · Claude Opus 5.5 / @marcjason2012
 
 - What: Builds `points.ledger`. Migration `0005_create_point_ledger.sql` adds `point_ledger` from the PointLedger spec, with a unique index so a system award for the same record pays once (DATA-027), and checks that system awards are positive and name their record (GAME-004). `app/services/points.py` has `award()`, which checks the game state, writes the ledger row and an audit row in one transaction, and joins the caller's transaction when there is one, and `score()`, the ledger sum (DATA-030). The data cleanup now deletes `point_ledger` before `player` (SAFE-014). Amounts come from callers reading `game-config.yaml`. The photobooth per-day limit, join points while paused, manual awards, and showing the real score are left to their own pieces.

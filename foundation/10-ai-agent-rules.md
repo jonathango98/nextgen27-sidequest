@@ -2,8 +2,8 @@
 
 - Status: LOCKED
 - Owner: Jonathan (@jonathango98)
-- Version: 1.4.0
-- Last updated: 2026-10-23
+- Version: 1.5.0
+- Last updated: 2026-10-30
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -34,7 +34,7 @@ The people using these agents are volunteers who are still learning. Agents shou
 - **AI-031** [LOCKED] Start every task from an updated `main`: `git switch main`, `git pull --ff-only`, `git switch -c <type>/<short-slug>`. Types: `feat`, `fix`, `chore`, `docs`, `test`, `refactor` (ENG-004).
 - **AI-032** [LOCKED] Keep commits small, and make each one pass the tests. Commit messages just need to be clear. Write the PR title in Conventional Commits style (ENG-010).
 - **AI-033** [LOCKED] Before every commit, run the formatter, the linter, and the tests, plus the browser check when the change can affect a page (AI-044). Then check `git status` and `git diff --staged` for forbidden files. All must pass.
-- **AI-034** [LOCKED] Open a draft PR early. Fill in the short PR template: what and why (with rule IDs) and how to test. No PR size limit and no PR screenshot (DEC-032).
+- **AI-034** [LOCKED] Open a draft PR early. Fill in the short PR template: what and why (with rule IDs) and how to test. No PR size limit and no PR screenshot (DEC-032). For a tree piece, "How to test" lists its `try_it` steps as a checklist, and a person runs every step on the PR preview before the PR leaves draft (ENG-112). Never tick a hand-test step you did not watch a person run.
 - **AI-035** [LOCKED] Stay current by rebasing your branch on `main`. `--force-with-lease` is allowed only on your own branch, after a rebase. Plain `--force` is never allowed.
 - **AI-036** [LOCKED] Never do these:
   - use `--no-verify`

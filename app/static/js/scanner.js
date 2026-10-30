@@ -1,5 +1,5 @@
 // Scan page: reads QR codes with the phone camera (ARCH-025, UI-034).
-// Saving a scan comes with connections.scan-save (POST /scan).
+// Saving a scan comes with connections.meet (POST /scan).
 (function () {
   "use strict";
 
