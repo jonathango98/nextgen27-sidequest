@@ -21,7 +21,7 @@ The app is built by a small volunteer team. It is not built yet. This repo curre
 
 ## Project status
 
-Status last updated: 2026-10-29 by Claude Opus 5.5 / @jonathango98
+Status last updated: 2026-10-29 by Claude Opus 5.5 / @OwenTjandra
 
 **Before you start anything**, check that nobody else is on it. A branch only shows up here after it merges, so also run:
 
@@ -42,6 +42,7 @@ What the app can do today, grouped by area, in plain words for anyone to read. W
 | 2026-10-26 | `screens.skeleton` | Player screens | Every player screen exists as a plain page, and every button and tab leads to the right next screen. The bottom bar has Home, My Code, and Quests. The final look and the game itself come next |
 | 2026-10-27 | | Game rules | The full game rules are written down, and most open game questions are answered. Prizes and what goes inside the blind boxes are still to be decided |
 | 2026-10-28 | `app.foundation` `infra.hosting` | Behind the scenes | A private test site updates with every change, and each proposed change gets its own preview link. Automatic tests check pages on the iPhone browser engine too. Game numbers live in one settings file, so they're easy to tune after playtests. Volunteers get a map of what's ready to build and a `/pick-task` helper to claim work. Every feature has a due week so all of them are done by January 15, before Playtest 1, and `/pick-task` offers what's due soonest |
+| 2026-10-29 | `connections.table` | Meeting people | The game has a place to remember who met whom. The same two people can only ever be saved as a pair once, whoever scans whom, and nobody can connect with themselves. It also remembers which new churches each player has met, so the new church bonus pays once. Scanning comes next |
 | 2026-10-28 | `points.audit-log` | Audit log | The game has a notebook of important actions, saying who did what, to which record, why, and when. Once written, an entry can't be changed or erased, and it never holds PINs or names. Point awards and admin tools will write to it as they are built |
 
 ### In progress
