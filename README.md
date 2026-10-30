@@ -47,7 +47,7 @@ What the app can do today, grouped by area, in plain words for anyone to read. W
 | 2026-10-29 | `ready.retention` | Protecting players after the event | A cleanup command deletes every player's personal data once the keep-until date has passed. That date is a set number of days after the event ends, and both live in the game settings file. Before that date it refuses and removes nothing. It shows what it would remove first, and only deletes when confirmed. Deleted data can't be recovered from the database file afterwards. Then it lists the steps to do by hand on the same day: Railway backups, server logs, the real data folder, and staff accounts |
 | 2026-10-29 | `game-state.core` | Game on, paused, or off | The game is always on, paused, or off. While it is paused or off, anything that earns points is refused with a friendly message, and the change applies to the very next tap. Admin buttons to switch it and the pause banner come next |
 | 2026-10-29 | `connections.scanner-camera` | Scanner | The Scan page opens the phone's back camera and reads QR codes, on iPhone Safari too. A Side Quest code shows "Got it!", any other code says it isn't a Side Quest code, and a blocked camera says so with a Try again button. Saving who met whom comes next |
-| 2026-10-29 | `points.ledger` | Points | Every point is given out in one place. It is refused while the game is paused or off, the same award is never paid twice even when two phones tap at once, and each award is noted in the audit log. A score is always the total of what was given. Quests start paying points as their pieces are built |
+| 2026-10-30 | `points.ledger` `points.score` | Points | Every point is given out in one place. It is refused while the game is paused or off, the same award is never paid twice even when two phones tap at once, and each award is noted in the audit log. A score is always the total of what was given. New players get their joining points once, even while the game is paused, and every player page shows their real score. While the game is off, sign-up is closed. Other quests start paying points as their pieces are built |
 
 ### In progress
 
@@ -55,7 +55,6 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| `points.score` New players get their joining points and every player page shows their real score | `feat/points-score` | #61 | 2026-10-30 | Claude Opus 5.5 / @marcjason2012 |
 
 ### Planned
 
