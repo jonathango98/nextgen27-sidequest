@@ -55,7 +55,7 @@ h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(28px, 
 .legend { display: flex; flex-wrap: wrap; gap: 8px; }
 .chip { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); border-radius: 999px; padding: 6px 12px; font: 500 13px/1 var(--font-body); cursor: pointer; }
 .chip[aria-pressed="false"] { opacity: .45; }
-.chip:focus-visible, select:focus-visible, .node:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.chip:focus-visible, select:focus-visible, .node:focus-visible, .zoom button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 .chip b { font-variant-numeric: tabular-nums; font-weight: 600; }
 .swatch { width: 12px; height: 12px; border-radius: 3px; border: 2px solid; }
 .sw-working { background: var(--working-bg); border-color: var(--working); }
@@ -71,7 +71,12 @@ select { font: 500 13px var(--font-body); color: var(--ink); background: var(--p
 .main { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 16px; align-items: start; }
 @media (max-width: 900px) { .main { grid-template-columns: minmax(0, 1fr); } }
 
-.mapbox { border: 1px solid var(--line); border-radius: 12px; background: var(--panel); overflow: auto; max-height: 78vh; min-width: 0; }
+.zoom { display: inline-flex; align-items: center; gap: 4px; }
+.zoom button { min-width: 36px; height: 32px; padding: 0 10px; font: 600 14px/1 var(--font-body); color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 8px; cursor: pointer; }
+.zoom button:disabled { opacity: .4; cursor: default; }
+.zoom output { min-width: 44px; text-align: center; font: 500 13px var(--font-body); font-variant-numeric: tabular-nums; color: var(--muted); }
+
+.mapbox { border: 1px solid var(--line); border-radius: 12px; background: var(--panel); overflow: auto; max-height: 78vh; min-width: 0; touch-action: pan-x pan-y; }
 .map { position: relative; }
 .weekline { position: absolute; top: 0; bottom: 0; border-left: 1px dashed var(--line); }
 .colhead { position: absolute; top: 12px; font: 500 11px/1 var(--font-body); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
@@ -129,13 +134,19 @@ footer { color: var(--muted); font-size: 12.5px; }
 <div class="wrap">
   <header>
     <h1>Side Quest Feature Tree</h1>
-    <p class="sub">Every piece of planned work, left to right by the week it's due, so every feature is done by January 15. Finishing a piece unlocks the ones to its right. Click any piece to trace what it needs and what it opens up.</p>
+    <p class="sub">Every piece of planned work, left to right by the week it's due, so every feature is done by January 15. Finishing a piece unlocks the ones to its right. Click any piece to trace what it needs and what it opens up. Zoom with the buttons, Ctrl or ⌘ + scroll, or two fingers.</p>
   </header>
 
   <div class="controls">
     <div class="legend" id="legend"></div>
     <select id="feature" aria-label="Show one feature"><option value="">All features</option></select>
     <select id="layout" aria-label="Arrange pieces"><option value="week">By due week</option><option value="step">By step</option></select>
+    <div class="zoom" role="group" aria-label="Zoom the map">
+      <button id="zoom-out" aria-label="Zoom out">−</button>
+      <output id="zoom-level" aria-live="polite">100%</output>
+      <button id="zoom-in" aria-label="Zoom in">+</button>
+      <button id="zoom-fit" aria-label="Fit the whole tree">Fit</button>
+    </div>
   </div>
 
   <div class="main">
@@ -215,7 +226,7 @@ Object.values(P).forEach(p => p.needs.forEach(n => {
   const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
   svg.appendChild(path); edgeEls.push({ from: n, to: p.id, el: path });
 }));
-let headEls = [];
+let headEls = [], mapSize = { width: 0, height: 0 };
 
 const nodeEls = {};
 Object.values(P).forEach(p => {
@@ -248,7 +259,7 @@ function draw() {
 draw();
 function place(name) {
   const { pos, heads, width, height } = arrange(LAYOUTS[name]);
-  map.style.width = width + 'px'; map.style.height = height + 'px';
+  map.style.width = width + 'px'; map.style.height = height + 'px'; mapSize = { width, height };
   svg.setAttribute('width', width); svg.setAttribute('height', height);
   headEls.forEach(h => h.remove());
   headEls = heads.flatMap(({ col, text, line }) => {
@@ -270,6 +281,44 @@ function place(name) {
 const layoutSel = document.getElementById('layout');
 layoutSel.addEventListener('change', () => place(layoutSel.value));
 place('week');
+
+// Zoom: the buttons, Ctrl or ⌘ + scroll (and trackpad pinch), or two fingers on a phone.
+// The point under the cursor or between the fingers stays put.
+const box = document.getElementById('mapbox'), zoomLevel = document.getElementById('zoom-level');
+const zoomIn = document.getElementById('zoom-in'), zoomOut = document.getElementById('zoom-out');
+const ZMAX = 2, STEP = 1.25;
+let zoom = 1;
+// The box shrinks with the map, so fit to its max height, not its current one.
+const fitZoom = () => Math.min(1, (box.clientWidth - 2) / mapSize.width, (parseFloat(getComputedStyle(box).maxHeight) - 2) / mapSize.height);
+const zmin = () => Math.min(0.25, fitZoom());
+function setZoom(z, cx = box.clientWidth / 2, cy = box.clientHeight / 2) {
+  z = Math.min(ZMAX, Math.max(zmin(), z));
+  const x = (box.scrollLeft + cx) / zoom, y = (box.scrollTop + cy) / zoom;
+  zoom = z; map.style.zoom = z;
+  box.scrollLeft = x * z - cx; box.scrollTop = y * z - cy;
+  zoomLevel.textContent = Math.round(z * 100) + '%';
+  zoomOut.disabled = z <= zmin() + 1e-6; zoomIn.disabled = z >= ZMAX - 1e-6;
+}
+zoomIn.addEventListener('click', () => setZoom(zoom * STEP));
+zoomOut.addEventListener('click', () => setZoom(zoom / STEP));
+document.getElementById('zoom-fit').addEventListener('click', () => { setZoom(fitZoom()); box.scrollTo(0, 0); });
+const inBox = (x, y) => { const r = box.getBoundingClientRect(); return [x - r.left, y - r.top]; };
+box.addEventListener('wheel', e => {
+  if (!e.ctrlKey && !e.metaKey) return;
+  e.preventDefault();
+  setZoom(zoom * Math.exp(-e.deltaY / 300), ...inBox(e.clientX, e.clientY));
+}, { passive: false });
+let pinch = null;
+const gap = t => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
+box.addEventListener('touchstart', e => { if (e.touches.length === 2) pinch = { dist: gap(e.touches), zoom }; }, { passive: true });
+box.addEventListener('touchmove', e => {
+  if (!pinch || e.touches.length !== 2) return;
+  e.preventDefault();
+  const t = e.touches;
+  setZoom(pinch.zoom * gap(t) / pinch.dist, ...inBox((t[0].clientX + t[1].clientX) / 2, (t[0].clientY + t[1].clientY) / 2));
+}, { passive: false });
+box.addEventListener('touchend', e => { if (e.touches.length < 2) pinch = null; });
+box.addEventListener('gesturestart', e => e.preventDefault());
 
 const sel = document.getElementById('feature');
 DATA.features.forEach(f => sel.add(new Option(f.name, f.id)));
