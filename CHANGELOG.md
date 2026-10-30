@@ -22,10 +22,10 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-10-29 · test/53-join-tests-both-browsers · Claude Opus 5.5 / @marcjason2012
 
-- What: Claim issue #53: the join browser tests sign up the same fake player in both browsers, so running Chromium and WebKit in one command fails the second one with NAME_TAKEN.
-- Why: The browser check asks for the scanner, My Code, and camera screens to run in WebKit too (AI-044).
-- Rule IDs: ENG-109, ENG-047, DATA-016, ENG-101
-- Status: Started
+- What: The join and login browser tests add the browser's name to the fake last name ("Browser Player 1 webkit"), so `pytest tests/player --browser chromium --browser webkit` passes in one command. Only `tests/player/test_join_page.py` changes.
+- Why: Issue #53. The test database lasts the whole run, so the second browser signed up the same name and got NAME_TAKEN, which is correct app behavior (DATA-016). The browser check asks for WebKit runs too (AI-044).
+- Rule IDs: ENG-109, ENG-047, DATA-016, AI-044
+- Status: Done
 - PR: #54
 
 ## 2026-10-29 · feat/connections-table · Claude Opus 5.5 / @OwenTjandra
