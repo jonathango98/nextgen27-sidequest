@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Jonathan wants to zoom in and out of the tree. It is too wide to see at once.
 - Rule IDs: ENG-110, ENG-109, AI-044
 - Status: Done
-- PR: draft
+- PR: #60
 
 ## 2026-10-30 · docs/feature-tree-slices · Claude Opus 5.5 / @jonathango98
 
