@@ -31,6 +31,7 @@ KEEP_TABLES = {
     "church": "the public church list, not personal data",
     "game_state": "the one-row game switch. updated_by is a staff id, not a player (OPS-042)",
     "schema_migration": "bookkeeping for the migration runner",
+    "staff_account": "usher and admin accounts, not players. Switched off by hand (OPS-042)",
 }
 
 AUDIT_NO_DELETE_TRIGGER = "audit_log_no_delete"

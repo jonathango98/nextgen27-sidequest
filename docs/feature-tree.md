@@ -5,7 +5,7 @@
 
 Every planned piece of work and what it needs first (ENG-105 to ENG-108), grouped by the week it is due (PRD-054). Pieces flow left to right in time: finishing one unlocks the pieces it points to. Run `/pick-task` to claim one.
 
-**Working** 11 · **In progress** 0 · **Ready** 8 · **Waiting** 63 · **Needs decision** 0
+**Working** 12 · **In progress** 0 · **Ready** 8 · **Waiting** 62 · **Needs decision** 0
 
 Colors: green Working, blue In progress, gold Ready, gray Waiting, red dashed Needs decision.
 
@@ -243,15 +243,15 @@ flowchart LR
   classDef ready fill:#fff4d6,stroke:#a87400,stroke-width:3px,color:#14151a
   classDef waiting fill:#f1f0eb,stroke:#c3c0b6,color:#545a66
   classDef decision fill:#fdeeec,stroke:#b42318,stroke-dasharray:4 3,color:#14151a
-  class app_foundation,auth_join_login,code_my_code,connections_scanner_camera,connections_table,game_state_core,infra_hosting,points_audit_log,ready_logout,ready_retention,screens_skeleton working
-  class connections_scan_save,game_state_banner,look_frame,points_ledger,ready_backups,ready_load_test,ready_rate_limits,staff_accounts ready
-  class admin_audit_view,admin_award_revoke,admin_churches,admin_fix_church,admin_pin_reset,admin_players,blind_box_claim,blind_box_close_redemption,blind_box_math,blind_box_open_box,blind_box_stock,checkin_close,checkin_end_session,checkin_hall_code,checkin_open,checkin_scan,checkin_sessions,connections_icebreaker_answer,connections_icebreaker_question,connections_incoming,connections_points,connections_verse_picker,explore_booth,explore_hidden_item,explore_photobooth,explore_places,game_state_admin_switch,game_state_auto_pause,home_progress,home_quests,journal_list,journal_review,journal_sharing,journal_summary,journal_table,journal_write,leaderboards_churches,leaderboards_in_app,leaderboards_players,look_code,look_components,look_home,look_summary,points_join,points_score_bar,recap_totals,recap_verse,screen_refresh,screen_shell,screen_takeaway_wall,staff_login,staff_manage,staff_screen_mode,usher_player_lookup,usher_scan,wrapped_cards,wrapped_collection,wrapped_journal,wrapped_people,wrapped_play_style,wrapped_save_image,wrapped_together,wrapped_unlock waiting
+  class app_foundation,auth_join_login,code_my_code,connections_scanner_camera,connections_table,game_state_core,infra_hosting,points_audit_log,ready_logout,ready_retention,screens_skeleton,staff_accounts working
+  class connections_scan_save,game_state_banner,look_frame,points_ledger,ready_backups,ready_load_test,ready_rate_limits,staff_login ready
+  class admin_audit_view,admin_award_revoke,admin_churches,admin_fix_church,admin_pin_reset,admin_players,blind_box_claim,blind_box_close_redemption,blind_box_math,blind_box_open_box,blind_box_stock,checkin_close,checkin_end_session,checkin_hall_code,checkin_open,checkin_scan,checkin_sessions,connections_icebreaker_answer,connections_icebreaker_question,connections_incoming,connections_points,connections_verse_picker,explore_booth,explore_hidden_item,explore_photobooth,explore_places,game_state_admin_switch,game_state_auto_pause,home_progress,home_quests,journal_list,journal_review,journal_sharing,journal_summary,journal_table,journal_write,leaderboards_churches,leaderboards_in_app,leaderboards_players,look_code,look_components,look_home,look_summary,points_join,points_score_bar,recap_totals,recap_verse,screen_refresh,screen_shell,screen_takeaway_wall,staff_manage,staff_screen_mode,usher_player_lookup,usher_scan,wrapped_cards,wrapped_collection,wrapped_journal,wrapped_people,wrapped_play_style,wrapped_save_image,wrapped_together,wrapped_unlock waiting
 ```
 
 ## Ready now
 
-- `staff.accounts`: A safe place to keep the accounts of ushers and admins, with passwords nobody can read. Also a way to make the very first admin when the game is set up. (M, hard, backend, due fri nov 20)
-  - Try it: On a local run, set the first admin's password in the environment and run the create-admin server command named in the PR. You should see a message that the admin was made, and the password should not show up anywhere in the output. Try to break it by running the command twice, you should not get two copies of the same admin.
+- `staff.login`: A login page for ushers and admins. Each staff page checks who you are and turns you away if your job is the wrong one. (M, hard, backend, due fri nov 20)
+  - Try it: Open the staff login page on a local run and log in as the first admin, you should land on an admin page. Then log in as Test Usher and open an admin page, you should be told you are not allowed. Also try opening a staff page while logged out, you should be sent to log in.
 - `points.ledger`: The one place where every point is given out. It checks the game is not paused, no limit is passed, and nobody gets the same points twice, then writes it down. (M, hard, backend, due fri nov 20)
   - Try it: Run `pytest -k points` and expect every test to pass. The tests should show that a good award is saved once, an award while paused is refused, and an award repeated by mistake is not given twice. Try to break it with two awards sent at the same moment, the player should still get the points only once.
 - `look.frame`: The frame around every player screen in the chosen design, with the score bar on top, the buttons at the bottom, and a glowing, grainy background. (M, easy, design, due fri nov 27)
