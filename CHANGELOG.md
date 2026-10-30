@@ -20,6 +20,16 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-29 · feat/staff-accounts · Claude Opus 5.5 / @OwenTjandra
+
+- What: Claims `staff.accounts`: a staff account table added by a numbered SQL migration, with passwords stored so nobody can read them, and a server command to create the first admin from an environment variable, run safely more than once.
+- Why: Picked through `/pick-task`. Due 2026-11-20 and unlocks `staff.login`, which most admin, usher, and check-in pieces wait on.
+- Rule IDs: ARCH-035, ARCH-036, ARCH-030, ENG-101
+- Status: Started
+- PR: draft
+
+---
+
 ## 2026-10-29 · feat/ready-retention · Claude Opus 5.5 / @OwenTjandra
 
 - What: Builds `ready.retention`. `app/services/retention.py` deletes every row in the player-linked tables (`DELETE_TABLES`: `audit_log`, `church_met`, `connection`, `player`, children first) in one transaction once the keep-until date has passed, and refuses before it. It removes the audit log's delete trigger, deletes, and restores the trigger before COMMIT (DATA-015), then writes one `retention_cleanup` audit row with totals only. Later runs keep earlier `retention_cleanup` rows, which hold no link to a person. Deleted rows can't be recovered: `secure_delete` zeroes them, then `VACUUM` and `wal_checkpoint(TRUNCATE)` clear free pages and the `-wal` file, and a test checks the raw bytes. A missing audit trigger stops with a clear error. `python -m app.services.retention` reports first and deletes only with `--confirm`. It never migrates, and refuses a database whose migrations don't match the code. `--as-of` pretends a later date on a local copy, staging, or a PR preview, and is refused on production. After deleting, it lists the manual steps: Railway backups, server logs, the real data folder, and staff accounts (ARCH-052, ARCH-053, OPS-042). Every table must be listed in `DELETE_TABLES` or `KEEP_TABLES` (`church`, `game_state`, `schema_migration`; `game_state.updated_by` is a staff id, not a player). A test fails when a new table is in neither, when a table linked to players (by foreign key or a player id column) is kept, or when the delete order is wrong. New config value `event.end_date` (PRD-022, DEC-059), with `game-config.yaml` 1.4.0, `01-product.md` 1.2.0, and `13-decisions.md` 1.23.0. The session cookie comment in `app/auth/session.py` no longer calls the retention date OPEN, and a test checks the 400-day cookie outlasts Wrapped.
