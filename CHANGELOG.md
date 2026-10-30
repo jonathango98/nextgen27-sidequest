@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Next ready piece in the feature tree, due 2026-11-20. Players can't see any points yet.
 - Rule IDs: UI-030, GAME-003, DATA-030, GAME-040, GAME-044, ENG-101, ENG-108
 - Status: Started
-- PR: draft
+- PR: #61
 
 ## 2026-10-30 · chore/tree-map-zoom · Claude Opus 5.5 / @jonathango98
 

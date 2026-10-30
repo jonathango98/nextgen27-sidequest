@@ -55,7 +55,7 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| `points.score` New players get their joining points and every player page shows their real score | `feat/points-score` | draft | 2026-10-30 | Claude Opus 5.5 / @marcjason2012 |
+| `points.score` New players get their joining points and every player page shows their real score | `feat/points-score` | #61 | 2026-10-30 | Claude Opus 5.5 / @marcjason2012 |
 
 ### Planned
 
