@@ -21,7 +21,7 @@ The app is built by a small volunteer team. It is not built yet. This repo curre
 
 ## Project status
 
-Status last updated: 2026-10-31 by Claude Opus 5.5 / @chrnso
+Status last updated: 2026-10-30 by Claude Opus 5.5 / @marcjason2012
 
 **Before you start anything**, check that nobody else is on it. A branch only shows up here after it merges, so also run:
 
@@ -56,6 +56,7 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
+| `points.score` New players get their joining points and every player page shows their real score | `feat/points-score` | draft | 2026-10-30 | Claude Opus 5.5 / @marcjason2012 |
 
 ### Planned
 

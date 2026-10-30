@@ -5,7 +5,7 @@
 
 Every planned piece of work and what it needs first (ENG-105 to ENG-108), grouped by the week it is due (PRD-054). Pieces flow left to right in time: finishing one unlocks the pieces it points to. Run `/pick-task` to claim one.
 
-**Working** 14 · **In progress** 0 · **Ready** 8 · **Waiting** 26 · **Needs decision** 0
+**Working** 14 · **In progress** 1 · **Ready** 7 · **Waiting** 26 · **Needs decision** 0
 
 Colors: green Working, blue In progress, gold Ready, gray Waiting, red dashed Needs decision.
 
@@ -169,7 +169,8 @@ flowchart LR
   classDef waiting fill:#f1f0eb,stroke:#c3c0b6,color:#545a66
   classDef decision fill:#fdeeec,stroke:#b42318,stroke-dasharray:4 3,color:#14151a
   class app_foundation,auth_join_login,code_my_code,connections_scanner_camera,connections_table,game_state_core,infra_hosting,look_base,points_audit_log,points_ledger,ready_logout,ready_retention,screens_skeleton,staff_accounts working
-  class connections_meet,home_pages,look_screens,points_score,ready_backups,ready_load_test,ready_rate_limits,staff_login ready
+  class points_score in_progress
+  class connections_meet,home_pages,look_screens,ready_backups,ready_load_test,ready_rate_limits,staff_login ready
   class admin_audit_view,admin_award_revoke,admin_players,admin_setup,blind_box_close_redemption,blind_box_handout,checkin_hall,checkin_sessions,checkin_window,connections_answers,connections_verse_picker,explore_booths,explore_items,game_state_auto_pause,game_state_controls,journal_notes,journal_share_review,leaderboards_in_app,leaderboards_screen,recap_screen,screen_main,usher_console,wrapped_cards,wrapped_collection,wrapped_save_image,wrapped_stat_cards waiting
 ```
 
@@ -180,12 +181,6 @@ flowchart LR
     1. Open the staff login page on a local run and log in as the first admin, you should land on an admin page.
     2. Then log in as Test Usher and open an admin page, you should be told you are not allowed.
     3. Also try opening a staff page while logged out, you should be sent to log in.
-- `points.score`: When a new player signs up, they get the points for joining the game, one time only. The bar at the top of every player page shows the player's real score. (M, medium, player-app, due fri nov 20)
-  - Try it:
-    1. On the PR preview, join as Test Player 1 on a phone. The score bar should show the points for joining.
-    2. Open Home, My Code and Quests. The score should be the same on every page.
-    3. Log out and log in again. The score should not go up a second time.
-    4. Refresh a few times. The score should not change by itself.
 - `look.screens`: The Home, My Code and shared notes pages made to look like the chosen design. Home and the notes page use pretend numbers and fake note cards for now. (L, easy, design, due fri nov 27)
   - Try it:
     1. Open Home as Test Player 1 on a phone, or a browser 360px wide. It should match the mockup, with nothing spilling off the side.
@@ -225,7 +220,7 @@ flowchart LR
 
 ## In progress
 
-- None
+- `points.score`: When a new player signs up, they get the points for joining the game, one time only. The bar at the top of every player page shows the player's real score.
 
 ## Needs a decision
 

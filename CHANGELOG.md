@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-30 · feat/points-score · Claude Opus 5.5 / @marcjason2012
+
+- What: Claimed `points.score`. New players will get their joining points once, and the bar at the top of every player page will show their real score.
+- Why: Next ready piece in the feature tree, due 2026-11-20. Players can't see any points yet.
+- Rule IDs: UI-030, GAME-003, DATA-030, GAME-040, GAME-044, ENG-101, ENG-108
+- Status: Started
+- PR: draft
+
 ## 2026-10-31 · chore/look-base-done · Claude Opus 5.5 / @chrnso
 
 - What: Marks `look.base` Working. Moves it out of README In progress and adds it to the Player screens row in Working, in plain words. Regenerates the feature tree map, so `look.screens` unlocks.
