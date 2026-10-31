@@ -56,6 +56,7 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
+| `look.screens` Home, My Code and the shared notes page match the chosen design | `feat/look-screens` | draft | 2026-10-31 | Claude Opus 5.5 / @chrnso |
 
 ### Planned
 

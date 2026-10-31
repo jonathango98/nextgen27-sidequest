@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-31 · feat/look-screens · Claude Opus 5.5 / @chrnso
+
+- What: Claims `look.screens`: Home, My Code and the shared notes page made to look like the Mix mockup, with pretend numbers and fake note cards for now. Stacked on #63, which marks `look.base` Working.
+- Why: Unlocked by `look.base`, due 2026-11-27, and the volunteer asked for the Home and My Code mockups.
+- Rule IDs: UI-036, DEC-037, UI-037, UI-038, ENG-101
+- Status: Started
+- PR: draft
+
 ## 2026-10-31 · chore/look-base-done · Claude Opus 5.5 / @chrnso
 
 - What: Marks `look.base` Working. Moves it out of README In progress and adds it to the Player screens row in Working, in plain words. Regenerates the feature tree map, so `look.screens` unlocks.
