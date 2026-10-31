@@ -1,0 +1,28 @@
+{% extends "player/base.html" %}
+
+{# Test-only page that shows every look.base component (07 section 3). The real app does not have it (API-001). #}
+{% block title %}Components · Side Quest{% endblock %}
+
+{% block content %}
+  <h1>Components</h1>
+  <p class="hint">Test page. Fake data only.</p>
+  <div class="stack">
+    {# UI-035: one main button, everything else frosted white. #}
+    <button class="button" type="button">Meet friends</button>
+    <button class="button button-secondary" type="button">Write <span class="pill">+{{ pill_points }}</span></button>
+    <a class="button button-secondary" href="/summary">Read</a>
+
+    <section class="card" aria-labelledby="card-title">
+      <h2 id="card-title">Card</h2>
+      <p>Frosted glass with a white top highlight.</p>
+    </section>
+
+    {# UI-051: the bar always shows its numbers. #}
+    <div class="progress">
+      <span class="progress-label"><span>Next box</span><span>{{ progress }} / {{ milestone }}</span></span>
+      <div class="progress-track" role="progressbar" aria-label="Points toward your next blind box" aria-valuemin="0" aria-valuemax="{{ milestone }}" aria-valuenow="{{ progress }}">
+        <div class="progress-fill" style="width: {{ percent }}%"></div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
