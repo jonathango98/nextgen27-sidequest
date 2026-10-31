@@ -2,6 +2,7 @@
 <form class="form" method="post" action="/join" hx-post="/join" hx-target="#join-step">
   <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
   <input type="hidden" name="step" value="details">
+  <div class="card form-card">
   {% if error %}{% include "partials/error.html" %}{% endif %}
 
   <label for="first_name">First name</label>
@@ -26,7 +27,8 @@
     <label class="choice"><input type="radio" name="age_18_plus" value="yes" {% if form.age_18_plus == "yes" %}checked{% endif %} required> Yes</label>
     <label class="choice"><input type="radio" name="age_18_plus" value="no" {% if form.age_18_plus == "no" %}checked{% endif %}> No</label>
   </fieldset>
+  </div>
 
   <button class="button" type="submit">Next</button>
 </form>
-<p class="hint">Already joined on another phone? <a href="/login">Log in</a></p>
+<p class="form-note">Already joined on another phone? <a href="/login">Log in</a></p>

@@ -1,6 +1,7 @@
 {# Log in on another phone (ARCH-032). The PIN is never sent back, so it always starts empty. #}
 <form class="form" method="post" action="/login" hx-post="/login" hx-target="#login-form">
   <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+  <div class="card form-card">
   {% if error %}{% include "partials/error.html" %}{% endif %}
 
   <label for="first_name">First name</label>
@@ -21,8 +22,9 @@
 
   <label for="pin">PIN</label>
   <input id="pin" name="pin" type="password" inputmode="numeric" pattern="[0-9]{{ '{' }}{{ pin_digits }}{{ '}' }}" maxlength="{{ pin_digits }}" autocomplete="current-password" required>
+  </div>
 
   <button class="button" type="submit">Log in</button>
 </form>
-<p class="hint">New here? <a href="/join">Join the game</a></p>
-<p class="hint">Forgot your PIN? Find an admin at the game booth.</p>
+<p class="form-note">New here? <a href="/join">Join the game</a></p>
+<p class="form-note">Forgot your PIN? Find an admin at the game booth.</p>

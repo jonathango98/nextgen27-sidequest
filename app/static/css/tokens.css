@@ -85,6 +85,17 @@
   --button-min: 60px; /* one-line buttons, from the Mix mockup */
   --press-scale: 0.98; /* a tapped button shrinks a little */
 
+  /* Form fields, PIN fields, and messages, from the Mix Join and Log in mockups */
+  --radius-field: 16px;
+  --border-field: 1.5px;
+  --radius-message: 12px;
+  --font-size-pin: 24px;
+  --pin-spacing: 0.4em;
+
+  /* Thin black viewfinder corners at the top of the screen (UI-009) */
+  --viewfinder-size: 14px;
+  --viewfinder-line: 1.5px;
+
   /* Box progress bar: a thin black bar on a faint track, always with numbers (UI-051) */
   --progress-height: 4px;
   --color-track: rgba(30, 26, 28, 0.15);
