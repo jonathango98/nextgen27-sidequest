@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-31 · feat/look-screens · Claude Opus 5.5 / @chrnso
+
+- What: Claims `look.screens`: Home, My Code and the shared notes page made to look like the Mix mockup, with pretend numbers and fake note cards for now. Stacked on #63, which marks `look.base` Working.
+- Why: Unlocked by `look.base`, due 2026-11-27, and the volunteer asked for the Home and My Code mockups.
+- Rule IDs: UI-036, DEC-037, UI-037, UI-038, ENG-101
+- Status: Started
+- PR: draft
+
 ## 2026-11-02 · feat/paused-screens · Claude Opus 5.5 / @OwenTjandra
 
 - What: Changes GAME-102 with Jonathan's OK (DEC-068): while paused, players see only Home with their score, log in, and sign up. Every other player page shows "Back after the session." with a Home button, Read and Open Box on Home are greyed out with the play buttons, and `/code/qr` returns 423 `PAUSED`, so an open My Code page drops its code at the next refresh. Nothing changes while off, because Sunday blind box claims need My Code (GAME-078). Stacked on #67.
