@@ -206,3 +206,17 @@ def test_arch_034_logged_in_player_skips_login(client, church_ids, fake_pin):
     response = client.get("/login", follow_redirects=False)
     assert response.status_code == 303
     assert response.headers["location"] == "/"
+
+
+def test_safe_022_login_error_says_when_an_account_locks(
+    client, church_ids, wrong_pin, fake_pin, cfg_auth
+):
+    wrong = _alert(_login(client, church_ids, wrong_pin, htmx=True))
+    unknown = _alert(
+        _login(client, church_ids, fake_pin, htmx=True, last_name="Player 9")
+    )
+    # The rule, never a count of tries left, so an unknown name reads the same (ARCH-032).
+    assert wrong == unknown
+    assert f"After {cfg_auth['pin_max_attempts']} wrong tries in a row" in wrong
+    assert f"locks for {cfg_auth['auto_unlock_minutes']} minutes" in wrong
+    assert "left" not in wrong

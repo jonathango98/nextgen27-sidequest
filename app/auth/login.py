@@ -19,12 +19,16 @@ def _missing() -> LoginError:
     return LoginError(400, "BAD_INPUT", "Please fill in your name, church, and PIN.")
 
 
-def _no_match() -> LoginError:
+def _no_match(auth: dict) -> LoginError:
     # The same message for an unknown name and a wrong PIN, so it never says who has joined.
+    # It states the lockout rule (SAFE-022) instead of a count of tries left, which only a real
+    # account would have.
     return LoginError(
         400,
         "BAD_INPUT",
-        "We couldn't log you in with that name, church, and PIN. Please check them and try again.",
+        "We couldn't log you in with that name, church, and PIN."
+        f" After {auth['pin_max_attempts']} wrong tries in a row,"
+        f" an account locks for {auth['auto_unlock_minutes']} minutes.",
     )
 
 
@@ -51,7 +55,7 @@ def log_in(conn: sqlite3.Connection, form: dict[str, str], auth: dict) -> str:
     if not (first and last and church.isascii() and church.isdigit()):
         raise _missing()
     if not pins.is_valid(pin, auth["pin_digits"]):
-        raise _no_match()
+        raise _no_match(auth)
 
     row = conn.execute(
         "SELECT id, public_id, pin_hash, locked_at FROM player WHERE church_id = ?"
@@ -61,7 +65,7 @@ def log_in(conn: sqlite3.Connection, form: dict[str, str], auth: dict) -> str:
     if row is None:
         # Same work as a real check, so the response time says nothing about who has joined.
         pins.verify_pin(pin, _dummy_hash())
-        raise _no_match()
+        raise _no_match(auth)
     if row["locked_at"] is not None:
         raise _locked()
 
@@ -89,4 +93,4 @@ def log_in(conn: sqlite3.Connection, form: dict[str, str], auth: dict) -> str:
             (row["id"],),
         )
         raise _locked()
-    raise _no_match()
+    raise _no_match(auth)
