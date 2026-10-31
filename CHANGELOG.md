@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Unlocked by `look.base`, due 2026-11-27, and the volunteer asked for the Home and My Code mockups.
 - Rule IDs: UI-036, DEC-037, UI-037, UI-038, ENG-101
 - Status: Started
-- PR: draft
+- PR: #64
 
 ## 2026-10-31 · chore/look-base-done · Claude Opus 5.5 / @chrnso
 
