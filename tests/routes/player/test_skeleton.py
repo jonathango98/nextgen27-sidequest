@@ -4,6 +4,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.auth.current import CurrentPlayer, get_current_player
+from app.config import load_config
 from app.main import create_app
 
 FAKE_PLAYER = CurrentPlayer(public_id="testpid01", score=120)  # fake data (ENG-047)
@@ -27,6 +28,20 @@ def current_tab(href, label):
     # The current tab's link, with its icon before the label (07 section 3).
     return re.compile(
         rf'<a href="{re.escape(href)}" aria-current="page">(?:(?!</a>).)*?{re.escape(label)}\s*</a>',
+        re.DOTALL,
+    )
+
+
+def main_buttons(html):
+    # UI-035: a main button has the button class without button-secondary.
+    classes = (c.split() for c in re.findall(r'class="([^"]*)"', html))
+    return [c for c in classes if "button" in c and "button-secondary" not in c]
+
+
+def link_to(href, label):
+    # A link to href whose text includes label, allowing icons and pills around it.
+    return re.compile(
+        rf'<a [^>]*href="{re.escape(href)}"[^>]*>(?:(?!</a>).)*?\b{re.escape(label)}\b',
         re.DOTALL,
     )
 
@@ -66,7 +81,7 @@ def test_ui_030_each_page_marks_its_tab(client, path, tab):
 
 @pytest.mark.parametrize("path", PAGES)
 def test_ui_035_each_page_has_at_most_one_main_button(client, path):
-    assert len(re.findall(r'class="button"', client.get(path).text)) <= 1
+    assert len(main_buttons(client.get(path).text)) <= 1
 
 
 @pytest.mark.parametrize("path", [p for p in TABBED_PAGES if p != "/"])
@@ -79,7 +94,8 @@ def test_ui_030_home_top_bar_has_no_score(client):
 
 
 def test_ui_036_home_shows_big_score(client):
-    assert "<h1>120 points</h1>" in client.get("/").text
+    h1 = re.search(r"<h1[^>]*>(.*?)</h1>", client.get("/").text, re.DOTALL).group(1)
+    assert re.sub(r"<[^>]+>", "", h1).split() == ["120", "points"]
 
 
 @pytest.mark.parametrize(
@@ -92,11 +108,11 @@ def test_ui_036_home_shows_big_score(client):
     ],
 )
 def test_ui_036_home_links(client, label, href):
-    assert f'href="{href}">{label}</a>' in client.get("/").text
+    assert link_to(href, label).search(client.get("/").text)
 
 
 def test_ui_035_home_has_one_main_button(client):
-    assert client.get("/").text.count('class="button"') == 1
+    assert len(main_buttons(client.get("/").text)) == 1
 
 
 def test_game_017_connection_id_must_be_a_number(client):
@@ -140,3 +156,13 @@ def test_wrap_002_wrapped_shows_unlock_message(client):
     assert "Your Wrapped unlocks on Sunday." in html
     assert 'href="/">Close</a>' in html
     assert 'aria-label="Main"' not in html
+
+
+def test_ui_036_home_numbers_come_from_config(client):
+    cfg = load_config()
+    html = client.get("/").text
+    # AI-013: the Write pill and the box size come from game-config.yaml.
+    assert f'<span class="pill">+{cfg["points"]["journal_takeaway"]}</span>' in html
+    milestone = cfg["blind_box"]["milestone_points"]
+    assert f'aria-valuemax="{milestone}"' in html
+    assert f"/ {milestone}</span>" in html

@@ -6,7 +6,7 @@
 </head>
 <body>
   {# UI-030: same frame on every player page. Child pages set `tab` to mark the current tab. #}
-  <header class="top-bar">
+  <header class="top-bar{% if viewfinder %} viewfinder{% endif %}">
     <a href="/">Side Quest</a>
     {% block top_score %}
     <span class="score">{{ score }}</span>
@@ -15,7 +15,7 @@
     {% block top_actions %}{% endblock %}
   </header>
 
-  <main class="content">
+  <main class="content{% block content_class %}{% endblock %}">
     {% block content %}{% endblock %}
   </main>
 

@@ -6,7 +6,7 @@
 </head>
 {# For pages before login: no score or bottom bar. API-004: HTMX sends the CSRF token in a header. #}
 <body class="plain" hx-headers='{"X-CSRF-Token": "{{ csrf_token }}"}'>
-  <header class="top-bar">
+  <header class="top-bar viewfinder">
     <p class="brand">Side Quest</p>
   </header>
   <main class="content">
