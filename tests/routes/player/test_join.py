@@ -273,3 +273,28 @@ def test_arch_034_signed_cookie_for_unknown_player_is_not_logged_in(client):
     value = f"nobody00000x.{session.sign('session', 'nobody00000x')}"
     client.cookies.set(session.COOKIE, value)
     assert client.get("/code").status_code == 401
+
+
+def test_ui_032_back_from_pin_step_keeps_the_details(
+    client, details, fake_pin, db_path
+):
+    response = _post(
+        client,
+        {**details, "step": "pin", "pin": fake_pin, "pin_again": fake_pin, "back": "1"},
+        htmx=True,
+    )
+    assert response.status_code == 200
+    assert 'name="pin"' not in response.text  # back on step 1
+    assert 'value="Test"' in response.text
+    assert 'value="Player 1"' in response.text
+    assert re.search(rf'value="{details["church_id"]}"\s+selected', response.text)
+    assert re.search(r'value="yes"\s+checked', response.text)
+    assert fake_pin not in response.text  # SAFE-021: the PIN is never sent back
+    assert _players(db_path) == []  # nothing saved
+
+
+def test_api_007_back_works_without_javascript(client, details, db_path):
+    response = _post(client, {**details, "step": "pin", "back": "1"})
+    assert response.status_code == 200
+    assert 'value="Player 1"' in response.text
+    assert _players(db_path) == []

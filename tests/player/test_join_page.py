@@ -136,3 +136,27 @@ def test_ui_054_typing_in_a_field_shows_its_border_not_a_box(page: Page, live_se
     assert style["outline"] == "none"
     assert style["ring"] != "none"  # focus is still visible
     assert style["border"] == style["text"]
+
+
+def test_ui_032_back_from_pin_step_keeps_what_was_typed(
+    page: Page, live_server, test_db_path, browser_name
+):
+    _seed_churches(test_db_path)
+    pin = make_fake_pin(load_config()["auth"]["pin_digits"])
+    page.goto(f"{live_server}/join")
+    page.get_by_label("First name").fill("Test")
+    page.get_by_label("Last name").fill(_last_name(3, browser_name))
+    page.get_by_label("Church").select_option(label=CHURCHES[1])
+    page.get_by_label("No").check()
+    page.get_by_role("button", name="Next").click()
+
+    page.get_by_label("PIN", exact=True).fill(pin)
+    page.get_by_role("button", name="Back").click()
+
+    expect(page.get_by_label("Last name")).to_have_value(_last_name(3, browser_name))
+    expect(page.get_by_label("Church").locator("option:checked")).to_have_text(
+        CHURCHES[1]
+    )
+    expect(page.get_by_label("No")).to_be_checked()
+    page.get_by_role("button", name="Next").click()
+    expect(page.get_by_label("PIN", exact=True)).to_have_value("")  # never sent back
