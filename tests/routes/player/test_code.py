@@ -6,7 +6,7 @@ from app.config import load_config
 from app.main import create_app
 from app.routes.player import code
 from app.services import qr
-from tests.routes.player.test_skeleton import current_tab
+from tests.routes.player.test_skeleton import current_tab, link_to, main_buttons
 
 # Fake data (ENG-047), never a real key (SAFE-030).
 FAKE_KEY = "test-only-fake-signing-key"
@@ -95,10 +95,31 @@ def test_arch_023_my_code_fails_closed_without_key(client, monkeypatch, cfg, pat
 
 
 def test_ui_037_my_code_has_scan_button(client):
-    assert '<a class="button" href="/scan">Scan</a>' in client.get("/code").text
+    html = client.get("/code").text
+    assert link_to("/scan", "Scan").search(html)
+    assert main_buttons(html) == [["button", "button-scan"]]
 
 
 def test_ui_030_my_code_marks_its_tab(client):
     html = client.get("/code").text
     assert current_tab("/code", "My Code").search(html)
     assert html.count('aria-current="page"') == 1
+
+
+def test_ui_037_qr_timer_starts_from_time_left(client, cfg, window_start):
+    rotation = cfg["rotation_seconds"]
+    elapsed = rotation // 3  # a third into the window, so the bar starts partway
+    client.app.dependency_overrides[code.current_time] = lambda: window_start + elapsed
+    html = client.get("/code/qr").text
+    left = rotation - elapsed
+    assert f'aria-valuemax="{rotation}"' in html
+    assert f'aria-valuenow="{left}"' in html
+    assert (
+        f"animation-duration: {rotation}s; animation-delay: -{rotation - left}s" in html
+    )
+
+
+def test_ui_037_my_code_says_show_a_friend_and_keeps_the_tip(client):
+    html = client.get("/code").text
+    assert '<p class="qr-caption">Show a friend</p>' in html
+    assert "brightness" in html  # 07 section 3: the QR panel keeps the brightness tip

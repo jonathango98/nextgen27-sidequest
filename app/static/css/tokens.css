@@ -106,6 +106,10 @@
   --progress-max: 230px;
   --color-surface-faint: rgba(255, 255, 255, 0.32); /* the settings gear */
 
+  /* My Code (UI-037), from the Mix My Code mockup */
+  --font-size-caption: 20px; /* "Show a friend" */
+  --qr-timer-height: 8px;
+
   /* Box progress bar: a thin black bar on a faint track, always with numbers (UI-051) */
   --progress-height: 4px;
   --color-track: rgba(30, 26, 28, 0.15);
