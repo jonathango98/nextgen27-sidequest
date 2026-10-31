@@ -43,3 +43,20 @@ def test_ui_037_scan_button_opens_scanner(page: Page, live_server):
     page.goto(f"{live_server}/code")
     page.get_by_role("link", name="Scan").click()
     expect(page).to_have_url(f"{live_server}/scan")
+
+
+def test_ui_002_icebreaker_form_stacks_its_fields(page: Page, live_server):
+    # A form section stacks label, field, and button. Only Join's Yes and No sit side by side.
+    page.goto(f"{live_server}/connections/1")
+    label = page.get_by_text("Answer", exact=True).bounding_box()
+    field = page.get_by_label("Answer").bounding_box()
+    save = page.get_by_role("button", name="Save").bounding_box()
+    assert label["y"] < field["y"] < save["y"]
+    assert field["x"] <= label["x"] + 1
+
+
+def test_safe_002_join_yes_and_no_sit_side_by_side(page: Page, live_server):
+    page.goto(f"{live_server}/join")
+    yes = page.get_by_label("Yes").bounding_box()
+    no = page.get_by_label("No").bounding_box()
+    assert yes["y"] == no["y"] and yes["x"] < no["x"]

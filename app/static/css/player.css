@@ -277,9 +277,13 @@ h2 {
   display: none;
 }
 
-/* Switched off until the feature behind it is built */
+/* Switched off: frosted with gray text, never black, as in the Mix Journal mockup */
 .button:disabled {
-  opacity: 0.5;
+  color: var(--color-text-muted);
+  background: var(--color-surface);
+  -webkit-backdrop-filter: var(--glass-filter);
+  backdrop-filter: var(--glass-filter);
+  box-shadow: var(--shadow-glass);
   cursor: not-allowed;
 }
 
@@ -467,6 +471,62 @@ h2 {
   font-weight: 600;
 }
 
+/* A page title with a small line under it, like the session name on Journal */
+.page-heading {
+  margin: 0 0 var(--space-3);
+  padding: 0 var(--space-1);
+}
+
+.page-heading h1 {
+  margin: 0;
+}
+
+.page-sub {
+  margin: 0;
+}
+
+/* Journal form (GAME-030, GAME-031): a card with the takeaway and the share choices, then Save */
+.form.journal-form > fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.form .form-title {
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-form-title);
+  font-weight: 400;
+}
+
+.journal-form textarea {
+  min-height: var(--textarea-min);
+  resize: none;
+}
+
+.word-count {
+  margin: 0;
+  font-size: var(--font-size-small);
+  font-weight: 600;
+}
+
+/* Share choices stacked, with a thin line between them */
+.form fieldset.choice-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.choice-list .choice + .choice {
+  border-top: thin solid var(--color-hairline);
+}
+
+.choice-list .hint {
+  margin-top: var(--space-2);
+}
+
 /* Forms: Join and Log in (UI-003 big targets, UI-053 visible labels, UI-051 errors in text) */
 .form {
   display: flex;
@@ -545,14 +605,22 @@ h2 {
   color: var(--color-text-muted);
 }
 
-/* Yes and No side by side */
+/* A form section stacks its fields, like the form itself */
 .form fieldset {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  column-gap: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
   margin: 0;
   padding: 0;
   border: 0;
+}
+
+/* Yes and No side by side, only for a question on a form card (Join) */
+.form-card > fieldset {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--space-2);
 }
 
 .form legend {

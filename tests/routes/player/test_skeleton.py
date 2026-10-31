@@ -185,3 +185,15 @@ def test_safe_004_summary_shows_first_name_and_church_or_anonymous(client):
     ]
     assert authors == expected
     assert "Anonymous" in authors
+
+
+def test_game_030_journal_word_count_uses_config_minimum(client):
+    minimum = load_config()["limits"]["journal_min_words"]
+    assert f"0 / {minimum} words" in client.get("/journal/new").text
+
+
+def test_game_036_journal_shows_a_session_name(client):
+    html = client.get("/journal/new").text
+    assert (
+        f'<p class="page-sub">{journal.PLACEHOLDER_SUMMARY[-1]["session"]}</p>' in html
+    )
