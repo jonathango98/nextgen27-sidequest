@@ -380,6 +380,16 @@ h2 {
   background: var(--color-surface-solid); /* text fields stay solid white (07 section 2) */
 }
 
+/* While typing, the field's own border turns black and thicker instead of a box around it.
+   Focus stays visible (UI-054). */
+.form input:not([type="radio"]):focus-visible,
+.form select:focus-visible,
+.form textarea:focus-visible {
+  outline: none;
+  border-color: var(--color-text);
+  box-shadow: 0 0 0 var(--border-field) var(--color-text);
+}
+
 /* PIN digits are big and spaced out so they are easy to count */
 .form input[type="password"] {
   font-size: var(--font-size-pin);
