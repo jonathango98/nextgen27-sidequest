@@ -110,6 +110,9 @@
   --font-size-caption: 20px; /* "Show a friend" */
   --qr-timer-height: 8px;
 
+  /* Shared takeaways (UI-038), from the Mix Takeaways mockup */
+  --font-size-takeaway: 18px;
+
   /* Box progress bar: a thin black bar on a faint track, always with numbers (UI-051) */
   --progress-height: 4px;
   --color-track: rgba(30, 26, 28, 0.15);

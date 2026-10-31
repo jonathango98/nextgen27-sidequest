@@ -6,6 +6,7 @@ from fastapi.testclient import TestClient
 from app.auth.current import CurrentPlayer, get_current_player
 from app.config import load_config
 from app.main import create_app
+from app.routes.player import journal
 
 FAKE_PLAYER = CurrentPlayer(public_id="testpid01", score=120)  # fake data (ENG-047)
 
@@ -166,3 +167,21 @@ def test_ui_036_home_numbers_come_from_config(client):
     milestone = cfg["blind_box"]["milestone_points"]
     assert f'aria-valuemax="{milestone}"' in html
     assert f"/ {milestone}</span>" in html
+
+
+def test_ui_038_summary_groups_by_session_in_order(client):
+    html = client.get("/summary").text
+    titles = re.findall(r'<h2 class="session-title"[^>]*>([^<]+)</h2>', html)
+    assert titles == [s["session"] for s in journal.PLACEHOLDER_SUMMARY]
+
+
+def test_safe_004_summary_shows_first_name_and_church_or_anonymous(client):
+    html = client.get("/summary").text
+    authors = re.findall(r'<p class="takeaway-author">([^<]+)</p>', html)
+    expected = [
+        "Anonymous" if t.get("anonymous") else f"{t['first_name']} · {t['church']}"
+        for s in journal.PLACEHOLDER_SUMMARY
+        for t in s["takeaways"]
+    ]
+    assert authors == expected
+    assert "Anonymous" in authors

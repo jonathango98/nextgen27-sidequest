@@ -5,5 +5,19 @@
 
 {% block content %}
   <h1>Takeaways</h1>
-  <p class="hint">Placeholder: shared takeaways by session, newest first (UI-038).</p>
+  {# UI-038: approved shared takeaways grouped by session, newest session first, as takeaway cards. #}
+  {% for session in sessions %}
+    <section class="takeaway-session" aria-labelledby="session-{{ loop.index }}">
+      <h2 class="session-title" id="session-{{ loop.index }}">{{ session.session }}</h2>
+      <ul class="takeaway-list">
+        {% for takeaway in session.takeaways %}
+          <li class="card takeaway-card">
+            <p class="takeaway-text">{{ takeaway.text }}</p>
+            {# SAFE-004: first name and church only. SAFE-009: Anonymous hides the name from players. #}
+            <p class="takeaway-author">{% if takeaway.anonymous %}Anonymous{% else %}{{ takeaway.first_name }} · {{ takeaway.church }}{% endif %}</p>
+          </li>
+        {% endfor %}
+      </ul>
+    </section>
+  {% endfor %}
 {% endblock %}

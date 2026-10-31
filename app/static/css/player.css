@@ -421,6 +421,52 @@ h2 {
   color: var(--color-text-muted);
 }
 
+/* Shared takeaways (UI-038): cards grouped by session */
+.takeaway-session {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+/* A small label above each group, not a big title (Mix Takeaways mockup) */
+.session-title {
+  margin: 0;
+  padding: 0 var(--space-1);
+  font-family: var(--font-family);
+  font-size: var(--font-size-small);
+  font-weight: 700;
+}
+
+.takeaway-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.takeaway-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.takeaway-text {
+  margin: 0;
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-takeaway);
+  line-height: 1.4;
+  overflow-wrap: anywhere; /* long words wrap instead of spilling off the side */
+}
+
+.takeaway-author {
+  margin: 0;
+  font-size: var(--font-size-small);
+  font-weight: 600;
+}
+
 /* Forms: Join and Log in (UI-003 big targets, UI-053 visible labels, UI-051 errors in text) */
 .form {
   display: flex;
