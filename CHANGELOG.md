@@ -22,10 +22,10 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-10-31 · feat/look-screens · Claude Opus 5.5 / @chrnso
 
-- What: Claims `look.screens`: Home, My Code and the shared notes page made to look like the Mix mockup, with pretend numbers and fake note cards for now. Stacked on #63, which marks `look.base` Working.
+- What: Builds `look.screens`. Home follows the Mix mockup: the big serif score with "points" under it, the Next box bar with its numbers, viewfinder corners, and a frosted settings gear, then in the lower half the black Meet friends button, Write (with its points pill) beside Read, and Redeem box. The pill and box size come from `game-config.yaml`, and the box progress is a pretend 0 with no "ready" count until `home.pages`. My Code puts the QR on a white card with a timer bar that drains until the code changes, starts partway when the page opens mid-window, restarts with each new code, and stays still with Reduce Motion on. Its caption says "Show a friend" and keeps the screen brightness tip (07 section 3). The black Scan button has a scan icon. The summary page shows takeaway cards grouped by session, newest first, with first name and church or Anonymous, from an obviously fake placeholder list until `journal.share-review`. The mockup's sample names were full real-looking names, so the placeholders use first names and Example churches (SAFE-004, SAFE-031). Viewfinder corners are now a class any top bar can use. The Home and My Code tests that matched exact HTML now check the same rules without it. Stacked on #63, which marks `look.base` Working. New tokens not yet in the doc: `--font-size-points-label`, `--score-hero-tracking`, `--font-size-tile`, `--font-size-tile-main`, `--tile-min`, `--tile-main-min`, `--progress-max`, `--color-surface-faint`, `--font-size-caption`, `--qr-timer-height`, `--font-size-takeaway`.
 - Why: Unlocked by `look.base`, due 2026-11-27, and the volunteer asked for the Home and My Code mockups.
-- Rule IDs: UI-036, DEC-037, UI-037, UI-038, ENG-101
-- Status: Started
+- Rule IDs: UI-036, UI-037, UI-038, DEC-037, UI-003, UI-009, UI-035, UI-051, UI-055, SAFE-004, SAFE-031, AI-013, ENG-101
+- Status: In progress
 - PR: #64
 
 ## 2026-10-31 · chore/look-base-done · Claude Opus 5.5 / @chrnso
