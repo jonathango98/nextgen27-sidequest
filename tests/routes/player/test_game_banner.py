@@ -1,3 +1,5 @@
+import re
+
 import pytest
 from fastapi.testclient import TestClient
 
@@ -23,6 +25,20 @@ PAGES = (
     "/summary",
     "/box",
 )
+
+
+def disabled_button(label):
+    # A switched-off button whose text includes label, allowing icons and pills around it.
+    return re.compile(
+        r'<button class="[^"]*" type="button" disabled>(?:(?!</button>).)*?\b'
+        + re.escape(label)
+        + r"\b",
+        re.DOTALL,
+    )
+
+
+def page_text(html):
+    return " ".join(re.sub(r"<[^>]+>", " ", html).split())
 
 
 @pytest.fixture
@@ -111,17 +127,17 @@ def test_game_102_home_play_buttons_wait_while_not_on(client, state):
     html = client.get("/").text
     assert 'href="/scan"' not in html
     assert 'href="/journal/new"' not in html
-    assert '<button class="button" type="button" disabled>Meet friends</button>' in html
+    assert disabled_button("Meet friends").search(html)
 
 
 def test_dec_066_home_stays_open_while_paused_with_reading_greyed_out(client):
     _set(client, "paused")
     html = client.get("/").text
-    assert "120 points" in html  # FAKE_PLAYER's score
+    assert "120 points" in page_text(html)  # FAKE_PLAYER's score
     assert "Back after the session." not in html
     assert 'href="/summary"' not in html
     assert 'href="/box"' not in html
-    assert ">Read</button>" in html
+    assert disabled_button("Read").search(html)
 
 
 def test_game_108_reading_stays_open_while_off(client):

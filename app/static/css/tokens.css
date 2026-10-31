@@ -96,6 +96,16 @@
   --viewfinder-size: 14px;
   --viewfinder-line: 1.5px;
 
+  /* Home (UI-036), from the Mix Home mockup */
+  --font-size-points-label: 28px; /* "points" under the big score */
+  --score-hero-tracking: -0.03em;
+  --font-size-tile: 23px; /* Write, Read, Redeem box */
+  --font-size-tile-main: 28px; /* Meet friends */
+  --tile-min: 76px;
+  --tile-main-min: 88px;
+  --progress-max: 230px;
+  --color-surface-faint: rgba(255, 255, 255, 0.32); /* the settings gear */
+
   /* Box progress bar: a thin black bar on a faint track, always with numbers (UI-051) */
   --progress-height: 4px;
   --color-track: rgba(30, 26, 28, 0.15);
