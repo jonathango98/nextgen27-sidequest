@@ -113,6 +113,10 @@
   /* Shared takeaways (UI-038), from the Mix Takeaways mockup */
   --font-size-takeaway: 18px;
 
+  /* Journal form, from the Mix Journal mockup */
+  --font-size-form-title: 21px; /* "Takeaway" and "Share" */
+  --textarea-min: 108px;
+
   /* Box progress bar: a thin black bar on a faint track, always with numbers (UI-051) */
   --progress-height: 4px;
   --color-track: rgba(30, 26, 28, 0.15);

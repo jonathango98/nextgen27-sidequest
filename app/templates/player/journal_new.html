@@ -4,22 +4,28 @@
 {% block title %}Journal · Side Quest{% endblock %}
 
 {% block content %}
-  <h1>Journal</h1>
-  <p class="hint">Placeholder: the session name (GAME-036).</p>
-  {# Saving comes with the Journal feature, so the form is switched off. #}
-  <form class="form">
+  <div class="page-heading">
+    <h1>Journal</h1>
+    <p class="page-sub">{{ session_name }}</p>
+  </div>
+  {# Saving comes with the Journal feature (journal.notes), so the form is switched off. #}
+  <form class="form journal-form">
     <fieldset disabled>
-      <label for="takeaway">Takeaway</label>
-      <textarea id="takeaway" name="text" rows="4"></textarea>
-      {# GAME-031: who can see it. #}
-      <fieldset>
-        <legend>Share</legend>
-        <label class="choice"><input type="radio" name="visibility" value="private" checked> Just me</label>
-        <label class="choice"><input type="radio" name="visibility" value="shared_named"> With name</label>
-        <label class="choice"><input type="radio" name="visibility" value="shared_anonymous"> Anonymous</label>
-        {# UI-031, SAFE-009 #}
-        <p class="hint">Anonymous hides your name from other players. Game organizers can still see who wrote it.</p>
-      </fieldset>
+      <div class="card form-card">
+        <label class="form-title" for="takeaway">Takeaway</label>
+        <textarea id="takeaway" name="text" rows="4" placeholder="Write here"></textarea>
+        {# GAME-030: the minimum comes from game-config.yaml. journal.notes makes it count as you type. #}
+        <p class="word-count" aria-live="polite">0 / {{ min_words }} words</p>
+        {# GAME-031: who can see it. #}
+        <fieldset class="choice-list">
+          <legend class="form-title">Share</legend>
+          <label class="choice"><input type="radio" name="visibility" value="private" checked> Just me</label>
+          <label class="choice"><input type="radio" name="visibility" value="shared_named"> With name</label>
+          <label class="choice"><input type="radio" name="visibility" value="shared_anonymous"> Anonymous</label>
+          {# UI-031, SAFE-009 #}
+          <p class="hint">Anonymous hides your name from other players. Game organizers can still see who wrote it.</p>
+        </fieldset>
+      </div>
       <button class="button" type="submit">Save</button>
     </fieldset>
   </form>
