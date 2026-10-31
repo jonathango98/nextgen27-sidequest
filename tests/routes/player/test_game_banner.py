@@ -183,7 +183,7 @@ def test_game_108_my_code_still_shows_while_off_but_scan_waits(client):
     html = client.get("/code").text
     assert 'class="qr-panel"' in html  # blind box claims on Sunday need it (GAME-078)
     assert 'href="/scan"' not in html
-    assert '<button class="button" type="button" disabled>Scan</button>' in html
+    assert disabled_button("Scan").search(html)
     assert client.get("/code/qr").status_code == 200
 
 
