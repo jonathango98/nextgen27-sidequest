@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: PR #62 merged after Jonathan's approval, but the move to Working was left for after the hand test on a phone, which needed a PR preview (ENG-108, ENG-112).
 - Rule IDs: ENG-100, ENG-103, ENG-108, ENG-109, ENG-112
 - Status: Done
-- PR: draft
+- PR: #63
 
 ## 2026-10-31 · docs/bloom-review-copy · Claude Opus 5.5 / @jonathango98
 
