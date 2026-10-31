@@ -6,7 +6,14 @@
   box-sizing: border-box;
 }
 
+/* With a background here, the body's own cream stays inside its layer below, so the grain can blend with it. */
+html {
+  background: var(--color-bg);
+}
+
 body {
+  position: relative;
+  isolation: isolate; /* keeps the background layers below behind the page, above the cream */
   margin: 0;
   min-height: 100vh;
   display: flex;
@@ -18,6 +25,29 @@ body {
   background: var(--color-bg);
 }
 
+/* Mix background (UI-008, DEC-036): bloom streaks, then film grain on top. Pseudo-elements are
+   decoration only, so screen readers never see them, and nothing is downloaded (UI-004). */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+body::before {
+  inset: var(--bloom-overhang);
+  background: var(--bloom-streaks);
+  transform: rotate(var(--bloom-angle));
+}
+
+body::after {
+  background: var(--grain);
+  opacity: var(--grain-opacity);
+  mix-blend-mode: overlay;
+}
+
 a {
   color: var(--color-primary);
 }
@@ -27,23 +57,50 @@ a {
   outline-offset: var(--space-1);
 }
 
-/* Top bar: home link and score */
+/* Top bar: home link and score, straight on the background as in the Mix mockup */
 .top-bar {
-  position: sticky;
-  top: 0;
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  padding: var(--space-3) var(--space-4);
-  background: var(--color-surface);
+  padding: var(--space-3) var(--space-4) var(--space-1) var(--space-5);
 }
 
-/* UI-003: the home link is a big enough tap target. */
-.top-bar > a {
+/* UI-003: the home link is a big enough tap target. Pages before login show the name without a link. */
+.top-bar > a,
+.top-bar > .brand {
   display: inline-flex;
   align-items: center;
   min-height: var(--tap-min);
-  margin-right: auto;
+  margin: 0 auto 0 0;
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-brand);
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+/* Viewfinder corners frame the top of the pages before login, as in the Mix Join and Log in mockups (UI-009) */
+.plain .top-bar {
+  position: relative;
+}
+
+.plain .top-bar::before,
+.plain .top-bar::after {
+  content: "";
+  position: absolute;
+  top: var(--space-3);
+  width: var(--viewfinder-size);
+  height: var(--viewfinder-size);
+  border-top: var(--viewfinder-line) solid var(--color-text);
+}
+
+.plain .top-bar::before {
+  left: var(--space-3);
+  border-left: var(--viewfinder-line) solid var(--color-text);
+}
+
+.plain .top-bar::after {
+  right: var(--space-3);
+  border-right: var(--viewfinder-line) solid var(--color-text);
 }
 
 /* Settings menu in the top bar (UI-036). UI-003: the gear and each item are big enough taps. */
@@ -74,9 +131,11 @@ a {
   z-index: 1;
   width: max-content;
   padding: var(--space-1);
-  border: thin solid var(--color-text-muted);
   border-radius: var(--radius);
-  background: var(--color-bg);
+  background: var(--color-surface);
+  -webkit-backdrop-filter: var(--glass-filter);
+  backdrop-filter: var(--glass-filter);
+  box-shadow: var(--shadow-glass);
 }
 
 .menu-item {
@@ -97,15 +156,17 @@ a {
   color: var(--color-error);
 }
 
+/* Titles, numbers, and buttons use the system serif (UI-008) */
 .score {
+  font-family: var(--font-family-display);
   font-size: var(--font-size-score);
-  font-weight: 700;
+  font-weight: 400;
   line-height: 1;
 }
 
+/* Muted gray is for white or glass only (07 section 2), so this label stays black on the background. */
 .score-label {
   font-size: var(--font-size-small);
-  color: var(--color-text-muted);
 }
 
 /* Content */
@@ -116,61 +177,95 @@ a {
 }
 
 h1 {
+  font-family: var(--font-family-display);
   font-size: var(--font-size-h1);
+  font-weight: 400;
+  line-height: 1.1;
   margin: 0 0 var(--space-4);
 }
 
-/* Bottom bar: Home, My Code, Quests (UI-003: in the lower half, big tap targets) */
+h2 {
+  font-family: var(--font-family-display);
+  font-weight: 400;
+  margin: 0 0 var(--space-2);
+}
+
+/* Bottom bar: Home, My Code, Quests on frosted glass (UI-003: in the lower half, big tap targets) */
 .bottom-bar {
   position: sticky;
   bottom: 0;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--space-2);
-  padding: var(--space-2) var(--space-2) calc(var(--space-2) + env(safe-area-inset-bottom));
+  padding: var(--space-2) var(--space-3) calc(var(--space-4) + env(safe-area-inset-bottom));
   background: var(--color-surface);
+  -webkit-backdrop-filter: var(--glass-filter);
+  backdrop-filter: var(--glass-filter);
+  box-shadow: var(--shadow-glass);
 }
 
+/* Each tab is an icon and a label (07 section 3) */
 .bottom-bar a {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: var(--space-1);
   min-width: var(--tap-min);
-  min-height: var(--tap-min);
-  padding: var(--space-2);
-  border-radius: var(--radius);
+  min-height: var(--tab-min);
+  border-radius: var(--radius-tab);
+  font-size: var(--font-size-small);
   font-weight: 600;
   text-align: center;
   text-decoration: none;
-  color: var(--color-bg);
-  background: var(--color-primary);
+  color: var(--color-text);
 }
 
-/* Only the current tab is filled (UI-030) */
-.bottom-bar a:not([aria-current="page"]) {
-  color: var(--color-primary);
-  background: var(--color-bg);
+/* Only the current tab is filled black (UI-030) */
+.bottom-bar a[aria-current="page"] {
+  font-weight: 700;
+  color: var(--color-on-primary);
+  background: var(--gradient-primary);
+  box-shadow: var(--shadow-primary);
 }
 
 /* Components (07 section 3) */
+
+/* Main button: filled black, at most one per screen (UI-035). Serif label, full width. */
 .button {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
   width: 100%;
-  min-height: var(--tap-min);
-  padding: var(--space-3) var(--space-4);
-  border: medium solid var(--color-primary);
-  border-radius: var(--radius);
-  font: inherit;
-  font-weight: 600;
+  min-height: var(--button-min);
+  padding: var(--space-2) var(--space-5);
+  border: 0;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-button);
+  font-weight: 400;
+  line-height: 1.2;
   text-align: center;
   text-decoration: none;
-  color: var(--color-bg);
-  background: var(--color-primary);
+  color: var(--color-on-primary);
+  background: var(--gradient-primary);
+  box-shadow: var(--shadow-primary);
+  cursor: pointer;
 }
 
+/* Everything else is frosted white (UI-035) */
 .button-secondary {
-  color: var(--color-primary);
-  background: var(--color-bg);
+  color: var(--color-text);
+  background: var(--color-surface);
+  -webkit-backdrop-filter: var(--glass-filter);
+  backdrop-filter: var(--glass-filter);
+  box-shadow: var(--shadow-glass);
+}
+
+/* Buttons respond to taps */
+.button:active:not(:disabled) {
+  transform: scale(var(--press-scale));
 }
 
 /* display: block above would otherwise show a button marked hidden */
@@ -184,10 +279,57 @@ h1 {
   cursor: not-allowed;
 }
 
+/* Frosted glass card with a white top highlight and a soft two-layer shadow */
 .card {
   padding: var(--space-4);
   border-radius: var(--radius);
   background: var(--color-surface);
+  -webkit-backdrop-filter: var(--glass-filter);
+  backdrop-filter: var(--glass-filter);
+  box-shadow: var(--shadow-glass);
+}
+
+.card > :last-child {
+  margin-bottom: 0;
+}
+
+/* Points pill: gold is for points only, for example "+20" */
+.pill {
+  display: inline-block;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-family);
+  font-size: var(--font-size-small);
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--color-text);
+  background: var(--color-gold);
+}
+
+/* Box progress bar: always shows the numbers next to the bar (UI-051) */
+.progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--font-size-small);
+  font-weight: 600;
+}
+
+.progress-track {
+  height: var(--progress-height);
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: var(--color-track);
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--color-primary);
 }
 
 /* A column of buttons with space between them */
@@ -209,17 +351,49 @@ h1 {
   font-weight: 600;
 }
 
+/* The fields sit on a frosted card, with the main button below it (Mix Join and Log in mockups) */
+.form-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.form-card > label ~ label,
+.form-card > label ~ fieldset {
+  margin-top: var(--space-1);
+}
+
+.form-card > [role="alert"] {
+  margin: 0;
+}
+
 .form input:not([type="radio"]),
 .form select,
 .form textarea {
   width: 100%;
   min-height: var(--tap-min);
   padding: var(--space-2) var(--space-3);
-  border: thin solid var(--color-text-muted);
-  border-radius: var(--radius);
+  border: var(--border-field) solid var(--color-text-muted);
+  border-radius: var(--radius-field);
   font: inherit;
   color: var(--color-text);
-  background: var(--color-bg);
+  background: var(--color-surface-solid); /* text fields stay solid white (07 section 2) */
+}
+
+/* While typing, the field's own border turns black and thicker instead of a box around it.
+   Focus stays visible (UI-054). */
+.form input:not([type="radio"]):focus-visible,
+.form select:focus-visible,
+.form textarea:focus-visible {
+  outline: none;
+  border-color: var(--color-text);
+  box-shadow: 0 0 0 var(--border-field) var(--color-text);
+}
+
+/* PIN digits are big and spaced out so they are easy to count */
+.form input[type="password"] {
+  font-size: var(--font-size-pin);
+  letter-spacing: var(--pin-spacing);
 }
 
 /* Safari ignores min-height on a native select, so draw it ourselves (UI-003). */
@@ -243,10 +417,19 @@ h1 {
   color: var(--color-text-muted);
 }
 
+/* Yes and No side by side */
 .form fieldset {
-  margin: var(--space-2) 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--space-2);
+  margin: 0;
   padding: 0;
   border: 0;
+}
+
+.form legend {
+  padding: 0;
+  margin-bottom: var(--space-1);
 }
 
 .form .choice {
@@ -261,25 +444,49 @@ h1 {
   width: var(--space-5);
   height: var(--space-5);
   margin: 0;
+  accent-color: var(--color-primary);
 }
 
 .form .button {
-  margin-top: var(--space-4);
+  margin-top: var(--space-1);
 }
 
+/* Helper text sits on the background, and muted gray is for white or glass only (07 section 2), so it is black. */
 .hint {
   margin: 0 0 var(--space-2);
   font-size: var(--font-size-small);
+  color: var(--color-text);
+}
+
+/* On a white or glass card, muted gray is allowed (07 section 2) */
+.card .hint {
+  margin: 0;
   color: var(--color-text-muted);
 }
 
+/* Links and notes under a form, centered, with links big enough to tap (UI-003) */
+.form-note {
+  margin: 0;
+  font-size: var(--font-size-small);
+  text-align: center;
+}
+
+.form-note a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-min);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+/* Error message: bold red text on white, never color alone (UI-051) */
 [role="alert"] {
   margin: 0 0 var(--space-2);
-  padding: var(--space-3);
-  border-left: var(--space-1) solid var(--color-error);
-  border-radius: var(--radius);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-message);
+  font-weight: 600;
   color: var(--color-error);
-  background: var(--color-surface);
+  background: var(--color-surface-solid);
 }
 
 /* QR panel: white background, large QR, quiet zone kept (GAME-001) */
@@ -287,7 +494,7 @@ h1 {
   width: 100%;
   max-width: 60vh;
   margin: 0 auto;
-  background: var(--color-bg);
+  background: var(--color-surface-solid);
 }
 
 .qr-panel svg {
@@ -300,7 +507,7 @@ h1 {
   margin: var(--space-4) 0 0;
   font-size: var(--font-size-small);
   text-align: center;
-  color: var(--color-text-muted);
+  color: var(--color-text); /* on the background, like .hint */
 }
 
 /* Scanner frame: camera view with a square guide and one line of help text (07 section 3) */
@@ -333,7 +540,7 @@ h1 {
   margin: var(--space-2) 0 var(--space-4);
   font-size: var(--font-size-small);
   text-align: center;
-  color: var(--color-text-muted);
+  color: var(--color-text); /* on the background, like .hint */
 }
 
 /* UI-034: a big clear result */

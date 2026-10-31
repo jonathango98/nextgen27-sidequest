@@ -6,6 +6,7 @@ from app.config import load_config
 from app.main import create_app
 from app.routes.player import code
 from app.services import qr
+from tests.routes.player.test_skeleton import current_tab
 
 # Fake data (ENG-047), never a real key (SAFE-030).
 FAKE_KEY = "test-only-fake-signing-key"
@@ -92,5 +93,5 @@ def test_ui_037_my_code_has_scan_button(client):
 
 def test_ui_030_my_code_marks_its_tab(client):
     html = client.get("/code").text
-    assert '<a href="/code" aria-current="page">My Code</a>' in html
+    assert current_tab("/code", "My Code").search(html)
     assert html.count('aria-current="page"') == 1

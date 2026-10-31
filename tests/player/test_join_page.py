@@ -94,3 +94,69 @@ def test_arch_032_login_flow_at_min_width(
         <= cfg["ui"]["min_viewport_px"]
     )
     assert errors == []
+
+
+def test_ui_030_pages_before_login_show_the_name_without_score_or_tabs(
+    page: Page, live_server
+):
+    for path in ("/join", "/login"):
+        page.goto(f"{live_server}{path}")
+        expect(page.locator(".top-bar")).to_have_text("Side Quest")
+        expect(page.locator(".score")).to_have_count(0)
+        expect(page.get_by_role("navigation", name="Main")).to_have_count(0)
+
+
+def test_ui_035_join_fields_sit_on_a_card_with_the_button_below(
+    page: Page, live_server
+):
+    page.goto(f"{live_server}/join")
+    card = page.locator(".card")
+    expect(card.get_by_label("First name")).to_be_visible()
+    expect(card.get_by_role("button", name="Next")).to_have_count(0)
+    button = page.get_by_role("button", name="Next").bounding_box()
+    box = card.bounding_box()
+    assert button["y"] >= box["y"] + box["height"]
+
+
+def test_ui_003_links_under_the_login_form_are_big_enough(page: Page, live_server):
+    page.goto(f"{live_server}/login")
+    link = page.get_by_role("link", name="Join the game")
+    assert link.bounding_box()["height"] >= load_config()["ui"]["min_tap_target_px"]
+
+
+def test_ui_054_typing_in_a_field_shows_its_border_not_a_box(page: Page, live_server):
+    page.goto(f"{live_server}/join")
+    field = page.get_by_label("First name")
+    field.click()
+    style = field.evaluate(
+        "(el) => { const s = getComputedStyle(el);"
+        " return {outline: s.outlineStyle, ring: s.boxShadow, border: s.borderTopColor,"
+        " text: getComputedStyle(document.body).color}; }"
+    )
+    assert style["outline"] == "none"
+    assert style["ring"] != "none"  # focus is still visible
+    assert style["border"] == style["text"]
+
+
+def test_ui_032_back_from_pin_step_keeps_what_was_typed(
+    page: Page, live_server, test_db_path, browser_name
+):
+    _seed_churches(test_db_path)
+    pin = make_fake_pin(load_config()["auth"]["pin_digits"])
+    page.goto(f"{live_server}/join")
+    page.get_by_label("First name").fill("Test")
+    page.get_by_label("Last name").fill(_last_name(3, browser_name))
+    page.get_by_label("Church").select_option(label=CHURCHES[1])
+    page.get_by_label("No").check()
+    page.get_by_role("button", name="Next").click()
+
+    page.get_by_label("PIN", exact=True).fill(pin)
+    page.get_by_role("button", name="Back").click()
+
+    expect(page.get_by_label("Last name")).to_have_value(_last_name(3, browser_name))
+    expect(page.get_by_label("Church").locator("option:checked")).to_have_text(
+        CHURCHES[1]
+    )
+    expect(page.get_by_label("No")).to_be_checked()
+    page.get_by_role("button", name="Next").click()
+    expect(page.get_by_label("PIN", exact=True)).to_have_value("")  # never sent back

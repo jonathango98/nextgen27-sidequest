@@ -67,6 +67,10 @@ def join_page(request: Request, conn: Db):
 def join_submit(request: Request, conn: Db, form: Form):
     kept = {k: form.get(k, "") for k in FORM_FIELDS}  # never the PIN (SAFE-021)
 
+    # Back on the PIN step: show step 1 again with what was typed (UI-032). Nothing is saved.
+    if form.get("back"):
+        return _render(request, conn, "details", kept)
+
     try:
         details = signup.check_details(conn, form)
     except signup.SignupError as error:
