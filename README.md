@@ -48,7 +48,7 @@ What the app can do today, grouped by area, in plain words for anyone to read. W
 | 2026-10-29 | `game-state.core` | Game on, paused, or off | The game is always on, paused, or off. While it is paused or off, anything that earns points is refused with a friendly message, and the change applies to the very next tap. Admin buttons to switch it and the pause banner come next |
 | 2026-10-29 | `connections.scanner-camera` | Scanner | The Scan page opens the phone's back camera and reads QR codes, on iPhone Safari too. A Side Quest code shows "Got it!", any other code says it isn't a Side Quest code, and a blocked camera says so with a Try again button. Saving who met whom comes next |
 | 2026-10-29 | `points.ledger` | Points | Every point is given out in one place. It is refused while the game is paused or off, the same award is never paid twice even when two phones tap at once, and each award is noted in the audit log. A score is always the total of what was given. Quests start paying points as their pieces are built |
-| 2026-10-31 | `staff.accounts` | Staff accounts | The game has a safe place for usher and admin accounts. Each person gets their own, with a password that is stored so nobody can read it, and an account can be switched off. A setup command makes the very first admin from a password kept on the server; running it again changes nothing. Logging in as staff comes next |
+| 2026-10-31 | `staff.accounts` `staff.login` | Staff accounts | Ushers and admins each have their own account, with a password stored so nobody can read it. A setup command makes the very first admin. Staff log in at the staff login page and land on their console: ushers on the usher console, admins on the admin console, and admins can open the usher console too. An usher who opens an admin page is told it is for admins only, a staff page opened while logged out asks to log in, and a staff login ends after 24 hours. Log out works for staff too. The real usher and admin tools come next |
 
 ### In progress
 
@@ -56,7 +56,6 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| `staff.login` Ushers and admins can log in | `feat/staff-login` | #58 | 2026-10-29 | Claude Opus 5.5 / @OwenTjandra |
 | `look.base` Every player screen gets the chosen look, with shared buttons, cards and bars | `feat/look-base` | #62 | 2026-10-30 | Claude Opus 5.5 / @chrnso |
 
 ### Planned
