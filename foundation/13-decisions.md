@@ -2,8 +2,8 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.24.0
-- Last updated: 2026-10-30
+- Version: 1.25.0
+- Last updated: 2026-10-31
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -80,6 +80,7 @@ Sources, in order of precedence:
 | DEC-058 | 2026-10-29 | Log out lives in a settings menu on Home: a gear in the top bar opens a small menu whose only item is Log out, in red. Tapping it asks "Log out on this phone?" before signing out this phone only (UI-036, ARCH-034) | A lone Log out button on Home was easy to tap by mistake next to the main actions. The gear keeps it out of the way and leaves room for later settings. The menu uses `<details>`, so it opens without JavaScript (API-007) | Jonathan (2026-10-29, PR #46) |
 | DEC-059 | 2026-10-29 | The data retention date counts from the last day of the event: `event.end_date` + `data.retention_days_after_event`, in the venue timezone (PRD-022, SAFE-014, GAME-105). `event.end_date` joins `game-config.yaml` as PROPOSED at 2027-03-07. Wrapped closes on the same date (WRAP-004) | SAFE-014 said "365 days after the event" without saying which day, and no date was in config for the cleanup to count from. One config value keeps the cleanup and Wrapped on the same date, and a moved event is a one-line change | Owen (@OwenTjandra), PR #52 review. Needs Jonathan's approval |
 | DEC-060 | 2026-10-30 | Feature tree pieces become slices (ENG-111): a piece that changes the server also builds the screen that shows it. The 66 pieces nobody had started were merged into 32, so the tree goes from 77 pieces to 43. A new size L (three to four sessions) is the cap (ENG-106). `try_it` is now a list of numbered steps, and a person runs every step on the PR preview, on a real phone for player pages, before the PR leaves draft (ENG-112). The PR template, AI-034, ENG-020, `AGENTS.md`, `CONTRIBUTING.md`, and `/pick-task` say the same. Pieces already Working or In progress keep their IDs | Backend pieces landed with nothing to tap: `game-state.core` works, but nobody could pause the game until a separate admin piece was built. Small pieces also meant many PRs for one screen. Bigger slices that end on a screen let volunteers test what they built by hand | Jonathan (2026-10-30) |
+| DEC-061 | 2026-10-31 | A logged-out visitor who opens a player page goes straight to `/login`, with no "Please log in first." error. A page load gets a 303 redirect. An HTMX request gets 204 with `HX-Redirect: /login`, so the whole page moves instead of the login form landing inside a partial. After login the player lands on Home, not the page they first asked for. Changes the `LOGIN_REQUIRED` row in 06 section 3 (API-005). Staff pages follow the same pattern once staff login is built | The error left players stuck with no link forward. Landing on Home skips a `next` parameter, which would need open-redirect checks | Jonathan (2026-10-31, PR #65) |
 
 ## 2. Resolved conflicts
 

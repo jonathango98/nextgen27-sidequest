@@ -97,15 +97,15 @@ def test_arch_034_after_logout_player_pages_need_login(phone):
     client = phone()
     assert client.get("/").status_code == 200
     _logout(client)
-    response = client.get("/")
-    assert response.status_code == 401
-    assert 'data-error-code="LOGIN_REQUIRED"' in response.text
+    response = client.get("/", follow_redirects=False)
+    assert response.status_code == 303
+    assert response.headers["location"] == "/login"
 
 
 def test_arch_034_logout_keeps_other_phone_logged_in(phone):
     first, second = phone(), phone()
     _logout(first)
-    assert first.get("/code").status_code == 401
+    assert first.get("/code", follow_redirects=False).status_code == 303
     assert second.get("/code").status_code == 200
 
 

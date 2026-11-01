@@ -272,7 +272,7 @@ def test_arch_034_logged_in_player_skips_join(client, details, fake_pin):
 def test_arch_034_signed_cookie_for_unknown_player_is_not_logged_in(client):
     value = f"nobody00000x.{session.sign('session', 'nobody00000x')}"
     client.cookies.set(session.COOKIE, value)
-    assert client.get("/code").status_code == 401
+    assert client.get("/code", follow_redirects=False).status_code == 303
 
 
 def test_ui_032_back_from_pin_step_keeps_the_details(

@@ -36,10 +36,17 @@ def client(monkeypatch, window_start):
 
 
 @pytest.mark.parametrize("path", PATHS)
-def test_api_005_my_code_requires_login(path):
-    response = TestClient(create_app()).get(path)
-    assert response.status_code == 401
-    assert 'data-error-code="LOGIN_REQUIRED"' in response.text
+def test_dec_061_my_code_logged_out_goes_to_login(path):
+    response = TestClient(create_app()).get(path, follow_redirects=False)
+    assert response.status_code == 303
+    assert response.headers["location"] == "/login"
+
+
+@pytest.mark.parametrize("path", PATHS)
+def test_dec_061_my_code_logged_out_htmx_goes_to_login(path):
+    response = TestClient(create_app()).get(path, headers={"HX-Request": "true"})
+    assert response.status_code == 204
+    assert response.headers["hx-redirect"] == "/login"
 
 
 @pytest.mark.parametrize("path", PATHS)
