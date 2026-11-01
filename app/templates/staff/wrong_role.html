@@ -1,0 +1,12 @@
+{% extends "player/plain.html" %}
+
+{% block title %}Not allowed · Side Quest{% endblock %}
+
+{% block content %}
+  {# ARCH-035: 403 WRONG_ROLE. Logged in, but this page is for another role. #}
+  <div class="stack">
+    <h1>Not allowed</h1>
+    <div class="card">{% include "partials/error.html" %}</div>
+    <a class="button button-secondary" href="/usher">Back to the usher console</a>
+  </div>
+{% endblock %}
