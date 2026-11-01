@@ -4,7 +4,7 @@ import os
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
-from fastapi.responses import PlainTextResponse
+from fastapi.responses import PlainTextResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
 
 from app.auth.csrf import CsrfFailed
@@ -65,13 +65,11 @@ def create_app() -> FastAPI:
 
     @app.exception_handler(LoginRequired)
     def login_required(request: Request, exc: LoginRequired):
-        # API-005: error partial with the error code from 06-api-and-screens.md section 3.
-        return templates.TemplateResponse(
-            request,
-            "partials/error.html",
-            {"error_code": "LOGIN_REQUIRED", "message": "Please log in first."},
-            status_code=401,
-        )
+        # DEC-061: straight to the login page, no error. HTMX would swap a 303's
+        # login page into the target, so HTMX gets HX-Redirect instead (API-002).
+        if request.headers.get("HX-Request"):
+            return Response(status_code=204, headers={"HX-Redirect": "/login"})
+        return RedirectResponse("/login", status_code=303)
 
     @app.exception_handler(BadForm)
     @app.exception_handler(CsrfFailed)

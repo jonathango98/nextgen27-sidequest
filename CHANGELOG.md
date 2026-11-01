@@ -22,11 +22,11 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-10-31 · fix/login-redirect · Claude Opus 5.5 / @jonathango98
 
-- What: Logged-out players who open any player page go straight to `/login` instead of seeing "Please log in first."
+- What: Logged-out players who open any player page go straight to `/login` instead of seeing "Please log in first." The `LoginRequired` handler in `app/main.py` sends a 303 to `/login` on a page load, and 204 with `HX-Redirect: /login` on an HTMX request, so the My Code QR refresh moves the whole page instead of loading the login form inside the QR box. After login the player lands on Home. Protected changes: the `LOGIN_REQUIRED` row in `06-api-and-screens.md` (1.6.0) and DEC-061 in `13-decisions.md` (1.25.0). Staff pages follow once staff login (#58) merges.
 - Why: The bare error left players with no way forward. Jonathan asked for a direct redirect.
-- Rule IDs: API-005, ARCH-034, ENG-087
-- Status: Started
-- PR: draft
+- Rule IDs: DEC-061, API-002, API-005, ARCH-034, ENG-087
+- Status: Done
+- PR: #65
 
 ## 2026-10-31 · feat/staff-accounts · Claude Opus 5.5 / @OwenTjandra
 

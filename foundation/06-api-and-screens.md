@@ -2,8 +2,8 @@
 
 - Status: PROPOSED (developers confirm at kickoff)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.5.0
-- Last updated: 2026-10-28
+- Version: 1.6.0
+- Last updated: 2026-10-31
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -109,7 +109,7 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 | 400 | `BAD_INPUT` | A form field is missing or wrong | "Please pick your church." |
 | 400 | `NOT_A_CODE` | The scanned payload is not `SQ1` | "This isn't a Side Quest code." |
 | 400 | `TOO_SHORT` | A takeaway has fewer than 15 words | "Add 3 more words to save this." |
-| 401 | `LOGIN_REQUIRED` | Not logged in | "Please log in first." |
+| 303 | `LOGIN_REQUIRED` | Not logged in | No message. A page load is redirected to `/login`, and an HTMX request gets 204 with `HX-Redirect: /login` (DEC-061) |
 | 403 | `WRONG_ROLE` | Logged in, but not allowed | "This page is for game staff." |
 | 403 | `PIN_LOCKED` | Too many wrong PINs | "This account is locked. Please find an admin at the game booth." |
 | 404 | `NOT_FOUND` | No such record | "We couldn't find that." |
