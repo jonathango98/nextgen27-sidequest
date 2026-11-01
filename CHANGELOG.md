@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-10-31 · docs/bloom-review-copy · Claude Opus 5.5 / @jonathango98
+
+- What: Foundation catches up with the Mix design review (Design canvas v91). Only Home shows the score. Home gets "Hi, <first name>", "My journal" and "All journals" under Write and Read, and Claim box in place of Redeem box. The Journal form uses "Submit +20" with a Cancel button, and its page title labels the text box. Back links on the journal list, shared takeaways, and Scan. "Please select your church." Protected changes: UI-030, UI-036, new UI-039, UI-053, UI-057 in `07-design-system.md` (1.6.0), the `BAD_INPUT` row in `06-api-and-screens.md` (1.6.1), DEC-062 in `13-decisions.md` (1.26.0). Docs only. The player templates follow in a separate PR.
+- Why: Design review comments on the Mix screens, answered by Jonathan.
+- Rule IDs: DEC-062, UI-030, UI-036, UI-039, UI-053, UI-057, ENG-087
+- Status: Done
+- PR: draft
+
 ## 2026-10-31 · fix/login-redirect · Claude Opus 5.5 / @jonathango98
 
 - What: Logged-out players who open any player page go straight to `/login` instead of seeing "Please log in first." The `LoginRequired` handler in `app/main.py` sends a 303 to `/login` on a page load, and 204 with `HX-Redirect: /login` on an HTMX request, so the My Code QR refresh moves the whole page instead of loading the login form inside the QR box. After login the player lands on Home. Protected changes: the `LOGIN_REQUIRED` row in `06-api-and-screens.md` (1.6.0) and DEC-061 in `13-decisions.md` (1.25.0). Staff pages follow once staff login (#58) merges.
