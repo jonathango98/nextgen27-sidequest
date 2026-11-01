@@ -5,7 +5,7 @@
 
 Every planned piece of work and what it needs first (ENG-105 to ENG-108), grouped by the week it is due (PRD-054). Pieces flow left to right in time: finishing one unlocks the pieces it points to. Run `/pick-task` to claim one.
 
-**Working** 13 · **In progress** 1 · **Ready** 7 · **Waiting** 27 · **Needs decision** 0
+**Working** 13 · **In progress** 2 · **Ready** 6 · **Waiting** 27 · **Needs decision** 0
 
 Colors: green Working, blue In progress, gold Ready, gray Waiting, red dashed Needs decision.
 
@@ -169,18 +169,13 @@ flowchart LR
   classDef waiting fill:#f1f0eb,stroke:#c3c0b6,color:#545a66
   classDef decision fill:#fdeeec,stroke:#b42318,stroke-dasharray:4 3,color:#14151a
   class app_foundation,auth_join_login,code_my_code,connections_scanner_camera,connections_table,game_state_core,infra_hosting,points_audit_log,points_ledger,ready_logout,ready_retention,screens_skeleton,staff_accounts working
-  class look_base in_progress
-  class connections_meet,home_pages,points_score,ready_backups,ready_load_test,ready_rate_limits,staff_login ready
+  class look_base,staff_login in_progress
+  class connections_meet,home_pages,points_score,ready_backups,ready_load_test,ready_rate_limits ready
   class admin_audit_view,admin_award_revoke,admin_players,admin_setup,blind_box_close_redemption,blind_box_handout,checkin_hall,checkin_sessions,checkin_window,connections_answers,connections_verse_picker,explore_booths,explore_items,game_state_auto_pause,game_state_controls,journal_notes,journal_share_review,leaderboards_in_app,leaderboards_screen,look_screens,recap_screen,screen_main,usher_console,wrapped_cards,wrapped_collection,wrapped_save_image,wrapped_stat_cards waiting
 ```
 
 ## Ready now
 
-- `staff.login`: A login page for ushers and admins. Each staff page checks who you are and turns you away if your job is the wrong one. (M, hard, backend, due fri nov 20)
-  - Try it:
-    1. Open the staff login page on a local run and log in as the first admin, you should land on an admin page.
-    2. Then log in as Test Usher and open an admin page, you should be told you are not allowed.
-    3. Also try opening a staff page while logged out, you should be sent to log in.
 - `points.score`: When a new player signs up, they get the points for joining the game, one time only. The bar at the top of every player page shows the player's real score. (M, medium, player-app, due fri nov 20)
   - Try it:
     1. On the PR preview, join as Test Player 1 on a phone. The score bar should show the points for joining.
@@ -220,6 +215,7 @@ flowchart LR
 
 ## In progress
 
+- `staff.login`: A login page for ushers and admins. Each staff page checks who you are and turns you away if your job is the wrong one.
 - `look.base`: The frame around every player screen in the chosen design, with the score bar on top, the buttons at the bottom, and a glowing, grainy background. Also building blocks like buttons, cards and progress bars, ready for every screen to reuse.
 
 ## Needs a decision
