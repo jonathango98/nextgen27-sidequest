@@ -21,7 +21,7 @@ The app is built by a small volunteer team. It is not built yet. This repo curre
 
 ## Project status
 
-Status last updated: 2026-10-30 by Claude Opus 5.5 / @chrnso
+Status last updated: 2026-10-31 by Claude Opus 5.5 / @OwenTjandra
 
 **Before you start anything**, check that nobody else is on it. A branch only shows up here after it merges, so also run:
 
@@ -48,6 +48,7 @@ What the app can do today, grouped by area, in plain words for anyone to read. W
 | 2026-10-29 | `game-state.core` | Game on, paused, or off | The game is always on, paused, or off. While it is paused or off, anything that earns points is refused with a friendly message, and the change applies to the very next tap. Admin buttons to switch it and the pause banner come next |
 | 2026-10-29 | `connections.scanner-camera` | Scanner | The Scan page opens the phone's back camera and reads QR codes, on iPhone Safari too. A Side Quest code shows "Got it!", any other code says it isn't a Side Quest code, and a blocked camera says so with a Try again button. Saving who met whom comes next |
 | 2026-10-29 | `points.ledger` | Points | Every point is given out in one place. It is refused while the game is paused or off, the same award is never paid twice even when two phones tap at once, and each award is noted in the audit log. A score is always the total of what was given. Quests start paying points as their pieces are built |
+| 2026-10-31 | `staff.accounts` | Staff accounts | The game has a safe place for usher and admin accounts. Each person gets their own, with a password that is stored so nobody can read it, and an account can be switched off. A setup command makes the very first admin from a password kept on the server; running it again changes nothing. Logging in as staff comes next |
 
 ### In progress
 
