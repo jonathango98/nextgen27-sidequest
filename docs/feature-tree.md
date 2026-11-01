@@ -5,7 +5,7 @@
 
 Every planned piece of work and what it needs first (ENG-105 to ENG-108), grouped by the week it is due (PRD-054). Pieces flow left to right in time: finishing one unlocks the pieces it points to. Run `/pick-task` to claim one.
 
-**Working** 13 · **In progress** 1 · **Ready** 7 · **Waiting** 27 · **Needs decision** 0
+**Working** 14 · **In progress** 0 · **Ready** 8 · **Waiting** 26 · **Needs decision** 0
 
 Colors: green Working, blue In progress, gold Ready, gray Waiting, red dashed Needs decision.
 
@@ -168,10 +168,9 @@ flowchart LR
   classDef ready fill:#fff4d6,stroke:#a87400,stroke-width:3px,color:#14151a
   classDef waiting fill:#f1f0eb,stroke:#c3c0b6,color:#545a66
   classDef decision fill:#fdeeec,stroke:#b42318,stroke-dasharray:4 3,color:#14151a
-  class app_foundation,auth_join_login,code_my_code,connections_scanner_camera,connections_table,game_state_core,infra_hosting,points_audit_log,points_ledger,ready_logout,ready_retention,screens_skeleton,staff_accounts working
-  class look_base in_progress
-  class connections_meet,home_pages,points_score,ready_backups,ready_load_test,ready_rate_limits,staff_login ready
-  class admin_audit_view,admin_award_revoke,admin_players,admin_setup,blind_box_close_redemption,blind_box_handout,checkin_hall,checkin_sessions,checkin_window,connections_answers,connections_verse_picker,explore_booths,explore_items,game_state_auto_pause,game_state_controls,journal_notes,journal_share_review,leaderboards_in_app,leaderboards_screen,look_screens,recap_screen,screen_main,usher_console,wrapped_cards,wrapped_collection,wrapped_save_image,wrapped_stat_cards waiting
+  class app_foundation,auth_join_login,code_my_code,connections_scanner_camera,connections_table,game_state_core,infra_hosting,look_base,points_audit_log,points_ledger,ready_logout,ready_retention,screens_skeleton,staff_accounts working
+  class connections_meet,home_pages,look_screens,points_score,ready_backups,ready_load_test,ready_rate_limits,staff_login ready
+  class admin_audit_view,admin_award_revoke,admin_players,admin_setup,blind_box_close_redemption,blind_box_handout,checkin_hall,checkin_sessions,checkin_window,connections_answers,connections_verse_picker,explore_booths,explore_items,game_state_auto_pause,game_state_controls,journal_notes,journal_share_review,leaderboards_in_app,leaderboards_screen,recap_screen,screen_main,usher_console,wrapped_cards,wrapped_collection,wrapped_save_image,wrapped_stat_cards waiting
 ```
 
 ## Ready now
@@ -187,6 +186,12 @@ flowchart LR
     2. Open Home, My Code and Quests. The score should be the same on every page.
     3. Log out and log in again. The score should not go up a second time.
     4. Refresh a few times. The score should not change by itself.
+- `look.screens`: The Home, My Code and shared notes pages made to look like the chosen design. Home and the notes page use pretend numbers and fake note cards for now. (L, easy, design, due fri nov 27)
+  - Try it:
+    1. Open Home as Test Player 1 on a phone, or a browser 360px wide. It should match the mockup, with nothing spilling off the side.
+    2. Open My Code. The QR panel and the black Scan button should match the mockup and fit on screen, and Scan should open the scanner.
+    3. Open the summary page. The fake cards should match the mockup, with text wrapping and nothing cut off.
+    4. Check the browser console on each page. There should be no red errors.
 - `connections.meet`: When one player scans another player's code, the game saves that they met and both phones show the same fun question to talk about, like a favorite food. The scanned player's My Code page shows a note without them tapping anything. It says no if you scan yourself, scan an old code, or scan someone you already met. (L, hard, player-app, due fri dec 4)
   - Try it:
     1. On the PR preview, join as Test Player 1 and Test Player 2 on two phones.
@@ -220,7 +225,7 @@ flowchart LR
 
 ## In progress
 
-- `look.base`: The frame around every player screen in the chosen design, with the score bar on top, the buttons at the bottom, and a glowing, grainy background. Also building blocks like buttons, cards and progress bars, ready for every screen to reuse.
+- None
 
 ## Needs a decision
 
