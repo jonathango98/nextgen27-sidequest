@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Design review comments on the Mix screens, answered by Jonathan.
 - Rule IDs: DEC-062, UI-030, UI-036, UI-039, UI-053, UI-057, ENG-087
 - Status: Done
-- PR: draft
+- PR: #66
 
 ## 2026-10-31 · fix/login-redirect · Claude Opus 5.5 / @jonathango98
 
