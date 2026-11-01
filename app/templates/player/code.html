@@ -3,10 +3,19 @@
 
 {% block title %}My Code · Side Quest{% endblock %}
 
+{% block content_class %} code-page{% endblock %}
+
 {% block content %}
   <h1>My Code</h1>
-  {% include "player/partials/code_qr.html" %}
-  <p class="qr-tip">Turn your screen brightness up so it scans fast.</p>
-  {# UI-037: the Scan button sits under the QR panel. #}
-  <a class="button" href="/scan">Scan</a>
+  {# UI-037: a white card with the QR, its timer, and the caption. The brightness tip stays (07 section 3). #}
+  <section class="qr-card" aria-label="Your code">
+    {% include "player/partials/code_qr.html" %}
+    <p class="qr-caption">Show a friend</p>
+    <p class="qr-tip">Turn your screen brightness up so it scans fast.</p>
+  </section>
+  {# UI-037: the black Scan button sits under the QR panel, in the lower half (UI-003). #}
+  <a class="button button-scan" href="/scan">
+    <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2M4 12h16"></path></svg>
+    Scan
+  </a>
 {% endblock %}

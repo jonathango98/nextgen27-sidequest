@@ -2,4 +2,9 @@
    DEC-031: if a refresh fails (no connection, server error), try again after retry_seconds. #}
 <div class="qr-panel" hx-get="/code/qr" hx-trigger="load delay:{{ refresh_seconds }}s, htmx:afterRequest[!detail.successful] delay:{{ retry_seconds }}s" hx-swap="outerHTML">
   {{ qr_svg }}
+  {# UI-037: drains until this code changes. It is inside the panel, so each new code restarts it.
+     A negative delay starts it partway when the page opens mid-window. Still with Reduce Motion (UI-055). #}
+  <div class="qr-timer" role="progressbar" aria-label="Time until your code changes" aria-valuemin="0" aria-valuemax="{{ rotation_seconds }}" aria-valuenow="{{ refresh_seconds }}">
+    <div class="qr-timer-fill" style="animation-duration: {{ rotation_seconds }}s; animation-delay: -{{ rotation_seconds - refresh_seconds }}s"></div>
+  </div>
 </div>

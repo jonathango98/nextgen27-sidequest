@@ -78,13 +78,13 @@ a {
   text-decoration: none;
 }
 
-/* Viewfinder corners frame the top of the pages before login, as in the Mix Join and Log in mockups (UI-009) */
-.plain .top-bar {
+/* Viewfinder corners frame the top of Home and the pages before login (UI-009, Mix mockups) */
+.top-bar.viewfinder {
   position: relative;
 }
 
-.plain .top-bar::before,
-.plain .top-bar::after {
+.top-bar.viewfinder::before,
+.top-bar.viewfinder::after {
   content: "";
   position: absolute;
   top: var(--space-3);
@@ -93,12 +93,12 @@ a {
   border-top: var(--viewfinder-line) solid var(--color-text);
 }
 
-.plain .top-bar::before {
+.top-bar.viewfinder::before {
   left: var(--space-3);
   border-left: var(--viewfinder-line) solid var(--color-text);
 }
 
-.plain .top-bar::after {
+.top-bar.viewfinder::after {
   right: var(--space-3);
   border-right: var(--viewfinder-line) solid var(--color-text);
 }
@@ -116,6 +116,10 @@ a {
   height: var(--tap-min);
   border-radius: 50%;
   color: var(--color-text);
+  background: var(--color-surface-faint);
+  -webkit-backdrop-filter: var(--glass-filter);
+  backdrop-filter: var(--glass-filter);
+  box-shadow: var(--shadow-glass);
   cursor: pointer;
   list-style: none;
 }
@@ -273,9 +277,13 @@ h2 {
   display: none;
 }
 
-/* Switched off until the feature behind it is built */
+/* Switched off: frosted with gray text, never black, as in the Mix Journal mockup */
 .button:disabled {
-  opacity: 0.5;
+  color: var(--color-text-muted);
+  background: var(--color-surface);
+  -webkit-backdrop-filter: var(--glass-filter);
+  backdrop-filter: var(--glass-filter);
+  box-shadow: var(--shadow-glass);
   cursor: not-allowed;
 }
 
@@ -337,6 +345,186 @@ h2 {
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
+}
+
+/* Home (UI-036): big score at the top, the actions in the lower half (UI-003) */
+.content.home {
+  display: flex;
+  flex-direction: column;
+}
+
+.home-score {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-5) var(--space-2) var(--space-4);
+}
+
+.score-hero {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
+.score-hero-number {
+  font-size: var(--font-size-score-hero);
+  line-height: 0.9;
+  letter-spacing: var(--score-hero-tracking);
+}
+
+.score-hero-label {
+  font-size: var(--font-size-points-label);
+}
+
+.home-progress {
+  max-width: var(--progress-max);
+}
+
+.home-actions {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+/* Big Home buttons: a title (and a small line) on the left, a pill or arrow on the right */
+.button-tile {
+  justify-content: space-between;
+  min-height: var(--tile-min);
+  padding: var(--space-3) var(--space-4) var(--space-3) var(--space-5);
+  border-radius: var(--radius);
+  font-size: var(--font-size-tile);
+  text-align: left;
+}
+
+.button-tile:not(.button-secondary) {
+  min-height: var(--tile-main-min);
+  font-size: var(--font-size-tile-main);
+}
+
+.tile-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+.tile-row .button-tile {
+  padding-left: var(--space-4);
+  padding-right: var(--space-3);
+}
+
+.tile-text {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Muted gray is fine here: the tile is glass (07 section 2) */
+.tile-sub {
+  font-family: var(--font-family);
+  font-size: var(--font-size-small);
+  color: var(--color-text-muted);
+}
+
+/* Shared takeaways (UI-038): cards grouped by session */
+.takeaway-session {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+/* A small label above each group, not a big title (Mix Takeaways mockup) */
+.session-title {
+  margin: 0;
+  padding: 0 var(--space-1);
+  font-family: var(--font-family);
+  font-size: var(--font-size-small);
+  font-weight: 700;
+}
+
+.takeaway-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.takeaway-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.takeaway-text {
+  margin: 0;
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-takeaway);
+  line-height: 1.4;
+  overflow-wrap: anywhere; /* long words wrap instead of spilling off the side */
+}
+
+.takeaway-author {
+  margin: 0;
+  font-size: var(--font-size-small);
+  font-weight: 600;
+}
+
+/* A page title with a small line under it, like the session name on Journal */
+.page-heading {
+  margin: 0 0 var(--space-3);
+  padding: 0 var(--space-1);
+}
+
+.page-heading h1 {
+  margin: 0;
+}
+
+.page-sub {
+  margin: 0;
+}
+
+/* Journal form (GAME-030, GAME-031): a card with the takeaway and the share choices, then Save */
+.form.journal-form > fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.form .form-title {
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-form-title);
+  font-weight: 400;
+}
+
+.journal-form textarea {
+  min-height: var(--textarea-min);
+  resize: none;
+}
+
+.word-count {
+  margin: 0;
+  font-size: var(--font-size-small);
+  font-weight: 600;
+}
+
+/* Share choices stacked, with a thin line between them */
+.form fieldset.choice-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.choice-list .choice + .choice {
+  border-top: thin solid var(--color-hairline);
+}
+
+.choice-list .hint {
+  margin-top: var(--space-2);
 }
 
 /* Forms: Join and Log in (UI-003 big targets, UI-053 visible labels, UI-051 errors in text) */
@@ -417,14 +605,22 @@ h2 {
   color: var(--color-text-muted);
 }
 
-/* Yes and No side by side */
+/* A form section stacks its fields, like the form itself */
 .form fieldset {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  column-gap: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
   margin: 0;
   padding: 0;
   border: 0;
+}
+
+/* Yes and No side by side, only for a question on a form card (Join) */
+.form-card > fieldset {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--space-2);
 }
 
 .form legend {
@@ -487,6 +683,70 @@ h2 {
   font-weight: 600;
   color: var(--color-error);
   background: var(--color-surface-solid);
+}
+
+/* My Code (UI-037): the white QR card, then the Scan button in the lower half (UI-003) */
+.content.code-page {
+  display: flex;
+  flex-direction: column;
+}
+
+.qr-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius);
+  background: var(--color-surface-solid);
+  box-shadow: var(--shadow-glass);
+}
+
+.qr-caption {
+  margin: 0;
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-caption);
+}
+
+/* The tip sits on the white card, where muted gray is allowed (07 section 2) */
+.qr-card .qr-tip {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+.button-scan {
+  margin-top: auto;
+}
+
+/* Timer bar: full when a code appears, empty when it changes */
+.qr-timer {
+  width: 100%;
+  height: var(--qr-timer-height);
+  margin-top: var(--space-2);
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: var(--color-track);
+}
+
+.qr-timer-fill {
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: var(--color-primary);
+  transform-origin: left center;
+  animation-name: qr-drain;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+}
+
+@keyframes qr-drain {
+  from {
+    transform: scaleX(1);
+  }
+
+  to {
+    transform: scaleX(0);
+  }
 }
 
 /* QR panel: white background, large QR, quiet zone kept (GAME-001) */

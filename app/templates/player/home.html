@@ -1,5 +1,7 @@
 {% extends "player/base.html" %}
 {% set tab = "home" %}
+{# UI-009: thin black viewfinder corners frame the top of Home. #}
+{% set viewfinder = true %}
 
 {% block title %}Home · Side Quest{% endblock %}
 
@@ -22,14 +24,38 @@
   </details>
 {% endblock %}
 
+{% block content_class %} home{% endblock %}
+
 {% block content %}
-  {# UI-036: big score, blind box progress, then the actions in the lower half. #}
-  <h1>{{ score }} points</h1>
-  <p class="hint">Placeholder: next box progress (GAME-070).</p>
-  <nav class="stack" aria-label="Things to do">
-    <a class="button" href="/scan">Meet friends</a>
-    <a class="button button-secondary" href="/journal/new">Write</a>
-    <a class="button button-secondary" href="/summary">Read</a>
-    <a class="button button-secondary" href="/box">Redeem box</a>
+  {# UI-036: big score with "points" under it, then blind box progress with its numbers (UI-051). #}
+  <section class="home-score">
+    <h1 class="score-hero"><span class="score-hero-number">{{ score }}</span> <span class="score-hero-label">points</span></h1>
+    <div class="progress home-progress">
+      <span class="progress-label"><span>Next box</span><span>{{ box_progress }} / {{ box_milestone }}</span></span>
+      <div class="progress-track" role="progressbar" aria-label="Points toward your next blind box" aria-valuemin="0" aria-valuemax="{{ box_milestone }}" aria-valuenow="{{ box_progress }}">
+        <div class="progress-fill" style="width: {{ box_progress * 100 // box_milestone }}%"></div>
+      </div>
+    </div>
+  </section>
+
+  {# UI-036, UI-003: the actions sit in the lower half. One black main button (UI-035). #}
+  <nav class="home-actions" aria-label="Things to do">
+    <a class="button button-tile" href="/scan">
+      <span class="tile-title">Meet friends</span>
+      <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+    </a>
+    <div class="tile-row">
+      <a class="button button-secondary button-tile" href="/journal/new">
+        <span class="tile-text"><span class="tile-title">Write</span> <span class="tile-sub">Journal</span></span>
+        <span class="pill">+{{ journal_points }}</span>
+      </a>
+      <a class="button button-secondary button-tile" href="/summary">
+        <span class="tile-text"><span class="tile-title">Read</span> <span class="tile-sub">Takeaways</span></span>
+      </a>
+    </div>
+    <a class="button button-secondary button-tile" href="/box">
+      <span class="tile-title">Redeem box</span>
+      <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg>
+    </a>
   </nav>
 {% endblock %}
