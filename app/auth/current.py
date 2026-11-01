@@ -30,7 +30,7 @@ def get_current_player(request: Request) -> CurrentPlayer:
         ).fetchone()
         if row is None:
             raise LoginRequired
-        # DATA-030: score is the PointLedger sum, read fresh on every page.
+        # DATA-030: score is the PointLedger sum, read fresh on every request.
         return CurrentPlayer(
             public_id=row["public_id"], score=points.score(conn, row["id"])
         )

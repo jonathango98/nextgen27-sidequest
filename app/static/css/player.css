@@ -57,7 +57,7 @@ a {
   outline-offset: var(--space-1);
 }
 
-/* Top bar: home link and score, straight on the background as in the Mix mockup */
+/* Top bar: home link, straight on the background as in the Mix mockup */
 .top-bar {
   display: flex;
   align-items: center;
@@ -154,19 +154,6 @@ a {
 
 .menu-item-danger {
   color: var(--color-error);
-}
-
-/* Titles, numbers, and buttons use the system serif (UI-008) */
-.score {
-  font-family: var(--font-family-display);
-  font-size: var(--font-size-score);
-  font-weight: 400;
-  line-height: 1;
-}
-
-/* Muted gray is for white or glass only (07 section 2), so this label stays black on the background. */
-.score-label {
-  font-size: var(--font-size-small);
 }
 
 /* Content */

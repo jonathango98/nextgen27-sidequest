@@ -415,12 +415,6 @@ def test_arch_013_pin_hashed_before_taking_the_write_lock(
     assert seen == [False]
 
 
-@pytest.mark.parametrize("path", ["/code", "/quests", "/box", "/journal"])
-def test_ui_030_top_bar_shows_real_score(client, details, fake_pin, join_points, path):
-    _join(client, details, fake_pin)
-    assert f'<span class="score">{join_points}</span>' in client.get(path).text
-
-
 def test_data_030_home_shows_real_score(client, details, fake_pin, join_points):
     _join(client, details, fake_pin)
     assert f"<h1>{join_points} points</h1>" in client.get("/").text

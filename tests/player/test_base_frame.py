@@ -7,17 +7,18 @@ BUTTONS = ("Home", "My Code", "Quests")
 
 
 def test_arch_001_template_autoescapes_html():
-    html = templates.get_template("player/base.html").render(score="<script>x</script>")
+    html = templates.get_template("player/home.html").render(score="<script>x</script>")
     assert "<script>x</script>" not in html
     assert "&lt;script&gt;" in html
 
 
-def test_ui_030_frame_shows_score_and_three_buttons(
-    page: Page, live_server, fake_score
-):
+def test_ui_030_frame_shows_just_the_name_and_three_buttons(page: Page, live_server):
     page.goto(f"{live_server}/_test/frame")
-    expect(page.locator(".score")).to_have_text(str(fake_score))
-    expect(page.get_by_text("points")).to_be_visible()
+    top_bar = page.locator(".top-bar")
+    expect(top_bar).to_have_text("Side Quest")
+    expect(top_bar.get_by_role("link", name="Side Quest")).to_have_attribute(
+        "href", "/"
+    )
     nav = page.get_by_role("navigation", name="Main")
     for name in BUTTONS:
         expect(nav.get_by_role("link", name=name)).to_be_visible()
@@ -112,12 +113,11 @@ def test_ui_030_only_current_tab_is_filled(page: Page, live_server):
         assert ("gradient" in image) == (name == "Quests"), name
 
 
-def test_ui_008_titles_and_score_use_the_serif(page: Page, live_server):
+def test_ui_008_titles_and_name_use_the_serif(page: Page, live_server):
     page.goto(f"{live_server}/quests")
     serif = _token(page, "--font-family-display").split(",")[0]
     for element in (
         page.locator("h1"),
-        page.locator(".score"),
         page.locator(".top-bar").get_by_role("link", name="Side Quest"),
     ):
         font = element.evaluate("(el) => getComputedStyle(el).fontFamily")
