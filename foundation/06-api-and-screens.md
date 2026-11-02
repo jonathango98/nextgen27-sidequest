@@ -2,7 +2,7 @@
 
 - Status: PROPOSED (developers confirm at kickoff)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.8.0
+- Version: 1.9.0
 - Last updated: 2026-11-02
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -152,7 +152,7 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 | Journal | Player | `/journal`, `/journal/new` | Visibility choice and the note about anonymous posts | GAME-031, SAFE-009, UI-031 |
 | Summary page | Player | `/summary` | Shared takeaways by session | SAFE-017 |
 | Open Box | Player | `/box` | Earned, claimed, claimable, "Go to the game booth when it's open" | GAME-073 |
-| Paused state | Player | Banner on every page | Friendly, short, no shaming | UI-033 |
+| Paused state | Player | Banner on every page. Every page except Home shows a short paused screen instead, and `/code/qr` returns 423 `PAUSED`, so an open My Code page hides its code (GAME-102) | Friendly, short, no shaming | UI-033, DEC-068 |
 | Wrapped cards | Player | `/wrapped` | Six swipeable cards, Save as image | WRAP-010 |
 | Staff log in | Usher, admin | `/staff/login` | Username, password | ARCH-036, DEC-063 |
 | Usher console | Usher | `/usher` | Big buttons for each scan type | GAME-112 |
