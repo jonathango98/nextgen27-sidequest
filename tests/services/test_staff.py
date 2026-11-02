@@ -1,14 +1,18 @@
 import sqlite3
 
 import pytest
+from fastapi.testclient import TestClient
 
 from app.auth.password import verify_password
 from app.db import connect, migrate
+from app.main import create_app
 from app.services.staff import (
     FIRST_ADMIN_PASSWORD_ENV,
+    PREVIEW_ACCOUNTS,
     StaffAccountError,
     create_account,
     main,
+    seed_preview,
 )
 
 # Fake data only (ENG-047).
@@ -126,3 +130,60 @@ def test_arch_036_missing_password_env_var_refuses(command_db, monkeypatch, caps
 def test_arch_036_command_needs_create_admin_and_a_username(command_db, argv, capsys):
     assert main(argv) == 2
     assert "Usage" in capsys.readouterr().err
+
+
+@pytest.fixture
+def preview_passwords(monkeypatch):
+    for _, _, password_env in PREVIEW_ACCOUNTS:
+        monkeypatch.setenv(password_env, FAKE_PASSWORD)
+
+
+def test_safe_031_preview_seed_makes_test_admin_and_usher(conn, preview_passwords):
+    assert seed_preview(conn) == ["test-admin-1", "test-usher-1"]
+    rows = conn.execute(
+        "SELECT username, role, password_hash FROM staff_account"
+    ).fetchall()
+    assert {(row["username"], row["role"]) for row in rows} == {
+        ("test-admin-1", "admin"),
+        ("test-usher-1", "usher"),
+    }
+    assert all(verify_password(FAKE_PASSWORD, row["password_hash"]) for row in rows)
+
+
+def test_safe_030_preview_seed_skips_an_account_without_a_password(conn, monkeypatch):
+    monkeypatch.setenv("SQ_PREVIEW_ADMIN_PASSWORD", FAKE_PASSWORD)
+    monkeypatch.delenv("SQ_PREVIEW_USHER_PASSWORD", raising=False)
+    assert seed_preview(conn) == ["test-admin-1"]
+
+
+def test_arch_036_preview_seed_never_changes_an_existing_account(
+    conn, preview_passwords
+):
+    create_account(conn, "test-admin-1", "test password only 2", "usher")
+    assert seed_preview(conn) == ["test-usher-1"]
+    assert seed_preview(conn) == []
+    row = conn.execute(
+        "SELECT role, password_hash FROM staff_account WHERE username = 'test-admin-1'"
+    ).fetchone()
+    assert row["role"] == "usher"
+    assert verify_password("test password only 2", row["password_hash"])
+
+
+@pytest.mark.parametrize(
+    ("environment", "expected"),
+    [
+        ("nextgen27-sidequest-pr-35", {"test-admin-1", "test-usher-1"}),
+        ("manual-pr-67", {"test-admin-1", "test-usher-1"}),
+        ("staging", set()),
+        ("production", set()),
+    ],
+)
+def test_arch_017_app_start_seeds_staff_only_on_pr_previews(
+    tmp_path, monkeypatch, preview_passwords, environment, expected
+):
+    db = tmp_path / "start.db"
+    monkeypatch.setenv("SQ_DB_PATH", str(db))
+    monkeypatch.setenv("RAILWAY_ENVIRONMENT_NAME", environment)
+    with TestClient(create_app()):
+        pass
+    assert {row["username"] for row in _accounts(db)} == expected

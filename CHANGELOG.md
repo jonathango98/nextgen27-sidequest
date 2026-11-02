@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-01 · chore/preview-staff-seed · Claude Opus 5.5 / @jonathango98
+
+- What: Every PR preview makes a test admin `test-admin-1` and a test usher `test-usher-1` when it starts, so staff pages can be hand-tested without running commands in each preview. Passwords come only from the Railway variables `SQ_PREVIEW_ADMIN_PASSWORD` and `SQ_PREVIEW_USHER_PASSWORD`, never the repo. An unset variable skips that account, and an existing account is never changed. New rule: the PR that makes a piece work also adds fake example data for it to the preview startup (ENG-113 in `16-feature-tree.md` 1.7.0, AI-047 in `10-ai-agent-rules.md` 1.6.0, DEC-064 in `13-decisions.md` 1.28.0, `AGENTS.md` 1.6.0, `CONTRIBUTING.md` 1.6.0, and a PR template checkbox), all needing Jonathan's approval (ENG-080). 7 new tests.
+- Why: Jonathan asked so PR #67 and later staff pieces can be hand-tested on their previews (ENG-112).
+- Rule IDs: ARCH-017, SAFE-030, SAFE-031, ARCH-035, ARCH-036, ENG-113, AI-047, DEC-064, ENG-087, ENG-101
+- Status: In progress
+- PR: #69
+
 ## 2026-11-01 · feat/staff-login · Claude Opus 5.5 / @OwenTjandra
 
 - What: Builds `staff.login`. `GET` and `POST /staff/login` take a username and password with a CSRF token. An unknown username, a wrong password, and a switched-off account all get the same message after the same hashing work, and the password is never sent back (ARCH-036, ARCH-038). A separate signed cookie, `__Host-sq_staff`, holds the staff id and the time it was issued, signed for a different purpose than the player cookie so neither passes as the other. The server refuses it after `auth.staff_session_hours` (24), not only the browser (DEC-063). `require_role("usher")` and `require_role("admin")` guard every staff page: logged out goes to `/staff/login` (303, or `HX-Redirect`), an usher on an admin page gets 403 `WRONG_ROLE`, admins can open usher pages, and an account switched off after logging in is logged out on its next page (ARCH-035). Plain `/usher` and `/admin` consoles show who is logged in, with Log out; the real tools come with their own pieces. `POST /logout` also clears the staff cookie and sends staff back to `/staff/login`. No lockout after wrong staff passwords yet (DEC-063). Foundation: the two routes and the screen in `06-api-and-screens.md` 1.6.0, DEC-063 in `13-decisions.md` 1.25.0, and `auth.staff_session_hours` in `game-config.yaml` 1.5.0, all needing Jonathan's approval (ENG-080). 29 route tests and a browser test at 360px in Chromium and WebKit.

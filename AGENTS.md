@@ -2,8 +2,8 @@
 
 - Status: LOCKED
 - Owner: Jonathan (@jonathango98)
-- Version: 1.5.0
-- Last updated: 2026-10-30
+- Version: 1.6.0
+- Last updated: 2026-11-01
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -111,6 +111,7 @@ git switch -c <type>/<short-slug>   # types: feat fix chore docs test refactor
 - Every implemented rule has tests named with its rule ID, for example `test_game_013_same_pair_counts_once`. (AI-042)
 - Sign-up, PIN or login, admin controls, and minors' data need the `safety-review` label and a second-person review. (AI-043)
 - Before committing a change to routes, templates, CSS, or JavaScript, run the `browser-check` skill: every changed screen at 360px, no console errors, screenshots looked at. Report what you checked, and never claim a check you did not run. (AI-044)
+- When a piece works, the same PR adds fake example data for it to the PR preview startup, so the preview is ready to hand-test. Previews only, add only what is missing, obviously fake names, passwords and PINs from Railway variables. (AI-047, ENG-113)
 
 ## Teaching mode
 

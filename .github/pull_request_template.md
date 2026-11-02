@@ -16,6 +16,7 @@ Keep it short. Write "N/A" where something does not apply.
 ## Before review
 
 - [ ] Every How to test step was run by hand on the PR preview (ENG-112).
+- [ ] Fake example data for this piece added to the preview startup, or N/A (ENG-113).
 - [ ] `CHANGELOG.md` entry added and README Project status updated (ENG-100 to ENG-104).
 - [ ] No secrets, real attendee data, or DB files.
 - [ ] `safety-review` label added if this touches sign-up, PIN or login, roles, admin controls, or minors' data.
