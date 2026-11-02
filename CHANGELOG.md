@@ -203,7 +203,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - What: Started a build timeline: every feature gets a due week so all of them are done by 2027-01-15, before Playtest 1. `/pick-task` will offer the most urgent pieces first and stop asking about Claude Pro vs Max.
 - Why: Jonathan asked for a week-by-week plan that finishes early and a picker that follows it.
 - Rule IDs: ENG-070, ENG-072, ENG-105, PRD-052, AI-070
-- Status: In progress
+- Status: Started
 - PR: #44
 
 ## 2026-10-27 · docs/readme-working-topics · Claude Opus 5.5 / @jonathango98
