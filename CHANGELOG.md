@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-01 · feat/usher-console · Claude Opus 5.5 / @marcjason2012
+
+- What: Building `usher.console`. Done so far: `GET /usher/players` lets ushers and admins find a player by first, last, or full name and pick them. Results and the player card show first name, last initial, and church only, and the query never reads the under-18 answer or PIN hash. An empty search lists nobody. `app/access_log.py` strips query strings from the server's access log, because the search text is in the URL and logs must never hold a last name. Scanning a code to pick a player waits on Jonathan's route approval.
+- Why: Picked through `/pick-task`. Due 2026-12-04 and unlocks `explore.booths`, `explore.items`, and `blind-box.handout`.
+- Rule IDs: GAME-112, ARCH-025, GAME-113, SAFE-004, SAFE-019, SAFE-028, ARCH-035, ARCH-051, API-001, API-005, API-007, DEC-063, ENG-101, ENG-108
+- Status: In progress
+- PR: #68
+
 ## 2026-11-01 · feat/staff-login · Claude Opus 5.5 / @OwenTjandra
 
 - What: Builds `staff.login`. `GET` and `POST /staff/login` take a username and password with a CSRF token. An unknown username, a wrong password, and a switched-off account all get the same message after the same hashing work, and the password is never sent back (ARCH-036, ARCH-038). A separate signed cookie, `__Host-sq_staff`, holds the staff id and the time it was issued, signed for a different purpose than the player cookie so neither passes as the other. The server refuses it after `auth.staff_session_hours` (24), not only the browser (DEC-063). `require_role("usher")` and `require_role("admin")` guard every staff page: logged out goes to `/staff/login` (303, or `HX-Redirect`), an usher on an admin page gets 403 `WRONG_ROLE`, admins can open usher pages, and an account switched off after logging in is logged out on its next page (ARCH-035). Plain `/usher` and `/admin` consoles show who is logged in, with Log out; the real tools come with their own pieces. `POST /logout` also clears the staff cookie and sends staff back to `/staff/login`. No lockout after wrong staff passwords yet (DEC-063). Foundation: the two routes and the screen in `06-api-and-screens.md` 1.6.0, DEC-063 in `13-decisions.md` 1.25.0, and `auth.staff_session_hours` in `game-config.yaml` 1.5.0, all needing Jonathan's approval (ENG-080). 29 route tests and a browser test at 360px in Chromium and WebKit.
