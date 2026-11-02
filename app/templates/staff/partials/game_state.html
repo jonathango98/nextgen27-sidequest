@@ -1,0 +1,19 @@
+{# GAME-101, GAME-110: the admin's game switch. HTMX swaps this panel, so the page never reloads. #}
+{% set labels = {"on": "On", "paused": "Paused", "off": "Off"} %}
+<section id="game-state" class="card stack" aria-labelledby="game-state-title">
+  <h2 id="game-state-title">Game</h2>
+  <p>The game is <strong data-state="{{ state }}">{{ labels[state] }}</strong>.</p>
+  {% if error_code %}{% include "partials/error.html" %}{% endif %}
+  {# One form per button, so each works without JavaScript too (API-007). #}
+  {% for value, button, confirm in [
+    ("on", "Start", none),
+    ("paused", "Pause", none),
+    ("off", "Off", "Switch the game off? Sign-up closes until you press Start."),
+  ] %}
+    <form method="post" action="/admin/game-state" hx-post="/admin/game-state" hx-target="#game-state" hx-swap="outerHTML"{% if confirm %} hx-confirm="{{ confirm }}"{% endif %}>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <input type="hidden" name="state" value="{{ value }}">
+      <button class="button button-secondary" type="submit"{% if state == value %} disabled{% endif %}>{{ button }}</button>
+    </form>
+  {% endfor %}
+</section>

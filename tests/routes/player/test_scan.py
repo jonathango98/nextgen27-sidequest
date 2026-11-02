@@ -20,7 +20,9 @@ SCANNER_FILES = (
 def client():
     app = create_app()
     app.dependency_overrides[get_current_player] = lambda: FAKE_PLAYER
-    return TestClient(app)
+    # Start the app, so pages can read the game state for the paused note (UI-033).
+    with TestClient(app) as c:
+        yield c
 
 
 def test_arch_025_scan_page_uses_configured_format(client):

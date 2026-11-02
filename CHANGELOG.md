@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-02 · feat/game-state-controls · Claude Opus 5.5 / @OwenTjandra
+
+- What: Builds `game-state.controls`. The admin console has Start, Pause, and Off buttons that post to `POST /admin/game-state` and swap the panel in place with HTMX. Off asks to confirm. `game_state.change` saves the new state and an audit row (`game_on`, `pause`, `game_off`) in one transaction, and pressing the current state writes nothing. Ushers get 403 `WRONG_ROLE`, and an unknown state gets 400 `BAD_INPUT`. Every player page with the bottom bar shows "Game paused" while paused and "The game is closed right now." while off, read fresh on each page. While off, `GET /join` says sign-up is closed instead of showing the form. While the game is not on, Meet friends, Write, and the Scan button are greyed out and the Scan page shows a short note instead of the camera. My Code, Read, and Open Box stay open (GAME-102). While paused, player pages get the gray paused look (`--color-bg-paused`). Three route test fixtures now start the app, so pages can read the game state.
+- Why: Picked by Owen with `/pick-task`. Due 2026-12-04 and unlocks 5 pieces, including `screen.main` and `checkin.sessions`.
+- Rule IDs: GAME-100, GAME-101, GAME-102, GAME-104, GAME-108, GAME-110, OPS-001, ARCH-035, ARCH-038, ARCH-040, ARCH-042, ARCH-050, API-002, API-003, API-005, UI-033, AI-044, ENG-101, ENG-108
+- Status: Done
+- PR: #67
+
 ## 2026-11-02 · feat/usher-console · Claude Opus 5.5 / @marcjason2012
 
 - What: Builds `usher.console`. `GET /usher/players` lets ushers and admins find a player by first, last, or full name and pick them. `POST /usher/scan` checks a scanned My Code on the server (ARCH-026) and answers with the same player card, or `NOT_A_CODE`, `CODE_EXPIRED`, or `NOT_FOUND`. It saves nothing. The usher console has the scanner, and `scanner.js` sends codes to the server only on a page with a scan form, so the player Scan page is unchanged. Results and the card show first name, last initial, and church only (DEC-065), and the query never reads the under-18 answer or PIN hash. An empty search lists nobody. `app/access_log.py` strips query strings from the server's access log, because the search text is in the URL and logs must never hold a last name. PR previews seed an adult Test Player 1 when `SQ_PREVIEW_PLAYER_PIN` is set (ENG-113). Protected changes: the route in `06-api-and-screens.md` (1.8.0) and DEC-065 in `13-decisions.md` (1.29.0).

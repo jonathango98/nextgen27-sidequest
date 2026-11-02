@@ -7,6 +7,10 @@
   <h1>My Code</h1>
   {% include "player/partials/code_qr.html" %}
   <p class="qr-tip">Turn your screen brightness up so it scans fast.</p>
-  {# UI-037: the Scan button sits under the QR panel. #}
+  {# UI-037: the Scan button sits under the QR panel. GAME-102: My Code stays, scanning waits. #}
+  {% if game_state() == "on" %}
   <a class="button" href="/scan">Scan</a>
+  {% else %}
+  <button class="button" type="button" disabled>Scan</button>
+  {% endif %}
 {% endblock %}

@@ -11,6 +11,7 @@ from app.auth.session import session_public_id, set_session
 from app.db import get_db
 from app.forms import read_form
 from app.rendering import templates
+from app.services.game_state import current_state
 
 # Where a player lands after joining: Home.
 AFTER_JOIN = "/"
@@ -19,6 +20,8 @@ STEPS = {
     "pin": "player/partials/join_pin.html",
 }
 FORM_FIELDS = ("first_name", "last_name", "church_id", "age_18_plus")
+# GAME-108: shown instead of the form while the game is off, so nobody types it all for nothing.
+CLOSED = "Sign-up is closed right now."
 
 router = APIRouter()
 Db = Annotated[sqlite3.Connection, Depends(get_db)]
@@ -60,6 +63,10 @@ def _render(
 def join_page(request: Request, conn: Db):
     if session_public_id(request):
         return RedirectResponse(AFTER_JOIN, status_code=303)
+    if current_state(conn) == "off":
+        return templates.TemplateResponse(
+            request, "player/join.html", {"closed": CLOSED}
+        )
     return _render(request, conn, "details", {})
 
 

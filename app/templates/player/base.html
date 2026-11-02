@@ -4,12 +4,14 @@
   {% include "player/head.html" %}
   <title>{% block title %}Side Quest{% endblock %}</title>
 </head>
-<body>
+{# UI-033: the paused look, a gray background with the streaks faded (07 section 2). #}
+<body{% if game_state() == "paused" %} class="paused"{% endif %}>
   {# UI-030: same frame on every player page. Child pages set `tab` to mark the current tab. #}
   <header class="top-bar">
     <a href="/">Side Quest</a>
     {% block top_actions %}{% endblock %}
   </header>
+  {% include "partials/game_banner.html" %}
 
   <main class="content">
     {% block content %}{% endblock %}

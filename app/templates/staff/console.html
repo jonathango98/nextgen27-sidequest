@@ -8,7 +8,6 @@
     <h1>{{ "Admin" if page == "admin" else "Usher" }} console</h1>
     <div class="card">
       <p>Logged in as <strong>{{ staff.username }}</strong> ({{ staff.role }}).</p>
-      {% if page == "admin" %}<p>Game controls are coming soon.</p>{% endif %}
     </div>
     {% if page == "usher" %}
       {# GAME-112: the same scanner players use (07 section 3). The server checks every code (ARCH-026). #}
@@ -31,6 +30,7 @@
       <script src="/static/js/vendor/barcode-detector-3.2.2.ponyfill.js" defer></script>
       <script src="/static/js/scanner.js" defer></script>
     {% endif %}
+    {% if page == "admin" %}{% include "staff/partials/game_state.html" %}{% endif %}
     {# DEC-063: admins can open usher pages too. #}
     {% if page == "admin" %}<a class="button button-secondary" href="/usher">Usher console</a>{% endif %}
     {% if page == "usher" and staff.role == "admin" %}<a class="button button-secondary" href="/admin">Admin console</a>{% endif %}
