@@ -17,6 +17,12 @@ from app.db import connect, db_path_from_env, migrate
 FIRST_ADMIN_PASSWORD_ENV = "SQ_FIRST_ADMIN_PASSWORD"
 # ARCH-035. Screen is a device mode, not an account (ARCH-037).
 ROLES = ("usher", "admin")
+# Obviously fake (SAFE-031), so a PR preview's staff pages can be tested (ARCH-017).
+# Passwords come only from Railway variables, never the repo (SAFE-030).
+PREVIEW_ACCOUNTS = (
+    ("test-admin-1", "admin", "SQ_PREVIEW_ADMIN_PASSWORD"),
+    ("test-usher-1", "usher", "SQ_PREVIEW_USHER_PASSWORD"),
+)
 
 
 class StaffAccountError(Exception):
@@ -43,6 +49,16 @@ def create_account(
         (username, hash_password(password), role),
     ).fetchone()
     return None if row is None else row["id"]
+
+
+def seed_preview(conn: sqlite3.Connection) -> list[str]:
+    """A PR preview starts with no staff. Adds each test account whose password variable is set."""
+    created = []
+    for username, role, password_env in PREVIEW_ACCOUNTS:
+        password = os.environ.get(password_env)
+        if password and create_account(conn, username, password, role) is not None:
+            created.append(username)
+    return created
 
 
 def main(argv: list[str]) -> int:

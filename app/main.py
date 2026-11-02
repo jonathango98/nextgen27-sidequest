@@ -28,7 +28,7 @@ from app.routes.player import (
 )
 from app.routes.staff import console as staff_console
 from app.routes.staff import login as staff_login
-from app.services import churches
+from app.services import churches, staff
 from app.services.game_state import GAME_NOT_ON_MESSAGES, GameNotOn
 
 
@@ -41,6 +41,7 @@ async def lifespan(app: FastAPI):
         migrate(conn)
         if churches.is_preview(os.environ.get("RAILWAY_ENVIRONMENT_NAME")):
             churches.seed_examples(conn)
+            staff.seed_preview(conn)
     finally:
         conn.close()
     yield

@@ -25,8 +25,8 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - What: Started. Every PR preview makes a test admin and a test usher when it starts, so staff pages can be hand-tested without running commands in each preview. Passwords come only from Railway variables, never the repo.
 - Why: Jonathan asked so PR #67 and later staff pieces can be hand-tested on their previews (ENG-112).
 - Rule IDs: ARCH-017, SAFE-030, SAFE-031, ARCH-035, ARCH-036, ENG-101
-- Status: Started
-- PR: draft
+- Status: In progress
+- PR: #69
 
 ## 2026-11-01 · feat/staff-login · Claude Opus 5.5 / @OwenTjandra
 
@@ -203,7 +203,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - What: Started a build timeline: every feature gets a due week so all of them are done by 2027-01-15, before Playtest 1. `/pick-task` will offer the most urgent pieces first and stop asking about Claude Pro vs Max.
 - Why: Jonathan asked for a week-by-week plan that finishes early and a picker that follows it.
 - Rule IDs: ENG-070, ENG-072, ENG-105, PRD-052, AI-070
-- Status: Started
+- Status: In progress
 - PR: #44
 
 ## 2026-10-27 · docs/readme-working-topics · Claude Opus 5.5 / @jonathango98
