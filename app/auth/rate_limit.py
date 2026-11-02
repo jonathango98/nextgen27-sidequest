@@ -55,30 +55,14 @@ class RateLimiter:
 
 
 def client_ip(request: Request) -> str:
-    # Railway's edge adds the address it saw to the end of X-Forwarded-For. Anything before
-    # that came from the phone and can be faked, so only the last entry counts.
-    forwarded = ",".join(request.headers.getlist("x-forwarded-for"))
-    last = forwarded.rsplit(",", 1)[-1].strip()
-    if last:
-        return last
+    # Railway's edge sets X-Real-IP to the address it saw and replaces any value the phone sent.
+    # X-Forwarded-For's last entry is a rotating edge node, so it can't be used (checked on PR 71).
+    real = request.headers.get("x-real-ip", "").strip()
+    if real:
+        return real
     return request.client.host if request.client else "unknown"
 
 
 def allow(request: Request, kind: str) -> bool:
-    # TEMPORARY diagnostic, PR previews only. Removed before review.
-    import logging
-    import os
-
-    from app.services.churches import is_preview
-
-    if is_preview(os.environ.get("RAILWAY_ENVIRONMENT_NAME")):
-        logging.getLogger("uvicorn.error").warning(
-            "rl-diag xff=%r real=%r fastly=%r client=%r picked=%r",
-            request.headers.getlist("x-forwarded-for"),
-            request.headers.get("x-real-ip"),
-            request.headers.get("fastly-client-ip"),
-            request.client.host if request.client else None,
-            client_ip(request),
-        )
     limit = request.app.state.config["auth"][LIMIT_KEYS[kind]]
     return request.app.state.rate_limiter.allow(kind, client_ip(request), limit)

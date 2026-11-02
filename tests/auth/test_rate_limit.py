@@ -92,7 +92,7 @@ def _post(client, path, data, ip=PHONE_IP):
     return client.post(
         path,
         data={"csrf_token": client.cookies.get(csrf.COOKIE), **data},
-        headers={"HX-Request": "true", "X-Forwarded-For": ip},
+        headers={"HX-Request": "true", "X-Real-IP": ip},
         follow_redirects=False,
     )
 
@@ -166,12 +166,22 @@ def test_arch_031_old_ips_are_forgotten(limiter, clock, login_limit):
     assert list(limiter._hits) == [("login", OTHER_IP)]
 
 
-def test_arch_031_last_forwarded_address_is_the_client(client, church_id, wrong_pin):
-    # Railway's edge adds the real address last. A phone can fake the earlier entries.
+def test_arch_031_changing_forwarded_for_does_not_dodge_the_limit(
+    client, church_id, wrong_pin
+):
+    # On Railway the last X-Forwarded-For entry is a rotating edge node. X-Real-IP is the client.
     _fill(client, "login", PHONE_IP)
-    spoofed = _login(client, church_id, wrong_pin, ip=f"{OTHER_IP}, {PHONE_IP}")
-    assert spoofed.status_code == rate_limit.STATUS
-    assert _error_code(spoofed) == rate_limit.CODE
+    data = {
+        "csrf_token": client.cookies.get(csrf.COOKIE),
+        "first_name": "Test",
+        "last_name": "Player 1",
+        "church_id": str(church_id["id"]),
+        "pin": wrong_pin,
+    }
+    headers = {"X-Real-IP": PHONE_IP, "X-Forwarded-For": f"{PHONE_IP}, {OTHER_IP}"}
+    response = client.post("/login", data=data, headers=headers)
+    assert response.status_code == rate_limit.STATUS
+    assert _error_code(response) == rate_limit.CODE
 
 
 def test_arch_031_login_over_limit_gets_rate_limited(
