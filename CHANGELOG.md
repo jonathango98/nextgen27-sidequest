@@ -22,10 +22,10 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-11-02 · feat/ready-rate-limits · Claude Opus 5.5 / @jonathango98
 
-- What: Claims `ready.rate-limits`: per-IP limits on login and sign-up tries, with a 429 `RATE_LIMITED` "slow down" message.
+- What: Builds `ready.rate-limits`. `app/auth/rate_limit.py` counts tries per address in memory over the last minute (one replica, ARCH-010), with limits from `auth.login_ip_limit_per_minute` and `auth.signup_ip_limit_per_minute`. Every `POST /login`, every `POST /staff/login` (own counter, same limit), and the final `POST /join` step are counted. Over the limit, the form shows 429 `RATE_LIMITED` before any PIN or password is checked, so the account lockout (SAFE-022) is untouched. The address comes from Railway's `X-Real-IP`: on the PR 71 preview, the last `X-Forwarded-For` entry was a rotating Railway edge node, and Railway replaced faked values of both headers. Checked on the preview: 60 wrong logins then 429, with faked headers on every try. No new dependency.
 - Why: Picked through `/pick-task`. Due 2027-01-08. Stops one common PIN being tried against every account.
-- Rule IDs: ARCH-031, SAFE-022, ENG-101
-- Status: Started
+- Rule IDs: ARCH-031, SAFE-022, AI-042, AI-044, ENG-101, ENG-108
+- Status: Done
 - PR: #71
 
 ## 2026-11-02 · feat/game-state-controls · Claude Opus 5.5 / @OwenTjandra

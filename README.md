@@ -37,7 +37,7 @@ What the app can do today, grouped by area, in plain words for anyone to read. W
 
 | Updated | Pieces | Area | What works today |
 |---|---|---|---|
-| 2026-10-28 | `auth.join-login` `ready.logout` | Joining and logging in | Players join with their name, church, a PIN, and an "Are you 18 or older?" question. They can log in again on another phone. Too many wrong PINs lock the account. A settings gear on Home has Log out, which asks to confirm, then signs out that phone only, so the next person who picks it up can't play as them |
+| 2026-11-02 | `auth.join-login` `ready.logout` `ready.rate-limits` | Joining and logging in | Players join with their name, church, a PIN, and an "Are you 18 or older?" question. They can log in again on another phone. Too many wrong PINs lock the account. A settings gear on Home has Log out, which asks to confirm, then signs out that phone only, so the next person who picks it up can't play as them. Too many log in or sign-up tries from one place in a minute get a "wait a minute" message, which makes guessing PINs much harder, even for staff log in |
 | 2026-10-23 | `code.my-code` | Personal QR code | Each player has their own QR code on the My Code screen. It keeps changing, so a screenshot can't be passed around |
 | 2026-10-31 | `screens.skeleton` `look.base` | Player screens | Every player screen exists, and every button and tab leads to the right next screen. Every page has the chosen look: a cream background with soft flower-colored streaks and a light film grain, titles in a printed-program serif, a frosted bottom bar with Home, My Code, and Quests, one black main button, and frosted white cards and buttons. Join, Pick a PIN, and Log in match the design, and the PIN step has a Back button that keeps what was typed. A wrong login says how many wrong tries in a row lock an account. The final Home and My Code layouts come next |
 | 2026-10-27 | | Game rules | The full game rules are written down, and most open game questions are answered. Prizes and what goes inside the blind boxes are still to be decided |
@@ -57,7 +57,6 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| `ready.rate-limits` Too many login or sign-up tries from one place are slowed down | `feat/ready-rate-limits` | #71 | 2026-11-02 | Claude Opus 5.5 / @jonathango98 |
 | Test staff accounts on PR previews | `chore/preview-staff-seed` | #69 | 2026-11-01 | Claude Opus 5.5 / @jonathango98 |
 
 ### Planned
