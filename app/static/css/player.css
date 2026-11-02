@@ -48,6 +48,15 @@ body::after {
   mix-blend-mode: overlay;
 }
 
+/* Paused look (UI-033, 07 section 2): gray page, with the bloom streaks faded to gray */
+body.paused {
+  background: var(--color-bg-paused);
+}
+
+body.paused::before {
+  filter: grayscale(1);
+}
+
 a {
   color: var(--color-primary);
 }

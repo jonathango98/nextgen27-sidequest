@@ -95,3 +95,59 @@ def test_game_108_login_page_still_works_while_off(client):
     response = client.get("/login")
     assert response.status_code == 200
     assert 'name="pin"' in response.text
+
+
+@pytest.mark.parametrize(
+    ("state", "paused_look"), [("on", False), ("paused", True), ("off", False)]
+)
+def test_ui_033_paused_look_only_while_paused(client, state, paused_look):
+    _set(client, state)
+    assert ('<body class="paused">' in client.get("/").text) is paused_look
+
+
+@pytest.mark.parametrize("state", ["paused", "off"])
+def test_game_102_home_play_buttons_wait_while_not_on(client, state):
+    _set(client, state)
+    html = client.get("/").text
+    assert 'href="/scan"' not in html
+    assert 'href="/journal/new"' not in html
+    assert '<button class="button" type="button" disabled>Meet friends</button>' in html
+    # Reading your own things still works (GAME-102).
+    assert 'href="/summary"' in html
+    assert 'href="/box"' in html
+
+
+def test_game_102_home_play_buttons_work_while_on(client):
+    html = client.get("/").text
+    assert 'href="/scan"' in html
+    assert 'href="/journal/new"' in html
+
+
+@pytest.mark.parametrize("state", ["paused", "off"])
+def test_game_102_my_code_still_shows_but_scan_waits(client, state):
+    _set(client, state)
+    html = client.get("/code").text
+    assert 'class="qr-panel"' in html  # GAME-102: My Code works while paused
+    assert 'href="/scan"' not in html
+    assert '<button class="button" type="button" disabled>Scan</button>' in html
+
+
+@pytest.mark.parametrize(
+    ("state", "message"),
+    [
+        ("paused", "Scanning is back after the session."),
+        ("off", "Scanning is closed right now."),
+    ],
+)
+def test_game_102_scan_page_has_no_camera_while_not_on(client, state, message):
+    _set(client, state)
+    html = client.get("/scan").text
+    assert message in html
+    assert "data-scanner" not in html
+    assert "scanner.js" not in html
+
+
+def test_game_102_scan_page_has_the_camera_while_on(client):
+    html = client.get("/scan").text
+    assert "data-scanner" in html
+    assert "Scanning is" not in html

@@ -24,8 +24,14 @@
   <h1>{{ score }} points</h1>
   <p class="hint">Placeholder: next box progress (GAME-070).</p>
   <nav class="stack" aria-label="Things to do">
+    {# GAME-102, GAME-108: nothing that earns points while the game is not on. The server refuses it too. #}
+    {% if game_state() == "on" %}
     <a class="button" href="/scan">Meet friends</a>
     <a class="button button-secondary" href="/journal/new">Write</a>
+    {% else %}
+    <button class="button" type="button" disabled>Meet friends</button>
+    <button class="button button-secondary" type="button" disabled>Write</button>
+    {% endif %}
     <a class="button button-secondary" href="/summary">Read</a>
     <a class="button button-secondary" href="/box">Redeem box</a>
   </nav>

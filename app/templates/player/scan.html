@@ -6,6 +6,12 @@
 
 {% block content %}
   <h1>Scan</h1>
+  {% set state = game_state() %}
+  {% if state != "on" %}
+  {# GAME-102, GAME-108: no camera while the game is not on, so nobody scans for nothing. #}
+  <p class="card">{{ "Scanning is back after the session." if state == "paused" else "Scanning is closed right now." }}</p>
+  <a class="button button-secondary" href="/code">Back to My Code</a>
+  {% else %}
   {# Scanner frame (07 section 3): camera view with a square guide and one line of help text. #}
   <div class="scanner" data-scanner data-format="{{ qr_format }}"
        data-wasm="/static/js/vendor/zxing-wasm-3.1.3-reader.wasm">
@@ -19,4 +25,5 @@
   {# ARCH-004: barcode-detector 3.2.2 (ZXing 3.1.3), served from our own server, not a CDN. #}
   <script src="/static/js/vendor/barcode-detector-3.2.2.ponyfill.js" defer></script>
   <script src="/static/js/scanner.js" defer></script>
+  {% endif %}
 {% endblock %}
