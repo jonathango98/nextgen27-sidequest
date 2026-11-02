@@ -280,6 +280,20 @@ h2 {
   margin-bottom: 0;
 }
 
+/* Paused or closed note under the top bar on every player page (UI-033): calm, never red */
+.game-banner {
+  margin: 0 var(--space-4);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-pill);
+  font-weight: 700;
+  text-align: center;
+  color: var(--color-text);
+  background: var(--color-surface);
+  -webkit-backdrop-filter: var(--glass-filter);
+  backdrop-filter: var(--glass-filter);
+  box-shadow: var(--shadow-glass);
+}
+
 /* Points pill: gold is for points only, for example "+20" */
 .pill {
   display: inline-block;

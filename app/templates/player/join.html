@@ -4,7 +4,13 @@
 
 {% block content %}
   <h1>Join Side Quest</h1>
+  {% if closed %}
+    {# GAME-108: sign-up is closed while the game is off. Login still works. #}
+    <p class="card">{{ closed }}</p>
+    <p class="form-note">Already joined? <a href="/login">Log in</a></p>
+  {% else %}
   <div id="join-step">
     {% include step_template %}
   </div>
+  {% endif %}
 {% endblock %}
