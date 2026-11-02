@@ -2,8 +2,8 @@
 
 - Status: PROPOSED (developers confirm at kickoff)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.7.0
-- Last updated: 2026-11-01
+- Version: 1.8.0
+- Last updated: 2026-11-02
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -59,6 +59,7 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 | POST | `/usher/hidden-item` | Record an item number and scan My Code | GAME-043 |
 | POST | `/usher/box-claim` | Scan My Code and record a blind box handed over | GAME-073 |
 | GET | `/usher/players` | Look up a player by name (dead phone) | GAME-113 |
+| POST | `/usher/scan` | Scan My Code to see which player it is. Saves nothing | GAME-112, DEC-065 |
 
 ### Admin
 
