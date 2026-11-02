@@ -56,8 +56,7 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| `usher.console` Ushers scan or search to find the player they are helping | `feat/usher-console` | draft | 2026-11-01 | Claude Opus 5.5 / @marcjason2012 |
-| Test staff accounts on PR previews | `chore/preview-staff-seed` | #69 | 2026-11-01 | Claude Opus 5.5 / @jonathango98 |
+| `usher.console` Ushers scan or search to find the player they are helping | `feat/usher-console` | #68 | 2026-11-01 | Claude Opus 5.5 / @marcjason2012 |
 
 ### Planned
 
