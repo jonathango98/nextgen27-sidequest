@@ -20,12 +20,12 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
-## 2026-11-01 · feat/usher-console · Claude Opus 5.5 / @marcjason2012
+## 2026-11-02 · feat/usher-console · Claude Opus 5.5 / @marcjason2012
 
-- What: Building `usher.console`. Done so far: `GET /usher/players` lets ushers and admins find a player by first, last, or full name and pick them. Results and the player card show first name, last initial, and church only, and the query never reads the under-18 answer or PIN hash. An empty search lists nobody. `app/access_log.py` strips query strings from the server's access log, because the search text is in the URL and logs must never hold a last name. Scanning a code to pick a player waits on Jonathan's route approval.
+- What: Builds `usher.console`. `GET /usher/players` lets ushers and admins find a player by first, last, or full name and pick them. `POST /usher/scan` checks a scanned My Code on the server (ARCH-026) and answers with the same player card, or `NOT_A_CODE`, `CODE_EXPIRED`, or `NOT_FOUND`. It saves nothing. The usher console has the scanner, and `scanner.js` sends codes to the server only on a page with a scan form, so the player Scan page is unchanged. Results and the card show first name, last initial, and church only (DEC-065), and the query never reads the under-18 answer or PIN hash. An empty search lists nobody. `app/access_log.py` strips query strings from the server's access log, because the search text is in the URL and logs must never hold a last name. PR previews seed an adult Test Player 1 when `SQ_PREVIEW_PLAYER_PIN` is set (ENG-113). Protected changes: the route in `06-api-and-screens.md` (1.8.0) and DEC-065 in `13-decisions.md` (1.29.0).
 - Why: Picked through `/pick-task`. Due 2026-12-04 and unlocks `explore.booths`, `explore.items`, and `blind-box.handout`.
-- Rule IDs: GAME-112, ARCH-025, GAME-113, SAFE-004, SAFE-019, SAFE-028, ARCH-035, ARCH-051, API-001, API-005, API-007, DEC-063, ENG-101, ENG-108
-- Status: In progress
+- Rule IDs: GAME-112, ARCH-020, ARCH-022, ARCH-025, ARCH-026, GAME-113, SAFE-004, SAFE-019, SAFE-028, ARCH-035, ARCH-051, API-001, API-004, API-005, API-007, DEC-063, DEC-065, ENG-087, ENG-101, ENG-108, ENG-113, AI-047
+- Status: Done
 - PR: #68
 
 ## 2026-11-01 · chore/preview-staff-seed · Claude Opus 5.5 / @jonathango98
