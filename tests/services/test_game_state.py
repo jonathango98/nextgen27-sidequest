@@ -9,14 +9,19 @@ from fastapi.testclient import TestClient
 from app.config import load_config
 from app.db import MIGRATIONS_DIR, connect, get_db, migrate
 from app.main import create_app
+from app.services import game_state
 from app.services.game_state import (
     GameNotOn,
+    UnknownState,
+    change,
     current_state,
     require_game_on,
     set_state,
 )
 
 MIGRATION = "0003_create_game_state.sql"
+STATES = load_config()["game"]["states"]
+FAKE_ADMIN_ID = 7  # fake staff id (ENG-047)
 
 
 @pytest.fixture
@@ -123,3 +128,55 @@ def test_arch_042_new_state_applies_to_next_request(client):
 def test_game_102_reading_pages_still_work_when_paused(client):
     _set(client, "paused")
     assert client.get("/health").status_code == 200
+
+
+def _audit_rows(conn):
+    return conn.execute(
+        "SELECT actor_type, actor_id, action, target_type, target_id FROM audit_log"
+    ).fetchall()
+
+
+def test_game_101_admin_change_sets_state_and_who(conn):
+    assert change(conn, "paused", FAKE_ADMIN_ID, STATES) is True
+    assert current_state(conn) == "paused"
+    row = conn.execute("SELECT updated_by FROM game_state").fetchone()
+    assert row["updated_by"] == FAKE_ADMIN_ID
+
+
+@pytest.mark.parametrize(
+    ("state", "action"), [("paused", "pause"), ("off", "game_off")]
+)
+def test_arch_050_each_change_writes_one_audit_row(conn, state, action):
+    change(conn, state, FAKE_ADMIN_ID, STATES)
+    rows = [tuple(r) for r in _audit_rows(conn)]
+    assert rows == [("admin", FAKE_ADMIN_ID, action, "game_state", 1)]
+
+
+def test_arch_050_starting_again_is_audited_as_game_on(conn):
+    change(conn, "paused", FAKE_ADMIN_ID, STATES)
+    change(conn, "on", FAKE_ADMIN_ID, STATES)
+    assert [r["action"] for r in _audit_rows(conn)] == ["pause", "game_on"]
+
+
+def test_arch_050_pressing_the_current_state_writes_nothing(conn):
+    assert change(conn, current_state(conn), FAKE_ADMIN_ID, STATES) is False
+    assert _audit_rows(conn) == []
+    assert conn.execute("SELECT updated_by FROM game_state").fetchone()[0] is None
+
+
+def test_game_100_change_refuses_unknown_state(conn):
+    with pytest.raises(UnknownState):
+        change(conn, "sleeping", FAKE_ADMIN_ID, STATES)
+    assert current_state(conn) == "on"
+    assert _audit_rows(conn) == []
+
+
+def test_arch_040_state_and_audit_row_save_together(conn, monkeypatch):
+    def broken_record(*args, **kwargs):
+        raise RuntimeError("audit write failed")
+
+    monkeypatch.setattr(game_state.audit, "record", broken_record)
+    with pytest.raises(RuntimeError):
+        change(conn, "paused", FAKE_ADMIN_ID, STATES)
+    # The audit row failed, so the new state was rolled back too.
+    assert current_state(conn) == "on"
