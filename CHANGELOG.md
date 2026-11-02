@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-01 · feat/usher-console · Claude Opus 5.5 / @marcjason2012
+
+- What: Claims `usher.console`. Ushers will get a helper page where they scan a player's code, or search by name if the player's phone is dead, to pick who they are helping, and see only what an usher needs.
+- Why: Picked through `/pick-task`. Due 2026-12-04 and unlocks `explore.booths`, `explore.items`, and `blind-box.handout`.
+- Rule IDs: GAME-112, ARCH-025, GAME-113, SAFE-004, SAFE-028, ENG-101, ENG-108
+- Status: Started
+- PR: draft
+
 ## 2026-11-01 · chore/preview-staff-seed · Claude Opus 5.5 / @jonathango98
 
 - What: Every PR preview makes a test admin `test-admin-1` and a test usher `test-usher-1` when it starts, so staff pages can be hand-tested without running commands in each preview. Passwords come only from the Railway variables `SQ_PREVIEW_ADMIN_PASSWORD` and `SQ_PREVIEW_USHER_PASSWORD`, never the repo. An unset variable skips that account, and an existing account is never changed. New rule: the PR that makes a piece work also adds fake example data for it to the preview startup (ENG-113 in `16-feature-tree.md` 1.7.0, AI-047 in `10-ai-agent-rules.md` 1.6.0, DEC-064 in `13-decisions.md` 1.28.0, `AGENTS.md` 1.6.0, `CONTRIBUTING.md` 1.6.0, and a PR template checkbox), all needing Jonathan's approval (ENG-080). 7 new tests.

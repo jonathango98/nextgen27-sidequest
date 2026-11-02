@@ -5,7 +5,7 @@
 
 Every planned piece of work and what it needs first (ENG-105 to ENG-108), grouped by the week it is due (PRD-054). Pieces flow left to right in time: finishing one unlocks the pieces it points to. Run `/pick-task` to claim one.
 
-**Working** 16 · **In progress** 0 · **Ready** 11 · **Waiting** 21 · **Needs decision** 0
+**Working** 16 · **In progress** 1 · **Ready** 10 · **Waiting** 21 · **Needs decision** 0
 
 Colors: green Working, blue In progress, gold Ready, gray Waiting, red dashed Needs decision.
 
@@ -169,7 +169,8 @@ flowchart LR
   classDef waiting fill:#f1f0eb,stroke:#c3c0b6,color:#545a66
   classDef decision fill:#fdeeec,stroke:#b42318,stroke-dasharray:4 3,color:#14151a
   class app_foundation,auth_join_login,code_my_code,connections_scanner_camera,connections_table,game_state_core,infra_hosting,look_base,points_audit_log,points_ledger,points_score,ready_logout,ready_retention,screens_skeleton,staff_accounts,staff_login working
-  class admin_players,admin_setup,connections_meet,game_state_controls,home_pages,look_screens,ready_backups,ready_load_test,ready_rate_limits,usher_console,wrapped_cards ready
+  class usher_console in_progress
+  class admin_players,admin_setup,connections_meet,game_state_controls,home_pages,look_screens,ready_backups,ready_load_test,ready_rate_limits,wrapped_cards ready
   class admin_audit_view,admin_award_revoke,blind_box_close_redemption,blind_box_handout,checkin_hall,checkin_sessions,checkin_window,connections_answers,connections_verse_picker,explore_booths,explore_items,game_state_auto_pause,journal_notes,journal_share_review,leaderboards_in_app,leaderboards_screen,recap_screen,screen_main,wrapped_collection,wrapped_save_image,wrapped_stat_cards waiting
 ```
 
@@ -195,12 +196,6 @@ flowchart LR
     3. Within a few seconds, Test Player 2's phone should show a note and the very same question, without tapping anything.
     4. Scan the same code again. It should say you already met, with no new question and no second note.
     5. Try to break it: scan your own code, then a screenshot of an old code. Each should be refused with a clear message.
-- `usher.console`: A helper page for ushers. They scan a player's code with their phone camera to pick which player they are helping, or find them by typing their name if the player's phone is dead. (L, medium, admin-screens, due fri dec 4)
-  - Try it:
-    1. On the PR preview, log in as Test Usher on a phone and open the usher page.
-    2. Scan Test Player 1's My Code. You should see Test Player 1's first name and church.
-    3. Search for Test Player 1 by name and pick them. You should see only what an usher needs, with no PIN or full last name.
-    4. Try to break it: log in as Test Player 1 and open the usher page. You should be refused.
 - `home.pages`: Home shows the player's real score and how close they are to the next blind box. A Quests page lists every quest and how many points it gives. An Open Box page shows how many blind boxes the player can collect and how to go and get them. (L, easy, player-app, due fri dec 11)
   - Try it:
     1. On the PR preview, join as a brand new Test Player 1. Home should show the starting score and the progress bar without breaking.
@@ -247,7 +242,7 @@ flowchart LR
 
 ## In progress
 
-- None
+- `usher.console`: A helper page for ushers. They scan a player's code with their phone camera to pick which player they are helping, or find them by typing their name if the player's phone is dead.
 
 ## Needs a decision
 
