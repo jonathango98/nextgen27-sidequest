@@ -22,10 +22,10 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-11-02 · feat/game-state-controls · Claude Opus 5.5 / @OwenTjandra
 
-- What: Claims `game-state.controls`: admin Start, Pause, and Off buttons, a paused note on every player page, sign-up closed while off, and an audit row for each press.
+- What: Builds `game-state.controls`. The admin console has Start, Pause, and Off buttons that post to `POST /admin/game-state` and swap the panel in place with HTMX. Off asks to confirm. `game_state.change` saves the new state and an audit row (`game_on`, `pause`, `game_off`) in one transaction, and pressing the current state writes nothing. Ushers get 403 `WRONG_ROLE`, and an unknown state gets 400 `BAD_INPUT`. Every player page with the bottom bar shows "Game paused" while paused and "The game is closed right now." while off, read fresh on each page. While off, `GET /join` says sign-up is closed instead of showing the form. Three route test fixtures now start the app, so pages can read the game state.
 - Why: Picked by Owen with `/pick-task`. Due 2026-12-04 and unlocks 5 pieces, including `screen.main` and `checkin.sessions`.
-- Rule IDs: GAME-101, GAME-104, GAME-110, OPS-001, ARCH-050, UI-033, GAME-108, ENG-101, ENG-108
-- Status: Started
+- Rule IDs: GAME-100, GAME-101, GAME-102, GAME-104, GAME-108, GAME-110, OPS-001, ARCH-035, ARCH-038, ARCH-040, ARCH-042, ARCH-050, API-002, API-003, API-005, UI-033, AI-044, ENG-101, ENG-108
+- Status: Done
 - PR: #67
 
 ## 2026-11-01 · chore/preview-staff-seed · Claude Opus 5.5 / @jonathango98
