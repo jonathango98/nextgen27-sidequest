@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-02 · feat/game-state-controls · Claude Opus 5.5 / @OwenTjandra
+
+- What: Claims `game-state.controls`: admin Start, Pause, and Off buttons, a paused note on every player page, sign-up closed while off, and an audit row for each press.
+- Why: Picked by Owen with `/pick-task`. Due 2026-12-04 and unlocks 5 pieces, including `screen.main` and `checkin.sessions`.
+- Rule IDs: GAME-101, GAME-104, GAME-110, OPS-001, ARCH-050, UI-033, GAME-108, ENG-101, ENG-108
+- Status: Started
+- PR: draft
+
 ## 2026-11-01 · chore/preview-staff-seed · Claude Opus 5.5 / @jonathango98
 
 - What: Every PR preview makes a test admin `test-admin-1` and a test usher `test-usher-1` when it starts, so staff pages can be hand-tested without running commands in each preview. Passwords come only from the Railway variables `SQ_PREVIEW_ADMIN_PASSWORD` and `SQ_PREVIEW_USHER_PASSWORD`, never the repo. An unset variable skips that account, and an existing account is never changed. New rule: the PR that makes a piece work also adds fake example data for it to the preview startup (ENG-113 in `16-feature-tree.md` 1.7.0, AI-047 in `10-ai-agent-rules.md` 1.6.0, DEC-064 in `13-decisions.md` 1.28.0, `AGENTS.md` 1.6.0, `CONTRIBUTING.md` 1.6.0, and a PR template checkbox), all needing Jonathan's approval (ENG-080). 7 new tests.
