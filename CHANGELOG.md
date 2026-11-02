@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-01 · feat/points-score · Claude Opus 5.5 / @marcjason2012
+
+- What: Builds `points.score`. Sign-up saves the player and their join points in one transaction, through a new `points.award_join`, the only award allowed while paused. Home now shows the real score from the ledger. Only Home shows the score (DEC-062): the top bar on every other player page shows just Side Quest, linking to Home, and `--font-size-score` is no longer used on player pages. While the game is off, `POST /join` refuses with `GAME_OFF` on the form and saves nothing. If `join.points_while_paused` is turned off, a player who joins during a pause gets no join points, then or later. `create_player` now takes the config, and the PIN is hashed before the write lock.
+- Why: Due 2026-11-20. Players couldn't see any points yet, because the score was a placeholder 0.
+- Rule IDs: UI-030, DEC-062, GAME-003, GAME-004, DATA-027, DATA-030, GAME-040, GAME-044, GAME-102, GAME-108, API-020, ARCH-013, ARCH-040, ARCH-041, AI-013, AI-041, UI-032, SAFE-016, SAFE-021, ENG-101, ENG-108, ENG-110
+- Status: Done
+- PR: #61
+
 ## 2026-10-31 · chore/look-base-done · Claude Opus 5.5 / @chrnso
 
 - What: Marks `look.base` Working. Moves it out of README In progress and adds it to the Player screens row in Working, in plain words. Regenerates the feature tree map, so `look.screens` unlocks.

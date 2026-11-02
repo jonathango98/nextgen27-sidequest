@@ -4,6 +4,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.auth import csrf, session, signup
+from app.config import load_config
 from app.db import connect
 from app.main import create_app
 from app.services import qr
@@ -37,7 +38,7 @@ def client(monkeypatch, db_path, church_ids, fake_pin):
                 "INSERT INTO church (name) VALUES (?)", (name,)
             ).lastrowid
         details = signup.Details("Test", "Player 1", church_ids[CHURCHES[0]], False)
-        signup.create_player(conn, details, fake_pin)
+        signup.create_player(conn, details, fake_pin, load_config())
         conn.close()
         c.get("/login")  # sets the CSRF cookie
         yield c

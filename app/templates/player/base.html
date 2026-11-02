@@ -8,10 +8,6 @@
   {# UI-030: same frame on every player page. Child pages set `tab` to mark the current tab. #}
   <header class="top-bar">
     <a href="/">Side Quest</a>
-    {% block top_score %}
-    <span class="score">{{ score }}</span>
-    <span class="score-label">points</span>
-    {% endblock %}
     {% block top_actions %}{% endblock %}
   </header>
 

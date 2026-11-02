@@ -40,9 +40,7 @@ def _frame_app():
     # Test-only route that renders the frame on its own. The real app does not have it (API-001).
     @app.get("/_test/frame")
     def frame(request: Request):
-        return templates.TemplateResponse(
-            request, "player/base.html", {"score": FAKE_SCORE}
-        )
+        return templates.TemplateResponse(request, "player/base.html")
 
     # Test-only page with every look.base component (07 section 3). Not in the real app (API-001).
     @app.get("/_test/components")

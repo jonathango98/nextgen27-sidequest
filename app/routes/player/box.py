@@ -14,6 +14,4 @@ Player = Annotated[CurrentPlayer, Depends(get_current_player)]
 
 @router.get("/box")
 def open_box(request: Request, player: Player):
-    return templates.TemplateResponse(
-        request, "player/box.html", {"score": player.score}
-    )
+    return templates.TemplateResponse(request, "player/box.html")

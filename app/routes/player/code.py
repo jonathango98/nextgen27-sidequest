@@ -48,9 +48,8 @@ def _qr_context(request: Request, player: CurrentPlayer, now: float) -> dict:
 
 @router.get("/code")
 def my_code(request: Request, player: Player, now: Now):
-    context = {"score": player.score, **_qr_context(request, player, now)}
     return templates.TemplateResponse(
-        request, "player/code.html", context, headers=NO_STORE
+        request, "player/code.html", _qr_context(request, player, now), headers=NO_STORE
     )
 
 
