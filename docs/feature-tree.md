@@ -5,7 +5,7 @@
 
 Every planned piece of work and what it needs first (ENG-105 to ENG-108), grouped by the week it is due (PRD-054). Pieces flow left to right in time: finishing one unlocks the pieces it points to. Run `/pick-task` to claim one.
 
-**Working** 18 · **In progress** 0 · **Ready** 12 · **Waiting** 18 · **Needs decision** 0
+**Working** 18 · **In progress** 1 · **Ready** 11 · **Waiting** 18 · **Needs decision** 0
 
 Colors: green Working, blue In progress, gold Ready, gray Waiting, red dashed Needs decision.
 
@@ -169,7 +169,8 @@ flowchart LR
   classDef waiting fill:#f1f0eb,stroke:#c3c0b6,color:#545a66
   classDef decision fill:#fdeeec,stroke:#b42318,stroke-dasharray:4 3,color:#14151a
   class app_foundation,auth_join_login,code_my_code,connections_scanner_camera,connections_table,game_state_controls,game_state_core,infra_hosting,look_base,points_audit_log,points_ledger,points_score,ready_logout,ready_retention,screens_skeleton,staff_accounts,staff_login,usher_console working
-  class admin_players,admin_setup,checkin_sessions,connections_meet,explore_booths,home_pages,look_screens,ready_backups,ready_load_test,ready_rate_limits,screen_main,wrapped_cards ready
+  class ready_rate_limits in_progress
+  class admin_players,admin_setup,checkin_sessions,connections_meet,explore_booths,home_pages,look_screens,ready_backups,ready_load_test,screen_main,wrapped_cards ready
   class admin_audit_view,admin_award_revoke,blind_box_close_redemption,blind_box_handout,checkin_hall,checkin_window,connections_answers,connections_verse_picker,explore_items,game_state_auto_pause,journal_notes,journal_share_review,leaderboards_in_app,leaderboards_screen,recap_screen,wrapped_collection,wrapped_save_image,wrapped_stat_cards waiting
 ```
 
@@ -227,11 +228,6 @@ flowchart LR
     2. Look through the page and the form. There should be no spot for where an item is hidden.
     3. As Test Usher on a phone, scan Test Player 1's My Code at Example Booth A. Test Player 1's score should go up.
     4. Scan again at Example Booth A. It should be refused with no extra points. Example Booth B should still work.
-- `ready.rate-limits`: Stops someone from trying to log in or sign up too many times too fast from the same place. This makes guessing someone's PIN much harder. (M, hard, backend, due fri jan 8)
-  - Try it:
-    1. On a local run or PR preview, type a wrong PIN for the log in over and over, quickly, using different Test Players.
-    2. After too many tries you should get a slow down message instead of a normal wrong PIN message.
-    3. Wait a bit and check log in works again, and never do this on production.
 - `ready.backups`: Railway makes safe copies of the game's data on a schedule, and we prove a copy can bring everything back if something goes wrong. (M, hard, infra, due fri jan 8)
   - Try it:
     1. On staging, never production, make a Railway backup, then join as Test Player 9 and restore the backup.
@@ -252,7 +248,7 @@ flowchart LR
 
 ## In progress
 
-- None
+- `ready.rate-limits`: Stops someone from trying to log in or sign up too many times too fast from the same place. This makes guessing someone's PIN much harder.
 
 ## Needs a decision
 

@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-02 · feat/ready-rate-limits · Claude Opus 5.5 / @jonathango98
+
+- What: Claims `ready.rate-limits`: per-IP limits on login and sign-up tries, with a 429 `RATE_LIMITED` "slow down" message.
+- Why: Picked through `/pick-task`. Due 2027-01-08. Stops one common PIN being tried against every account.
+- Rule IDs: ARCH-031, SAFE-022, ENG-101
+- Status: Started
+- PR: draft
+
 ## 2026-11-02 · feat/game-state-controls · Claude Opus 5.5 / @OwenTjandra
 
 - What: Builds `game-state.controls`. The admin console has Start, Pause, and Off buttons that post to `POST /admin/game-state` and swap the panel in place with HTMX. Off asks to confirm. `game_state.change` saves the new state and an audit row (`game_on`, `pause`, `game_off`) in one transaction, and pressing the current state writes nothing. Ushers get 403 `WRONG_ROLE`, and an unknown state gets 400 `BAD_INPUT`. Every player page with the bottom bar shows "Game paused" while paused and "The game is closed right now." while off, read fresh on each page. While off, `GET /join` says sign-up is closed instead of showing the form. While the game is not on, Meet friends, Write, and the Scan button are greyed out and the Scan page shows a short note instead of the camera. My Code, Read, and Open Box stay open (GAME-102). While paused, player pages get the gray paused look (`--color-bg-paused`). Three route test fixtures now start the app, so pages can read the game state.

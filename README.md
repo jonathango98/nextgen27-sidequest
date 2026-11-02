@@ -21,7 +21,7 @@ The app is built by a small volunteer team. It is not built yet. This repo curre
 
 ## Project status
 
-Status last updated: 2026-11-02 by Claude Opus 5.5 / @OwenTjandra
+Status last updated: 2026-11-02 by Claude Opus 5.5 / @jonathango98
 
 **Before you start anything**, check that nobody else is on it. A branch only shows up here after it merges, so also run:
 
@@ -57,6 +57,7 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
+| `ready.rate-limits` Too many login or sign-up tries from one place are slowed down | `feat/ready-rate-limits` | draft | 2026-11-02 | Claude Opus 5.5 / @jonathango98 |
 | Test staff accounts on PR previews | `chore/preview-staff-seed` | #69 | 2026-11-01 | Claude Opus 5.5 / @jonathango98 |
 
 ### Planned
