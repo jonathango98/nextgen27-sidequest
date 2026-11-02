@@ -2,8 +2,8 @@
 
 - Status: LOCKED
 - Owner: Jonathan (@jonathango98)
-- Version: 1.5.0
-- Last updated: 2026-10-30
+- Version: 1.6.0
+- Last updated: 2026-11-01
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -52,6 +52,7 @@ The people using these agents are volunteers who are still learning. Agents shou
 - **AI-042** [LOCKED] Every implemented rule has tests named with its rule ID, including the edge cases in `02-game-rules.md` section 12 (ENG-046).
 - **AI-043** [LOCKED] Anything touching sign-up, PIN or login, admin controls, or minors' data gets the `safety-review` label and a second-person review before merge (SAFE-016).
 - **AI-044** [LOCKED] Before committing a change that can affect a page (routes, templates, CSS, JavaScript), run the `browser-check` skill in `.claude/skills/browser-check/`. Every changed screen opens at 360px wide with no console errors, and you look at each screenshot (ENG-045). Report what you checked. If the check cannot run (no app yet, Playwright not installed), say so plainly. Never report a check you did not run.
+- **AI-047** [LOCKED] When a piece works, the same PR adds fake example data for it to the PR preview startup, so the person running the hand test has something to tap (ENG-113). Never seed real data or the hidden item list (SAFE-030). Seeding minors' data is a stop-and-ask (AI-050).
 
 ## 5. Teaching mode
 

@@ -2,8 +2,8 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.5.0
-- Last updated: 2026-10-30
+- Version: 1.6.0
+- Last updated: 2026-11-01
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -75,7 +75,7 @@ Example: you want to add the join form.
    ```
 
 9. **Fill in the short PR template:** what and why (with rule IDs) and how to test. Give the PR a title like `feat(player): add join form`.
-10. **Try it by hand, then mark it ready for review.** Open the PR's preview link and run every step under How to test (your piece's `try_it` steps), on a real phone for player pages. Tick each step as it passes (ENG-112). Someone else reviews and merges. You never merge your own PR.
+10. **Try it by hand, then mark it ready for review.** If your piece needs data to try (players, a session, items), add fake examples for it to the preview startup in `app/main.py` in the same PR, so every preview has them (ENG-113). Open the PR's preview link and run every step under How to test (your piece's `try_it` steps), on a real phone for player pages. Tick each step as it passes (ENG-112). Someone else reviews and merges. You never merge your own PR.
 11. **If `main` moved on,** rebase and push safely:
 
     ```bash

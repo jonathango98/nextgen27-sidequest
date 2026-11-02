@@ -2,7 +2,7 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.27.0
+- Version: 1.28.0
 - Last updated: 2026-11-01
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -83,6 +83,7 @@ Sources, in order of precedence:
 | DEC-061 | 2026-10-31 | A logged-out visitor who opens a player page goes straight to `/login`, with no "Please log in first." error. A page load gets a 303 redirect. An HTMX request gets 204 with `HX-Redirect: /login`, so the whole page moves instead of the login form landing inside a partial. After login the player lands on Home, not the page they first asked for. Changes the `LOGIN_REQUIRED` row in 06 section 3 (API-005). Staff pages follow the same pattern once staff login is built | The error left players stuck with no link forward. Landing on Home skips a `next` parameter, which would need open-redirect checks | Jonathan (2026-10-31, PR #65) |
 | DEC-062 | 2026-10-31 | Design review of the Mix screens (Design canvas v91). Only Home shows the score. Every other top bar shows just Side Quest (UI-030). Home adds "Hi, <first name>" over the score, labels Write "A journal" and Read "All journals", and says Claim box in place of Redeem box (UI-036). The Journal form drops its visible "Takeaway" label and uses the page title instead (UI-053). Its button becomes "Submit +20", with a Cancel back to Home (UI-039, UI-057). The journal list, the shared takeaways page, and Scan get back links (UI-030). A finished quest on Quests shows plain "Done" text, not an outlined pill, since it is not a button. Copy: "Select your church" (06 section 3), "Create a PIN", "How to claim" on Open Box, and "Session happening now" on the paused Home buttons | Reviewers found the repeated score noisy and the Home labels unclear. "Claim box" won over "Redeem points" because boxes unlock at point milestones and points are never spent | Jonathan (2026-10-31, PR #66) |
 | DEC-063 | 2026-11-01 | Staff log in at `GET` and `POST /staff/login` with a username and password (ARCH-036). A staff login lasts 24 hours, then asks again (`auth.staff_session_hours`). Admins can open every usher page as well as admin pages (ARCH-035). No lockout after wrong staff passwords for now: IP rate limits slow guessing (ARCH-031) | A staff login can do far more than a player's, so it ends much sooner than the 400-day player cookie (ARCH-034). Admins often help at the game booth. A staff lockout can come later if the safety review asks for it | Jonathan (2026-10-31, PR #58). PROPOSED |
+| DEC-064 | 2026-11-01 | PR previews seed fake example data at start: Example Churches, a test admin `test-admin-1`, and a test usher `test-usher-1`, with passwords from the Railway variables `SQ_PREVIEW_ADMIN_PASSWORD` and `SQ_PREVIEW_USHER_PASSWORD`. From now on, the PR that makes a piece work also seeds example data for it (ENG-113, AI-047). `AGENTS.md`, `CONTRIBUTING.md`, and the PR template say the same | Hand testers had to run commands in each preview's shell before they could log in as staff or try a feature. Seeding with each piece keeps example data in step with the code, instead of building it ahead of features | Jonathan (2026-11-01, PR #69) |
 
 ## 2. Resolved conflicts
 
