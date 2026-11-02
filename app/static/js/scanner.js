@@ -1,5 +1,6 @@
-// Scan page: reads QR codes with the phone camera (ARCH-025, UI-034).
-// Saving a scan comes with connections.meet (POST /scan).
+// Scan page and usher console: reads QR codes with the phone camera (ARCH-025, UI-034).
+// A page with a scan form sends each code to the server, which checks it (ARCH-026).
+// Saving a player's scan comes with connections.meet (POST /scan).
 (function () {
   "use strict";
 
@@ -10,6 +11,8 @@
   var status = document.querySelector(".scan-result");
   var alert = document.querySelector("[role=alert]");
   var again = document.querySelector("[data-scan-again]");
+  var form = document.querySelector("[data-scan-form]");
+  var outcome = document.querySelector("[data-scan-outcome]");
   var prefix = root.dataset.format + ".";
 
   // UI-034: a frame is checked this often, well inside the one second budget.
@@ -69,7 +72,13 @@
       stop();
       show(alert, "");
       show(status, "Got it!");
-      showAgain("Scan again");
+      if (form) {
+        // The server's answer replaces "Got it!" when it comes back.
+        form.elements.payload.value = text;
+        window.htmx.trigger(form, "submit");
+      } else {
+        showAgain("Scan again");
+      }
     } else {
       // ARCH-025, API table NOT_A_CODE: keep scanning for the right code.
       show(alert, "This isn't a Side Quest code.");
@@ -92,6 +101,7 @@
   async function start() {
     show(status, "");
     show(alert, "");
+    if (outcome) outcome.textContent = "";
     again.hidden = true;
     try {
       detector = detector || (await makeDetector());
@@ -112,8 +122,19 @@
     tick();
   }
 
+  if (form) {
+    form.addEventListener("htmx:afterRequest", function (event) {
+      show(status, "");
+      // No answer at all, for example no signal. A refused scan shows the server's message.
+      if (!event.detail.xhr.status) show(alert, "No connection. Try again.");
+      showAgain("Scan again");
+    });
+  }
+
   again.addEventListener("click", start);
   window.addEventListener("pagehide", stop);
   window.sqScanner = { handle: handle };
-  start();
+  // The usher console keeps the camera off until the usher taps Scan.
+  if ("startOnTap" in root.dataset) showAgain("Scan");
+  else start();
 })();

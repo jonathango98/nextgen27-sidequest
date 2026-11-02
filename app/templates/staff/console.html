@@ -3,13 +3,34 @@
 {% block title %}{{ "Admin" if page == "admin" else "Usher" }} console · Side Quest{% endblock %}
 
 {% block content %}
-  {# ARCH-035: a plain landing page for now. The real tools come with their own pieces. #}
+  {# ARCH-035: the other tools come with their own pieces. #}
   <div class="stack">
     <h1>{{ "Admin" if page == "admin" else "Usher" }} console</h1>
     <div class="card">
       <p>Logged in as <strong>{{ staff.username }}</strong> ({{ staff.role }}).</p>
-      <p>{{ "Game controls" if page == "admin" else "Scan tools" }} are coming soon.</p>
+      {% if page == "admin" %}<p>Game controls are coming soon.</p>{% endif %}
     </div>
+    {% if page == "usher" %}
+      {# GAME-112: the same scanner players use (07 section 3). The server checks every code (ARCH-026). #}
+      <div class="scanner" data-scanner data-start-on-tap data-format="{{ qr_format }}"
+           data-wasm="/static/js/vendor/zxing-wasm-3.1.3-reader.wasm">
+        <video class="scanner-video" muted playsinline aria-label="Camera"></video>
+        <div class="scanner-guide" aria-hidden="true"></div>
+      </div>
+      <p class="scanner-help">Point at a code</p>
+      <p class="scan-result" role="status" hidden></p>
+      <p role="alert" hidden></p>
+      <form data-scan-form hidden hx-post="/usher/scan" hx-target="[data-scan-outcome]" hx-swap="innerHTML">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <input type="hidden" name="payload">
+      </form>
+      <div data-scan-outcome></div>
+      <button class="button" type="button" data-scan-again hidden></button>
+      <a class="button button-secondary" href="/usher/players">Find player</a>
+      {# ARCH-004: barcode-detector 3.2.2 (ZXing 3.1.3), served from our own server, not a CDN. #}
+      <script src="/static/js/vendor/barcode-detector-3.2.2.ponyfill.js" defer></script>
+      <script src="/static/js/scanner.js" defer></script>
+    {% endif %}
     {# DEC-063: admins can open usher pages too. #}
     {% if page == "admin" %}<a class="button button-secondary" href="/usher">Usher console</a>{% endif %}
     {% if page == "usher" and staff.role == "admin" %}<a class="button button-secondary" href="/admin">Admin console</a>{% endif %}

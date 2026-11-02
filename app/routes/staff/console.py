@@ -1,5 +1,5 @@
-"""Plain usher and admin consoles, so a staff login lands somewhere (ARCH-035). GET /usher and
-GET /admin only (API-001). The real tools come with their own pieces, such as usher.scan and
+"""Usher and admin consoles (ARCH-035, GAME-112). GET /usher and GET /admin only (API-001).
+The usher console has the scanner. The other tools come with their own pieces, such as
 game-state.admin-switch.
 """
 
@@ -21,7 +21,13 @@ def _console(request: Request, staff: CurrentStaff, page: str):
     response = templates.TemplateResponse(
         request,
         "staff/console.html",
-        {"csrf_token": token, "staff": staff, "page": page},
+        {
+            "csrf_token": token,
+            "staff": staff,
+            "page": page,
+            # ARCH-025: the scanner only accepts codes that start with this version.
+            "qr_format": request.app.state.config["qr"]["format_version"],
+        },
     )
     csrf.set_token(response, token)
     return response
