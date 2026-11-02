@@ -60,16 +60,18 @@ def test_game_101_admin_switches_the_game_at_min_width(
             page.goto(f"{live_server}{path}")
             expect(page.get_by_role("status")).to_have_text(BANNERS["paused"])
             _fits(page)
-        # Nothing that earns points can be opened, and the camera stays off (GAME-102).
+        # Only Home stays open, with every button greyed out (GAME-102, DEC-068).
         page.goto(f"{live_server}/")
-        expect(page.get_by_role("button", name="Meet friends")).to_be_disabled()
-        expect(page.get_by_role("link", name="Read")).to_be_visible()
+        for name in ("Meet friends", "Write", "Read", "Redeem box"):
+            expect(page.get_by_role("button", name=name)).to_be_disabled()
         page.screenshot(path=tmp_path / "home-paused.png", full_page=True)
+        # My Code hides the code, and the camera stays off.
+        page.goto(f"{live_server}/code")
+        expect(page.get_by_text("Back after the session.")).to_be_visible()
+        expect(page.locator(".qr-panel")).to_have_count(0)
+        page.screenshot(path=tmp_path / "code-paused.png", full_page=True)
         page.goto(f"{live_server}/scan")
-        expect(page.get_by_text("Scanning is back after the session.")).to_be_visible()
         expect(page.locator("[data-scanner]")).to_have_count(0)
-        _fits(page)
-        page.screenshot(path=tmp_path / "scan-paused.png", full_page=True)
 
         # Start brings the game back, and the note is gone on the next page.
         page.goto(f"{live_server}/admin")

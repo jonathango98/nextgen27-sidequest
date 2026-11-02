@@ -112,7 +112,21 @@ def test_game_102_home_play_buttons_wait_while_not_on(client, state):
     assert 'href="/scan"' not in html
     assert 'href="/journal/new"' not in html
     assert '<button class="button" type="button" disabled>Meet friends</button>' in html
-    # Reading your own things still works (GAME-102).
+
+
+def test_dec_066_home_stays_open_while_paused_with_reading_greyed_out(client):
+    _set(client, "paused")
+    html = client.get("/").text
+    assert "120 points" in html  # FAKE_PLAYER's score
+    assert "Back after the session." not in html
+    assert 'href="/summary"' not in html
+    assert 'href="/box"' not in html
+    assert ">Read</button>" in html
+
+
+def test_game_108_reading_stays_open_while_off(client):
+    _set(client, "off")
+    html = client.get("/").text
     assert 'href="/summary"' in html
     assert 'href="/box"' in html
 
@@ -123,26 +137,44 @@ def test_game_102_home_play_buttons_work_while_on(client):
     assert 'href="/journal/new"' in html
 
 
-@pytest.mark.parametrize("state", ["paused", "off"])
-def test_game_102_my_code_still_shows_but_scan_waits(client, state):
-    _set(client, state)
+@pytest.mark.parametrize("path", [p for p in PAGES if p != "/"])
+def test_dec_066_every_other_page_shows_the_paused_screen(client, path):
+    _set(client, "paused")
+    html = client.get(path).text
+    assert "Back after the session." in html
+    assert 'class="qr-panel"' not in html
+    assert "data-scanner" not in html
+
+
+@pytest.mark.parametrize("path", [p for p in PAGES if p != "/"])
+def test_dec_066_pages_open_again_after_start(client, path):
+    _set(client, "paused")
+    client.get(path)
+    _set(client, "on")
+    assert "Back after the session." not in client.get(path).text
+
+
+def test_dec_066_open_my_code_page_loses_its_code_while_paused(client):
+    _set(client, "paused")
+    response = client.get("/code/qr", headers={"HX-Request": "true"})
+    assert response.status_code == 423
+    assert 'data-error-code="PAUSED"' in response.text
+    assert "<svg" not in response.text
+
+
+def test_game_108_my_code_still_shows_while_off_but_scan_waits(client):
+    _set(client, "off")
     html = client.get("/code").text
-    assert 'class="qr-panel"' in html  # GAME-102: My Code works while paused
+    assert 'class="qr-panel"' in html  # blind box claims on Sunday need it (GAME-078)
     assert 'href="/scan"' not in html
     assert '<button class="button" type="button" disabled>Scan</button>' in html
+    assert client.get("/code/qr").status_code == 200
 
 
-@pytest.mark.parametrize(
-    ("state", "message"),
-    [
-        ("paused", "Scanning is back after the session."),
-        ("off", "Scanning is closed right now."),
-    ],
-)
-def test_game_102_scan_page_has_no_camera_while_not_on(client, state, message):
-    _set(client, state)
+def test_game_108_scan_page_has_no_camera_while_off(client):
+    _set(client, "off")
     html = client.get("/scan").text
-    assert message in html
+    assert "Scanning is closed right now." in html
     assert "data-scanner" not in html
     assert "scanner.js" not in html
 

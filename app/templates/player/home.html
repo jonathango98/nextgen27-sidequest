@@ -1,5 +1,6 @@
 {% extends "player/base.html" %}
 {% set tab = "home" %}
+{% set open_while_paused = true %}
 
 {% block title %}Home · Side Quest{% endblock %}
 
@@ -32,7 +33,13 @@
     <button class="button" type="button" disabled>Meet friends</button>
     <button class="button button-secondary" type="button" disabled>Write</button>
     {% endif %}
+    {# GAME-102, DEC-068: while paused, Read and Open Box wait too. #}
+    {% if game_state() != "paused" %}
     <a class="button button-secondary" href="/summary">Read</a>
     <a class="button button-secondary" href="/box">Redeem box</a>
+    {% else %}
+    <button class="button button-secondary" type="button" disabled>Read</button>
+    <button class="button button-secondary" type="button" disabled>Redeem box</button>
+    {% endif %}
   </nav>
 {% endblock %}
