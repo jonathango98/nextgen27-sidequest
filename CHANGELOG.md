@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Picked through `/pick-task`. Due 2026-12-04 and unlocks `explore.booths`, `explore.items`, and `blind-box.handout`.
 - Rule IDs: GAME-112, ARCH-025, GAME-113, SAFE-004, SAFE-028, ENG-101, ENG-108
 - Status: Started
-- PR: draft
+- PR: #68
 
 ## 2026-11-01 · feat/staff-login · Claude Opus 5.5 / @OwenTjandra
 
