@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Picked by Owen with `/pick-task`. Due 2026-12-04 and unlocks 5 pieces, including `screen.main` and `checkin.sessions`.
 - Rule IDs: GAME-101, GAME-104, GAME-110, OPS-001, ARCH-050, UI-033, GAME-108, ENG-101, ENG-108
 - Status: Started
-- PR: draft
+- PR: #67
 
 ## 2026-11-01 · chore/preview-staff-seed · Claude Opus 5.5 / @jonathango98
 

@@ -56,7 +56,7 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| `game-state.controls` Admin buttons to start, pause, or switch off the game | `feat/game-state-controls` | draft | 2026-11-02 | Claude Opus 5.5 / @OwenTjandra |
+| `game-state.controls` Admin buttons to start, pause, or switch off the game | `feat/game-state-controls` | #67 | 2026-11-02 | Claude Opus 5.5 / @OwenTjandra |
 | Test staff accounts on PR previews | `chore/preview-staff-seed` | #69 | 2026-11-01 | Claude Opus 5.5 / @jonathango98 |
 
 ### Planned
