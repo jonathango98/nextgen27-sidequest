@@ -7,6 +7,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import PlainTextResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
 
+from app.access_log import keep_queries_out_of_log
 from app.auth.csrf import CsrfFailed
 from app.auth.current import LoginRequired
 from app.auth.staff import StaffLoginRequired, WrongRole
@@ -28,12 +29,14 @@ from app.routes.player import (
 )
 from app.routes.staff import console as staff_console
 from app.routes.staff import login as staff_login
+from app.routes.staff import usher as staff_usher
 from app.services import churches
 from app.services.game_state import GAME_NOT_ON_MESSAGES, GameNotOn
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    keep_queries_out_of_log()  # ARCH-051
     # DATA-040: migrations run at start. ARCH-010: one replica, so only one process runs them.
     app.state.db_path = db_path_from_env()
     conn = connect(app.state.db_path)
@@ -58,6 +61,7 @@ def create_app() -> FastAPI:
     app.include_router(logout.router)
     app.include_router(staff_login.router)
     app.include_router(staff_console.router)
+    app.include_router(staff_usher.router)
     # Screen skeleton (UI-030): plain pages, no game logic yet.
     for module in (home, scan, quests, journal, box, wrapped):
         app.include_router(module.router)

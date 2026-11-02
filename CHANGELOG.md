@@ -22,10 +22,10 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-11-01 · feat/usher-console · Claude Opus 5.5 / @marcjason2012
 
-- What: Claims `usher.console`. Ushers will get a helper page where they scan a player's code, or search by name if the player's phone is dead, to pick who they are helping, and see only what an usher needs.
+- What: Building `usher.console`. Done so far: `GET /usher/players` lets ushers and admins find a player by first, last, or full name and pick them. Results and the player card show first name, last initial, and church only, and the query never reads the under-18 answer or PIN hash. An empty search lists nobody. `app/access_log.py` strips query strings from the server's access log, because the search text is in the URL and logs must never hold a last name. Scanning a code to pick a player waits on Jonathan's route approval.
 - Why: Picked through `/pick-task`. Due 2026-12-04 and unlocks `explore.booths`, `explore.items`, and `blind-box.handout`.
-- Rule IDs: GAME-112, ARCH-025, GAME-113, SAFE-004, SAFE-028, ENG-101, ENG-108
-- Status: Started
+- Rule IDs: GAME-112, ARCH-025, GAME-113, SAFE-004, SAFE-019, SAFE-028, ARCH-035, ARCH-051, API-001, API-005, API-007, DEC-063, ENG-101, ENG-108
+- Status: In progress
 - PR: #68
 
 ## 2026-11-01 · feat/staff-login · Claude Opus 5.5 / @OwenTjandra
