@@ -32,7 +32,9 @@ def client(monkeypatch, window_start):
     app = create_app()
     app.dependency_overrides[get_current_player] = lambda: FAKE_PLAYER
     app.dependency_overrides[code.current_time] = lambda: window_start
-    return TestClient(app)
+    # Start the app, so pages can read the game state for the paused note (UI-033).
+    with TestClient(app) as c:
+        yield c
 
 
 @pytest.mark.parametrize("path", PATHS)

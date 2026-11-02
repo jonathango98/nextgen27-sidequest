@@ -1,0 +1,3 @@
+{# UI-033: a short note while the game is paused or off. Never scolds. #}
+{% set banner = game_banner() %}
+{% if banner %}<p class="game-banner" role="status">{{ banner }}</p>{% endif %}
