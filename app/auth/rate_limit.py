@@ -65,5 +65,20 @@ def client_ip(request: Request) -> str:
 
 
 def allow(request: Request, kind: str) -> bool:
+    # TEMPORARY diagnostic, PR previews only. Removed before review.
+    import logging
+    import os
+
+    from app.services.churches import is_preview
+
+    if is_preview(os.environ.get("RAILWAY_ENVIRONMENT_NAME")):
+        logging.getLogger("uvicorn.error").warning(
+            "rl-diag xff=%r real=%r fastly=%r client=%r picked=%r",
+            request.headers.getlist("x-forwarded-for"),
+            request.headers.get("x-real-ip"),
+            request.headers.get("fastly-client-ip"),
+            request.client.host if request.client else None,
+            client_ip(request),
+        )
     limit = request.app.state.config["auth"][LIMIT_KEYS[kind]]
     return request.app.state.rate_limiter.allow(kind, client_ip(request), limit)
