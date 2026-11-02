@@ -1,4 +1,4 @@
-"""Staff log in (ARCH-036, DEC-061). GET and POST /staff/login only (API-001)."""
+"""Staff log in (ARCH-036, DEC-063). GET and POST /staff/login only (API-001)."""
 
 import sqlite3
 from typing import Annotated

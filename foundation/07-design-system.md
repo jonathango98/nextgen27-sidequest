@@ -2,8 +2,8 @@
 
 - Status: PROPOSED (everything here may change until the designer signs off)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.5.0
-- Last updated: 2026-10-29
+- Version: 1.6.0
+- Last updated: 2026-10-31
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -63,7 +63,7 @@ Contrast ratios below were checked with the WCAG 2.1 formula.
 | `--font-size-body` | `16px` | Body text on phones (never smaller) |
 | `--font-size-small` | `14px` | Labels and helper text only |
 | `--font-size-h1` | `38px` | Page titles on phones |
-| `--font-size-score` | `34px` | The score in the top bar |
+| `--font-size-score` | `34px` | Not used on player pages since DEC-062 (only Home shows the score, UI-030) |
 | `--font-size-score-hero` | `128px` | The big score on Home (120px for the points on the scan result) |
 | `--space-1` to `--space-6` | `4px`, `8px`, `12px`, `16px`, `24px`, `32px` | Padding and gaps |
 | `--radius` | `26px` | Cards, panels, and big buttons |
@@ -93,15 +93,16 @@ Contrast ratios below were checked with the WCAG 2.1 formula.
 
 ## 4. Phone screens
 
-- **UI-030** [PROPOSED] Every player page has the same frame: a top bar with the score, the content, and a bottom bar with three tabs: Home, My Code, Quests. Scan is not a tab. It opens from the Scan button on My Code and from Meet friends on Home. Home shows the big score itself, so its top bar has no score.
+- **UI-030** [PROPOSED] Every player page has the same frame: a top bar, the content, and a bottom bar with three tabs: Home, My Code, Quests. Only Home shows the score (UI-036). Every other top bar shows just the Side Quest name, which links to Home (DEC-062). Scan is not a tab. It opens from the Scan button on My Code and from Meet friends on Home. The journal list and the shared takeaways page have a "Back to home" link above the title, and Scan has "Back to My Code".
 - **UI-031** [LOCKED] The Journal form shows this note next to the visibility choice, in plain words: "Anonymous hides your name from other players. Game organizers can still see who wrote it." (SAFE-009)
 - **UI-032** [PROPOSED] If submitting a form fails (paused, no connection, too short), the text stays in the form so nothing typed is lost.
 - **UI-033** [PROPOSED] The paused banner says something short like "Game paused". It never scolds.
 - **UI-034** [PROPOSED] The scanner result shows within one second of a scan, with a big clear message: the friend's name and church, then the icebreaker question. Points show after the player types their answer, for example "+15" (GAME-016, DEC-053).
 - **UI-035** [PROPOSED] Each screen has at most one main (black) button, for its most important action. Everything else is frosted white.
-- **UI-036** [PROPOSED] Home layout, top to bottom: the big score (`--font-size-score-hero`) with "points" under it, then blind box progress ("Next box" with the numbers, UI-051). In the lower half (UI-003): Meet friends (the black main button, opens the scanner), a row split in two with Write (new journal entry, with its points pill) and Read (shared takeaways, `/summary`), then Redeem box (Open Box). The top bar has a settings gear (at least 48px, UI-003) that opens a small menu. Its only item is Log out in red (`--color-error`), which asks "Log out on this phone?" first and signs out this phone only (ARCH-034, DEC-058).
+- **UI-036** [PROPOSED] Home layout, top to bottom: the player's first name ("Hi, <first name>"), the big score (`--font-size-score-hero`) with "points" under it, then blind box progress ("Next box" with the numbers, UI-051). In the lower half (UI-003): Meet friends (the black main button, opens the scanner), a row split in two with Write, "A journal" under it (new journal entry, with its points pill), and Read, "All journals" under it (shared takeaways, `/summary`), then Claim box (Open Box) (DEC-062). The top bar has a settings gear (at least 48px, UI-003) that opens a small menu. Its only item is Log out in red (`--color-error`), which asks "Log out on this phone?" first and signs out this phone only (ARCH-034, DEC-058).
 - **UI-037** [PROPOSED] My Code shows the QR panel, then a black Scan button. The scanner, the icebreaker, and the scan result all sit under the My Code tab.
 - **UI-038** [PROPOSED] The shared takeaways page (`/summary`) lists approved shared takeaways grouped by session, newest session first, as takeaway cards (section 3).
+- **UI-039** [PROPOSED] The Journal form's main button is "Submit" with its points pill. A frosted Cancel button under it goes back to Home without saving (UI-035, DEC-062).
 
 The Mix mockup shows a scan going to the icebreaker first and the points result after it. GAME-016 settles it (DEC-042): each player's points land when they type their own answer, so build this order.
 
@@ -124,13 +125,13 @@ The Mix mockup shows a scan going to the icebreaker first and the points result 
 | "You wrote 4 takeaways this weekend." | "You wrote fewer takeaways than most people." |
 | "Keep playing to unlock your next box." | "Not enough points." |
 
-- **UI-057** [PROPOSED] Buttons, labels, and helper lines are one or two words, for example "Meet friends", "Scan again", "Save +20". Don't explain what the screen already shows. Use longer text only where a rule sets the exact words (UI-031).
+- **UI-057** [PROPOSED] Buttons, labels, and helper lines are one or two words, for example "Meet friends", "Scan again", "Submit +20". Don't explain what the screen already shows. Use longer text only where a rule sets the exact words (UI-031).
 
 ## 7. Accessibility
 
 - **UI-051** [LOCKED] Color is never the only way to show meaning. Errors have text, church colors have names, and the progress bar has numbers.
 - **UI-052** [LOCKED] Text contrast is at least 4.5:1 (3:1 for large text and for UI parts like borders and icons).
-- **UI-053** [PROPOSED] Every input has a visible label. Every icon button has an accessible name.
+- **UI-053** [PROPOSED] Every input has a visible label. A form whose only text box sits right under the page title may use that title as the label (`aria-labelledby`), as the Journal form does (DEC-062). Every icon button has an accessible name.
 - **UI-054** [PROPOSED] Focus is always visible for keyboard and switch users.
 - **UI-055** [PROPOSED] Animations, including Wrapped transitions, respect the "reduce motion" setting.
 - **UI-056** [PROPOSED] Pages still work when text is enlarged to 200%.

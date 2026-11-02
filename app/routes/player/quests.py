@@ -14,6 +14,4 @@ Player = Annotated[CurrentPlayer, Depends(get_current_player)]
 
 @router.get("/quests")
 def quests(request: Request, player: Player):
-    return templates.TemplateResponse(
-        request, "player/quests.html", {"score": player.score}
-    )
+    return templates.TemplateResponse(request, "player/quests.html")

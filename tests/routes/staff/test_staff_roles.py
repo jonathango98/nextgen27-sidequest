@@ -91,7 +91,7 @@ def test_arch_035_usher_cannot_open_admin_console(client):
     assert "This page is for admins only." in response.text
 
 
-def test_dec_061_admin_can_open_usher_console(client):
+def test_dec_063_admin_can_open_usher_console(client):
     _log_in(client, *ADMIN)
     response = client.get("/usher")
     assert response.status_code == 200
@@ -105,7 +105,10 @@ def test_arch_035_player_session_is_not_staff(client, db_path, fake_pin, path):
         "INSERT INTO church (name) VALUES ('Example Church A')"
     ).lastrowid
     public_id = signup.create_player(
-        conn, signup.Details("Test", "Player 1", church, False), fake_pin
+        conn,
+        signup.Details("Test", "Player 1", church, False),
+        fake_pin,
+        client.app.state.config,
     )
     conn.close()
     client.cookies.set(
@@ -131,7 +134,7 @@ def test_arch_035_player_cookie_value_is_not_a_staff_cookie(client):
     assert _sent_to_login(client.get("/admin"))
 
 
-def test_dec_061_staff_login_ends_after_the_configured_hours(client, clock, hours):
+def test_dec_063_staff_login_ends_after_the_configured_hours(client, clock, hours):
     _log_in(client, *ADMIN)
     clock[0] = FAKE_START + hours * 60 * 60 - 1
     assert client.get("/admin").status_code == 200
@@ -150,7 +153,7 @@ def test_arch_036_switched_off_account_is_logged_out_on_next_page(client, db_pat
     assert _sent_to_login(client.get("/usher"))
 
 
-def test_dec_061_logout_ends_the_staff_session(client):
+def test_dec_063_logout_ends_the_staff_session(client):
     _log_in(client, *ADMIN)
     response = client.post("/logout", data={"csrf_token": client.cookies[csrf.COOKIE]})
     assert (response.status_code, response.headers["location"]) == (

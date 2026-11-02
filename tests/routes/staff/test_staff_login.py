@@ -142,7 +142,7 @@ def test_arch_038_staff_login_needs_csrf(client):
     assert staff_session.COOKIE not in response.cookies
 
 
-def test_dec_061_cookie_lasts_the_configured_hours(client, hours):
+def test_dec_063_cookie_lasts_the_configured_hours(client, hours):
     cookie = _log_in(client, *ADMIN).headers["set-cookie"]
     assert cookie.startswith(f"{staff_session.COOKIE}=")
     assert f"Max-Age={hours * 60 * 60}" in cookie

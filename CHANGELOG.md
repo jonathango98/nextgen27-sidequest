@@ -20,13 +20,45 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
-## 2026-10-31 · feat/staff-login · Claude Opus 5.5 / @OwenTjandra
+## 2026-11-01 · feat/staff-login · Claude Opus 5.5 / @OwenTjandra
 
-- What: Builds `staff.login`. `GET` and `POST /staff/login` take a username and password with a CSRF token. An unknown username, a wrong password, and a switched-off account all get the same message after the same hashing work, and the password is never sent back (ARCH-036, ARCH-038). A separate signed cookie, `__Host-sq_staff`, holds the staff id and the time it was issued, signed for a different purpose than the player cookie so neither passes as the other. The server refuses it after `auth.staff_session_hours` (24), not only the browser (DEC-061). `require_role("usher")` and `require_role("admin")` guard every staff page: logged out goes to `/staff/login` (303, or `HX-Redirect`), an usher on an admin page gets 403 `WRONG_ROLE`, admins can open usher pages, and an account switched off after logging in is logged out on its next page (ARCH-035). Plain `/usher` and `/admin` consoles show who is logged in, with Log out; the real tools come with their own pieces. `POST /logout` also clears the staff cookie and sends staff back to `/staff/login`. No lockout after wrong staff passwords yet (DEC-061). Foundation: the two routes and the screen in `06-api-and-screens.md` 1.6.0, DEC-061 in `13-decisions.md` 1.25.0, and `auth.staff_session_hours` in `game-config.yaml` 1.5.0, all needing Jonathan's approval (ENG-080). 29 route tests and a browser test at 360px in Chromium and WebKit.
+- What: Builds `staff.login`. `GET` and `POST /staff/login` take a username and password with a CSRF token. An unknown username, a wrong password, and a switched-off account all get the same message after the same hashing work, and the password is never sent back (ARCH-036, ARCH-038). A separate signed cookie, `__Host-sq_staff`, holds the staff id and the time it was issued, signed for a different purpose than the player cookie so neither passes as the other. The server refuses it after `auth.staff_session_hours` (24), not only the browser (DEC-063). `require_role("usher")` and `require_role("admin")` guard every staff page: logged out goes to `/staff/login` (303, or `HX-Redirect`), an usher on an admin page gets 403 `WRONG_ROLE`, admins can open usher pages, and an account switched off after logging in is logged out on its next page (ARCH-035). Plain `/usher` and `/admin` consoles show who is logged in, with Log out; the real tools come with their own pieces. `POST /logout` also clears the staff cookie and sends staff back to `/staff/login`. No lockout after wrong staff passwords yet (DEC-063). Foundation: the two routes and the screen in `06-api-and-screens.md` 1.6.0, DEC-063 in `13-decisions.md` 1.25.0, and `auth.staff_session_hours` in `game-config.yaml` 1.5.0, all needing Jonathan's approval (ENG-080). 29 route tests and a browser test at 360px in Chromium and WebKit.
 - Why: Picked by Owen after `staff.accounts`, stacked on it as Jonathan asked. Due 2026-11-20 and unlocks the admin, usher, check-in, and game switch pieces.
-- Rule IDs: ARCH-034, ARCH-035, ARCH-036, ARCH-038, API-001, API-002, API-004, API-005, DEC-061, ENG-087, AI-044, ENG-101, ENG-108
+- Rule IDs: ARCH-034, ARCH-035, ARCH-036, ARCH-038, API-001, API-002, API-004, API-005, DEC-063, ENG-087, AI-044, ENG-101, ENG-108
 - Status: Done
 - PR: #58
+
+## 2026-11-01 · feat/points-score · Claude Opus 5.5 / @marcjason2012
+
+- What: Builds `points.score`. Sign-up saves the player and their join points in one transaction, through a new `points.award_join`, the only award allowed while paused. Home now shows the real score from the ledger. Only Home shows the score (DEC-062): the top bar on every other player page shows just Side Quest, linking to Home, and `--font-size-score` is no longer used on player pages. While the game is off, `POST /join` refuses with `GAME_OFF` on the form and saves nothing. If `join.points_while_paused` is turned off, a player who joins during a pause gets no join points, then or later. `create_player` now takes the config, and the PIN is hashed before the write lock.
+- Why: Due 2026-11-20. Players couldn't see any points yet, because the score was a placeholder 0.
+- Rule IDs: UI-030, DEC-062, GAME-003, GAME-004, DATA-027, DATA-030, GAME-040, GAME-044, GAME-102, GAME-108, API-020, ARCH-013, ARCH-040, ARCH-041, AI-013, AI-041, UI-032, SAFE-016, SAFE-021, ENG-101, ENG-108, ENG-110
+- Status: Done
+- PR: #61
+
+## 2026-10-31 · chore/look-base-done · Claude Opus 5.5 / @chrnso
+
+- What: Marks `look.base` Working. Moves it out of README In progress and adds it to the Player screens row in Working, in plain words. Regenerates the feature tree map, so `look.screens` unlocks.
+- Why: PR #62 merged after Jonathan's approval, but the move to Working was left for after the hand test on a phone, which needed a PR preview (ENG-108, ENG-112).
+- Rule IDs: ENG-100, ENG-103, ENG-108, ENG-109, ENG-112
+- Status: Done
+- PR: #63
+
+## 2026-10-31 · docs/bloom-review-copy · Claude Opus 5.5 / @jonathango98
+
+- What: Foundation catches up with the Mix design review (Design canvas v91). Only Home shows the score. Home gets "Hi, <first name>", "A journal" and "All journals" under Write and Read, and Claim box in place of Redeem box. The Journal form uses "Submit +20" with a Cancel button, and its page title labels the text box. Back links on the journal list, shared takeaways, and Scan. "Please select your church." Protected changes: UI-030, UI-036, new UI-039, UI-053, UI-057 in `07-design-system.md` (1.6.0), the `BAD_INPUT` row in `06-api-and-screens.md` (1.6.1), DEC-062 in `13-decisions.md` (1.26.0). Docs only. The player templates follow in a separate PR.
+- Why: Design review comments on the Mix screens, answered by Jonathan.
+- Rule IDs: DEC-062, UI-030, UI-036, UI-039, UI-053, UI-057, ENG-087
+- Status: Done
+- PR: #66
+
+## 2026-10-31 · fix/login-redirect · Claude Opus 5.5 / @jonathango98
+
+- What: Logged-out players who open any player page go straight to `/login` instead of seeing "Please log in first." The `LoginRequired` handler in `app/main.py` sends a 303 to `/login` on a page load, and 204 with `HX-Redirect: /login` on an HTMX request, so the My Code QR refresh moves the whole page instead of loading the login form inside the QR box. After login the player lands on Home. Protected changes: the `LOGIN_REQUIRED` row in `06-api-and-screens.md` (1.6.0) and DEC-061 in `13-decisions.md` (1.25.0). Staff pages follow once staff login (#58) merges.
+- Why: The bare error left players with no way forward. Jonathan asked for a direct redirect.
+- Rule IDs: DEC-061, API-002, API-005, ARCH-034, ENG-087
+- Status: Done
+- PR: #65
 
 ## 2026-10-31 · feat/staff-accounts · Claude Opus 5.5 / @OwenTjandra
 

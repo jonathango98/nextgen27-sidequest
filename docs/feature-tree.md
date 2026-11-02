@@ -5,7 +5,7 @@
 
 Every planned piece of work and what it needs first (ENG-105 to ENG-108), grouped by the week it is due (PRD-054). Pieces flow left to right in time: finishing one unlocks the pieces it points to. Run `/pick-task` to claim one.
 
-**Working** 14 · **In progress** 1 · **Ready** 10 · **Waiting** 23 · **Needs decision** 0
+**Working** 16 · **In progress** 0 · **Ready** 11 · **Waiting** 21 · **Needs decision** 0
 
 Colors: green Working, blue In progress, gold Ready, gray Waiting, red dashed Needs decision.
 
@@ -168,20 +168,19 @@ flowchart LR
   classDef ready fill:#fff4d6,stroke:#a87400,stroke-width:3px,color:#14151a
   classDef waiting fill:#f1f0eb,stroke:#c3c0b6,color:#545a66
   classDef decision fill:#fdeeec,stroke:#b42318,stroke-dasharray:4 3,color:#14151a
-  class app_foundation,auth_join_login,code_my_code,connections_scanner_camera,connections_table,game_state_core,infra_hosting,points_audit_log,points_ledger,ready_logout,ready_retention,screens_skeleton,staff_accounts,staff_login working
-  class look_base in_progress
-  class admin_players,admin_setup,connections_meet,game_state_controls,home_pages,points_score,ready_backups,ready_load_test,ready_rate_limits,usher_console ready
-  class admin_audit_view,admin_award_revoke,blind_box_close_redemption,blind_box_handout,checkin_hall,checkin_sessions,checkin_window,connections_answers,connections_verse_picker,explore_booths,explore_items,game_state_auto_pause,journal_notes,journal_share_review,leaderboards_in_app,leaderboards_screen,look_screens,recap_screen,screen_main,wrapped_cards,wrapped_collection,wrapped_save_image,wrapped_stat_cards waiting
+  class app_foundation,auth_join_login,code_my_code,connections_scanner_camera,connections_table,game_state_core,infra_hosting,look_base,points_audit_log,points_ledger,points_score,ready_logout,ready_retention,screens_skeleton,staff_accounts,staff_login working
+  class admin_players,admin_setup,connections_meet,game_state_controls,home_pages,look_screens,ready_backups,ready_load_test,ready_rate_limits,usher_console,wrapped_cards ready
+  class admin_audit_view,admin_award_revoke,blind_box_close_redemption,blind_box_handout,checkin_hall,checkin_sessions,checkin_window,connections_answers,connections_verse_picker,explore_booths,explore_items,game_state_auto_pause,journal_notes,journal_share_review,leaderboards_in_app,leaderboards_screen,recap_screen,screen_main,wrapped_collection,wrapped_save_image,wrapped_stat_cards waiting
 ```
 
 ## Ready now
 
-- `points.score`: When a new player signs up, they get the points for joining the game, one time only. The bar at the top of every player page shows the player's real score. (M, medium, player-app, due fri nov 20)
+- `look.screens`: The Home, My Code and shared notes pages made to look like the chosen design. Home and the notes page use pretend numbers and fake note cards for now. (L, easy, design, due fri nov 27)
   - Try it:
-    1. On the PR preview, join as Test Player 1 on a phone. The score bar should show the points for joining.
-    2. Open Home, My Code and Quests. The score should be the same on every page.
-    3. Log out and log in again. The score should not go up a second time.
-    4. Refresh a few times. The score should not change by itself.
+    1. Open Home as Test Player 1 on a phone, or a browser 360px wide. It should match the mockup, with nothing spilling off the side.
+    2. Open My Code. The QR panel and the black Scan button should match the mockup and fit on screen, and Scan should open the scanner.
+    3. Open the summary page. The fake cards should match the mockup, with text wrapping and nothing cut off.
+    4. Check the browser console on each page. There should be no red errors.
 - `game-state.controls`: Buttons for an admin to start the game, pause it, or turn it off, and a friendly note on every player page while it is paused. When the game is off, the sign-up page says it is closed. Each button press is written in the game's notebook. (M, medium, admin-screens, due fri dec 4)
   - Try it:
     1. On the PR preview, log in as Test Admin on a laptop and press Pause. The page should show the new state without a full reload.
@@ -238,10 +237,17 @@ flowchart LR
     1. Run the load test command against staging, never production, and wait for it to finish.
     2. It should print a summary showing how fast the pages answered and whether any failed.
     3. Check the staging app still opens normally on a phone afterward.
+- `wrapped.cards`: An admin presses a button to open Wrapped, your personal story of the conference. Until then, players see a note saying when it will open. Once open, it's cards you swipe through like a little story, starting with a Welcome card. (L, medium, player-app, due fri jan 15)
+  - Try it:
+    1. On a phone at the PR preview, log in as Test Player 1 and open Wrapped. You should see the note about when it unlocks.
+    2. Type the address of a Wrapped card directly. You should still see only the note.
+    3. Log in as Test Admin and unlock Wrapped, then reload the phone. You should land on the Welcome card.
+    4. Swipe left and right. You should move back and forth through the cards.
+    5. Turn on Reduce Motion in the phone settings and reload. The cards should change with no sliding or zooming.
 
 ## In progress
 
-- `look.base`: The frame around every player screen in the chosen design, with the score bar on top, the buttons at the bottom, and a glowing, grainy background. Also building blocks like buttons, cards and progress bars, ready for every screen to reuse.
+- None
 
 ## Needs a decision
 

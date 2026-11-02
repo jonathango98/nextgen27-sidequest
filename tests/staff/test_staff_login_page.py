@@ -51,7 +51,7 @@ def test_arch_035_staff_login_at_min_width(
     expect(page.locator('[data-error-code="BAD_INPUT"]')).to_be_visible()
     expect(page.get_by_label("Password")).to_have_value("")
 
-    # Admin lands on the admin console, and can open the usher console too (DEC-061).
+    # Admin lands on the admin console, and can open the usher console too (DEC-063).
     page.get_by_label("Password").fill(FAKE_PASSWORD)
     page.get_by_role("button", name="Log in").click()
     page.wait_for_url(f"{live_server}/admin")

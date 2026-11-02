@@ -29,13 +29,7 @@ from app.routes.player import (
 from app.routes.staff import console as staff_console
 from app.routes.staff import login as staff_login
 from app.services import churches
-from app.services.game_state import GameNotOn
-
-# API-020: friendly message for each 423 code, from 06-api-and-screens.md section 3.
-GAME_NOT_ON_MESSAGES = {
-    "PAUSED": "The game is paused during the session.",
-    "GAME_OFF": "The game is closed right now.",
-}
+from app.services.game_state import GAME_NOT_ON_MESSAGES, GameNotOn
 
 
 @asynccontextmanager
@@ -70,13 +64,11 @@ def create_app() -> FastAPI:
 
     @app.exception_handler(LoginRequired)
     def login_required(request: Request, exc: LoginRequired):
-        # API-005: error partial with the error code from 06-api-and-screens.md section 3.
-        return templates.TemplateResponse(
-            request,
-            "partials/error.html",
-            {"error_code": "LOGIN_REQUIRED", "message": "Please log in first."},
-            status_code=401,
-        )
+        # DEC-061: straight to the login page, no error. HTMX would swap a 303's
+        # login page into the target, so HTMX gets HX-Redirect instead (API-002).
+        if request.headers.get("HX-Request"):
+            return Response(status_code=204, headers={"HX-Redirect": "/login"})
+        return RedirectResponse("/login", status_code=303)
 
     @app.exception_handler(StaffLoginRequired)
     def staff_login_required(request: Request, exc: StaffLoginRequired):

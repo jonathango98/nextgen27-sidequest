@@ -36,10 +36,17 @@ def client(monkeypatch, window_start):
 
 
 @pytest.mark.parametrize("path", PATHS)
-def test_api_005_my_code_requires_login(path):
-    response = TestClient(create_app()).get(path)
-    assert response.status_code == 401
-    assert 'data-error-code="LOGIN_REQUIRED"' in response.text
+def test_dec_061_my_code_logged_out_goes_to_login(path):
+    response = TestClient(create_app()).get(path, follow_redirects=False)
+    assert response.status_code == 303
+    assert response.headers["location"] == "/login"
+
+
+@pytest.mark.parametrize("path", PATHS)
+def test_dec_061_my_code_logged_out_htmx_goes_to_login(path):
+    response = TestClient(create_app()).get(path, headers={"HX-Request": "true"})
+    assert response.status_code == 204
+    assert response.headers["hx-redirect"] == "/login"
 
 
 @pytest.mark.parametrize("path", PATHS)
@@ -57,7 +64,8 @@ def test_game_001_my_code_is_never_cached(client, path):
 
 def test_ui_030_my_code_page_uses_player_frame(client):
     html = client.get("/code").text
-    assert f'<span class="score">{FAKE_PLAYER.score}</span>' in html
+    assert '<a href="/">Side Quest</a>' in html
+    assert 'class="score"' not in html
     assert "/static/js/htmx.min.js" in html
 
 

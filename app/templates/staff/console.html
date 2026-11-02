@@ -10,7 +10,7 @@
       <p>Logged in as <strong>{{ staff.username }}</strong> ({{ staff.role }}).</p>
       <p>{{ "Game controls" if page == "admin" else "Scan tools" }} are coming soon.</p>
     </div>
-    {# DEC-061: admins can open usher pages too. #}
+    {# DEC-063: admins can open usher pages too. #}
     {% if page == "admin" %}<a class="button button-secondary" href="/usher">Usher console</a>{% endif %}
     {% if page == "usher" and staff.role == "admin" %}<a class="button button-secondary" href="/admin">Admin console</a>{% endif %}
     <form method="post" action="/logout">

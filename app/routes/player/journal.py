@@ -14,21 +14,15 @@ Player = Annotated[CurrentPlayer, Depends(get_current_player)]
 
 @router.get("/journal")
 def my_takeaways(request: Request, player: Player):
-    return templates.TemplateResponse(
-        request, "player/journal.html", {"score": player.score}
-    )
+    return templates.TemplateResponse(request, "player/journal.html")
 
 
 @router.get("/journal/new")
 def new_takeaway(request: Request, player: Player):
-    return templates.TemplateResponse(
-        request, "player/journal_new.html", {"score": player.score}
-    )
+    return templates.TemplateResponse(request, "player/journal_new.html")
 
 
 @router.get("/summary")
 def summary(request: Request, player: Player):
     # SAFE-017: signed-in players only, so it needs the player like every page here.
-    return templates.TemplateResponse(
-        request, "player/summary.html", {"score": player.score}
-    )
+    return templates.TemplateResponse(request, "player/summary.html")

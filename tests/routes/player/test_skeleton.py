@@ -39,10 +39,17 @@ def client():
 
 
 @pytest.mark.parametrize("path", PAGES)
-def test_api_005_skeleton_pages_require_login(path):
-    response = TestClient(create_app()).get(path)
-    assert response.status_code == 401
-    assert 'data-error-code="LOGIN_REQUIRED"' in response.text
+def test_dec_061_skeleton_pages_logged_out_go_to_login(path):
+    response = TestClient(create_app()).get(path, follow_redirects=False)
+    assert response.status_code == 303
+    assert response.headers["location"] == "/login"
+
+
+@pytest.mark.parametrize("path", PAGES)
+def test_dec_061_skeleton_pages_logged_out_htmx_go_to_login(path):
+    response = TestClient(create_app()).get(path, headers={"HX-Request": "true"})
+    assert response.status_code == 204
+    assert response.headers["hx-redirect"] == "/login"
 
 
 @pytest.mark.parametrize("path", PAGES)
@@ -62,13 +69,20 @@ def test_ui_035_each_page_has_at_most_one_main_button(client, path):
     assert len(re.findall(r'class="button"', client.get(path).text)) <= 1
 
 
+def top_bar_text(html):
+    header = re.search(r'<header class="top-bar">(.*?)</header>', html, re.DOTALL)
+    return re.sub(r"<[^>]+>", "", header.group(1)).strip()
+
+
 @pytest.mark.parametrize("path", [p for p in TABBED_PAGES if p != "/"])
-def test_ui_030_other_pages_show_score_in_top_bar(client, path):
-    assert '<span class="score">120</span>' in client.get(path).text
+def test_ui_030_other_pages_top_bar_shows_just_the_name(client, path):
+    html = client.get(path).text
+    assert top_bar_text(html) == "Side Quest"
+    assert '<a href="/">Side Quest</a>' in html
 
 
 def test_ui_030_home_top_bar_has_no_score(client):
-    assert 'class="score"' not in client.get("/").text
+    assert str(FAKE_PLAYER.score) not in top_bar_text(client.get("/").text)
 
 
 def test_ui_036_home_shows_big_score(client):

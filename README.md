@@ -21,7 +21,7 @@ The app is built by a small volunteer team. It is not built yet. This repo curre
 
 ## Project status
 
-Status last updated: 2026-10-31 by Claude Opus 5.5 / @OwenTjandra
+Status last updated: 2026-11-01 by Claude Opus 5.5 / @OwenTjandra
 
 **Before you start anything**, check that nobody else is on it. A branch only shows up here after it merges, so also run:
 
@@ -39,7 +39,7 @@ What the app can do today, grouped by area, in plain words for anyone to read. W
 |---|---|---|---|
 | 2026-10-28 | `auth.join-login` `ready.logout` | Joining and logging in | Players join with their name, church, a PIN, and an "Are you 18 or older?" question. They can log in again on another phone. Too many wrong PINs lock the account. A settings gear on Home has Log out, which asks to confirm, then signs out that phone only, so the next person who picks it up can't play as them |
 | 2026-10-23 | `code.my-code` | Personal QR code | Each player has their own QR code on the My Code screen. It keeps changing, so a screenshot can't be passed around |
-| 2026-10-26 | `screens.skeleton` | Player screens | Every player screen exists as a plain page, and every button and tab leads to the right next screen. The bottom bar has Home, My Code, and Quests. The final look and the game itself come next |
+| 2026-10-31 | `screens.skeleton` `look.base` | Player screens | Every player screen exists, and every button and tab leads to the right next screen. Every page has the chosen look: a cream background with soft flower-colored streaks and a light film grain, titles in a printed-program serif, a frosted bottom bar with Home, My Code, and Quests, one black main button, and frosted white cards and buttons. Join, Pick a PIN, and Log in match the design, and the PIN step has a Back button that keeps what was typed. A wrong login says how many wrong tries in a row lock an account. The final Home and My Code layouts come next |
 | 2026-10-27 | | Game rules | The full game rules are written down, and most open game questions are answered. Prizes and what goes inside the blind boxes are still to be decided |
 | 2026-10-28 | `app.foundation` `infra.hosting` | Behind the scenes | A private test site updates with every change, and each proposed change gets its own preview link. Automatic tests check pages on the iPhone browser engine too. Game numbers live in one settings file, so they're easy to tune after playtests. Volunteers get a map of what's ready to build and a `/pick-task` helper to claim work. Every feature has a due week so all of them are done by January 15, before Playtest 1, and `/pick-task` offers what's due soonest |
 | 2026-10-29 | `connections.table` | Meeting people | The game has a place to remember who met whom. The same two people can only ever be saved as a pair once, whoever scans whom, and nobody can connect with themselves. It also remembers which new churches each player has met, so the new church bonus pays once. Scanning comes next |
@@ -47,8 +47,8 @@ What the app can do today, grouped by area, in plain words for anyone to read. W
 | 2026-10-29 | `ready.retention` | Protecting players after the event | A cleanup command deletes every player's personal data once the keep-until date has passed. That date is a set number of days after the event ends, and both live in the game settings file. Before that date it refuses and removes nothing. It shows what it would remove first, and only deletes when confirmed. Deleted data can't be recovered from the database file afterwards. Then it lists the steps to do by hand on the same day: Railway backups, server logs, the real data folder, and staff accounts |
 | 2026-10-29 | `game-state.core` | Game on, paused, or off | The game is always on, paused, or off. While it is paused or off, anything that earns points is refused with a friendly message, and the change applies to the very next tap. Admin buttons to switch it and the pause banner come next |
 | 2026-10-29 | `connections.scanner-camera` | Scanner | The Scan page opens the phone's back camera and reads QR codes, on iPhone Safari too. A Side Quest code shows "Got it!", any other code says it isn't a Side Quest code, and a blocked camera says so with a Try again button. Saving who met whom comes next |
-| 2026-10-29 | `points.ledger` | Points | Every point is given out in one place. It is refused while the game is paused or off, the same award is never paid twice even when two phones tap at once, and each award is noted in the audit log. A score is always the total of what was given. Quests start paying points as their pieces are built |
-| 2026-10-31 | `staff.accounts` `staff.login` | Staff accounts | Ushers and admins each have their own account, with a password stored so nobody can read it. A setup command makes the very first admin. Staff log in at the staff login page and land on their console: ushers on the usher console, admins on the admin console, and admins can open the usher console too. An usher who opens an admin page is told it is for admins only, a staff page opened while logged out asks to log in, and a staff login ends after 24 hours. Log out works for staff too. The real usher and admin tools come next |
+| 2026-11-01 | `points.ledger` `points.score` | Points | Every point is given out in one place. It is refused while the game is paused or off, the same award is never paid twice even when two phones tap at once, and each award is noted in the audit log. A score is always the total of what was given. New players get their joining points once, even while the game is paused, and Home shows their real score. While the game is off, sign-up is closed. Other quests start paying points as their pieces are built |
+| 2026-11-01 | `staff.accounts` `staff.login` | Staff accounts | Ushers and admins each have their own account, with a password stored so nobody can read it. A setup command makes the very first admin. Staff log in at the staff login page and land on their console: ushers on the usher console, admins on the admin console, and admins can open the usher console too. An usher who opens an admin page is told it is for admins only, a staff page opened while logged out asks to log in, and a staff login ends after 24 hours. Log out works for staff too. The real usher and admin tools come next |
 
 ### In progress
 
@@ -56,7 +56,6 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| `look.base` Every player screen gets the chosen look, with shared buttons, cards and bars | `feat/look-base` | #62 | 2026-10-30 | Claude Opus 5.5 / @chrnso |
 
 ### Planned
 

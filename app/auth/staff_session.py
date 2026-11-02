@@ -1,4 +1,4 @@
-"""Signed staff session cookie (ARCH-034, ARCH-036, DEC-061). Separate from the player cookie.
+"""Signed staff session cookie (ARCH-034, ARCH-036, DEC-063). Separate from the player cookie.
 
 A phone can be logged in as a player and as staff at once, and neither can stand in for the other:
 the staff cookie is signed for a different purpose, so a player cookie never passes as staff.
@@ -53,7 +53,7 @@ def staff_session_id(request: Request, hours: int) -> int | None:
         return None
     if not (issued.isascii() and issued.isdigit()):
         return None
-    # DEC-061: the server checks the age itself. The cookie's max_age is only a hint to the browser.
+    # DEC-063: the server checks the age itself. The cookie's max_age is only a hint to the browser.
     age = _now() - int(issued)
     if not 0 <= age < hours * 60 * 60:
         return None

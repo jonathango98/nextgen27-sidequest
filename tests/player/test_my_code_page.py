@@ -61,12 +61,22 @@ def test_api_006_my_code_shows_error_partial(page: Page, live_server):
     page.route(
         "**/code/qr",
         lambda route: route.fulfill(
-            status=401,
+            status=423,
             content_type="text/html",
-            body='<p role="alert" data-error-code="LOGIN_REQUIRED">Please log in first.</p>',
+            body='<p role="alert" data-error-code="PAUSED">The game is paused during the session.</p>',
         ),
     )
     page.goto(f"{live_server}/code")
-    expect(page.locator('[data-error-code="LOGIN_REQUIRED"]')).to_be_visible(
+    expect(page.locator('[data-error-code="PAUSED"]')).to_be_visible(
         timeout=REFRESH_TIMEOUT_MS
     )
+
+
+def test_dec_061_my_code_goes_to_login_when_logged_out(page: Page, live_server):
+    # What the server sends an HTMX request once the session is gone.
+    page.route(
+        "**/code/qr",
+        lambda route: route.fulfill(status=204, headers={"HX-Redirect": "/login"}),
+    )
+    page.goto(f"{live_server}/code")
+    expect(page).to_have_url(f"{live_server}/login", timeout=REFRESH_TIMEOUT_MS)

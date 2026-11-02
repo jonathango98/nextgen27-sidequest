@@ -1,4 +1,4 @@
-"""The logged-in usher or admin, and the role check on every staff page (ARCH-035, DEC-061)."""
+"""The logged-in usher or admin, and the role check on every staff page (ARCH-035, DEC-063)."""
 
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -8,7 +8,7 @@ from fastapi import Request
 from app.auth.staff_session import staff_session_id
 from app.db import connect
 
-# ARCH-035: which roles may open each kind of staff page. DEC-061: admins can open usher pages too.
+# ARCH-035: which roles may open each kind of staff page. DEC-063: admins can open usher pages too.
 ALLOWED = {"usher": ("usher", "admin"), "admin": ("admin",)}
 
 
