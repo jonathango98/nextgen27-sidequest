@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Picked by Owen from the feature tree. Due 2026-12-04 and unlocks 4 pieces. `game-state.controls` (#67) stays open, waiting for review.
 - Rule IDs: GAME-013, GAME-014, ARCH-026, API-020, API-030, API-032, GAME-017, SAFE-043, ENG-101, ENG-108
 - Status: Started
-- PR: draft
+- PR: #70
 
 ## 2026-11-01 · feat/staff-login · Claude Opus 5.5 / @OwenTjandra
 

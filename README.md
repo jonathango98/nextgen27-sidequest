@@ -56,7 +56,7 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| `connections.meet` Scanning a player saves that you met, with a shared icebreaker | `feat/connections-meet` | draft | 2026-11-01 | Claude Opus 5.5 / @OwenTjandra |
+| `connections.meet` Scanning a player saves that you met, with a shared icebreaker | `feat/connections-meet` | #70 | 2026-11-01 | Claude Opus 5.5 / @OwenTjandra |
 
 ### Planned
 
