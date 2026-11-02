@@ -10,6 +10,7 @@ from fastapi.staticfiles import StaticFiles
 from app.access_log import keep_queries_out_of_log
 from app.auth.csrf import CsrfFailed
 from app.auth.current import LoginRequired
+from app.auth.rate_limit import RateLimiter
 from app.auth.staff import StaffLoginRequired, WrongRole
 from app.config import load_config
 from app.db import connect, db_path_from_env, migrate
@@ -55,6 +56,7 @@ def create_app() -> FastAPI:
     # API-001: only routes in 06-api-and-screens.md, so FastAPI's built-in docs pages are off.
     app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None, lifespan=lifespan)
     app.state.config = load_config()
+    app.state.rate_limiter = RateLimiter()  # ARCH-031
     # ARCH-010: the app serves its own static files.
     app.mount("/static", StaticFiles(directory=APP_DIR / "static"), name="static")
     app.include_router(code.router)
