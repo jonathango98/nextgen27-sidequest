@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Picked through `/pick-task`. Due 2027-01-08. Stops one common PIN being tried against every account.
 - Rule IDs: ARCH-031, SAFE-022, ENG-101
 - Status: Started
-- PR: draft
+- PR: #71
 
 ## 2026-11-02 · feat/game-state-controls · Claude Opus 5.5 / @OwenTjandra
 
