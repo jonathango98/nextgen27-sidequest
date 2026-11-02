@@ -1,0 +1,37 @@
+{% extends "player/plain.html" %}
+
+{% block title %}Find player · Side Quest{% endblock %}
+
+{% block content %}
+  <div class="stack">
+    <h1>Find player</h1>
+
+    {% if picked %}
+      {% include "staff/partials/player_card.html" %}
+      <a class="button button-secondary" href="/usher/players">Find another</a>
+    {% else %}
+      {% if error_code %}{% include "partials/error.html" %}{% endif %}
+      {# API-007: a plain form, so it works without JavaScript. #}
+      <form class="form" method="get" action="/usher/players">
+        <div class="card form-card">
+          <label for="q">Name</label>
+          <input id="q" name="q" value="{{ q }}" maxlength="{{ query_max }}" autocomplete="off" autocapitalize="words" spellcheck="false" required>
+        </div>
+        <button class="button" type="submit">Search</button>
+      </form>
+
+      {% if results %}
+        <nav class="stack" aria-label="Players found">
+          {% for found in results %}
+            <a class="button button-secondary" href="/usher/players?player={{ found.public_id | urlencode }}">{{ found.first_name }} {{ found.last_initial }}. · {{ found.church }}</a>
+          {% endfor %}
+        </nav>
+        {% if more %}<p class="hint">Type more of the name to see everyone.</p>{% endif %}
+      {% elif q %}
+        <p class="hint">No players found.</p>
+      {% endif %}
+    {% endif %}
+
+    <a class="button button-secondary" href="/usher">Usher console</a>
+  </div>
+{% endblock %}
