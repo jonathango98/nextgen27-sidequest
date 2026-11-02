@@ -2,8 +2,8 @@
 #
 # Status: Active
 # Owner: Jonathan (@jonathango98)
-# Version: 1.4.0
-# Last updated: 2026-10-29
+# Version: 1.5.0
+# Last updated: 2026-11-01
 # Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 #
 # How to read this file
@@ -81,6 +81,7 @@ auth:
   pin_reset_role: admin               # SAFE-023 LOCKED: only an admin resets a locked PIN
   login_ip_limit_per_minute: 60       # ARCH-031 PROPOSED: login attempts allowed per IP per minute
   signup_ip_limit_per_minute: 600     # ARCH-031 PROPOSED: sign-ups allowed per IP per minute (venue Wi-Fi shares one address)
+  staff_session_hours: 24             # DEC-063 PROPOSED: a staff login lasts this long, then asks again
 
 join:
   points_while_paused: true           # GAME-044 PROPOSED: join points are given during a pause (Day 1 stage intro)

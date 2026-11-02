@@ -5,7 +5,7 @@
 
 Every planned piece of work and what it needs first (ENG-105 to ENG-108), grouped by the week it is due (PRD-054). Pieces flow left to right in time: finishing one unlocks the pieces it points to. Run `/pick-task` to claim one.
 
-**Working** 15 · **In progress** 0 · **Ready** 7 · **Waiting** 26 · **Needs decision** 0
+**Working** 16 · **In progress** 0 · **Ready** 11 · **Waiting** 21 · **Needs decision** 0
 
 Colors: green Working, blue In progress, gold Ready, gray Waiting, red dashed Needs decision.
 
@@ -168,24 +168,26 @@ flowchart LR
   classDef ready fill:#fff4d6,stroke:#a87400,stroke-width:3px,color:#14151a
   classDef waiting fill:#f1f0eb,stroke:#c3c0b6,color:#545a66
   classDef decision fill:#fdeeec,stroke:#b42318,stroke-dasharray:4 3,color:#14151a
-  class app_foundation,auth_join_login,code_my_code,connections_scanner_camera,connections_table,game_state_core,infra_hosting,look_base,points_audit_log,points_ledger,points_score,ready_logout,ready_retention,screens_skeleton,staff_accounts working
-  class connections_meet,home_pages,look_screens,ready_backups,ready_load_test,ready_rate_limits,staff_login ready
-  class admin_audit_view,admin_award_revoke,admin_players,admin_setup,blind_box_close_redemption,blind_box_handout,checkin_hall,checkin_sessions,checkin_window,connections_answers,connections_verse_picker,explore_booths,explore_items,game_state_auto_pause,game_state_controls,journal_notes,journal_share_review,leaderboards_in_app,leaderboards_screen,recap_screen,screen_main,usher_console,wrapped_cards,wrapped_collection,wrapped_save_image,wrapped_stat_cards waiting
+  class app_foundation,auth_join_login,code_my_code,connections_scanner_camera,connections_table,game_state_core,infra_hosting,look_base,points_audit_log,points_ledger,points_score,ready_logout,ready_retention,screens_skeleton,staff_accounts,staff_login working
+  class admin_players,admin_setup,connections_meet,game_state_controls,home_pages,look_screens,ready_backups,ready_load_test,ready_rate_limits,usher_console,wrapped_cards ready
+  class admin_audit_view,admin_award_revoke,blind_box_close_redemption,blind_box_handout,checkin_hall,checkin_sessions,checkin_window,connections_answers,connections_verse_picker,explore_booths,explore_items,game_state_auto_pause,journal_notes,journal_share_review,leaderboards_in_app,leaderboards_screen,recap_screen,screen_main,wrapped_collection,wrapped_save_image,wrapped_stat_cards waiting
 ```
 
 ## Ready now
 
-- `staff.login`: A login page for ushers and admins. Each staff page checks who you are and turns you away if your job is the wrong one. (M, hard, backend, due fri nov 20)
-  - Try it:
-    1. Open the staff login page on a local run and log in as the first admin, you should land on an admin page.
-    2. Then log in as Test Usher and open an admin page, you should be told you are not allowed.
-    3. Also try opening a staff page while logged out, you should be sent to log in.
 - `look.screens`: The Home, My Code and shared notes pages made to look like the chosen design. Home and the notes page use pretend numbers and fake note cards for now. (L, easy, design, due fri nov 27)
   - Try it:
     1. Open Home as Test Player 1 on a phone, or a browser 360px wide. It should match the mockup, with nothing spilling off the side.
     2. Open My Code. The QR panel and the black Scan button should match the mockup and fit on screen, and Scan should open the scanner.
     3. Open the summary page. The fake cards should match the mockup, with text wrapping and nothing cut off.
     4. Check the browser console on each page. There should be no red errors.
+- `game-state.controls`: Buttons for an admin to start the game, pause it, or turn it off, and a friendly note on every player page while it is paused. When the game is off, the sign-up page says it is closed. Each button press is written in the game's notebook. (M, medium, admin-screens, due fri dec 4)
+  - Try it:
+    1. On the PR preview, log in as Test Admin on a laptop and press Pause. The page should show the new state without a full reload.
+    2. On a phone, join as Test Player 1 and open Home, My Code and Quests. Each page should show a short paused note.
+    3. Press Start as Test Admin and reload the phone. The note should be gone.
+    4. Press Off, then open the sign-up page in a new private tab on the phone. It should say sign-up is closed.
+    5. Try to break it: log in as Test Usher and press a game button. You should be refused.
 - `connections.meet`: When one player scans another player's code, the game saves that they met and both phones show the same fun question to talk about, like a favorite food. The scanned player's My Code page shows a note without them tapping anything. It says no if you scan yourself, scan an old code, or scan someone you already met. (L, hard, player-app, due fri dec 4)
   - Try it:
     1. On the PR preview, join as Test Player 1 and Test Player 2 on two phones.
@@ -193,6 +195,12 @@ flowchart LR
     3. Within a few seconds, Test Player 2's phone should show a note and the very same question, without tapping anything.
     4. Scan the same code again. It should say you already met, with no new question and no second note.
     5. Try to break it: scan your own code, then a screenshot of an old code. Each should be refused with a clear message.
+- `usher.console`: A helper page for ushers. They scan a player's code with their phone camera to pick which player they are helping, or find them by typing their name if the player's phone is dead. (L, medium, admin-screens, due fri dec 4)
+  - Try it:
+    1. On the PR preview, log in as Test Usher on a phone and open the usher page.
+    2. Scan Test Player 1's My Code. You should see Test Player 1's first name and church.
+    3. Search for Test Player 1 by name and pick them. You should see only what an usher needs, with no PIN or full last name.
+    4. Try to break it: log in as Test Player 1 and open the usher page. You should be refused.
 - `home.pages`: Home shows the player's real score and how close they are to the next blind box. A Quests page lists every quest and how many points it gives. An Open Box page shows how many blind boxes the player can collect and how to go and get them. (L, easy, player-app, due fri dec 11)
   - Try it:
     1. On the PR preview, join as a brand new Test Player 1. Home should show the starting score and the progress bar without breaking.
@@ -201,6 +209,19 @@ flowchart LR
     4. Tap Open Box. It should show how many boxes you can collect and clear steps for the game booth. It should never say how many boxes are left in total, and tapping it should not use up a box.
     5. On a local run, change one points number in game-config.yaml and restart. Quests should show the new number without touching any page file.
     6. Run `pytest -k 'game_070 or game_071'`. The worked examples from the rules should pass.
+- `admin.players`: Admins can search for a player and see their account details, give them a fresh PIN after checking their badge, and change their church if they picked the wrong one at sign-up. Last names are shown to staff only, and every change is written down. (L, medium, admin-screens, due fri dec 11)
+  - Try it:
+    1. On a phone, lock Test Player 1 out by typing the wrong PIN several times.
+    2. On the PR preview, log in as Test Admin, search for Test Player 1 and open them. You should see their account details, including last name.
+    3. Reset their PIN. Test Player 1 should now log in with the new PIN.
+    4. Change their church from Example Church A to Example Church B. The player's phone should show the new church.
+    5. Try to break it: open the same pages as Test Usher. You should be refused.
+- `admin.setup`: An admin page to add a new usher or screen account and switch one off, and to add, rename or hide churches in the list players choose from at sign-up. Every change is written in the game's notebook. (M, medium, admin-screens, due fri dec 11)
+  - Try it:
+    1. On the PR preview, log in as Test Admin and add an account called Test Usher. Log in as Test Usher on another phone. You should get in.
+    2. Switch Test Usher off and try again. The login should be refused.
+    3. Add Example Church C, then open the sign-up page in a private tab. It should be in the list. Rename it and check the new name shows.
+    4. Try to break it: open these pages as Test Usher. You should be turned away.
 - `ready.rate-limits`: Stops someone from trying to log in or sign up too many times too fast from the same place. This makes guessing someone's PIN much harder. (M, hard, backend, due fri jan 8)
   - Try it:
     1. On a local run or PR preview, type a wrong PIN for the log in over and over, quickly, using different Test Players.
@@ -216,6 +237,13 @@ flowchart LR
     1. Run the load test command against staging, never production, and wait for it to finish.
     2. It should print a summary showing how fast the pages answered and whether any failed.
     3. Check the staging app still opens normally on a phone afterward.
+- `wrapped.cards`: An admin presses a button to open Wrapped, your personal story of the conference. Until then, players see a note saying when it will open. Once open, it's cards you swipe through like a little story, starting with a Welcome card. (L, medium, player-app, due fri jan 15)
+  - Try it:
+    1. On a phone at the PR preview, log in as Test Player 1 and open Wrapped. You should see the note about when it unlocks.
+    2. Type the address of a Wrapped card directly. You should still see only the note.
+    3. Log in as Test Admin and unlock Wrapped, then reload the phone. You should land on the Welcome card.
+    4. Swipe left and right. You should move back and forth through the cards.
+    5. Turn on Reduce Motion in the phone settings and reload. The cards should change with no sliding or zooming.
 
 ## In progress
 

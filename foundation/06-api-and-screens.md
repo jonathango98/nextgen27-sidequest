@@ -2,8 +2,8 @@
 
 - Status: PROPOSED (developers confirm at kickoff)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.6.1
-- Last updated: 2026-10-31
+- Version: 1.7.0
+- Last updated: 2026-11-01
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -30,7 +30,7 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 | POST | `/join` | Create the player, log them in, give join points | GAME-040, GAME-044 |
 | GET | `/login` | Login form: full name, church, PIN | ARCH-032 |
 | POST | `/login` | Check the PIN, count wrong tries, lock after 5 | SAFE-022 |
-| POST | `/logout` | End the session | |
+| POST | `/logout` | End the session, player or staff | ARCH-034, DEC-063 |
 | GET | `/` | Home: score, blind box progress, quests, game state | GAME-070 |
 | GET | `/code` | My Code page | GAME-001 |
 | GET | `/code/qr` | Partial: the current QR, refreshed by polling | ARCH-074 |
@@ -51,6 +51,8 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 
 | Method | Path | What it does | Rules |
 |---|---|---|---|
+| GET | `/staff/login` | Staff login form: username, password. For ushers and admins | ARCH-036, DEC-063 |
+| POST | `/staff/login` | Check the password and start a staff session. Ushers land on `/usher`, admins on `/admin` | ARCH-035, ARCH-036, DEC-063 |
 | GET | `/usher` | Usher console | |
 | POST | `/usher/booth` | Scan My Code for a booth visit | GAME-041 |
 | POST | `/usher/photobooth` | Scan My Code for a photobooth visit | GAME-042 |
@@ -151,6 +153,7 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 | Open Box | Player | `/box` | Earned, claimed, claimable, "Go to the game booth when it's open" | GAME-073 |
 | Paused state | Player | Banner on every page | Friendly, short, no shaming | UI-033 |
 | Wrapped cards | Player | `/wrapped` | Six swipeable cards, Save as image | WRAP-010 |
+| Staff log in | Usher, admin | `/staff/login` | Username, password | ARCH-036, DEC-063 |
 | Usher console | Usher | `/usher` | Big buttons for each scan type | GAME-112 |
 | Admin console | Admin | `/admin` | Game state switch first, then queues | GAME-110 |
 | Main screen: leaderboards | Screen | `/screen/players`, `/screen/churches` | Readable from the back of the room | UI-041 |

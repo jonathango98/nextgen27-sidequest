@@ -1,0 +1,17 @@
+{# Staff log in (ARCH-036). The password is never sent back, so it always starts empty. #}
+<form class="form" method="post" action="/staff/login" hx-post="/staff/login" hx-target="#login-form">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+  <div class="card form-card">
+  {% if error %}{% include "partials/error.html" %}{% endif %}
+
+  <label for="username">Username</label>
+  <input id="username" name="username" value="{{ form.username }}" maxlength="{{ username_max }}" autocomplete="username" autocapitalize="none" spellcheck="false" required>
+
+  <label for="password">Password</label>
+  <input id="password" name="password" type="password" autocomplete="current-password" required>
+  </div>
+
+  <button class="button" type="submit">Log in</button>
+</form>
+<p class="form-note">Forgot your password? Ask an admin.</p>
+<p class="form-note">Playing the game? <a href="/login">Player log in</a></p>
