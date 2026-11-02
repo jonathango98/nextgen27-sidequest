@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Owen asked for pause to really stop play, so phones go away during sessions. Every usher scan is already refused while paused, and ushers can still find a player by name (GAME-112).
 - Rule IDs: GAME-102, DEC-068, UI-033, API-006, API-020, GAME-078, GAME-108, GAME-112, ENG-087
 - Status: Done
-- PR: draft
+- PR: #72
 
 ## 2026-11-02 · chore/ready-backups · Claude Opus 5.5 / @jonathango98
 
