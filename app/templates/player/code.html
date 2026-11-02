@@ -6,6 +6,7 @@
 {% block content %}
   <h1>My Code</h1>
   {% include "player/partials/code_qr.html" %}
+  {% include "player/partials/code_incoming.html" %}
   <p class="qr-tip">Turn your screen brightness up so it scans fast.</p>
   {# UI-037: the Scan button sits under the QR panel. GAME-102: My Code stays, scanning waits. #}
   {% if game_state() == "on" %}

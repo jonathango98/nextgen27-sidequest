@@ -4,7 +4,9 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.auth.current import CurrentPlayer, get_current_player
+from app.db import connect
 from app.main import create_app
+from tests.conftest import seed_fake_players
 
 FAKE_PLAYER = CurrentPlayer(public_id="testpid01", score=120)  # fake data (ENG-047)
 
@@ -32,8 +34,18 @@ def current_tab(href, label):
 
 
 @pytest.fixture
-def client():
+def client(tmp_path):
     app = create_app()
+    app.state.db_path = tmp_path / "skeleton.db"
+    ids = seed_fake_players(app.state.db_path, FAKE_PLAYER.public_id, "testpid02")
+    conn = connect(app.state.db_path)
+    # Connection 1, so /connections/1 is a pair this player is in (SAFE-006).
+    conn.execute(
+        "INSERT INTO connection (id, player_low_id, player_high_id, scanner_id,"
+        " question_category, is_same_church) VALUES (1, ?, ?, ?, 'food', 1)",
+        (*sorted(ids.values()), ids[FAKE_PLAYER.public_id]),
+    )
+    conn.close()
     app.dependency_overrides[get_current_player] = lambda: FAKE_PLAYER
     # Start the app, so pages can read the game state for the paused note (UI-033).
     with TestClient(app) as c:

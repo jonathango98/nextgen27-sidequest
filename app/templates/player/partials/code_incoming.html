@@ -1,0 +1,11 @@
+{# API-030, API-032: checks whether someone scanned this code. A 204 means nothing new, so the
+   notes stay. When someone did, this block comes back with every note since the page opened. #}
+<div class="incoming" hx-get="/code/incoming?since={{ since }}&amp;after={{ after }}" hx-trigger="every {{ poll_seconds }}s" hx-swap="outerHTML" role="status">
+  {% for connection in notes %}
+    {# GAME-017: the same question the scanner sees. SAFE-004: first name only. #}
+    <a class="card incoming-note" href="/connections/{{ connection.id }}">
+      <strong>{{ connection.other_first_name }} just scanned you!</strong>
+      <span>{{ connection.question }}</span>
+    </a>
+  {% endfor %}
+</div>

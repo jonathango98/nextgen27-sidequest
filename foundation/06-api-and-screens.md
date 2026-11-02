@@ -2,8 +2,8 @@
 
 - Status: PROPOSED (developers confirm at kickoff)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.9.0
-- Last updated: 2026-11-02
+- Version: 1.9.1
+- Last updated: 2026-11-03
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -133,7 +133,7 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 
 ## 4. Live updates
 
-- **API-030** [PROPOSED] The My Code page polls `/code/qr` so the code changes on time, and polls `/code/incoming` so the scanned player sees the icebreaker without doing anything.
+- **API-030** [PROPOSED] The My Code page polls `/code/qr` so the code changes on time, and polls `/code/incoming` so the scanned player sees the icebreaker without doing anything. Config: `qr.poll_retry_seconds`, `qr.incoming_poll_seconds` (ARCH-074).
 - **API-031** [PROPOSED] Main screen views refresh every 30 seconds (DEC-041). Config: `main_screen.poll_seconds`.
 - **API-032** [PROPOSED] When player A scans player B, B's phone learns about it the next time `/code/incoming` is polled, then shows the same icebreaker question.
 

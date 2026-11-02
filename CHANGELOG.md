@@ -22,10 +22,10 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-11-01 · feat/connections-meet · Claude Opus 5.5 / @OwenTjandra
 
-- What: Claims `connections.meet`: scanning another player's code saves that you met, and both phones show the same icebreaker question. Self scans, old codes, and repeat scans are refused.
+- What: Builds `connections.meet`. `POST /scan` checks a scanned My Code on the server (ARCH-026): the payload must be a player code (ARCH-020, else `NOT_A_CODE`), not your own (GAME-014, 400 `BAD_INPUT`, since 06 has no code of its own for it), signed and current (ARCH-022, else 410 `CODE_EXPIRED`), for a real player (404 `NOT_FOUND`), and the game must be on (GAME-102, GAME-108, 423). It then saves the pair low id first with one random question from `icebreaker.categories` and the same church flag, in one `BEGIN IMMEDIATE` write, so two phones scanning each other at once save one row and the other gets 409 `ALREADY_CONNECTED` (GAME-013, GAME-018, GAME-019). No points yet: they come with `connections.answers` (GAME-016). The scanner shows the other player's first name, church, and question (SAFE-004), with Open icebreaker as the one main button (UI-035). `/connections/{id}` shows the pair's question to the two players only, and a 404 to anyone else (SAFE-006). My Code polls `/code/incoming` and shows a note with the same question when someone scans it, without a tap, and never twice (API-030, API-032). Foundation, needing Jonathan's approval (ENG-080): `qr.incoming_poll_seconds` (3) in `game-config.yaml` 1.6.0, since ARCH-074 keeps polling intervals in config, and its mention in API-030 (`06-api-and-screens.md` 1.7.1). Tests: 26 service tests, 23 route tests, and browser tests for a scan and the My Code note. Browser check at 360px in Chromium (three fake players on the real app) and WebKit, no console errors.
 - Why: Picked by Owen from the feature tree. Due 2026-12-04 and unlocks 4 pieces. `game-state.controls` (#67) stays open, waiting for review.
-- Rule IDs: GAME-013, GAME-014, ARCH-026, API-020, API-030, API-032, GAME-017, SAFE-043, ENG-101, ENG-108
-- Status: Started
+- Rule IDs: GAME-013, GAME-014, GAME-017, GAME-018, GAME-019, GAME-102, GAME-108, ARCH-020, ARCH-022, ARCH-026, ARCH-074, API-005, API-020, API-030, API-032, SAFE-004, SAFE-006, SAFE-043, UI-035, AI-044, ENG-080, ENG-087, ENG-101, ENG-108
+- Status: In progress
 - PR: #70
 
 ## 2026-11-02 · feat/paused-screens · Claude Opus 5.5 / @OwenTjandra

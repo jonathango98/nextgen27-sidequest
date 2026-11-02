@@ -1,6 +1,5 @@
 // Scan page and usher console: reads QR codes with the phone camera (ARCH-025, UI-034).
 // A page with a scan form sends each code to the server, which checks it (ARCH-026).
-// Saving a player's scan comes with connections.meet (POST /scan).
 (function () {
   "use strict";
 
@@ -128,6 +127,11 @@
       // No answer at all, for example no signal. A refused scan shows the server's message.
       if (!event.detail.xhr.status) show(alert, "No connection. Try again.");
       showAgain("Scan again");
+      // UI-035: after a new friend, Open icebreaker is the one main button.
+      again.classList.toggle(
+        "button-secondary",
+        !!(outcome && outcome.querySelector("[data-connection]"))
+      );
     });
   }
 

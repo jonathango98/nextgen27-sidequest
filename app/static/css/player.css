@@ -568,3 +568,13 @@ h2 {
     transition: none !important;
   }
 }
+
+/* API-032: the note on My Code when someone scans it */
+.incoming-note {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-bottom: var(--space-4);
+  color: var(--color-text);
+  text-decoration: none;
+}

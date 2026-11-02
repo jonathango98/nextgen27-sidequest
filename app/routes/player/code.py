@@ -1,17 +1,18 @@
-"""My Code page and its refreshing QR (GAME-001, API-030, ARCH-074)."""
+"""My Code page, its refreshing QR, and the note when someone scans it (GAME-001, API-030, API-032)."""
 
 import sqlite3
 import time
 from typing import Annotated
 
 import segno
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, Request, Response
 from markupsafe import Markup
 
 from app.auth.current import CurrentPlayer, get_current_player
 from app.db import get_db
 from app.rendering import templates
-from app.services import qr
+from app.routes.player.scan import player_id
+from app.services import connections, qr
 from app.services.game_state import GameNotOn, current_state
 
 # The QR standard's minimum quiet zone, in modules. Not a game number.
@@ -52,10 +53,24 @@ def _qr_context(request: Request, player: CurrentPlayer, now: float) -> dict:
     }
 
 
+def _incoming_context(request: Request, since: int, after: int, notes: list) -> dict:
+    return {
+        "since": since,
+        "after": after,
+        "notes": notes,
+        "poll_seconds": request.app.state.config["qr"]["incoming_poll_seconds"],
+    }
+
+
 @router.get("/code")
-def my_code(request: Request, player: Player, now: Now):
+def my_code(request: Request, player: Player, conn: Db, now: Now):
+    # API-032: only scans after the page opened get a note.
+    latest = connections.latest_id(conn, player_id(conn, player))
+    context = _qr_context(request, player, now) | _incoming_context(
+        request, latest, latest, []
+    )
     return templates.TemplateResponse(
-        request, "player/code.html", _qr_context(request, player, now), headers=NO_STORE
+        request, "player/code.html", context, headers=NO_STORE
     )
 
 
@@ -70,5 +85,24 @@ def my_code_qr(request: Request, player: Player, now: Now, conn: Db):
         request,
         "player/partials/code_qr.html",
         _qr_context(request, player, now),
+        headers=NO_STORE,
+    )
+
+
+@router.get("/code/incoming")
+def my_code_incoming(
+    request: Request, player: Player, conn: Db, since: int = 0, after: int = 0
+):
+    # API-032: 204 when nobody new scanned this code, so the page keeps what it shows.
+    # Otherwise every note since the page opened, and the newest id to check after.
+    me = player_id(conn, player)
+    notes = connections.incoming(conn, me, since)
+    newest = max((note.id for note in notes), default=0)
+    if newest <= after:
+        return Response(status_code=204, headers=NO_STORE)
+    return templates.TemplateResponse(
+        request,
+        "player/partials/code_incoming.html",
+        _incoming_context(request, since, newest, notes),
         headers=NO_STORE,
     )

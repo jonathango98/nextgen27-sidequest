@@ -2,8 +2,8 @@
 #
 # Status: Active
 # Owner: Jonathan (@jonathango98)
-# Version: 1.6.0
-# Last updated: 2026-11-02
+# Version: 1.7.0
+# Last updated: 2026-11-03
 # Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 #
 # How to read this file
@@ -74,6 +74,7 @@ qr:
   code_digits: 6                      # ARCH-021 PROPOSED: digits in the rotating code
   poll_retry_seconds: 3               # ARCH-074 PROPOSED (DEC-031): wait before My Code retries a failed refresh
   refresh_spread_seconds: 10          # ARCH-074 PROPOSED: each phone refreshes My Code up to this long after the code changes, so they don't all ask at once. Keep well under rotation_seconds (ARCH-022)
+  incoming_poll_seconds: 3            # API-030 PROPOSED (ARCH-074): how often My Code checks whether someone scanned it
 
 auth:
   pin_digits: 4                       # SAFE-021 LOCKED: PIN length
