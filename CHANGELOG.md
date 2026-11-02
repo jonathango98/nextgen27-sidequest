@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-01 · feat/connections-meet · Claude Opus 5.5 / @OwenTjandra
+
+- What: Claims `connections.meet`: scanning another player's code saves that you met, and both phones show the same icebreaker question. Self scans, old codes, and repeat scans are refused.
+- Why: Picked by Owen from the feature tree. Due 2026-12-04 and unlocks 4 pieces. `game-state.controls` (#67) stays open, waiting for review.
+- Rule IDs: GAME-013, GAME-014, ARCH-026, API-020, API-030, API-032, GAME-017, SAFE-043, ENG-101, ENG-108
+- Status: Started
+- PR: draft
+
 ## 2026-11-02 · feat/paused-screens · Claude Opus 5.5 / @OwenTjandra
 
 - What: Changes GAME-102 with Jonathan's OK (DEC-068): while paused, players see only Home with their score, log in, and sign up. Every other player page shows "Back after the session." with a Home button, Read and Open Box on Home are greyed out with the play buttons, and `/code/qr` returns 423 `PAUSED`, so an open My Code page drops its code at the next refresh. Nothing changes while off, because Sunday blind box claims need My Code (GAME-078). Stacked on #67.

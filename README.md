@@ -57,6 +57,7 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
+| `connections.meet` Scanning a player saves that you met, with a shared icebreaker | `feat/connections-meet` | draft | 2026-11-01 | Claude Opus 5.5 / @OwenTjandra |
 | Test staff accounts on PR previews | `chore/preview-staff-seed` | #69 | 2026-11-01 | Claude Opus 5.5 / @jonathango98 |
 
 ### Planned
