@@ -8,8 +8,9 @@ import random
 import sqlite3
 from dataclasses import dataclass
 
-from app.services import qr
+from app.services import churches, players
 from app.services.game_state import require_game_on
+from app.services.players import NOT_FOUND, ScanRefused
 
 # GAME-019: the question for each key in icebreaker.categories (02-game-rules.md section 3).
 # SAFE-043: none of them ask for contact details, social handles, or where someone stays.
@@ -23,22 +24,14 @@ QUESTIONS = {
 }
 
 
-class ScanRefused(Exception):
-    """A scan that saves nothing. Status, code, and message from 06 section 3 (API-005)."""
-
-    def __init__(self, status: int, code: str, message: str):
-        super().__init__(code)
-        self.status = status
-        self.code = code
-        self.message = message
-
-
-NOT_A_CODE = (400, "NOT_A_CODE", "This isn't a Side Quest code.")
-# GAME-014: 06 has no code of its own for this, so it is a wrong input (BAD_INPUT).
+# API-005: the refusals this adds to the ones in players (06 section 3).
+# GAME-014: 06 has no code of its own for scanning yourself, so it is a wrong input (BAD_INPUT).
 OWN_CODE = (400, "BAD_INPUT", "That's your own code! Scan a friend's.")
-NOT_FOUND = (404, "NOT_FOUND", "We couldn't find that.")
 ALREADY_CONNECTED = (409, "ALREADY_CONNECTED", "You two are already connected!")
-CODE_EXPIRED = (410, "CODE_EXPIRED", "That code expired. Ask them to show it again.")
+
+# ENG-113: the hand test scans between two phones, so a preview also gets Test Player 2,
+# from another church. No pair is saved, so the first scan on the preview is a new one.
+PREVIEW_FRIEND = ("Test", "Player 2")
 
 
 @dataclass(frozen=True)
@@ -47,20 +40,6 @@ class Connection:
     question: str
     other_first_name: str  # SAFE-004: other players see first name and church only
     other_church: str
-
-
-def _parse(payload: str, qr_cfg: dict) -> tuple[str, str]:
-    # ARCH-020: SQ1.<kind>.<public_id>.<code>. Only player codes for now: session
-    # check-in codes come with the check-in pieces.
-    parts = payload.split(".")
-    if (
-        len(parts) != 4
-        or parts[0] != qr_cfg["format_version"]
-        or parts[1] != qr.PLAYER_KIND
-        or not parts[2]
-    ):
-        raise ScanRefused(*NOT_A_CODE)
-    return parts[2], parts[3]
 
 
 def _player_id(conn: sqlite3.Connection, public_id: str) -> int | None:
@@ -101,12 +80,10 @@ def scan(
     Raises ScanRefused, or GameNotOn while paused or off (GAME-102, GAME-108), and then
     saves nothing.
     """
-    qr_cfg = config["qr"]
-    scanned_public_id, code = _parse(payload.strip(), qr_cfg)
+    # ARCH-025, ARCH-022, ARCH-026: a player code, checked by the server. Shared with the usher console.
+    scanned_public_id = players.public_id_from_scan(payload.strip(), now, config["qr"])
     if scanned_public_id == scanner_public_id:
         raise ScanRefused(*OWN_CODE)  # GAME-014
-    if not qr.verify(qr.PLAYER_KIND, scanned_public_id, code, now, qr_cfg):
-        raise ScanRefused(*CODE_EXPIRED)  # ARCH-022
     # GAME-019: one question per pair, saved with the pair so both phones show the same one.
     category = random.choice(config["icebreaker"]["categories"])
 
@@ -168,3 +145,10 @@ def incoming(conn: sqlite3.Connection, player_id: int, after: int) -> list[Conne
         (after, player_id, player_id),
     ).fetchall()
     return [for_player(conn, row["id"], player_id) for row in rows]
+
+
+def seed_preview(conn: sqlite3.Connection, config: dict) -> list[str]:
+    """Adds Test Player 2 to a PR preview, with the preview PIN (ENG-113, AI-047)."""
+    return players.seed_preview_player(
+        conn, config, PREVIEW_FRIEND, churches.EXAMPLE_CHURCHES[1]
+    )

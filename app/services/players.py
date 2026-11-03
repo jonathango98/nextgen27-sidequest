@@ -82,10 +82,8 @@ class ScanRefused(Exception):
         self.message = message
 
 
-def from_scan(
-    conn: sqlite3.Connection, payload: str, now: float, qr_cfg: dict
-) -> PlayerForUsher:
-    """The player whose My Code this is. Only says who it is, and saves nothing (GAME-112)."""
+def public_id_from_scan(payload: str, now: float, qr_cfg: dict) -> str:
+    """The public ID in a scanned My Code, once the server has checked the code (ARCH-026)."""
     parts = payload.split(".")  # ARCH-020: SQ1.<kind>.<public_id>.<code>
     if (
         len(parts) != 4
@@ -97,7 +95,14 @@ def from_scan(
     # ARCH-026: the code in the payload proves nothing until the server has checked it.
     if not qr.verify(qr.PLAYER_KIND, parts[2], parts[3], now, qr_cfg):
         raise ScanRefused(*CODE_EXPIRED)  # ARCH-022
-    player = find(conn, parts[2])
+    return parts[2]
+
+
+def from_scan(
+    conn: sqlite3.Connection, payload: str, now: float, qr_cfg: dict
+) -> PlayerForUsher:
+    """The player whose My Code this is. Only says who it is, and saves nothing (GAME-112)."""
+    player = find(conn, public_id_from_scan(payload, now, qr_cfg))
     if player is None:
         raise ScanRefused(*NOT_FOUND)
     return player
@@ -105,13 +110,22 @@ def from_scan(
 
 def seed_preview(conn: sqlite3.Connection, config: dict) -> list[str]:
     """A PR preview starts with no players. Adds Test Player 1 if its PIN variable is set (ENG-113)."""
+    return seed_preview_player(
+        conn, config, PREVIEW_PLAYER, churches.EXAMPLE_CHURCHES[0]
+    )
+
+
+def seed_preview_player(
+    conn: sqlite3.Connection, config: dict, name: tuple[str, str], church_name: str
+) -> list[str]:
+    """Adds one fake adult player with the preview PIN, if it is set and they are missing (ENG-113)."""
     pin = os.environ.get(PREVIEW_PIN_ENV)
     church = conn.execute(
-        "SELECT id FROM church WHERE name = ?", (churches.EXAMPLE_CHURCHES[0],)
+        "SELECT id FROM church WHERE name = ?", (church_name,)
     ).fetchone()
     if not pin or church is None:
         return []
-    first, last = PREVIEW_PLAYER
+    first, last = name
     details = signup.Details(first, last, church["id"], False)
     try:
         signup.check_pin({"pin": pin, "pin_again": pin}, config["auth"]["pin_digits"])

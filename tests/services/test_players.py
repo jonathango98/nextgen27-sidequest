@@ -78,7 +78,8 @@ def test_eng_113_preview_seed_skips_without_the_example_church(tmp_path, monkeyp
 
 @pytest.mark.parametrize(
     ("environment", "seeded"),
-    [("sidequest-pr-68", 1), ("staging", 0), ("production", 0), (None, 0)],
+    # A preview gets Test Player 1, and Test Player 2 for the connections.meet hand test.
+    [("sidequest-pr-68", 2), ("staging", 0), ("production", 0), (None, 0)],
 )
 def test_arch_017_app_start_seeds_the_player_only_on_pr_previews(
     tmp_path, monkeypatch, environment, seeded

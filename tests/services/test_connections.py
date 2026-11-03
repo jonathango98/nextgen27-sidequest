@@ -4,11 +4,11 @@ import threading
 import pytest
 
 from app.config import load_config
-from app.db import connect
-from app.services import connections, qr
+from app.db import connect, migrate
+from app.services import churches, connections, players, qr
 from app.services.connections import ScanRefused
 from app.services.game_state import GameNotOn, set_state
-from tests.conftest import seed_fake_players
+from tests.conftest import make_fake_pin, seed_fake_players
 
 # Fake data (ENG-047), never a real key (SAFE-030).
 FAKE_KEY = "test-only-fake-signing-key"
@@ -239,3 +239,41 @@ def test_api_032_incoming_lists_only_scans_by_someone_else(conn, ids):
     notes = connections.incoming(conn, me, start)
     assert [n.id for n in notes] == [first.id]
     assert connections.incoming(conn, me, connections.latest_id(conn, me)) == []
+
+
+@pytest.fixture
+def preview_conn(tmp_path, monkeypatch):
+    monkeypatch.setenv(
+        players.PREVIEW_PIN_ENV, make_fake_pin(CONFIG["auth"]["pin_digits"])
+    )
+    conn = connect(tmp_path / "preview.db")
+    migrate(conn)
+    churches.seed_examples(conn)
+    yield conn
+    conn.close()
+
+
+def test_eng_113_preview_seeds_a_second_player_from_another_church(preview_conn):
+    players.seed_preview(preview_conn, CONFIG)
+    assert connections.seed_preview(preview_conn, CONFIG) == ["Test Player 2"]
+    rows = preview_conn.execute(
+        "SELECT p.last_name, p.is_under_18, c.name AS church"
+        " FROM player p JOIN church c ON c.id = p.church_id ORDER BY p.id"
+    ).fetchall()
+    assert [(r["last_name"], r["church"]) for r in rows] == [
+        ("Player 1", churches.EXAMPLE_CHURCHES[0]),
+        ("Player 2", churches.EXAMPLE_CHURCHES[1]),
+    ]
+    assert [r["is_under_18"] for r in rows] == [0, 0]  # AI-047: never a minor
+
+
+def test_eng_113_preview_seeds_no_pair_so_the_first_scan_is_new(preview_conn):
+    players.seed_preview(preview_conn, CONFIG)
+    connections.seed_preview(preview_conn, CONFIG)
+    assert _rows(preview_conn) == []
+
+
+def test_eng_113_preview_seed_adds_only_what_is_missing(preview_conn):
+    connections.seed_preview(preview_conn, CONFIG)
+    assert connections.seed_preview(preview_conn, CONFIG) == []
+    assert preview_conn.execute("SELECT count(*) FROM player").fetchone()[0] == 1

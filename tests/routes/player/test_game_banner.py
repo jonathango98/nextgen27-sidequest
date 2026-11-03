@@ -7,6 +7,7 @@ from app.main import create_app
 from app.routes.player import join
 from app.services import qr
 from app.services.game_state import BANNERS, set_state
+from tests.conftest import seed_fake_players
 
 FAKE_PLAYER = CurrentPlayer(public_id="testpid01", score=120)  # fake data (ENG-047)
 FAKE_QR_KEY = "test-only-fake-signing-key"  # never a real key (SAFE-030)
@@ -33,6 +34,15 @@ def client(tmp_path, monkeypatch):
     app = create_app()
     app.dependency_overrides[get_current_player] = lambda: FAKE_PLAYER
     with TestClient(app, base_url="https://testserver") as c:
+        # My Code and the icebreaker read the player's rows, and /connections/1 is their pair.
+        ids = seed_fake_players(c.app.state.db_path, FAKE_PLAYER.public_id, "testpid02")
+        conn = connect(c.app.state.db_path)
+        conn.execute(
+            "INSERT INTO connection (id, player_low_id, player_high_id, scanner_id,"
+            " question_category, is_same_church) VALUES (1, ?, ?, ?, 'food', 1)",
+            (*sorted(ids.values()), ids[FAKE_PLAYER.public_id]),
+        )
+        conn.close()
         yield c
 
 
