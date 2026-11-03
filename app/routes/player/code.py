@@ -41,7 +41,9 @@ def _qr_context(request: Request, player: CurrentPlayer, now: float) -> dict:
     payload = qr.payload(qr.PLAYER_KIND, player.public_id, now, cfg)
     return {
         "qr_svg": qr_svg(payload),
-        "refresh_seconds": qr.seconds_left(now, cfg),
+        "refresh_seconds": qr.seconds_left(
+            now, cfg, qr.refresh_offset(player.public_id, cfg)
+        ),
         "retry_seconds": cfg["poll_retry_seconds"],  # DEC-031
     }
 

@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-02 · fix/my-code-refresh-spread · Claude Opus 5.5 / @jonathango98
+
+- What: Each player's My Code refreshes a fixed 0 to `qr.refresh_spread_seconds` after the code changes, worked out from their public ID, instead of every phone at the same second. Each phone still gets a new code every rotation (GAME-001). Until it refreshes, a phone shows the previous code, which is still accepted (ARCH-022).
+- Why: The `ready.load-test` run on the PR 73 preview failed ARCH-070. 300 phones refreshing at once made `/code/qr` p95 about 1.1 to 1.2 s, against 41 ms for one phone alone.
+- Rule IDs: ARCH-074, ARCH-070, ARCH-022, GAME-001, API-030, AI-013, AI-042, AI-044
+- Status: Started
+- PR: draft
+
 ## 2026-11-02 · feat/ready-rate-limits · Claude Opus 5.5 / @jonathango98
 
 - What: Builds `ready.rate-limits`. `app/auth/rate_limit.py` counts tries per address in memory over the last minute (one replica, ARCH-010), with limits from `auth.login_ip_limit_per_minute` and `auth.signup_ip_limit_per_minute`. Every `POST /login`, every `POST /staff/login` (own counter, same limit), and the final `POST /join` step are counted. Over the limit, the form shows 429 `RATE_LIMITED` before any PIN or password is checked, so the account lockout (SAFE-022) is untouched. The address comes from Railway's `X-Real-IP`: on the PR 71 preview, the last `X-Forwarded-For` entry was a rotating Railway edge node, and Railway replaced faked values of both headers. Checked on the preview: 60 wrong logins then 429, with faked headers on every try. No new dependency.
