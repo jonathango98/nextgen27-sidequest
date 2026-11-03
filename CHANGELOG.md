@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: The `ready.load-test` run on the PR 73 preview failed ARCH-070. 300 phones refreshing at once made `/code/qr` p95 about 1.1 to 1.2 s, against 41 ms for one phone alone.
 - Rule IDs: ARCH-074, ARCH-070, ARCH-022, GAME-001, API-030, AI-013, AI-042, AI-044
 - Status: Started
-- PR: draft
+- PR: #74
 
 ## 2026-11-02 · feat/ready-rate-limits · Claude Opus 5.5 / @jonathango98
 
