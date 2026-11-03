@@ -2,8 +2,8 @@
 #
 # Status: Active
 # Owner: Jonathan (@jonathango98)
-# Version: 1.5.0
-# Last updated: 2026-11-01
+# Version: 1.6.0
+# Last updated: 2026-11-02
 # Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 #
 # How to read this file
@@ -73,6 +73,7 @@ qr:
   accepted_previous_steps: 1          # ARCH-022 PROPOSED: also accept the code from the previous window (clock drift)
   code_digits: 6                      # ARCH-021 PROPOSED: digits in the rotating code
   poll_retry_seconds: 3               # ARCH-074 PROPOSED (DEC-031): wait before My Code retries a failed refresh
+  refresh_spread_seconds: 10          # ARCH-074 PROPOSED: each phone refreshes My Code up to this long after the code changes, so they don't all ask at once. Keep well under rotation_seconds (ARCH-022)
 
 auth:
   pin_digits: 4                       # SAFE-021 LOCKED: PIN length
@@ -110,6 +111,12 @@ main_screen:
   min_text_px_1080p: 40               # UI-041 PROPOSED: smallest text on the main screen at 1920x1080
   min_row_px_1080p: 56                # UI-041 PROPOSED: smallest leaderboard row height at 1920x1080
   poll_seconds: 30                    # API-031 PROPOSED: how often main screen views refresh
+
+load_test:
+  signups: 300                        # ARCH-072 PROPOSED (DEC-049): fake players who join in the join moment (ARCH-071)
+  signup_spread_seconds: 60           # ARCH-072 PROPOSED (DEC-049): the sign-ups are spread over this long
+  play_minutes: 10                    # ARCH-072 PROPOSED (DEC-049): how long the joined players keep playing afterwards
+  p95_target_ms: 500                  # ARCH-070 PROPOSED: 95% of requests must finish faster than this
 
 ui:
   min_viewport_px: 360                # UI-002 PROPOSED: narrowest phone width every screen must work at

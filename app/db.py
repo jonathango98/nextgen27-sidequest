@@ -12,7 +12,8 @@ MIGRATIONS_DIR = Path(__file__).resolve().parent.parent / "migrations"
 MIGRATION_NAME = re.compile(r"^(\d{4})_[a-z0-9_]+\.sql$")
 
 # ARCH-013: one writer at a time, so other writers wait instead of failing at once.
-BUSY_TIMEOUT_MS = 5000
+# The load test saw the Railway disk pause 5 to 8 s, so wait well past that (PR 73).
+BUSY_TIMEOUT_MS = 15000
 
 
 class DatabaseError(Exception):

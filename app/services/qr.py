@@ -57,7 +57,17 @@ def verify(kind: str, public_id: str, code: str, now: float, qr: dict) -> bool:
     )
 
 
-def seconds_left(now: float, qr: dict) -> int:
-    # API-030: whole seconds until the next code, so the page refreshes on time.
+def refresh_offset(public_id: str, qr: dict) -> int:
+    """ARCH-074: each player's fixed delay after a code change, from 0 to refresh_spread_seconds.
+
+    Phones refresh at different moments instead of all at once. The code a phone shows is at
+    most this late, and the previous window's code is still accepted (ARCH-022).
+    """
+    digest = hashlib.sha256(public_id.encode()).digest()
+    return int.from_bytes(digest[:4], "big") % (qr["refresh_spread_seconds"] + 1)
+
+
+def seconds_left(now: float, qr: dict, offset: int = 0) -> int:
+    # API-030: whole seconds until the next code, plus this phone's offset (ARCH-074).
     rotation = qr["rotation_seconds"]
-    return math.ceil(rotation - now % rotation)
+    return math.ceil(rotation - (now - offset) % rotation)

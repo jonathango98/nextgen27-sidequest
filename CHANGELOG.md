@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-02 · chore/ready-load-test · Claude Opus 5.5 / @jonathango98
+
+- What: Builds `ready.load-test`. `python -m scripts.load_test --base-url ...` makes `load_test.signups` fake players join over `load_test.signup_spread_seconds`, then keep My Code open for `load_test.play_minutes`. It prints p50/p95/max and why each request failed, then PASS or FAIL against `load_test.p95_target_ms`. A failed My Code refresh is retried once like the page (DEC-031). It refuses any host not in `LOAD_TEST_ALLOWED_HOSTS`. Scans and main screen polling join the test with their pieces. It also fixes what the test found. My Code: each player refreshes a fixed 0 to `qr.refresh_spread_seconds` after the code changes, from their public ID, instead of every phone in the same second. Their shown code is at most that late and still accepted (ARCH-022). On a PR preview, `/code/qr` p95 went from 1,108 ms to about 220 ms with 300 phones. Sign-up: 1 of 4 preview runs had 20 joins fail with `database is locked` after a 5 to 8 s stall with the CPU idle, so the write lock wait goes from 5 s to 15 s, and a sign-up save slower than 1 s logs its lock wait and write time (timings only, ARCH-051). DEC-066: the load test may run on a PR preview, not only staging, so ARCH-071 says so.
+- Why: Picked through `/pick-task`. Due 2027-01-08. The Day 1 stage intro must hold up before Playtest 2.
+- Rule IDs: ARCH-070, ARCH-071, ARCH-072, ARCH-074, ARCH-022, GAME-001, API-030, DEC-031, OPS-030, ARCH-013, ARCH-051, DEC-066, AI-013, AI-042, AI-044, ENG-101
+- Status: Done
+- PR: #73
+
 ## 2026-11-02 · feat/ready-rate-limits · Claude Opus 5.5 / @jonathango98
 
 - What: Builds `ready.rate-limits`. `app/auth/rate_limit.py` counts tries per address in memory over the last minute (one replica, ARCH-010), with limits from `auth.login_ip_limit_per_minute` and `auth.signup_ip_limit_per_minute`. Every `POST /login`, every `POST /staff/login` (own counter, same limit), and the final `POST /join` step are counted. Over the limit, the form shows 429 `RATE_LIMITED` before any PIN or password is checked, so the account lockout (SAFE-022) is untouched. The address comes from Railway's `X-Real-IP`: on the PR 71 preview, the last `X-Forwarded-For` entry was a rotating Railway edge node, and Railway replaced faked values of both headers. Checked on the preview: 60 wrong logins then 429, with faked headers on every try. No new dependency.

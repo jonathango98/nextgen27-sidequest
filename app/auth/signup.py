@@ -1,8 +1,10 @@
 """Sign-up: check the Join form and save the player (SAFE-002, SAFE-021, ARCH-033)."""
 
+import logging
 import secrets
 import sqlite3
 import string
+import time
 from dataclasses import dataclass
 
 from app.auth import pin as pins
@@ -13,6 +15,11 @@ from app.services.game_state import GAME_NOT_ON_MESSAGES, GameNotOn
 NAME_MAX_CHARS = 50
 PUBLIC_ID_CHARS = string.ascii_lowercase + string.digits
 PUBLIC_ID_LENGTH = 12  # ARCH-020: random and opaque, about 62 bits
+
+# A save slower than this is logged, to find what stalls sign-ups under load. Not a game number.
+SLOW_SAVE_MS = 1000
+
+log = logging.getLogger(__name__)
 
 
 class SignupError(Exception):
@@ -108,7 +115,9 @@ def create_player(conn: sqlite3.Connection, d: Details, pin: str, config: dict) 
     # Hash first: it is slow on purpose, and the lock below would make other joiners wait.
     pin_hash = pins.hash_pin(pin)
     # ARCH-013: IMMEDIATE takes the write lock first, so two sign-ups queue instead of racing.
+    start = time.perf_counter()
     conn.execute("BEGIN IMMEDIATE")
+    locked = time.perf_counter()
     try:
         public_id, player_id = _insert_player(conn, d, pin_hash)
         points.award_join(
@@ -127,7 +136,18 @@ def create_player(conn: sqlite3.Connection, d: Details, pin: str, config: dict) 
         conn.execute("ROLLBACK")
         raise
     conn.execute("COMMIT")
+    _log_if_slow(start, locked, time.perf_counter())
     return public_id
+
+
+def _log_if_slow(start: float, locked: float, done: float) -> None:
+    # ARCH-051: timings only, never names, PINs, or IDs.
+    if (done - start) * 1000 >= SLOW_SAVE_MS:
+        log.warning(
+            "slow sign-up save: waited %.0f ms for the write lock, wrote in %.0f ms",
+            (locked - start) * 1000,
+            (done - locked) * 1000,
+        )
 
 
 def _insert_player(

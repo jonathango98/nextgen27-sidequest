@@ -109,3 +109,33 @@ def test_api_030_seconds_left_counts_down_to_next_window(cfg):
     assert qr.seconds_left(start, cfg) == rotation
     assert qr.seconds_left(start + 0.5, cfg) == rotation
     assert qr.seconds_left(start + rotation - 0.5, cfg) == 1
+
+
+def test_arch_074_refresh_offset_is_within_spread_and_fixed(cfg):
+    offset = qr.refresh_offset(PLAYER, cfg)
+    assert 0 <= offset <= cfg["refresh_spread_seconds"]
+    assert qr.refresh_offset(PLAYER, cfg) == offset
+
+
+def test_arch_074_players_refresh_at_different_moments(cfg):
+    offsets = {qr.refresh_offset(f"testpid{n:02}", cfg) for n in range(50)}
+    assert len(offsets) > 1
+
+
+def test_arch_074_seconds_left_waits_for_the_offset(cfg):
+    start = window_start(cfg)
+    rotation = cfg["rotation_seconds"]
+    offset = cfg["refresh_spread_seconds"]
+    # Just after the code changes, this phone waits its offset before refreshing.
+    assert qr.seconds_left(start, cfg, offset) == offset
+    # Right after its own refresh, it waits a full rotation (GAME-001).
+    assert qr.seconds_left(start + offset, cfg, offset) == rotation
+
+
+def test_arch_074_late_refresh_code_still_scans(cfg):
+    # ARCH-022: until this phone refreshes, it shows the previous window's code. That code
+    # must still be accepted at the latest moment the phone could show it.
+    start = window_start(cfg)
+    shown = code_at(start - 1, cfg)
+    latest = start + cfg["refresh_spread_seconds"]
+    assert qr.verify(qr.PLAYER_KIND, PLAYER, shown, latest, cfg)
