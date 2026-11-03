@@ -73,6 +73,7 @@ qr:
   accepted_previous_steps: 1          # ARCH-022 PROPOSED: also accept the code from the previous window (clock drift)
   code_digits: 6                      # ARCH-021 PROPOSED: digits in the rotating code
   poll_retry_seconds: 3               # ARCH-074 PROPOSED (DEC-031): wait before My Code retries a failed refresh
+  refresh_spread_seconds: 10          # ARCH-074 PROPOSED: each phone refreshes My Code up to this long after the code changes, so they don't all ask at once. Keep well under rotation_seconds (ARCH-022)
 
 auth:
   pin_digits: 4                       # SAFE-021 LOCKED: PIN length

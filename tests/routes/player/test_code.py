@@ -78,8 +78,12 @@ def test_api_002_qr_partial_is_only_the_fragment(client):
 
 
 def test_api_030_refresh_waits_until_next_window(client, cfg, window_start):
+    # ARCH-074: plus this player's own offset, so phones don't all refresh at once.
     rotation = cfg["rotation_seconds"]
-    client.app.dependency_overrides[code.current_time] = lambda: window_start + 0.5
+    offset = qr.refresh_offset(FAKE_PLAYER.public_id, cfg)
+    client.app.dependency_overrides[code.current_time] = lambda: (
+        window_start + offset + 0.5
+    )
     html = client.get("/code/qr").text
     assert f'hx-trigger="load delay:{rotation}s,' in html
 

@@ -22,10 +22,10 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-11-02 · chore/ready-load-test · Claude Opus 5.5 / @jonathango98
 
-- What: Claims `ready.load-test`: a load test that pretends hundreds of phones join at once, run against staging only.
+- What: Builds `ready.load-test`. `python -m scripts.load_test --base-url ...` makes `load_test.signups` fake players join over `load_test.signup_spread_seconds`, then keep My Code open for `load_test.play_minutes`. It prints p50/p95/max and why each request failed, then PASS or FAIL against `load_test.p95_target_ms`. A failed My Code refresh is retried once like the page (DEC-031). It refuses any host not in `LOAD_TEST_ALLOWED_HOSTS`. Scans and main screen polling join the test with their pieces. It also fixes what the test found. My Code: each player refreshes a fixed 0 to `qr.refresh_spread_seconds` after the code changes, from their public ID, instead of every phone in the same second. Their shown code is at most that late and still accepted (ARCH-022). On a PR preview, `/code/qr` p95 went from 1,108 ms to about 220 ms with 300 phones.
 - Why: Picked through `/pick-task`. Due 2027-01-08. The Day 1 stage intro must hold up before Playtest 2.
-- Rule IDs: ARCH-070, ARCH-071, ARCH-072, OPS-030, ENG-101
-- Status: Started
+- Rule IDs: ARCH-070, ARCH-071, ARCH-072, ARCH-074, ARCH-022, GAME-001, API-030, DEC-031, OPS-030, AI-013, AI-042, AI-044, ENG-101
+- Status: In progress
 - PR: #73
 
 ## 2026-11-02 · feat/ready-rate-limits · Claude Opus 5.5 / @jonathango98
