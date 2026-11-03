@@ -5,7 +5,7 @@
 
 Every planned piece of work and what it needs first (ENG-105 to ENG-108), grouped by the week it is due (PRD-054). Pieces flow left to right in time: finishing one unlocks the pieces it points to. Run `/pick-task` to claim one.
 
-**Working** 24 · **In progress** 0 · **Ready** 9 · **Waiting** 15 · **Needs decision** 1
+**Working** 24 · **In progress** 1 · **Ready** 8 · **Waiting** 15 · **Needs decision** 1
 
 Colors: green Working, blue In progress, gold Ready, gray Waiting, red dashed Needs decision.
 
@@ -171,7 +171,8 @@ flowchart LR
   classDef waiting fill:#f1f0eb,stroke:#c3c0b6,color:#545a66
   classDef decision fill:#fdeeec,stroke:#b42318,stroke-dasharray:4 3,color:#14151a
   class app_foundation,auth_join_login,code_my_code,connections_meet,connections_scanner_camera,connections_table,game_state_controls,game_state_core,infra_hosting,look_base,look_screens,points_audit_log,points_ledger,points_score,ready_backups,ready_load_test,ready_logout,ready_rate_limits,ready_retention,screen_main,screens_skeleton,staff_accounts,staff_login,usher_console working
-  class admin_audit_view,admin_players,admin_setup,checkin_sessions,connections_answers,explore_booths,home_pages,leaderboards_screen,wrapped_cards ready
+  class checkin_sessions in_progress
+  class admin_audit_view,admin_players,admin_setup,connections_answers,explore_booths,home_pages,leaderboards_screen,wrapped_cards ready
   class admin_award_revoke,blind_box_close_redemption,blind_box_handout,checkin_hall,checkin_window,connections_verse_picker,explore_items,game_state_auto_pause,journal_notes,journal_share_review,leaderboards_in_app,recap_screen,wrapped_collection,wrapped_save_image,wrapped_stat_cards waiting
   class screen_photobooth decision
 ```
@@ -185,12 +186,6 @@ flowchart LR
     3. Connect two players from the same church and save an answer. They should get the smaller same-church points.
     4. Try to break it: log in as Test Player 3 and open that connection. You should be refused.
     5. Run `pytest -k 'game_010 or game_011 or game_012 or game_018'`. The worked examples from the rules should pass.
-- `checkin.sessions`: A list of the conference sessions, and an admin page to add one with a title, an optional start time, and how many minutes before the start check-in opens. An End session button turns the game back on and lets players write takeaways for that session. (L, medium, admin-screens, due fri dec 4)
-  - Try it:
-    1. On the PR preview, log in as Test Admin and add Example Session 1 with a start time and check-in minutes. Edit its title. It should show in the list after a refresh.
-    2. Pause the game, then press End session on Example Session 1. The game should be on again.
-    3. Press End session again. Nothing should break.
-    4. Try to break it: open the page as Test Usher. You should be refused.
 - `home.pages`: Home shows the player's real score and how close they are to the next blind box. A Quests page lists every quest and how many points it gives. An Open Box page shows how many blind boxes the player can collect and how to go and get them. (L, easy, player-app, due fri dec 11)
   - Try it:
     1. On the PR preview, join as a brand new Test Player 1. Home should show the starting score and the progress bar without breaking.
@@ -239,7 +234,7 @@ flowchart LR
 
 ## In progress
 
-- None
+- `checkin.sessions`: A list of the conference sessions, and an admin page to add one with a title, an optional start time, and how many minutes before the start check-in opens. An End session button turns the game back on and lets players write takeaways for that session.
 
 ## Needs a decision
 
