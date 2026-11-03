@@ -6,7 +6,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import RedirectResponse, Response
 
-from app.auth import csrf, signup
+from app.auth import csrf, rate_limit, signup
 from app.auth.session import session_public_id, set_session
 from app.db import get_db
 from app.forms import read_form
@@ -84,6 +84,13 @@ def join_submit(request: Request, conn: Db, form: Form):
         return _render(request, conn, "details", kept, error)
     if form.get("step") != "pin":
         return _render(request, conn, "pin", kept)
+
+    # ARCH-031: only the step that makes the account counts as a sign-up.
+    if not rate_limit.allow(request, "signup"):
+        error = signup.SignupError(
+            rate_limit.STATUS, rate_limit.CODE, rate_limit.MESSAGE
+        )
+        return _render(request, conn, "pin", kept, error)
 
     config = request.app.state.config
     try:

@@ -6,7 +6,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import RedirectResponse, Response
 
-from app.auth import csrf, signup
+from app.auth import csrf, rate_limit, signup
 from app.auth.login import LoginError, log_in
 from app.auth.session import session_public_id, set_session
 from app.db import get_db
@@ -62,6 +62,10 @@ def login_page(request: Request, conn: Db):
 @router.post("/login", dependencies=[Depends(csrf.require_csrf)])
 def login_submit(request: Request, conn: Db, form: Form):
     kept = {k: form.get(k, "") for k in FORM_FIELDS}  # never the PIN (SAFE-021)
+    # ARCH-031: checked before the PIN, so a limited try never reaches the account lockout.
+    if not rate_limit.allow(request, "login"):
+        error = LoginError(rate_limit.STATUS, rate_limit.CODE, rate_limit.MESSAGE)
+        return _render(request, conn, kept, error)
     try:
         public_id = log_in(conn, form, request.app.state.config["auth"])
     except LoginError as error:

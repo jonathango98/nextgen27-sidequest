@@ -6,7 +6,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import RedirectResponse, Response
 
-from app.auth import csrf
+from app.auth import csrf, rate_limit
 from app.auth.login import LoginError
 from app.auth.staff import StaffLoginRequired, get_current_staff
 from app.auth.staff_login import USERNAME_MAX_CHARS, log_in_staff
@@ -56,6 +56,10 @@ def login_page(request: Request):
 @router.post("/staff/login", dependencies=[Depends(csrf.require_csrf)])
 def login_submit(request: Request, conn: Db, form: Form):
     kept = {"username": form.get("username", "")}  # never the password (ARCH-036)
+    # ARCH-031: staff passwords get the same per-IP login limit, counted separately.
+    if not rate_limit.allow(request, "staff_login"):
+        error = LoginError(rate_limit.STATUS, rate_limit.CODE, rate_limit.MESSAGE)
+        return _render(request, kept, error)
     try:
         staff_id, role = log_in_staff(conn, form)
     except LoginError as error:
