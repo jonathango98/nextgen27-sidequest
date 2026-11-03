@@ -6,10 +6,9 @@
 
 {% block content %}
   <h1>Scan</h1>
-  {% set state = game_state() %}
-  {% if state != "on" %}
-  {# GAME-102, GAME-108: no camera while the game is not on, so nobody scans for nothing. #}
-  <p class="card">{{ "Scanning is back after the session." if state == "paused" else "Scanning is closed right now." }}</p>
+  {% if game_state() != "on" %}
+  {# GAME-108: no camera while the game is off, so nobody scans for nothing. Paused shows the paused screen. #}
+  <p class="card">Scanning is closed right now.</p>
   <a class="button button-secondary" href="/code">Back to My Code</a>
   {% else %}
   {# Scanner frame (07 section 3): camera view with a square guide and one line of help text. #}

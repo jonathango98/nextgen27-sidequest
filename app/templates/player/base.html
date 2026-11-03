@@ -14,7 +14,12 @@
   {% include "partials/game_banner.html" %}
 
   <main class="content">
-    {% block content %}{% endblock %}
+    {# GAME-102, DEC-068: while paused only Home stays open. Home sets `open_while_paused`. #}
+    {% if game_state() == "paused" and not open_while_paused %}
+      {% include "partials/paused_screen.html" %}
+    {% else %}
+      {% block content %}{% endblock %}
+    {% endif %}
   </main>
 
   {# UI-030: Scan is not a tab. It opens from My Code and from Meet friends on Home. Each tab is an icon and a label (07 section 3). #}

@@ -2,8 +2,8 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.2.0
-- Last updated: 2026-10-28
+- Version: 1.3.0
+- Last updated: 2026-11-02
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -171,7 +171,7 @@ Example Church B has 1 player with 300 points. Its church score is (300 + 5 × 9
 
 - **GAME-100** [LOCKED] The game is always in one of three states: on, paused, or off. Config: `game.states`.
 - **GAME-101** [LOCKED] The game is paused during every session. An admin turns pause on and off by hand.
-- **GAME-102** [LOCKED] While paused, the server refuses every action that earns points or claims a blind box, with the "paused" response (API-020). This includes connection scans, saving an icebreaker answer, check-ins, takeaway submissions, booth scans, photobooth scans, hidden item turn-ins, and blind box claims. While paused, players can still sign up, log in, view My Code, read their own data, and read the summary page. The one exception to refusing is join points at sign-up (GAME-044).
+- **GAME-102** [LOCKED] While paused, the server refuses every action that earns points or claims a blind box, with the "paused" response (API-020). This includes connection scans, saving an icebreaker answer, check-ins, takeaway submissions, booth scans, photobooth scans, hidden item turn-ins, and blind box claims. While paused, players can still sign up, log in, and see Home with their score. Every other player page, including My Code, the summary page, Open Box, and Quests, shows a short paused screen instead, so phones go away during the session (DEC-068). The one exception to refusing is join points at sign-up (GAME-044).
 - **GAME-103** [LOCKED] Admin fixes work in every state. An admin can award or revoke points by hand at any time, including while paused or off.
 - **GAME-104** [LOCKED] Day by day: Day 1 evening the game is on after the stage intro. Day 2 the game is on during breaks and paused during sessions. Day 3 (Sunday) the game is off: no gameplay, only final results, prizes, and Wrapped.
 - **GAME-105** [PROPOSED] The venue is in Houston, Texas, so the timezone is `America/Chicago` (DEC-050). The server stores all times in UTC and uses this timezone for "per day" limits (GAME-042). Config: `game.timezone`.

@@ -1,5 +1,6 @@
 """My Code page and its refreshing QR (GAME-001, API-030, ARCH-074)."""
 
+import sqlite3
 import time
 from typing import Annotated
 
@@ -8,8 +9,10 @@ from fastapi import APIRouter, Depends, Request
 from markupsafe import Markup
 
 from app.auth.current import CurrentPlayer, get_current_player
+from app.db import get_db
 from app.rendering import templates
 from app.services import qr
+from app.services.game_state import GameNotOn, current_state
 
 # The QR standard's minimum quiet zone, in modules. Not a game number.
 QUIET_ZONE = 4
@@ -26,6 +29,7 @@ def current_time() -> float:
 
 Player = Annotated[CurrentPlayer, Depends(get_current_player)]
 Now = Annotated[float, Depends(current_time)]
+Db = Annotated[sqlite3.Connection, Depends(get_db)]
 
 
 def qr_svg(payload: str) -> Markup:
@@ -56,7 +60,11 @@ def my_code(request: Request, player: Player, now: Now):
 
 
 @router.get("/code/qr")
-def my_code_qr(request: Request, player: Player, now: Now):
+def my_code_qr(request: Request, player: Player, now: Now, conn: Db):
+    # DEC-068: no code while paused. An open My Code page swaps this 423 in at its next refresh,
+    # so the code disappears without a reload (API-006).
+    if current_state(conn) == "paused":
+        raise GameNotOn("PAUSED")
     # API-002, API-003: only the fragment that HTMX swaps in.
     return templates.TemplateResponse(
         request,

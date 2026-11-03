@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-02 · feat/paused-screens · Claude Opus 5.5 / @OwenTjandra
+
+- What: Changes GAME-102 with Jonathan's OK (DEC-068): while paused, players see only Home with their score, log in, and sign up. Every other player page shows "Back after the session." with a Home button, Read and Open Box on Home are greyed out with the play buttons, and `/code/qr` returns 423 `PAUSED`, so an open My Code page drops its code at the next refresh. Nothing changes while off, because Sunday blind box claims need My Code (GAME-078). Stacked on #67.
+- Why: Owen asked for pause to really stop play, so phones go away during sessions. Every usher scan is already refused while paused, and ushers can still find a player by name (GAME-112).
+- Rule IDs: GAME-102, DEC-068, UI-033, API-006, API-020, GAME-078, GAME-108, GAME-112, ENG-087
+- Status: Done
+- PR: #72
+
 ## 2026-11-02 · chore/ready-backups · Claude Opus 5.5 / @jonathango98
 
 - What: Builds `ready.backups`. Railway volume backups run Daily, Weekly, and Monthly on production and Daily on staging. A restore on staging brought back the data from the backup: a player who joined after it was gone, `PRAGMA integrity_check` printed ok with WAL on, and the app was back about 50 s after Deploy. A single backup and a detached volume can both be deleted, which answers the DEC-053 check, but Railway keeps a deleted volume about 48 hours (accepted, DEC-067). New `docs/backups.md` has the steps to check, restore, and delete. The retention cleanup's manual steps now include deleting the old volume a restore leaves detached. ARCH-053 and the runbook link to the doc (protected files, needs Jonathan's approval).
