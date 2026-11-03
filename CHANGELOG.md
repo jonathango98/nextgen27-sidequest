@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Picked through `/pick-task`. Due 2026-12-04. Unlocks `game-state.auto-pause`, `checkin.window`, and `journal.notes`.
 - Rule IDs: DATA-014, DATA-022, GAME-021, GAME-110, GAME-026, OPS-002, ENG-101
 - Status: Started
-- PR: draft
+- PR: #76
 
 ## 2026-11-01 · feat/connections-meet · Claude Opus 5.5 / @OwenTjandra
 

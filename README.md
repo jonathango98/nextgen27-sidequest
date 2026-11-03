@@ -59,7 +59,7 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| `checkin.sessions` Admins add conference sessions, and End session turns the game back on | `feat/checkin-sessions` | draft | 2026-11-03 | Claude Opus 5.5 / @marcjason2012 |
+| `checkin.sessions` Admins add conference sessions, and End session turns the game back on | `feat/checkin-sessions` | #76 | 2026-11-03 | Claude Opus 5.5 / @marcjason2012 |
 | Test staff accounts on PR previews | `chore/preview-staff-seed` | #69 | 2026-11-01 | Claude Opus 5.5 / @jonathango98 |
 
 ### Planned
