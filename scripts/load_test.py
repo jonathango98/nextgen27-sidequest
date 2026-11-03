@@ -1,4 +1,4 @@
-"""Load test of the Day 1 join moment, against staging only (ARCH-070 to ARCH-072, OPS-030).
+"""Load test of the Day 1 join moment, on a PR preview or staging (ARCH-070 to ARCH-072, DEC-066).
 
 Fake players join over a short spread, then keep My Code open while it refreshes, like
 phones at the stage intro. It prints how fast each page answered and whether any failed,
@@ -11,7 +11,7 @@ are not built yet. They join this test with their pieces (see NOT_TESTED_YET).
 The host must be listed in LOAD_TEST_ALLOWED_HOSTS (comma-separated), which you set on your
 own machine, so the test never runs against production by mistake.
 
-Run from the repo root: python -m scripts.load_test --base-url https://<staging host>
+Run from the repo root: python -m scripts.load_test --base-url https://<preview or staging host>
 """
 
 import argparse
@@ -82,13 +82,13 @@ def profile_from_config(cfg: dict) -> Profile:
 
 
 def check_host(base_url: str, allowed: str | None) -> None:
-    """ARCH-071: staging only. Refuse any host not listed in LOAD_TEST_ALLOWED_HOSTS."""
+    """ARCH-071, DEC-066: never production. Refuse any host not listed in LOAD_TEST_ALLOWED_HOSTS."""
     host = urlsplit(base_url).hostname
     hosts = {h.strip().lower() for h in (allowed or "").split(",") if h.strip()}
     if not host or host.lower() not in hosts:
         raise LoadTestError(
             f"Refused: {host or base_url!r} is not in {ALLOWED_HOSTS_ENV}. "
-            "Add your staging host there. Never production."
+            "Add your PR preview or staging host there. Never production."
         )
 
 
@@ -259,7 +259,9 @@ async def run(
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="python -m scripts.load_test")
-    parser.add_argument("--base-url", required=True, help="the staging address")
+    parser.add_argument(
+        "--base-url", required=True, help="the PR preview or staging address"
+    )
     args = parser.parse_args(argv)
     try:
         check_host(args.base_url, os.environ.get(ALLOWED_HOSTS_ENV))

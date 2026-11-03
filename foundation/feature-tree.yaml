@@ -2,8 +2,8 @@
 #
 # Status: Active
 # Owner: Jonathan (@jonathango98)
-# Version: 2.0.0
-# Last updated: 2026-10-30
+# Version: 2.0.1
+# Last updated: 2026-11-02
 # Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 #
 # How to read this file (rules in 16-feature-tree.md, ENG-105 to ENG-112)
@@ -799,7 +799,7 @@ pieces:
     feature: ready
     what: A test that pretends hundreds of phones join the game at the same moment, to see if the app stays fast enough on staging.
     try_it:
-      - Run the load test command against staging, never production, and wait for it to finish.
+      - Run the load test command against a PR preview or staging, never production, and wait for it to finish.
       - It should print a summary showing how fast the pages answered and whether any failed.
       - Check the staging app still opens normally on a phone afterward.
     needs: [auth.join-login]

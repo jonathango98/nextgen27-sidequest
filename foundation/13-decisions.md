@@ -2,7 +2,7 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.29.0
+- Version: 1.30.0
 - Last updated: 2026-11-02
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -85,6 +85,7 @@ Sources, in order of precedence:
 | DEC-063 | 2026-11-01 | Staff log in at `GET` and `POST /staff/login` with a username and password (ARCH-036). A staff login lasts 24 hours, then asks again (`auth.staff_session_hours`). Admins can open every usher page as well as admin pages (ARCH-035). No lockout after wrong staff passwords for now: IP rate limits slow guessing (ARCH-031) | A staff login can do far more than a player's, so it ends much sooner than the 400-day player cookie (ARCH-034). Admins often help at the game booth. A staff lockout can come later if the safety review asks for it | Jonathan (2026-10-31, PR #58). PROPOSED |
 | DEC-064 | 2026-11-01 | PR previews seed fake example data at start: Example Churches, a test admin `test-admin-1`, and a test usher `test-usher-1`, with passwords from the Railway variables `SQ_PREVIEW_ADMIN_PASSWORD` and `SQ_PREVIEW_USHER_PASSWORD`. From now on, the PR that makes a piece work also seeds example data for it (ENG-113, AI-047). `AGENTS.md`, `CONTRIBUTING.md`, and the PR template say the same | Hand testers had to run commands in each preview's shell before they could log in as staff or try a feature. Seeding with each piece keeps example data in step with the code, instead of building it ahead of features | Jonathan (2026-11-01, PR #69) |
 | DEC-065 | 2026-11-02 | The usher console's name search and scan show only first name, last initial, and church. The full last name stays saved. New route `POST /usher/scan`: it checks a scanned My Code and shows which player it is, and saves nothing. PR previews also seed an adult Test Player 1 at Example Church A, with the PIN from the Railway variable `SQ_PREVIEW_PLAYER_PIN` (ENG-113). SAFE-004 and the who-sees-what table in `03-safety-privacy.md` are unchanged | The tree's `usher.console` test says no full last name, and picking a player by scan had no route (API-001). The preview seed follows ENG-113 | Jonathan, passed on by @marcjason2012 (2026-11-02, PR #68) |
+| DEC-066 | 2026-11-02 | The load test (ARCH-071) may run on a PR preview, not only staging. Previews copy staging's Railway settings (DEC-030), so the server is the same. The load test script refuses any host not in `LOAD_TEST_ALLOWED_HOSTS`, and never runs against production. The venue Wi-Fi test at the walkthrough (OPS-030) is unchanged | A preview's database is thrown away when its PR closes, so the 300 fake players need no cleanup. Removing them from staging would mean deleting audit rows, which only the retention cleanup may do (DATA-015) | Jonathan (PR #73) |
 
 ## 2. Resolved conflicts
 
