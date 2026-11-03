@@ -73,6 +73,13 @@ def filled(conn):
         " VALUES (?, 1, 'test_award', 'connection', ?)",
         (players[0], connection),
     )
+    session = conn.execute(
+        "INSERT INTO session (public_id, title) VALUES ('pub-s1', 'Example Session 1')"
+    ).lastrowid
+    conn.execute(
+        "INSERT INTO check_in (player_id, session_id, scan_order) VALUES (?, ?, 1)",
+        (players[0], session),
+    )
     record(
         conn,
         actor_type="admin",
@@ -144,11 +151,13 @@ def test_safe_014_cleanup_deletes_player_data_on_the_date(filled, cfg):
         "church_met": 1,
         "connection": 1,
         "point_ledger": 1,
+        "check_in": 1,
         "player": 2,
     }
-    for table in ("player", "connection", "church_met", "point_ledger"):
+    for table in ("player", "connection", "church_met", "point_ledger", "check_in"):
         assert _count(filled, table) == 0
     assert _count(filled, "church") == 2  # kept: not personal data
+    assert _count(filled, "session") == 1  # kept: program titles, not personal data
 
 
 def test_safe_014_deleted_data_is_gone_from_the_raw_files(filled, db_path, cfg):
