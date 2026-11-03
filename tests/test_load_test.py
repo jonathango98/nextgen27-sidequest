@@ -75,6 +75,13 @@ def test_arch_070_summary_fails_on_any_failed_request():
     assert not passed
 
 
+def test_arch_070_summary_says_why_requests_failed():
+    target = load_config()["load_test"]["p95_target_ms"]
+    failed = [lt.Result("join", "GET /join", target / 2, False, "HTTP 502")] * 2
+    lines, _ = lt.summarize(_results([target / 2] * 18) + failed, target)
+    assert "Failed: 2 x GET /join: HTTP 502" in lines
+
+
 def test_arch_070_summary_fails_with_no_requests():
     _, passed = lt.summarize([], load_config()["load_test"]["p95_target_ms"])
     assert not passed

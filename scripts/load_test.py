@@ -67,6 +67,7 @@ class Result:
     route: str
     ms: float
     ok: bool
+    why: str = ""  # for a failed request: the HTTP status or the error type
 
 
 def profile_from_config(cfg: dict) -> Profile:
@@ -117,6 +118,12 @@ def summarize(results: list[Result], target_ms: float) -> tuple[list[str], bool]
         f"{'PASS' if passed else 'FAIL'}: p95 {p95:.0f} ms (target under "
         f"{target_ms:.0f} ms, ARCH-070), {failed} of {len(results)} requests failed"
     )
+    reasons: dict[tuple[str, str], int] = {}
+    for r in results:
+        if not r.ok:
+            reasons[(r.route, r.why)] = reasons.get((r.route, r.why), 0) + 1
+    for (route, why), n in reasons.items():
+        lines.append(f"Failed: {n} x {route}: {why}")
     for what, piece in NOT_TESTED_YET.items():
         lines.append(f"Not tested yet: {what}, comes with {piece}")
     return lines, passed
@@ -137,11 +144,12 @@ class Phone:
         start = time.perf_counter()
         try:
             response = await self.client.request(method, url, **kwargs)
-        except httpx2.HTTPError:
-            response = None
+            ok = bool(expect(response))
+            why = "" if ok else f"HTTP {response.status_code}"
+        except httpx2.HTTPError as error:
+            response, ok, why = None, False, type(error).__name__
         ms = (time.perf_counter() - start) * 1000
-        ok = response is not None and bool(expect(response))
-        self.results.append(Result(phase, route, ms, ok))
+        self.results.append(Result(phase, route, ms, ok, why))
         return response if ok else None
 
     async def join(self, last_name: str, pin_digits: int) -> bool:
