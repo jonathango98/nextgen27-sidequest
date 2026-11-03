@@ -5,7 +5,7 @@
 
 Every planned piece of work and what it needs first (ENG-105 to ENG-108), grouped by the week it is due (PRD-054). Pieces flow left to right in time: finishing one unlocks the pieces it points to. Run `/pick-task` to claim one.
 
-**Working** 20 · **In progress** 1 · **Ready** 9 · **Waiting** 18 · **Needs decision** 0
+**Working** 21 · **In progress** 0 · **Ready** 9 · **Waiting** 18 · **Needs decision** 0
 
 Colors: green Working, blue In progress, gold Ready, gray Waiting, red dashed Needs decision.
 
@@ -168,8 +168,7 @@ flowchart LR
   classDef ready fill:#fff4d6,stroke:#a87400,stroke-width:3px,color:#14151a
   classDef waiting fill:#f1f0eb,stroke:#c3c0b6,color:#545a66
   classDef decision fill:#fdeeec,stroke:#b42318,stroke-dasharray:4 3,color:#14151a
-  class app_foundation,auth_join_login,code_my_code,connections_scanner_camera,connections_table,game_state_controls,game_state_core,infra_hosting,look_base,points_audit_log,points_ledger,points_score,ready_load_test,ready_logout,ready_rate_limits,ready_retention,screens_skeleton,staff_accounts,staff_login,usher_console working
-  class ready_backups in_progress
+  class app_foundation,auth_join_login,code_my_code,connections_scanner_camera,connections_table,game_state_controls,game_state_core,infra_hosting,look_base,points_audit_log,points_ledger,points_score,ready_backups,ready_load_test,ready_logout,ready_rate_limits,ready_retention,screens_skeleton,staff_accounts,staff_login,usher_console working
   class admin_players,admin_setup,checkin_sessions,connections_meet,explore_booths,home_pages,look_screens,screen_main,wrapped_cards ready
   class admin_audit_view,admin_award_revoke,blind_box_close_redemption,blind_box_handout,checkin_hall,checkin_window,connections_answers,connections_verse_picker,explore_items,game_state_auto_pause,journal_notes,journal_share_review,leaderboards_in_app,leaderboards_screen,recap_screen,wrapped_collection,wrapped_save_image,wrapped_stat_cards waiting
 ```
@@ -238,7 +237,7 @@ flowchart LR
 
 ## In progress
 
-- `ready.backups`: Railway makes safe copies of the game's data on a schedule, and we prove a copy can bring everything back if something goes wrong.
+- None
 
 ## Needs a decision
 

@@ -22,10 +22,10 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-11-02 · chore/ready-backups · Claude Opus 5.5 / @jonathango98
 
-- What: Claims `ready.backups`: scheduled Railway volume backups, and a tested restore on staging.
+- What: Builds `ready.backups`. Railway volume backups run Daily, Weekly, and Monthly on production and Daily on staging. A restore on staging brought back the data from the backup: a player who joined after it was gone, `PRAGMA integrity_check` printed ok with WAL on, and the app was back about 50 s after Deploy. A single backup and a detached volume can both be deleted, which answers the DEC-053 check, but Railway keeps a deleted volume about 48 hours (accepted, DEC-067). New `docs/backups.md` has the steps to check, restore, and delete. The retention cleanup's manual steps now include deleting the old volume a restore leaves detached. ARCH-053 and the runbook link to the doc (protected files, needs Jonathan's approval).
 - Why: Picked through `/pick-task`. Due 2027-01-08. The game day checklist needs backups running and a restore tested.
-- Rule IDs: ARCH-053, SAFE-014, ENG-101
-- Status: Started
+- Rule IDs: ARCH-053, ARCH-052, ARCH-016, SAFE-014, DEC-049, DEC-053, DEC-067, OPS-042, ENG-087, AI-042, ENG-101, ENG-108
+- Status: Done
 - PR: #75
 
 ## 2026-11-02 · chore/ready-load-test · Claude Opus 5.5 / @jonathango98
