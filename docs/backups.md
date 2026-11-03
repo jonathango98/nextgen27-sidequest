@@ -34,7 +34,7 @@ A restore puts the game back to the moment of the backup. Everything after it is
 4. Run the check above. It should print `ok`, and the player count should match the backup.
 5. Log in on a phone as a player who joined before the backup. It should work.
 6. Enter anything from the paper log since the backup as manual awards, with reason "paper fallback".
-7. Once you're sure the restore is good, delete the old detached volume. It holds player data (SAFE-014).
+7. Once you're sure the restore is good, delete the old detached volume. It holds player data (SAFE-014). Railway removes it about 48 hours later, not straight away.
 
 Tested on staging on 2026-11-03: a player who joined after the backup was gone, the integrity check printed `ok` with WAL mode on, and the app was back about 50 seconds after Deploy was pressed.
 
@@ -45,4 +45,4 @@ The cleanup command (`app/services/retention.py`) can't reach Railway, so on the
 1. Delete every backup in the **Backups** tab.
 2. Delete every old volume left detached by a restore.
 
-Wiping a volume deletes all of its backups. Deleting a single backup by hand has not been tried yet. Developers confirm it before Playtest 2 (DEC-053).
+Tested on staging on 2026-11-03 (DEC-053): a single backup can be deleted in the **Backups** tab, and a detached volume can be deleted with `railway volume --environment <environment> delete --volume <name>`. Railway keeps a deleted volume for about 48 hours before it is gone, and `railway volume list` shows the "Deletes on" time.
