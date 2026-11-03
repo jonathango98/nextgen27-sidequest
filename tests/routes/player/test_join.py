@@ -415,6 +415,21 @@ def test_arch_013_pin_hashed_before_taking_the_write_lock(
     assert seen == [False]
 
 
+def test_arch_051_slow_signup_save_logs_timings_only(
+    client, details, fake_pin, db_path, monkeypatch, caplog
+):
+    monkeypatch.setattr(signup, "SLOW_SAVE_MS", 0)  # every save counts as slow
+    conn = connect(db_path)
+    d = signup.Details("Test", "Player 3", int(details["church_id"]), False)
+    with caplog.at_level("WARNING", logger=signup.log.name):
+        public_id = signup.create_player(conn, d, fake_pin, client.app.state.config)
+    conn.close()
+    [message] = [r.getMessage() for r in caplog.records]
+    assert message.startswith("slow sign-up save: waited ")
+    for private in ("Test", "Player 3", fake_pin, public_id):
+        assert private not in message
+
+
 def test_data_030_home_shows_real_score(client, details, fake_pin, join_points):
     _join(client, details, fake_pin)
     assert f"<h1>{join_points} points</h1>" in client.get("/").text
