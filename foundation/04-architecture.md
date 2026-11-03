@@ -2,7 +2,7 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.8.0
+- Version: 1.9.0
 - Last updated: 2026-11-02
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -129,7 +129,7 @@ Example payload (fake): `SQ1.P.k3x9q2mf.482913`
 - **ARCH-050** [LOCKED] Every award, revocation, and admin or usher action writes an audit row: who did it, what they did, to which record, the reason (if any), and when.
 - **ARCH-051** [LOCKED] Logs never contain PINs, icebreaker answers, takeaway text, last names, or session cookies. Logs refer to players by internal ID.
 - **ARCH-052** [LOCKED] Logs, database files, and backups stay on the server. They are never committed (SAFE-030). They are deleted on the retention date (SAFE-014).
-- **ARCH-053** [PROPOSED] Backups are Railway volume backups only, on a schedule developers set in Railway. No copy is kept off Railway. Railway backups restore only into the same project and environment, so losing the project means losing the backups. This risk is accepted (DEC-049). Backups are deleted on the retention date (SAFE-014). Developers confirm before Playtest 2 that Railway backups can be deleted on that date (DEC-053).
+- **ARCH-053** [PROPOSED] Backups are Railway volume backups only, on a schedule developers set in Railway. No copy is kept off Railway. Railway backups restore only into the same project and environment, so losing the project means losing the backups. This risk is accepted (DEC-049). Backups are deleted on the retention date (SAFE-014). Deleting a single backup and a detached volume was tested on staging (DEC-053, DEC-067). Railway keeps a deleted volume about 48 hours before it is gone, so data on it may outlast the retention date by up to two days. This is accepted (DEC-067). Steps for backup, restore, and deletion are in `docs/backups.md`.
 
 ## 8. Performance and the join moment
 

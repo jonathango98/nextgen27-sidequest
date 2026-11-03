@@ -38,7 +38,7 @@ AUDIT_NO_DELETE_TRIGGER = "audit_log_no_delete"
 
 # Done by hand on the same date. The command can't reach these (ARCH-052, ARCH-053, OPS-042).
 MANUAL_STEPS = (
-    "Delete the Railway volume backups (ARCH-053).",
+    "Delete the Railway volume backups, and any old volume a restore left detached (ARCH-053).",
     "Delete the server logs on Railway (ARCH-052).",
     "Delete the real event data folder (OPS-042).",
     "Switch off every staff account (OPS-042).",

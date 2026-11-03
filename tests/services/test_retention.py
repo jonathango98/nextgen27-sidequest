@@ -264,6 +264,10 @@ def test_ops_042_manual_steps_cover_backups_logs_data_folder_and_staff():
     assert "staff account" in text and "logs" in text and "backups" in text
 
 
+def test_arch_053_manual_steps_include_volumes_left_by_a_restore():
+    assert "old volume a restore left detached" in " ".join(MANUAL_STEPS)
+
+
 def test_safe_014_command_refuses_early_date(local_command, filled, cfg):
     early = (retention_date(cfg) - timedelta(days=1)).isoformat()
     assert local_command(["--confirm", "--as-of", early]) == 1
