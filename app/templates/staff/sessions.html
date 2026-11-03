@@ -1,0 +1,71 @@
+{% extends "player/plain.html" %}
+
+{% block title %}Sessions · Side Quest{% endblock %}
+
+{# DATA-014: title, start time, and check-in minutes only. No rooms or places (SAFE-037). #}
+{% macro fields(prefix, title, starts_at, minutes) %}
+  <label for="{{ prefix }}-title">Title</label>
+  <input id="{{ prefix }}-title" name="title" value="{{ title }}" maxlength="{{ title_max }}" autocomplete="off" required>
+  <label for="{{ prefix }}-starts-at">Start time (venue time, optional)</label>
+  <input id="{{ prefix }}-starts-at" name="starts_at" type="datetime-local" value="{{ starts_at }}">
+  <label for="{{ prefix }}-minutes">Check-in opens this many minutes before</label>
+  <input id="{{ prefix }}-minutes" name="checkin_open_minutes" type="number" min="1" step="1" inputmode="numeric" value="{{ minutes }}">
+{% endmacro %}
+
+{% block content %}
+  {% set labels = {"on": "On", "paused": "Paused", "off": "Off"} %}
+  <div class="stack">
+    <h1>Sessions</h1>
+
+    {# GAME-026: End session swaps only this part, picked out of the page with hx-select (API-002). #}
+    <section id="sessions" class="stack" aria-labelledby="sessions-title">
+      <p>The game is <strong data-state="{{ state }}">{{ labels[state] }}</strong>.</p>
+      {% if notice %}<p class="card" role="status">{{ notice }}</p>{% endif %}
+      {% if error_code %}{% include "partials/error.html" %}{% endif %}
+      <h2 id="sessions-title">Program</h2>
+      {% for row in rows %}
+        {% set s = row.session %}
+        {% set editing = form.get("session") == s.public_id %}
+        <article class="card stack" data-session="{{ s.public_id }}">
+          <h3>{{ s.title }}</h3>
+          <p class="hint">
+            {% if row.start_label %}Starts {{ row.start_label }}. Check-in opens {{ s.checkin_open_minutes }} min before.{% else %}No start time.{% endif %}
+          </p>
+          <p class="hint" data-ended="{{ 'yes' if s.ended_at else 'no' }}">{% if s.ended_at %}<strong>Ended.</strong> Takeaways are open.{% else %}Not ended yet.{% endif %}</p>
+          {# One form per button, so it works without JavaScript too (API-007). #}
+          <form method="post" action="/admin/sessions/{{ s.public_id }}/end" hx-post="/admin/sessions/{{ s.public_id }}/end" hx-target="#sessions" hx-select="#sessions" hx-swap="outerHTML" hx-confirm="End {{ s.title }}? A paused game turns back on, and takeaways open.">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <button class="button button-secondary" type="submit">End session</button>
+          </form>
+          <details class="session-edit"{% if editing %} open{% endif %}>
+            <summary class="button button-secondary">Edit</summary>
+            <form class="form" method="post" action="/admin/sessions">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+              <input type="hidden" name="session" value="{{ s.public_id }}">
+              {% if editing %}
+                {{ fields("edit-" ~ s.public_id, form.get("title", ""), form.get("starts_at", ""), form.get("checkin_open_minutes", "")) }}
+              {% else %}
+                {{ fields("edit-" ~ s.public_id, s.title, row.start_value, s.checkin_open_minutes or "") }}
+              {% endif %}
+              <button class="button button-secondary" type="submit">Save</button>
+            </form>
+          </details>
+        </article>
+      {% else %}
+        <p class="hint">No sessions yet.</p>
+      {% endfor %}
+    </section>
+
+    <h2>Add a session</h2>
+    <form class="form" method="post" action="/admin/sessions">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      {% set adding = form and not form.get("session") %}
+      <div class="card form-card">
+        {{ fields("add", form.get("title", "") if adding else "", form.get("starts_at", "") if adding else "", form.get("checkin_open_minutes", "") if adding else "") }}
+      </div>
+      <button class="button" type="submit">Add session</button>
+    </form>
+
+    <a class="button button-secondary" href="/admin">Admin console</a>
+  </div>
+{% endblock %}
