@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Picked through `/pick-task`. Due 2027-01-08. The Day 1 stage intro must hold up before Playtest 2.
 - Rule IDs: ARCH-070, ARCH-071, ARCH-072, OPS-030, ENG-101
 - Status: Started
-- PR: draft
+- PR: #73
 
 ## 2026-11-02 · feat/ready-rate-limits · Claude Opus 5.5 / @jonathango98
 
