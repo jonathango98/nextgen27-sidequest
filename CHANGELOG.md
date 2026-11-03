@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Picked through `/pick-task`. Due 2027-01-08. The game day checklist needs backups running and a restore tested.
 - Rule IDs: ARCH-053, SAFE-014, ENG-101
 - Status: Started
-- PR: draft
+- PR: #75
 
 ## 2026-11-02 · chore/ready-load-test · Claude Opus 5.5 / @jonathango98
 
