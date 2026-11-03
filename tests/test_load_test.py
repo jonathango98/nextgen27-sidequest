@@ -1,4 +1,5 @@
 import asyncio
+import time
 from concurrent.futures import ThreadPoolExecutor
 
 import httpx2
@@ -80,6 +81,38 @@ def test_arch_070_summary_says_why_requests_failed():
     failed = [lt.Result("join", "GET /join", target / 2, False, "HTTP 502")] * 2
     lines, _ = lt.summarize(_results([target / 2] * 18) + failed, target)
     assert "Failed: 2 x GET /join: HTTP 502" in lines
+
+
+def test_dec_031_summary_passes_when_retry_worked():
+    target = load_config()["load_test"]["p95_target_ms"]
+    failed = lt.Result("play", "GET /code/qr", target / 2, False, "ConnectError", True)
+    lines, passed = lt.summarize(_results([target / 2] * 19) + [failed], target)
+    assert passed
+    assert "Failed: 1 x GET /code/qr: ConnectError, worked on retry" in lines
+
+
+def test_dec_031_failed_refresh_is_retried_once():
+    calls = []
+
+    def answer(request):
+        calls.append(request.url.path)
+        if request.url.path == "/code/qr" and calls.count("/code/qr") == 1:
+            raise httpx2.ConnectError("fake dropped connection")
+        return httpx2.Response(200, text="no refresh delay here")
+
+    async def go():
+        results = []
+        transport = httpx2.MockTransport(answer)
+        async with httpx2.AsyncClient(base_url=STAGING, transport=transport) as c:
+            # Tiny waits so the test is quick. Not the real refresh times.
+            await lt.Phone(c, results).play(time.monotonic() + 0.3, 0.05, 0.01)
+        return results
+
+    with ThreadPoolExecutor(1) as pool:  # the browser tests leave a loop running
+        results = pool.submit(asyncio.run, go()).result()
+    first, retry = results[1], results[2]
+    assert (first.route, first.ok, first.recovered) == ("GET /code/qr", False, True)
+    assert (retry.route, retry.ok) == ("GET /code/qr retry", True)
 
 
 def test_arch_070_summary_fails_with_no_requests():

@@ -23,7 +23,7 @@ import re
 import secrets
 import sys
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import UTC, datetime
 from urllib.parse import urlsplit
 
@@ -68,6 +68,7 @@ class Result:
     ms: float
     ok: bool
     why: str = ""  # for a failed request: the HTTP status or the error type
+    recovered: bool = False  # a failed My Code refresh whose retry worked (DEC-031)
 
 
 def profile_from_config(cfg: dict) -> Profile:
@@ -112,18 +113,22 @@ def summarize(results: list[Result], target_ms: float) -> tuple[list[str], bool]
     if not results:
         return [*lines, "FAIL: no requests were made"], False
     p95 = percentile([r.ms for r in results], 95)
-    failed = sum(not r.ok for r in results)
+    failed = sum(not r.ok and not r.recovered for r in results)
+    recovered = sum(r.recovered for r in results)
     passed = p95 < target_ms and failed == 0
     lines.append(
         f"{'PASS' if passed else 'FAIL'}: p95 {p95:.0f} ms (target under "
-        f"{target_ms:.0f} ms, ARCH-070), {failed} of {len(results)} requests failed"
+        f"{target_ms:.0f} ms, ARCH-070), {failed} of {len(results)} requests failed, "
+        f"{recovered} more worked on retry like the page does (DEC-031)"
     )
-    reasons: dict[tuple[str, str], int] = {}
+    reasons: dict[tuple[str, str, bool], int] = {}
     for r in results:
         if not r.ok:
-            reasons[(r.route, r.why)] = reasons.get((r.route, r.why), 0) + 1
-    for (route, why), n in reasons.items():
-        lines.append(f"Failed: {n} x {route}: {why}")
+            key = (r.route, r.why, r.recovered)
+            reasons[key] = reasons.get(key, 0) + 1
+    for (route, why, ok_on_retry), n in reasons.items():
+        retry = ", worked on retry" if ok_on_retry else ""
+        lines.append(f"Failed: {n} x {route}: {why}{retry}")
     for what, piece in NOT_TESTED_YET.items():
         lines.append(f"Not tested yet: {what}, comes with {piece}")
     return lines, passed
@@ -150,6 +155,7 @@ class Phone:
             response, ok, why = None, False, type(error).__name__
         ms = (time.perf_counter() - start) * 1000
         self.results.append(Result(phase, route, ms, ok, why))
+        self.last = len(self.results) - 1  # this phone's latest result
         return response if ok else None
 
     async def join(self, last_name: str, pin_digits: int) -> bool:
@@ -194,7 +200,9 @@ class Phone:
             return False
         return bool(await self.request("join", "GET /", "GET", "/", _is_200))
 
-    async def play(self, until: float, fallback_seconds: float) -> None:
+    async def play(
+        self, until: float, fallback_seconds: float, retry_seconds: float
+    ) -> None:
         """Keep My Code open. It refreshes when the code changes, like the page does (ARCH-074)."""
         response = await self.request("play", "GET /code", "GET", "/code", _is_200)
         while (left := until - time.monotonic()) > 0:
@@ -206,6 +214,19 @@ class Phone:
             response = await self.request(
                 "play", "GET /code/qr", "GET", "/code/qr", _is_200
             )
+            if response is None and until - time.monotonic() > retry_seconds:
+                response = await self.retry_refresh(retry_seconds)
+
+    async def retry_refresh(self, retry_seconds: float) -> httpx2.Response | None:
+        """DEC-031: the page tries a failed refresh again, so a retry that works isn't a failure."""
+        failed_at = self.last
+        await asyncio.sleep(retry_seconds)
+        response = await self.request(
+            "play", "GET /code/qr retry", "GET", "/code/qr", _is_200
+        )
+        if response is not None:
+            self.results[failed_at] = replace(self.results[failed_at], recovered=True)
+        return response
 
 
 async def run(
@@ -227,7 +248,10 @@ async def run(
         ) as client:
             phone = Phone(client, results)
             if await phone.join(f"Player {run_id}-{n + 1}", cfg["auth"]["pin_digits"]):
-                await phone.play(until, cfg["qr"]["rotation_seconds"])
+                qr = cfg["qr"]
+                await phone.play(
+                    until, qr["rotation_seconds"], qr["poll_retry_seconds"]
+                )
 
     await asyncio.gather(*(one(n) for n in range(profile.signups)))
     return results
