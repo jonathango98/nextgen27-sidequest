@@ -2,8 +2,8 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.3.0
-- Last updated: 2026-10-28
+- Version: 1.3.1
+- Last updated: 2026-11-02
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -78,7 +78,7 @@ This file is for game day and the weeks before it: who does what, what to do whe
 
 - [ ] Production on Railway is up, HTTPS works, and staging matches production (ARCH-010, ARCH-011)
 - [ ] Secrets are set as environment variables on the server, not in any file in the repo (SAFE-032)
-- [ ] Backups run and a restore was tested (ARCH-053)
+- [ ] Backups run and a restore was tested (ARCH-053, steps in `docs/backups.md`)
 - [ ] Church list loaded. Booths loaded. Hidden item numbers loaded (no locations in the app, SAFE-010)
 - [ ] Session titles and start times loaded (no room details, DATA-014, GAME-107)
 - [ ] Usher and admin accounts created, one per person (ARCH-036)
