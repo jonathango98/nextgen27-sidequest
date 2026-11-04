@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Picked through `/pick-task`. Due 2026-12-18. Unlocks `leaderboards.in-app`.
 - Rule IDs: GAME-081, GAME-082, GAME-083, GAME-084, GAME-086, GAME-087, GAME-088, GAME-089, SAFE-004, SAFE-019, ENG-101
 - Status: Started
-- PR: draft
+- PR: #80
 
 ## 2026-11-03 · feat/checkin-sessions · Claude Opus 5.5 / @marcjason2012
 
