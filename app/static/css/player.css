@@ -556,6 +556,25 @@ h2 {
   text-decoration: none;
 }
 
+/* Journal list: Write a takeaway, then the player's own notes as takeaway cards */
+.button-write {
+  margin-bottom: var(--space-4);
+}
+
+.note-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+/* Muted gray is fine here: the card is glass (07 section 2) */
+.note-status {
+  font-size: var(--font-size-small);
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
 /* Journal: Cancel sits under Save (UI-039) */
 .button-cancel {
   margin-top: var(--space-2);

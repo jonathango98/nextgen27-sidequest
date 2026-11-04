@@ -43,3 +43,24 @@ def test_ui_039_cancel_sits_under_save_and_goes_home(page: Page, live_server):
     assert cancel.bounding_box()["y"] >= save["y"] + save["height"]
     cancel.click()
     expect(page).to_have_url(f"{live_server}/")
+
+
+def test_game_031_journal_list_fits_and_back_goes_home(page: Page, live_server):
+    problems = []
+    page.on("console", lambda m: problems.append(m.text) if m.type == "error" else None)
+    page.goto(f"{live_server}/journal")
+    back = page.get_by_role("link", name="Back to home")
+    title = page.get_by_role("heading", level=1)
+    write = page.get_by_role("link", name="Write a takeaway")
+    assert (
+        back.bounding_box()["y"] < title.bounding_box()["y"] < write.bounding_box()["y"]
+    )
+    width = load_config()["ui"]["min_viewport_px"]
+    cards = page.locator(".takeaway-card")
+    for i in range(cards.count()):
+        box = cards.nth(i).bounding_box()
+        assert box["x"] >= 0 and box["x"] + box["width"] <= width
+    assert page.evaluate("document.documentElement.scrollWidth") <= width
+    assert problems == []
+    back.click()
+    expect(page).to_have_url(f"{live_server}/")

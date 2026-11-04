@@ -282,3 +282,18 @@ def test_dec_062_a_finished_quest_is_plain_text_not_a_pill(client):
     row = re.search(r"Join the game.*?</li>", html, re.DOTALL).group(0)
     assert 'class="pill"' not in row
     assert "<button" not in row and "<a " not in row
+
+
+def test_ui_030_journal_has_a_back_link_to_home(client):
+    assert link_to("/", "Back to home").search(client.get("/journal").text)
+
+
+def test_game_031_journal_lists_own_notes_with_who_can_read_them(client):
+    html = client.get("/journal").text
+    sessions = re.findall(r'<h2 class="session-title"[^>]*>([^<]+)</h2>', html)
+    assert sessions == [n["session"] for n in journal.PLACEHOLDER_NOTES]
+    statuses = re.findall(r'<span class="note-status">([^<]+)</span>', html)
+    assert statuses == [n["status"] for n in journal.PLACEHOLDER_NOTES]
+    points = load_config()["points"]["journal_takeaway"]  # AI-013
+    pills = re.findall(r'<span class="pill">\+(\d+)</span>', html)
+    assert pills == [str(points)] * len(journal.PLACEHOLDER_NOTES)

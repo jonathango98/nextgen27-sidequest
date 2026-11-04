@@ -41,9 +41,34 @@ PLACEHOLDER_SUMMARY = [
 ]
 
 
+# Fake notes until journal.notes lists the player's own notes (GAME-031). Obviously fake
+# (SAFE-031). Newest session first, each with who can read it and where its review is (SAFE-007).
+PLACEHOLDER_NOTES = [
+    {
+        "session": "Example Session 3",
+        "text": "Example takeaway: I want to pray before I scroll in the morning, even for one minute.",
+        "status": "Just me",
+    },
+    {
+        "session": "Example Session 2",
+        "text": "Example takeaway: listening first stuck with me. I'll ask more questions in small group.",
+        "status": "With name · In review",
+    },
+    {
+        "session": "Example Session 1",
+        "text": "Example takeaway: serving isn't about the stage. I'll help set up chairs without being asked.",
+        "status": "Anonymous · Shared",
+    },
+]
+
+
 @router.get("/journal")
 def my_takeaways(request: Request, player: Player):
-    return templates.TemplateResponse(request, "player/journal.html")
+    context = {
+        "notes": PLACEHOLDER_NOTES,
+        "journal_points": request.app.state.config["points"]["journal_takeaway"],
+    }
+    return templates.TemplateResponse(request, "player/journal.html", context)
 
 
 @router.get("/journal/new")
