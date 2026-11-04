@@ -22,11 +22,11 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-11-04 · feat/error-page · Claude Opus 5.5 / @jonathango98
 
-- What: Started. A wrong link shows a friendly Side Quest page instead of `{"detail":"Not Found"}`, and a server error shows one instead of plain text. Its button goes to Home when logged in, or to Log in when not.
+- What: A 404 shows a friendly full page (`app/templates/error.html`) with an icon, "Page not found", "We couldn't find that.", and `data-error-code="NOT_FOUND"`, instead of `{"detail":"Not Found"}`. A server crash shows "Something went wrong" with no details instead of plain text, and the server still logs it. The button goes to Home when the session cookie is valid, or to Log in when not, read from the cookie only, so it works even if the database failed. HTMX requests still get the small error partial. Other HTTP errors keep FastAPI's default. The main screen's wrong key test now checks that a wrong key looks exactly like any unknown page (ARCH-037).
 - Why: Jonathan saw the raw JSON on a mistyped staging link.
-- Rule IDs: API-005, API-021, UI-051, UI-003, DEC-061
-- Status: Started
-- PR: draft
+- Rule IDs: API-005, API-021, ARCH-037, UI-051, UI-003, DEC-061, AI-042, AI-044
+- Status: Done
+- PR: #78
 
 ---
 
