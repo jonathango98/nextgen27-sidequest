@@ -1,3 +1,4 @@
+import copy
 import re
 
 import pytest
@@ -6,7 +7,7 @@ from fastapi.testclient import TestClient
 from app.auth.current import CurrentPlayer, get_current_player
 from app.config import load_config
 from app.main import create_app, templates
-from app.routes.player import journal
+from app.routes.player import journal, quests
 
 FAKE_PLAYER = CurrentPlayer(public_id="testpid01", score=120)  # fake data (ENG-047)
 
@@ -257,3 +258,27 @@ def page_text(html):
 def test_ui_036_no_greeting_without_a_player_row(client):
     # FAKE_PLAYER is not in the database, so there is no first name to show.
     assert 'class="greeting"' not in client.get("/").text
+
+
+def test_game_040_quests_show_points_from_config(client):
+    html = client.get("/quests").text
+    pills = re.findall(r'<span class="pill">\+(\d+)</span>', html)
+    expected = [str(q["points"]) for q in quests.quest_list(load_config())]
+    # AI-013: every pill comes from game-config.yaml. Join the game is done, so it has no pill.
+    assert pills == expected[:-1]
+    assert '<span class="quest-done">Done</span>' in html
+
+
+def test_game_040_quests_follow_a_changed_config_number(client):
+    cfg = copy.deepcopy(client.app.state.config)
+    cfg["points"]["booth_visit"] += 1  # any change, not a real game number
+    client.app.state.config = cfg
+    html = client.get("/quests").text
+    assert f'<span class="pill">+{cfg["points"]["booth_visit"]}</span>' in html
+
+
+def test_dec_062_a_finished_quest_is_plain_text_not_a_pill(client):
+    html = client.get("/quests").text
+    row = re.search(r"Join the game.*?</li>", html, re.DOTALL).group(0)
+    assert 'class="pill"' not in row
+    assert "<button" not in row and "<a " not in row

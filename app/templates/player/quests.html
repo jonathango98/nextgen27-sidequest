@@ -5,5 +5,18 @@
 
 {% block content %}
   <h1>Quests</h1>
-  <p class="hint">Placeholder: what earns points and what is done.</p>
+  {# Every quest and what it gives. Progress is pretend until home.pages. #}
+  <ul class="card quest-list">
+    {% for quest in quests %}
+      <li class="quest">
+        <span class="quest-text">
+          <span class="quest-title">{{ quest.title }}</span>
+          <span class="quest-how">{{ quest.how }}</span>
+          <span class="quest-progress">{{ quest.progress }}</span>
+        </span>
+        {# DEC-062: a finished quest says Done in plain text, not a pill, since it is not a button. #}
+        {% if quest.done %}<span class="quest-done">Done</span>{% else %}<span class="pill">+{{ quest.points }}</span>{% endif %}
+      </li>
+    {% endfor %}
+  </ul>
 {% endblock %}

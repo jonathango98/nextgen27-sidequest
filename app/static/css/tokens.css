@@ -122,6 +122,10 @@
   --box-tile-min: 140px;
   --font-size-box-number: 44px;
 
+  /* Quests, from the Mix Quests mockup */
+  --font-size-quest-title: 19px;
+  --quest-row-min: 72px;
+
   /* Box progress bar: a thin black bar on a faint track, always with numbers (UI-051) */
   --progress-height: 4px;
   --color-track: rgba(30, 26, 28, 0.15);

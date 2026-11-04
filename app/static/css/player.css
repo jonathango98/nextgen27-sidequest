@@ -620,6 +620,60 @@ h2 {
   margin-top: auto;
 }
 
+/* Quests: one frosted card, a row per quest with a line between them */
+.quest-list {
+  margin: 0;
+  padding-top: var(--space-1);
+  padding-bottom: var(--space-1);
+  list-style: none;
+}
+
+.quest {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: var(--quest-row-min);
+  padding: var(--space-2) 0;
+}
+
+.quest + .quest {
+  border-top: thin solid var(--color-hairline);
+}
+
+.quest-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.3; /* three short lines per row, as in the mockup */
+}
+
+.quest-title {
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-quest-title);
+}
+
+/* Muted gray is fine here: the card is glass (07 section 2) */
+.quest-how {
+  font-size: var(--font-size-small);
+  color: var(--color-text-muted);
+}
+
+.quest-progress {
+  font-size: var(--font-size-small);
+  font-weight: 600;
+}
+
+.quest .pill,
+.quest-done {
+  flex-shrink: 0;
+}
+
+.quest-done {
+  font-weight: 700;
+  color: var(--color-text-muted);
+}
+
 /* Forms: Join and Log in (UI-003 big targets, UI-053 visible labels, UI-051 errors in text) */
 .form {
   display: flex;
