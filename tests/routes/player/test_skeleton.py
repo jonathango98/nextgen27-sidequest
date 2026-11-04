@@ -323,3 +323,10 @@ def test_ui_039_journal_submit_shows_its_points(client):
 
 def test_ui_030_scan_has_a_back_link_to_my_code(client):
     assert link_to("/code", "Back to My Code").search(client.get("/scan").text)
+
+
+def test_dec_062_box_page_says_claim_box(client):
+    html = client.get("/box").text
+    assert "<h1>Claim box</h1>" in html
+    assert "<title>Claim box · Side Quest</title>" in html
+    assert "Redeem box" not in page_text(html)

@@ -1,13 +1,14 @@
 {% extends "player/base.html" %}
 {% set tab = "home" %}
 
-{% block title %}Redeem box · Side Quest{% endblock %}
+{% block title %}Claim box · Side Quest{% endblock %}
 
 {% block content_class %} box-page{% endblock %}
 
 {% block content %}
   <div class="page-heading">
-    <h1>Redeem box</h1>
+    {# DEC-062: Claim box, since boxes unlock at point milestones and points are never spent. #}
+    <h1>Claim box</h1>
     {# GAME-074: boxes this player can claim now. GAME-077: never a "boxes left" count. #}
     <p class="page-sub">{{ ready }} ready</p>
   </div>
