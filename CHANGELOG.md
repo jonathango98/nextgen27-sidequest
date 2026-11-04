@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Picked by Owen from the feature tree after `connections.meet` (#70). Due 2026-12-04 and unlocks 3 pieces.
 - Rule IDs: GAME-010, GAME-011, GAME-012, GAME-015, GAME-018, SAFE-006, ENG-101
 - Status: Started
-- PR: draft
+- PR: #79
 
 ## 2026-11-01 · feat/connections-meet · Claude Opus 5.5 / @OwenTjandra
 
