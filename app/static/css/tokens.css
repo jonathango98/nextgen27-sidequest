@@ -98,6 +98,7 @@
 
   /* Home (UI-036), from the Mix Home mockup */
   --font-size-points-label: 28px; /* "points" under the big score */
+  --font-size-greeting: 22px; /* "Hi, <first name>" over the score */
   --score-hero-tracking: -0.03em;
   --font-size-tile: 23px; /* Write, Read, Redeem box */
   --font-size-tile-main: 28px; /* Meet friends */

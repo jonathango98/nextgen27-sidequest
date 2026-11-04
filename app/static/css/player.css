@@ -370,6 +370,12 @@ h2 {
   padding: var(--space-5) var(--space-2) var(--space-4);
 }
 
+.greeting {
+  margin: 0 0 var(--space-3);
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-greeting);
+}
+
 .score-hero {
   display: flex;
   flex-direction: column;

@@ -252,3 +252,8 @@ def test_ui_030_takeaways_has_a_back_link_to_home(client):
 
 def page_text(html):
     return " ".join(re.sub(r"<[^>]+>", " ", html).split())
+
+
+def test_ui_036_no_greeting_without_a_player_row(client):
+    # FAKE_PLAYER is not in the database, so there is no first name to show.
+    assert 'class="greeting"' not in client.get("/").text

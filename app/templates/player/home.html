@@ -27,6 +27,8 @@
 {% block content %}
   {# UI-036: big score with "points" under it, then blind box progress with its numbers (UI-051). #}
   <section class="home-score">
+    {# UI-036, DEC-062: say hi by first name, over the score. #}
+    {% if first_name %}<p class="greeting">Hi, {{ first_name }}</p>{% endif %}
     <h1 class="score-hero"><span class="score-hero-number">{{ score }}</span> <span class="score-hero-label">points</span></h1>
     <div class="progress home-progress">
       <span class="progress-label"><span>Next box</span><span>{{ box_progress }} / {{ box_milestone }}</span></span>
