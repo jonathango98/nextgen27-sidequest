@@ -97,10 +97,13 @@ def test_ui_040_off_game_shows_offline(page: Page, live_server, test_db_path, tm
     page.screenshot(path=tmp_path / "screen-off.png", full_page=True)
 
 
-def test_arch_037_wrong_key_shows_nothing(page: Page, live_server):
+def test_arch_037_wrong_key_looks_like_any_unknown_page(page: Page, live_server):
+    # API-021: the same not found page as a made-up link, so the key page can't be told apart.
     response = page.goto(f"{live_server}/screen?{screen_key.PARAM}=test-only-wrong")
     assert response.status == 404
-    expect(page.get_by_text("Side Quest")).to_have_count(0)
+    wrong_key = page.content()
+    page.goto(f"{live_server}/test-only-no-such-page")
+    assert page.content() == wrong_key
 
 
 def test_ui_044_admin_panel_at_min_width(

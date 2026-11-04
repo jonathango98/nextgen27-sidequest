@@ -500,6 +500,22 @@ h2 {
 .page-sub {
   margin: 0;
 }
+.error-page {
+  align-items: center;
+  gap: var(--space-4);
+  margin-top: var(--space-5);
+  text-align: center;
+}
+.error-page h1 {
+  margin: 0;
+}
+.error-page .card {
+  width: 100%;
+  margin: 0;
+}
+.error-icon {
+  color: var(--color-error);
+}
 
 /* Journal form (GAME-030, GAME-031): a card with the takeaway and the share choices, then Save */
 .form.journal-form > fieldset {
