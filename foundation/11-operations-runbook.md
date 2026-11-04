@@ -87,7 +87,7 @@ This file is for game day and the weeks before it: who does what, what to do whe
 - [ ] Paper fallback kit printed: blank paper logs and pens (ARCH-081)
 - [ ] Blind boxes sealed and counted, and `blind_box.stock_total` set (GAME-069)
 - [ ] Join QR on the intro slides points to the production sign-up page (ARCH-024)
-- [ ] `SCREEN_KEY` set in production, and the main screen link opened on the main screen device and the outside TV (ARCH-037)
+- [ ] `SQ_SCREEN_KEY` set in production, and the main screen link opened on the main screen device and the outside TV (ARCH-037)
 
 ### Venue walkthrough (mid-February)
 

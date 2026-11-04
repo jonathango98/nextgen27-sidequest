@@ -22,10 +22,10 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-11-04 · feat/screen-main · Claude Opus 5.5 / @jonathango98
 
-- What: Claims `screen.main` from the feature tree: the dark big-screen page for the room, signed in by an admin and switched to screen mode, showing only public views, a holding message while paused, and refreshing by itself.
-- Why: Ready in the tree, due 2026-12-11, and unlocks `leaderboards.screen`, `checkin.hall`, and `recap.screen`.
-- Rule IDs: ARCH-037, UI-040, UI-041, UI-042, UI-043, API-031, ARCH-074, ENG-101
-- Status: Started
+- What: Builds `screen.main`, changed with Jonathan's answers (DEC-069 to DEC-071). The main screen at `/screen` needs no login: its link carries a secret key from `SQ_SCREEN_KEY`, and a wrong or missing key, or no key set on the server, gets 404 (ARCH-037). Responses send no referrer and ask not to be indexed. While the game is on or paused it takes turns every `main_screen.rotate_seconds` through `/screen/players`, `/screen/churches`, `/screen/takeaways`, and `/screen/photobooth`, each loaded fresh and saying coming soon until `leaderboards.screen`, `recap.screen`, and `screen.photobooth` fill them in. A failed load keeps the last view and asks again at the next turn. While off it shows "Side Quest is offline" or the recap placeholder, picked by an admin on a new Main screen panel on the admin console (`POST /admin/screen-off-view`, audit logged, UI-044), which also shows the full link. Dark screen tokens, text sized from `main_screen.min_text_px_1080p` and scaled to the screen, slow fade in, none with Reduce Motion (UI-041 to UI-043). Migration `0008_add_screen_off_view.sql` (0007 is taken by #76). Foundation: UI-040, GAME-087, SAFE-013, SAFE-018, ARCH-035 (LOCKED) and ARCH-037, API-031, GAME-024, GAME-027, GAME-028 changed; UI-044, OPS-007, SAFE-038 (OPEN) added; `poll_seconds` replaced by `rotate_seconds`; `checkin.hall` and `recap.screen` reworded; new piece `screen.photobooth`, locked by SAFE-038. Screen mode and `POST /admin/screen-mode` are gone.
+- Why: Jonathan wants the main screen to run all day with no login, also on the TV outside the hall, so pause no longer hides it. The hall check-in page gets its own admin-made link, so nobody can check in from outside the hall (DEC-070). Photobooth pictures wait on a consent decision (SAFE-024).
+- Rule IDs: ARCH-035, ARCH-037, UI-040, UI-041, UI-042, UI-043, UI-044, API-031, ARCH-074, ARCH-050, GAME-087, SAFE-013, SAFE-018, SAFE-038, OPS-007, DEC-069, DEC-070, DEC-071, ENG-087, ENG-108
+- Status: Done
 - PR: #77
 
 ## 2026-10-31 · feat/look-screens · Claude Opus 5.5 / @chrnso

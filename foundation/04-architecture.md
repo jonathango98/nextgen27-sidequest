@@ -114,7 +114,7 @@ Example payload (fake): `SQ1.P.k3x9q2mf.482913`
 - **ARCH-034** [PROPOSED] After login, the server sets a signed session cookie: `Secure`, `HttpOnly`, `SameSite=Lax`. The signing key comes from the environment variable `SQ_SESSION_KEY`. The cookie lasts at least until Wrapped closes (WRAP-004), so the recap stays in the browser the person played on.
 - **ARCH-035** [LOCKED] There are four roles: player, usher, admin, and screen. The screen role is whoever opens the main screen link with the screen key (ARCH-037, DEC-069). Every usher, admin, and screen route checks the role on the server. Hiding a button is not a security check.
 - **ARCH-036** [PROPOSED] Usher and admin accounts are personal (one per person, no shared logins). An admin creates them. They log in with a password, not a 4-digit PIN. The first admin account is created with a server command that reads its password from an environment variable.
-- **ARCH-037** [PROPOSED] The main screen needs no login. Its link carries a secret key, set in the `SCREEN_KEY` environment variable on the server and never in the repo. A wrong or missing key gets 404, and so does every main screen page while `SCREEN_KEY` is not set. The key opens only the views meant for the main screen. Changing the variable cuts off every old link. Admins see the full link on the admin console (DEC-069). This replaces signing in a device in screen mode.
+- **ARCH-037** [PROPOSED] The main screen needs no login. Its link carries a secret key, set in the `SQ_SCREEN_KEY` environment variable on the server and never in the repo. A wrong or missing key gets 404, and so does every main screen page while `SQ_SCREEN_KEY` is not set. The key opens only the views meant for the main screen. Changing the variable cuts off every old link. Admins see the full link on the admin console (DEC-069). This replaces signing in a device in screen mode.
 - **ARCH-038** [LOCKED] Every request that changes data (POST) is protected against cross-site request forgery. The mechanism is PROPOSED: a token in each form and in an HTMX request header.
 
 ## 6. Points service and pause
@@ -167,7 +167,7 @@ Weak or overloaded Wi-Fi is the biggest risk (see `11-operations-runbook.md`).
 | Guessing IDs | Walking through player IDs one by one | Random public IDs, role checks | ARCH-020 |
 | Scraping takeaways | Reading the summary page from outside | Summary page needs login | SAFE-017 |
 | Leaked secret | A key committed to the repo | Push protection, rotate the key, never rely on secrecy of code | SAFE-030, SAFE-034 |
-| Leaked main screen link | Someone outside the venue watches the main screen | It is read-only and shows only main screen fields (SAFE-028). Change `SCREEN_KEY` to cut off old links | ARCH-037 |
+| Leaked main screen link | Someone outside the venue watches the main screen | It is read-only and shows only main screen fields (SAFE-028). Change `SQ_SCREEN_KEY` to cut off old links | ARCH-037 |
 
 - **ARCH-061** [LOCKED] Jinja2 autoescape stays on. User-written text (names, answers, takeaways) is never marked as safe HTML.
 - **ARCH-062** [PROPOSED] The admin console has a view of unusual activity, for example a player with many connections in a short time, so admins can look before prizes are given.

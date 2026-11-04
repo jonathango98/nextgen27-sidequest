@@ -5,7 +5,7 @@
 
 Every planned piece of work and what it needs first (ENG-105 to ENG-108), grouped by the week it is due (PRD-054). Pieces flow left to right in time: finishing one unlocks the pieces it points to. Run `/pick-task` to claim one.
 
-**Working** 22 · **In progress** 1 · **Ready** 7 · **Waiting** 18 · **Needs decision** 1
+**Working** 23 · **In progress** 0 · **Ready** 8 · **Waiting** 17 · **Needs decision** 1
 
 Colors: green Working, blue In progress, gold Ready, gray Waiting, red dashed Needs decision.
 
@@ -170,10 +170,9 @@ flowchart LR
   classDef ready fill:#fff4d6,stroke:#a87400,stroke-width:3px,color:#14151a
   classDef waiting fill:#f1f0eb,stroke:#c3c0b6,color:#545a66
   classDef decision fill:#fdeeec,stroke:#b42318,stroke-dasharray:4 3,color:#14151a
-  class app_foundation,auth_join_login,code_my_code,connections_scanner_camera,connections_table,game_state_controls,game_state_core,infra_hosting,look_base,look_screens,points_audit_log,points_ledger,points_score,ready_backups,ready_load_test,ready_logout,ready_rate_limits,ready_retention,screens_skeleton,staff_accounts,staff_login,usher_console working
-  class screen_main in_progress
-  class admin_players,admin_setup,checkin_sessions,connections_meet,explore_booths,home_pages,wrapped_cards ready
-  class admin_audit_view,admin_award_revoke,blind_box_close_redemption,blind_box_handout,checkin_hall,checkin_window,connections_answers,connections_verse_picker,explore_items,game_state_auto_pause,journal_notes,journal_share_review,leaderboards_in_app,leaderboards_screen,recap_screen,wrapped_collection,wrapped_save_image,wrapped_stat_cards waiting
+  class app_foundation,auth_join_login,code_my_code,connections_scanner_camera,connections_table,game_state_controls,game_state_core,infra_hosting,look_base,look_screens,points_audit_log,points_ledger,points_score,ready_backups,ready_load_test,ready_logout,ready_rate_limits,ready_retention,screen_main,screens_skeleton,staff_accounts,staff_login,usher_console working
+  class admin_players,admin_setup,checkin_sessions,connections_meet,explore_booths,home_pages,leaderboards_screen,wrapped_cards ready
+  class admin_audit_view,admin_award_revoke,blind_box_close_redemption,blind_box_handout,checkin_hall,checkin_window,connections_answers,connections_verse_picker,explore_items,game_state_auto_pause,journal_notes,journal_share_review,leaderboards_in_app,recap_screen,wrapped_collection,wrapped_save_image,wrapped_stat_cards waiting
   class screen_photobooth decision
 ```
 
@@ -219,6 +218,12 @@ flowchart LR
     2. Look through the page and the form. There should be no spot for where an item is hidden.
     3. As Test Usher on a phone, scan Test Player 1's My Code at Example Booth A. Test Player 1's score should go up.
     4. Scan again at Example Booth A. It should be refused with no extra points. Example Booth B should still work.
+- `leaderboards.screen`: Lists for the big screen: the top players, and churches ranked by a fair average so a small church can beat a big one. Players show only a first name, last initial and church. (L, medium, admin-screens, due fri dec 18)
+  - Try it:
+    1. On the PR preview, make a few test players in Example Church A and Example Church B with different scores.
+    2. Open the main screen link on a laptop. When the player board comes round, players should be ranked from highest score, with first name, last initial and church only.
+    3. Churches should be ranked by the average per player, not the total. Give one test player many points and check their church does not jump ahead on its own.
+    4. Switch the game off. The boards should stop and the off view should show.
 - `wrapped.cards`: An admin presses a button to open Wrapped, your personal story of the conference. Until then, players see a note saying when it will open. Once open, it's cards you swipe through like a little story, starting with a Welcome card. (L, medium, player-app, due fri jan 15)
   - Try it:
     1. On a phone at the PR preview, log in as Test Player 1 and open Wrapped. You should see the note about when it unlocks.
@@ -229,7 +234,7 @@ flowchart LR
 
 ## In progress
 
-- `screen.main`: The big-screen page for the room and the TV outside, with a dark look that is easy to read from far away. It opens from a secret link with no login. It takes turns showing the player board, the church board, a takeaway and photobooth pictures, each saying coming soon until its own piece fills it in. When the game is off it shows "Side Quest is offline" or the recap, and an admin picks which one.
+- None
 
 ## Needs a decision
 

@@ -654,7 +654,7 @@ pieces:
       - Wait a little. It should move by itself from the player board to the church board, the takeaway and the photobooth, then start again.
       - Change one letter of the key in the link and open it. You should get a not found page. Open the link without the key. Same.
       - On a phone, pause the game as Test Admin. The main screen should keep taking turns.
-      - Switch the game off. After a short wait, the main screen should say Side Quest is offline. On the admin console, switch the off view to recap. The main screen should change to the recap by itself.
+      - Switch the game off. After a short wait, the main screen should say Side Quest is offline. On the admin console, press Recap under Main screen. The main screen should change to the recap by itself.
       - Start the game again. The main screen should go back to taking turns on its own.
     needs: [staff.login, game-state.core, game-state.controls]
     open: []

@@ -984,3 +984,8 @@ h2 {
     transition: none !important;
   }
 }
+
+/* The main screen link on the admin console is long, so it wraps instead of spilling off the side (ARCH-037). */
+.screen-link {
+  overflow-wrap: anywhere;
+}

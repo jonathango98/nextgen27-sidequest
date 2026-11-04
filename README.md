@@ -50,6 +50,7 @@ What the app can do today, grouped by area, in plain words for anyone to read. W
 | 2026-11-01 | `points.ledger` `points.score` | Points | Every point is given out in one place. It is refused while the game is paused or off, the same award is never paid twice even when two phones tap at once, and each award is noted in the audit log. A score is always the total of what was given. New players get their joining points once, even while the game is paused, and Home shows their real score. While the game is off, sign-up is closed. Other quests start paying points as their pieces are built |
 | 2026-11-01 | `staff.accounts` `staff.login` | Staff accounts | Ushers and admins each have their own account, with a password stored so nobody can read it. A setup command makes the very first admin. Staff log in at the staff login page and land on their console: ushers on the usher console, admins on the admin console, and admins can open the usher console too. An usher who opens an admin page is told it is for admins only, a staff page opened while logged out asks to log in, and a staff login ends after 24 hours. Log out works for staff too. The real usher and admin tools come next |
 | 2026-11-02 | `usher.console` | Usher console | Ushers can find the player they are helping by scanning their My Code, or by typing their name if the player's phone is dead. They see only the first name, last initial, and church. An old or fake code is refused, and a player can't open the usher page. Finding someone saves nothing yet: recording booth visits and blind boxes comes next |
+| 2026-11-04 | `screen.main` | Main screen | The main screen opens from a secret link with no login, on the big screen or the TV outside. Admins find the link on the admin console. It is dark with big text you can read from the back of the room, and every few seconds it moves on by itself: top players, top churches, a takeaway, and the photobooth, each saying coming soon until its piece is built. Pausing the game doesn't stop it. When the game is off it says Side Quest is offline, or shows the recap, and an admin picks which. A wrong link shows nothing, and the link opens no admin or player page |
 
 ### In progress
 
@@ -57,7 +58,6 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| `screen.main` The big screen for the room | `feat/screen-main` | #77 | 2026-11-04 | Claude Opus 5.5 / @jonathango98 |
 | Test staff accounts on PR previews | `chore/preview-staff-seed` | #69 | 2026-11-01 | Claude Opus 5.5 / @jonathango98 |
 
 ### Planned
