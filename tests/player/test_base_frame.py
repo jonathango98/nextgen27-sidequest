@@ -7,7 +7,14 @@ BUTTONS = ("Home", "My Code", "Quests")
 
 
 def test_arch_001_template_autoescapes_html():
-    html = templates.get_template("player/home.html").render(score="<script>x</script>")
+    cfg = load_config()
+    html = templates.get_template("player/home.html").render(
+        score="<script>x</script>",
+        # The rest of what the Home route passes (UI-036), from game-config.yaml (AI-013).
+        journal_points=cfg["points"]["journal_takeaway"],
+        box_milestone=cfg["blind_box"]["milestone_points"],
+        box_progress=0,
+    )
     assert "<script>x</script>" not in html
     assert "&lt;script&gt;" in html
 
