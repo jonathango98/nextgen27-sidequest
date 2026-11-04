@@ -1,0 +1,18 @@
+{# UI-040, API-031: one main screen view. Every rotate_seconds it asks for the next view and swaps
+   itself out. If that fails, it stays up and asks again at the next turn.
+   Coming soon until: players, churches (leaderboards.screen), takeaways and recap (recap.screen),
+   photobooth (screen.photobooth, SAFE-038). #}
+{% set titles = {
+  "players": "Top players",
+  "churches": "Top churches",
+  "takeaways": "Takeaways",
+  "photobooth": "Photobooth",
+  "offline": "Side Quest is offline",
+  "recap": "Conference recap",
+} %}
+<main id="screen-view" class="screen-view" data-view="{{ view }}"
+      hx-get="/screen/{{ next }}?{{ param }}={{ key | urlencode }}"
+      hx-trigger="every {{ rotate_seconds }}s" hx-swap="outerHTML">
+  <h1 class="screen-title">{{ titles[view] }}</h1>
+  {% if view != "offline" %}<p class="screen-note">Coming soon</p>{% endif %}
+</main>

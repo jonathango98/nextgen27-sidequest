@@ -2,8 +2,8 @@
 
 - Status: PROPOSED (everything here may change until the designer signs off)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.6.0
-- Last updated: 2026-10-31
+- Version: 1.7.0
+- Last updated: 2026-11-04
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -108,10 +108,11 @@ The Mix mockup shows a scan going to the icebreaker first and the points result 
 
 ## 5. Main screen
 
-- **UI-040** [LOCKED] The main screen shows leaderboards and the takeaway wall only between sessions. While the game is paused, it shows a neutral holding screen with no leaderboard. It never shows a photo of a minor without consent (SAFE-024). It never shows a "boxes left" counter (GAME-077).
+- **UI-040** [LOCKED] While the game is on or paused, the main screen takes turns showing the player leaderboard, the church leaderboard, one approved shared takeaway, and photobooth pictures (API-031, DEC-069). While the game is off, it shows the off view (UI-044). It never shows a photo of a minor without consent (SAFE-024). It never shows a "boxes left" counter (GAME-077).
 - **UI-041** [PROPOSED] Readable from the back of a ballroom. At 1920x1080, no text is smaller than 40px, and leaderboard rows are at least 56px tall. Check this from the back of the room at the venue walkthrough (OPS-030). Config: `main_screen.min_text_px_1080p`, `main_screen.min_row_px_1080p`.
 - **UI-042** [PROPOSED] The main screen uses the dark screen tokens (white text on near-black) to reduce glare in a dim room.
 - **UI-043** [PROPOSED] No fast animation on the main screen. Views change slowly so people can read them.
+- **UI-044** [PROPOSED] While the game is off, the main screen shows either "Side Quest is offline" or the conference recap (WRAP-020). An admin switches between the two on the admin console, and each switch is written in the audit log (DEC-069).
 
 ## 6. Copy voice
 

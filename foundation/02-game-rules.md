@@ -2,8 +2,8 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.3.0
-- Last updated: 2026-11-02
+- Version: 1.4.0
+- Last updated: 2026-11-04
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -88,11 +88,11 @@ Tier size: 10 scans per tier. Config: `checkin.tier_size`.
 - **GAME-021** [LOCKED] Check-in happens before a session, not after. The check-in code goes live on its own a set number of minutes before the session's start time. An admin sets that number for each session, along with the start time (DATA-014, DEC-057). Arriving early earns the most (GAME-022).
 - **GAME-022** [PROPOSED] The first players to check in earn the most. Points follow the tier table in section 2. Config: `checkin.tier_size`, `checkin.tier_points`.
 - **GAME-023** [LOCKED] Each player can check in once per session.
-- **GAME-024** [PROPOSED] Check-in closes on its own at the session's start time. An admin can still close it early by hand. End session also closes it if it is still open (GAME-026, DEC-057).
+- **GAME-024** [PROPOSED] Check-in closes on its own at the close time the admin entered when making the session's hall check-in link (DEC-070, was the start time in DEC-057). An admin can still close it early by hand. End session also closes it if it is still open (GAME-026, DEC-057).
 - **GAME-025** [PROPOSED] Scan order is the order in which the server saves check-ins for that session. The 11th saved check-in gets tier 2 points, even if two phones scanned in the same second.
 - **GAME-026** [PROPOSED] The admin action "End session" does two things in one step: it turns the game from paused to on, and it lets players write takeaways for that session (GAME-036). It also closes that session's check-in if it is still open. It does not open check-in (DEC-057).
-- **GAME-027** [PROPOSED] A session with no start time has no automatic check-in. An admin opens it by hand with "Open check-in". It stays open until an admin closes it or ends the session (DEC-057).
-- **GAME-028** [PROPOSED] While check-in is open for a session with a start time, the hall screen shows a big countdown to when check-in closes, next to the check-in code. This is the only place a start time shows outside the admin pages (DATA-014). A session opened by hand shows "Check-in closes when the session starts" with no countdown (DEC-057).
+- **GAME-027** [PROPOSED] A session with no start time has no automatic check-in. An admin opens it by hand with "Open check-in". It stays open until an admin closes it, ends the session, or the close time on its hall check-in link passes (DEC-057, DEC-070).
+- **GAME-028** [PROPOSED] An admin makes a link to a session's hall check-in page and enters the time check-in closes. That page shows the check-in code and a big countdown to that time (DEC-070). This is the only place that time shows outside the admin pages (DATA-014). The main screen link does not open it (ARCH-037).
 
 ### Journal
 
@@ -149,7 +149,7 @@ The Blueprint's estimated share of players at each level (indicative only, confl
 - **GAME-084** [PROPOSED] Ties go to whoever reached that score first: the earlier latest point award ranks higher. Church ties use the latest point award of any counted player. This applies to boards and prizes (DEC-041). Config: `leaderboard.tie_break`.
 - **GAME-085** [PROPOSED] The phone shows no leaderboard and no rank, only the player's own points. Leaderboards are on the main screen only (DEC-040). Config: `leaderboard.in_app_leaderboard`.
 - **GAME-086** [LOCKED] The player leaderboard shows first name, last initial, and church (SAFE-004, GAME-088). Under-18 players appear like everyone else (SAFE-019).
-- **GAME-087** [LOCKED] Leaderboards appear on the main screen only between sessions, never during a talk (UI-040).
+- **GAME-087** [LOCKED] Leaderboards appear on the main screen while the game is on or paused, and never while it is off (UI-040, DEC-069). Screens inside the hall show the program during talks, not the main screen (OPS-007).
 - **GAME-088** [PROPOSED] Every row on a player leaderboard shows the last initial after the first name, for example "Sam K." (DEC-046). This tells apart most players with the same first name and church. It changed SAFE-004, so it went through safety review (SAFE-016).
 
 Church score example (GAME-089). The overall average is 90. Example Church A has 5 players with scores 100, 80, 60, 10, 10. The two with 10 only joined, so 3 active players count.

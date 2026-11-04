@@ -2,8 +2,8 @@
 
 - Status: PROPOSED (developers confirm at kickoff)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.9.0
-- Last updated: 2026-11-02
+- Version: 1.10.0
+- Last updated: 2026-11-04
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -86,17 +86,18 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 | GET | `/admin/audit` | Audit log | ARCH-050 |
 | POST | `/admin/redemption/close` | Close blind box redemption on Sunday when the service starts | GAME-078, GAME-110 |
 | POST | `/admin/wrapped/unlock` | Unlock Wrapped | WRAP-002 |
-| POST | `/admin/screen-mode` | Switch this device to screen mode | ARCH-037 |
+| POST | `/admin/screen-off-view` | Choose what the main screen shows while the game is off: the offline message or the recap | UI-044 |
 
 ### Main screen
 
 | Method | Path | What it does | Rules |
 |---|---|---|---|
-| GET | `/screen` | Main screen: rotates between the views below when the game is on | UI-040 |
+| GET | `/screen?k=<key>` | Main screen: rotates between the views below while the game is on or paused, and shows the off view while it is off. Every main screen page needs the key | UI-040, ARCH-037, API-031 |
 | GET | `/screen/players` | Partial: player leaderboard | GAME-086 |
 | GET | `/screen/churches` | Partial: church leaderboard | GAME-081 |
-| GET | `/screen/takeaways` | Partial: takeaway wall | SAFE-018 |
-| GET | `/screen/checkin/{session_id}` | Rotating session check-in QR and countdown for the hall screen | GAME-020, GAME-028 |
+| GET | `/screen/takeaways` | Partial: takeaway wall, one approved shared takeaway picked at random | SAFE-018 |
+| GET | `/screen/photobooth` | Partial: photobooth pictures. Says coming soon until SAFE-038 is decided | SAFE-038 |
+| GET | `/screen/checkin/{session_id}` | Rotating session check-in QR and countdown for the hall screen. Opens only from the link an admin makes for that session, not with the main screen key. `checkin.hall` adds the route that makes the link | GAME-020, GAME-028, DEC-070 |
 | GET | `/screen/recap` | Conference recap on Sunday | WRAP-020 |
 
 ### System
@@ -134,7 +135,7 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 ## 4. Live updates
 
 - **API-030** [PROPOSED] The My Code page polls `/code/qr` so the code changes on time, and polls `/code/incoming` so the scanned player sees the icebreaker without doing anything.
-- **API-031** [PROPOSED] Main screen views refresh every 30 seconds (DEC-041). Config: `main_screen.poll_seconds`.
+- **API-031** [PROPOSED] The main screen moves to its next view every 15 seconds and loads that view fresh, so its numbers are never more than one turn old (DEC-069, was a 30 second refresh in DEC-041). Config: `main_screen.rotate_seconds`.
 - **API-032** [PROPOSED] When player A scans player B, B's phone learns about it the next time `/code/incoming` is polled, then shows the same icebreaker question.
 
 ## 5. Screen inventory
@@ -158,7 +159,8 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 | Usher console | Usher | `/usher` | Big buttons for each scan type | GAME-112 |
 | Admin console | Admin | `/admin` | Game state switch first, then queues | GAME-110 |
 | Main screen: leaderboards | Screen | `/screen/players`, `/screen/churches` | Readable from the back of the room | UI-041 |
-| Main screen: takeaway wall | Screen | `/screen/takeaways` | Approved shared posts only | SAFE-018 |
-| Main screen: check-in QR | Screen | `/screen/checkin/{id}` | Shown in the hall while check-in is open, before the session starts, with a countdown | GAME-020, GAME-028 |
-| Main screen: paused | Screen | `/screen` | Neutral holding screen, no leaderboard | UI-040 |
+| Main screen: takeaway wall | Screen | `/screen/takeaways` | One approved shared post at a time | SAFE-018 |
+| Main screen: photobooth | Screen | `/screen/photobooth` | Coming soon until SAFE-038 is decided | SAFE-038 |
+| Main screen: check-in QR | Screen | `/screen/checkin/{id}` | Opened from the link an admin makes, with a countdown to the close time the admin entered | GAME-020, GAME-028, DEC-070 |
+| Main screen: off | Screen | `/screen` | "Side Quest is offline", or the recap, as an admin chooses | UI-044 |
 | Main screen: conference recap | Screen | `/screen/recap` | Sunday before prizes | WRAP-020 |

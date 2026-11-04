@@ -1,5 +1,6 @@
-"""Usher and admin consoles (ARCH-035, GAME-112), and the admin's game switch (GAME-101, GAME-110).
-GET /usher, GET /admin, and POST /admin/game-state only (API-001). The usher console has the
+"""Usher and admin consoles (ARCH-035, GAME-112), the admin's game switch (GAME-101, GAME-110),
+and the admin's main screen panel (ARCH-037, UI-044).
+GET /usher, GET /admin, POST /admin/game-state, and POST /admin/screen-off-view only (API-001). The usher console has the
 scanner. The other tools come with their own pieces.
 """
 
@@ -10,14 +11,17 @@ from fastapi import APIRouter, Depends, Request
 from fastapi.responses import RedirectResponse, Response
 
 from app.auth import csrf
+from app.auth.screen_key import screen_link
 from app.auth.staff import CurrentStaff, require_role
 from app.db import get_db
 from app.forms import read_form
 from app.rendering import templates
-from app.services import game_state
+from app.services import game_state, main_screen
 
 PANEL = "staff/partials/game_state.html"
+SCREEN_PANEL = "staff/partials/main_screen.html"
 BAD_STATE = "Please pick Start, Pause, or Off."
+BAD_OFF_VIEW = "Please pick Message or Recap."
 
 router = APIRouter()
 Usher = Annotated[CurrentStaff, Depends(require_role("usher"))]
@@ -32,6 +36,7 @@ def _console(
     page: str,
     conn: sqlite3.Connection | None = None,
     error: str | None = None,
+    panel: str = PANEL,
 ) -> Response:
     token = csrf.token_for(request)
     context = {
@@ -43,10 +48,13 @@ def _console(
     }
     if conn is not None:
         context["state"] = game_state.current_state(conn)
+        # ARCH-037: admins only. The usher console never gets the main screen link.
+        context["screen_link"] = screen_link(request)
+        context["off_view"] = main_screen.off_view(conn)
     if error:
         context |= {"error_code": "BAD_INPUT", "message": error}
-    # API-002: HTMX gets only the game panel, a normal browser gets the whole console.
-    name = PANEL if request.headers.get("HX-Request") else "staff/console.html"
+    # API-002: HTMX gets only the panel it posted from, a normal browser gets the whole console.
+    name = panel if request.headers.get("HX-Request") else "staff/console.html"
     response = templates.TemplateResponse(
         request, name, context, status_code=400 if error else 200
     )
@@ -73,4 +81,15 @@ def set_game_state(request: Request, staff: Admin, conn: Db, form: Form):
         return _console(request, staff, "admin", conn, BAD_STATE)
     if request.headers.get("HX-Request"):
         return _console(request, staff, "admin", conn)
+    return RedirectResponse("/admin", status_code=303)
+
+
+@router.post("/admin/screen-off-view", dependencies=[Depends(csrf.require_csrf)])
+def set_screen_off_view(request: Request, staff: Admin, conn: Db, form: Form):
+    try:
+        main_screen.change_off_view(conn, form.get("view", ""), staff.id)
+    except main_screen.UnknownOffView:
+        return _console(request, staff, "admin", conn, BAD_OFF_VIEW, SCREEN_PANEL)
+    if request.headers.get("HX-Request"):
+        return _console(request, staff, "admin", conn, panel=SCREEN_PANEL)
     return RedirectResponse("/admin", status_code=303)

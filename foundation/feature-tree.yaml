@@ -2,8 +2,8 @@
 #
 # Status: Active
 # Owner: Jonathan (@jonathango98)
-# Version: 2.0.1
-# Last updated: 2026-11-02
+# Version: 2.1.0
+# Last updated: 2026-11-04
 # Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 #
 # How to read this file (rules in 16-feature-tree.md, ENG-105 to ENG-112)
@@ -92,7 +92,7 @@ features:
     milestone: January build
     due: "2026-12-11"
   - id: screen
-    name: Main screen views (leaderboards, takeaway wall, check-in QR, paused)
+    name: Main screen views (leaderboards, takeaway wall, photobooth, check-in QR, offline)
     milestone: January build
     due: "2027-01-15"
   - id: wrapped
@@ -408,9 +408,9 @@ pieces:
     learn: how the server works out if something is open from stored times, and how a by-hand button sits on top of that rule
   - id: checkin.hall
     feature: checkin
-    what: The big hall screen shows a check-in code that keeps changing, so a photo of it soon stops working, and a big countdown to when check-in closes. A player scans it to check in, and the first players to check in get the most points.
+    what: An admin makes a link to a session's hall check-in page and types the time check-in closes. The page shows a check-in code that keeps changing, so a photo of it soon stops working, and a big countdown to that time. A player scans it to check in, and the first players to check in get the most points.
     try_it:
-      - On the PR preview, open the main screen on a laptop for a session whose check-in is open. The code should change on its own after a short wait, and the countdown should tick down.
+      - On the PR preview, log in as Test Admin, make the hall check-in link for Example Session 1 with a close time, and open it on a laptop. The code should change on its own after a short wait, and the countdown should tick down to that time.
       - On a phone, scan the hall code as Test Player 1. You should see a points message, and the score should go up.
       - Scan again. You should get no new points.
       - "Try to break it: scan a photo of an old code, then scan after check-in closes. Both should be refused."
@@ -420,7 +420,7 @@ pieces:
     size: L
     level: hard
     safety_review: true
-    rules: [GAME-020, GAME-028, DEC-013, GAME-022, GAME-023, GAME-025]
+    rules: [GAME-020, GAME-028, DEC-013, DEC-070, GAME-024, GAME-022, GAME-023, GAME-025]
     learn: how the QR service makes a different kind of code, and how save order decides tiers when many phones scan at once
 
   # Journal and Summary page
@@ -552,9 +552,9 @@ pieces:
     what: "Lists for the big screen: the top players, and churches ranked by a fair average so a small church can beat a big one. Players show only a first name, last initial and church."
     try_it:
       - On the PR preview, make a few test players in Example Church A and Example Church B with different scores.
-      - Open the main screen on a laptop between sessions. Players should be ranked from highest score, with first name, last initial and church only.
+      - Open the main screen link on a laptop. When the player board comes round, players should be ranked from highest score, with first name, last initial and church only.
       - Churches should be ranked by the average per player, not the total. Give one test player many points and check their church does not jump ahead on its own.
-      - Pause the game. Only the holding message should show.
+      - Switch the game off. The boards should stop and the off view should show.
     needs: [points.ledger, screen.main]
     open: [GAME-083, GAME-084, GAME-088, GAME-089, GAME-082]
     area: admin-screens
@@ -648,20 +648,37 @@ pieces:
   # Main screen views
   - id: screen.main
     feature: screen
-    what: The big-screen page for the room, with a dark look that is easy to read from far away. An admin sets up the screen so it can only show pages meant for everyone. It shows a waiting message while the game is paused, and it updates by itself.
+    what: The big-screen page for the room and the TV outside, with a dark look that is easy to read from far away. It opens from a secret link with no login. It takes turns showing the player board, the church board, a takeaway and photobooth pictures, each saying coming soon until its own piece fills it in. When the game is off it shows "Side Quest is offline" or the recap, and an admin picks which one.
     try_it:
-      - On the PR preview, log in as Test Admin on a laptop and switch it to screen mode. The main screen should open as a dark page with big readable text.
-      - In the same browser, try to open an admin page or a player's private page. You should be refused.
-      - On a phone, pause the game as Test Admin. After a short wait, the main screen should switch to the holding message by itself.
-      - Resume the game. The screen should come back on its own.
+      - On the PR preview, log in as Test Admin and copy the main screen link from the admin console. Open it on a laptop. It should be a dark page with big readable text.
+      - Wait a little. It should move by itself from the player board to the church board, the takeaway and the photobooth, then start again.
+      - Change one letter of the key in the link and open it. You should get a not found page. Open the link without the key. Same.
+      - On a phone, pause the game as Test Admin. The main screen should keep taking turns.
+      - Switch the game off. After a short wait, the main screen should say Side Quest is offline. On the admin console, press Recap under Main screen. The main screen should change to the recap by itself.
+      - Start the game again. The main screen should go back to taking turns on its own.
     needs: [staff.login, game-state.core, game-state.controls]
-    open: [API-031]
+    open: []
     area: admin-screens
     size: L
     level: medium
     safety_review: true
-    rules: [ARCH-037, UI-040, UI-041, UI-042, UI-043, API-031, ARCH-074]
-    learn: how a big-screen layout differs from a phone layout, and how HTMX polling keeps it live
+    rules: [ARCH-037, ARCH-035, UI-040, UI-044, UI-041, UI-042, UI-043, API-031, ARCH-074, DEC-069]
+    learn: how a big-screen layout differs from a phone layout, how HTMX polling takes turns between views, and how a secret key guards a page with no login
+  - id: screen.photobooth
+    feature: screen
+    what: The photobooth view on the main screen gets pictures from the photobooth's own service and shows them, only with consent checked for under-18 players. The app never saves the photos.
+    try_it:
+      - On the PR preview, open the main screen link and wait for the photobooth view. It should show test pictures from a test photobooth service.
+      - Turn the test photobooth service off. The photobooth view should say it has no pictures right now, and the other views should keep taking turns.
+      - Look through the database and the server files. No photo should be saved anywhere.
+    needs: [screen.main]
+    open: [SAFE-038]
+    area: admin-screens
+    size: M
+    level: medium
+    safety_review: true
+    rules: [SAFE-038, SAFE-024, SAFE-025, UI-040, DEC-071]
+    learn: how a page shows pictures from another service without saving them
 
   # Wrapped cards
   - id: wrapped.cards
@@ -733,20 +750,20 @@ pieces:
   # Conference recap screen
   - id: recap.screen
     feature: recap
-    what: Big-screen views for everyone. The takeaway wall shows takeaways players shared that an admin approved. The Sunday recap shows how many connections were made, how many church pairs met, how many takeaways were shared, and the Bible verse people collected most, with no names.
+    what: Big-screen views for everyone. The takeaway wall shows one takeaway at a time that a player shared and an admin approved. The Sunday recap shows how many connections were made, how many church pairs met, how many takeaways were shared, and the Bible verse people collected most, with no names.
     try_it:
       - As Test Player 1 on the PR preview, share a takeaway, then approve it as Test Admin.
-      - Open the main screen between sessions. The takeaway should show with first name and church, or Anonymous if chosen. A takeaway that is not approved should never show.
+      - Open the main screen link and wait for the takeaway view. The takeaway should show with first name and church, or Anonymous if chosen. A takeaway that is not approved should never show.
       - Make a few test connections where most friends' verses are the same. Open the recap. The totals should go up, and that verse should show as the most collected.
       - Look closely at the recap. No person's name should show anywhere.
-      - Pause the game. Nothing from players should show.
+      - Switch the game off and pick recap on the admin console. The recap should show in place of the offline message.
     needs: [screen.main, connections.meet, journal.share-review, connections.answers]
     open: [WRAP-012]
     area: admin-screens
     size: L
     level: medium
     safety_review: true
-    rules: [WRAP-020, WRAP-021, WRAP-022, WRAP-012, SAFE-018, DEC-008]
+    rules: [WRAP-020, WRAP-021, WRAP-022, WRAP-012, SAFE-018, DEC-008, UI-044]
     learn: how a public screen shows only approved posts and counts without naming anyone
 
   # Game day readiness

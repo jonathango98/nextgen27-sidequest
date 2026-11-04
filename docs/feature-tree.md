@@ -5,7 +5,7 @@
 
 Every planned piece of work and what it needs first (ENG-105 to ENG-108), grouped by the week it is due (PRD-054). Pieces flow left to right in time: finishing one unlocks the pieces it points to. Run `/pick-task` to claim one.
 
-**Working** 22 · **In progress** 0 · **Ready** 8 · **Waiting** 18 · **Needs decision** 0
+**Working** 23 · **In progress** 0 · **Ready** 8 · **Waiting** 17 · **Needs decision** 1
 
 Colors: green Working, blue In progress, gold Ready, gray Waiting, red dashed Needs decision.
 
@@ -69,6 +69,7 @@ flowchart LR
     ready_retention["ready.retention<br/>M · hard"]
   end
   subgraph w_2027_01_15 ["Due Fri Jan 15"]
+    screen_photobooth["screen.photobooth<br/>M · medium"]
     wrapped_cards["wrapped.cards<br/>L · medium"]
     wrapped_stat_cards["wrapped.stat-cards<br/>L · medium"]
     wrapped_collection["wrapped.collection<br/>M · hard"]
@@ -143,6 +144,7 @@ flowchart LR
   staff_login --> screen_main
   game_state_core --> screen_main
   game_state_controls --> screen_main
+  screen_main --> screen_photobooth
   game_state_core --> wrapped_cards
   staff_login --> wrapped_cards
   points_audit_log --> wrapped_cards
@@ -168,9 +170,10 @@ flowchart LR
   classDef ready fill:#fff4d6,stroke:#a87400,stroke-width:3px,color:#14151a
   classDef waiting fill:#f1f0eb,stroke:#c3c0b6,color:#545a66
   classDef decision fill:#fdeeec,stroke:#b42318,stroke-dasharray:4 3,color:#14151a
-  class app_foundation,auth_join_login,code_my_code,connections_scanner_camera,connections_table,game_state_controls,game_state_core,infra_hosting,look_base,look_screens,points_audit_log,points_ledger,points_score,ready_backups,ready_load_test,ready_logout,ready_rate_limits,ready_retention,screens_skeleton,staff_accounts,staff_login,usher_console working
-  class admin_players,admin_setup,checkin_sessions,connections_meet,explore_booths,home_pages,screen_main,wrapped_cards ready
-  class admin_audit_view,admin_award_revoke,blind_box_close_redemption,blind_box_handout,checkin_hall,checkin_window,connections_answers,connections_verse_picker,explore_items,game_state_auto_pause,journal_notes,journal_share_review,leaderboards_in_app,leaderboards_screen,recap_screen,wrapped_collection,wrapped_save_image,wrapped_stat_cards waiting
+  class app_foundation,auth_join_login,code_my_code,connections_scanner_camera,connections_table,game_state_controls,game_state_core,infra_hosting,look_base,look_screens,points_audit_log,points_ledger,points_score,ready_backups,ready_load_test,ready_logout,ready_rate_limits,ready_retention,screen_main,screens_skeleton,staff_accounts,staff_login,usher_console working
+  class admin_players,admin_setup,checkin_sessions,connections_meet,explore_booths,home_pages,leaderboards_screen,wrapped_cards ready
+  class admin_audit_view,admin_award_revoke,blind_box_close_redemption,blind_box_handout,checkin_hall,checkin_window,connections_answers,connections_verse_picker,explore_items,game_state_auto_pause,journal_notes,journal_share_review,leaderboards_in_app,recap_screen,wrapped_collection,wrapped_save_image,wrapped_stat_cards waiting
+  class screen_photobooth decision
 ```
 
 ## Ready now
@@ -209,18 +212,18 @@ flowchart LR
     2. Switch Test Usher off and try again. The login should be refused.
     3. Add Example Church C, then open the sign-up page in a private tab. It should be in the list. Rename it and check the new name shows.
     4. Try to break it: open these pages as Test Usher. You should be turned away.
-- `screen.main`: The big-screen page for the room, with a dark look that is easy to read from far away. An admin sets up the screen so it can only show pages meant for everyone. It shows a waiting message while the game is paused, and it updates by itself. (L, medium, admin-screens, due fri dec 11)
-  - Try it:
-    1. On the PR preview, log in as Test Admin on a laptop and switch it to screen mode. The main screen should open as a dark page with big readable text.
-    2. In the same browser, try to open an admin page or a player's private page. You should be refused.
-    3. On a phone, pause the game as Test Admin. After a short wait, the main screen should switch to the holding message by itself.
-    4. Resume the game. The screen should come back on its own.
 - `explore.booths`: Lists of the booths and the hidden item numbers that admins fill in before the event. It never saves where the items are hidden. An usher records that a player visited a booth, and the player gets points, once for each booth. (L, medium, admin-screens, due fri dec 18)
   - Try it:
     1. On the PR preview, log in as Test Admin and add Example Booth A, Example Booth B and a hidden item number. Both lists should show them.
     2. Look through the page and the form. There should be no spot for where an item is hidden.
     3. As Test Usher on a phone, scan Test Player 1's My Code at Example Booth A. Test Player 1's score should go up.
     4. Scan again at Example Booth A. It should be refused with no extra points. Example Booth B should still work.
+- `leaderboards.screen`: Lists for the big screen: the top players, and churches ranked by a fair average so a small church can beat a big one. Players show only a first name, last initial and church. (L, medium, admin-screens, due fri dec 18)
+  - Try it:
+    1. On the PR preview, make a few test players in Example Church A and Example Church B with different scores.
+    2. Open the main screen link on a laptop. When the player board comes round, players should be ranked from highest score, with first name, last initial and church only.
+    3. Churches should be ranked by the average per player, not the total. Give one test player many points and check their church does not jump ahead on its own.
+    4. Switch the game off. The boards should stop and the off view should show.
 - `wrapped.cards`: An admin presses a button to open Wrapped, your personal story of the conference. Until then, players see a note saying when it will open. Once open, it's cards you swipe through like a little story, starting with a Welcome card. (L, medium, player-app, due fri jan 15)
   - Try it:
     1. On a phone at the PR preview, log in as Test Player 1 and open Wrapped. You should see the note about when it unlocks.
@@ -235,4 +238,4 @@ flowchart LR
 
 ## Needs a decision
 
-- None
+- `screen.photobooth`: SAFE-038 (Jonathan)

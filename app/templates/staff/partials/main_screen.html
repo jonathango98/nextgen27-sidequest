@@ -1,0 +1,24 @@
+{# ARCH-037, UI-044: the main screen link, and what the main screen shows while the game is off.
+   Admins only. HTMX swaps this panel, so the page never reloads. #}
+{# Buttons say Message, not Offline, so they never read like the game's Off button. #}
+{% set shows = {"offline": "the offline message", "recap": "the recap"} %}
+{% set buttons = {"offline": "Message", "recap": "Recap"} %}
+<section id="main-screen" class="card stack" aria-labelledby="main-screen-title">
+  <h2 id="main-screen-title">Main screen</h2>
+  {% if screen_link %}
+    <p>Open this link on the main screen and the TV outside. Anyone with the link can watch, so share it only with the AV team.</p>
+    <p><a class="screen-link" href="{{ screen_link }}" target="_blank" rel="noreferrer">{{ screen_link }}</a></p>
+  {% else %}
+    <p>The main screen is not set up yet. Ask Jonathan to set its key on the server.</p>
+  {% endif %}
+  <p>While the game is off, it shows <strong data-off-view="{{ off_view }}">{{ shows[off_view] }}</strong>.</p>
+  {% if error_code %}{% include "partials/error.html" %}{% endif %}
+  {# One form per button, so each works without JavaScript too (API-007). #}
+  {% for value in ["offline", "recap"] %}
+    <form method="post" action="/admin/screen-off-view" hx-post="/admin/screen-off-view" hx-target="#main-screen" hx-swap="outerHTML">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <input type="hidden" name="view" value="{{ value }}">
+      <button class="button button-secondary" type="submit"{% if off_view == value %} disabled{% endif %}>{{ buttons[value] }}</button>
+    </form>
+  {% endfor %}
+</section>
