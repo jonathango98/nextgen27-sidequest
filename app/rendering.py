@@ -1,5 +1,7 @@
 """Shared Jinja2 templates, so routes can render without importing app.main."""
 
+import hashlib
+from functools import cache
 from pathlib import Path
 
 from fastapi.templating import Jinja2Templates
@@ -38,5 +40,17 @@ def game_banner(context: Context) -> str | None:
     return BANNERS.get(game_state(context))
 
 
+@cache
+def static_url(path: str) -> str:
+    """A static file's URL with a fingerprint of its contents, such as /static/css/player.css?v=1a2b3c4d.
+
+    The fingerprint changes whenever the file does, so phones fetch new styles right after a
+    deploy instead of keeping an old copy. Files only change with a deploy, which restarts the app.
+    """
+    digest = hashlib.sha256((APP_DIR / "static" / path).read_bytes()).hexdigest()
+    return f"/static/{path}?v={digest[:8]}"
+
+
+templates.env.globals["static_url"] = static_url
 templates.env.globals["game_state"] = game_state
 templates.env.globals["game_banner"] = game_banner
