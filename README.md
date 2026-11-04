@@ -21,7 +21,7 @@ The app is built by a small volunteer team. It is not built yet. This repo curre
 
 ## Project status
 
-Status last updated: 2026-11-02 by Claude Opus 5.5 / @jonathango98
+Status last updated: 2026-11-03 by Claude Opus 5.5 / @chrnso
 
 **Before you start anything**, check that nobody else is on it. A branch only shows up here after it merges, so also run:
 
@@ -39,7 +39,7 @@ What the app can do today, grouped by area, in plain words for anyone to read. W
 |---|---|---|---|
 | 2026-11-02 | `auth.join-login` `ready.logout` `ready.rate-limits` | Joining and logging in | Players join with their name, church, a PIN, and an "Are you 18 or older?" question. They can log in again on another phone. Too many wrong PINs lock the account. A settings gear on Home has Log out, which asks to confirm, then signs out that phone only, so the next person who picks it up can't play as them. Too many log in or sign-up tries from one place in a minute get a "wait a minute" message, which makes guessing PINs much harder, even for staff log in |
 | 2026-10-23 | `code.my-code` | Personal QR code | Each player has their own QR code on the My Code screen. It keeps changing, so a screenshot can't be passed around |
-| 2026-10-31 | `screens.skeleton` `look.base` | Player screens | Every player screen exists, and every button and tab leads to the right next screen. Every page has the chosen look: a cream background with soft flower-colored streaks and a light film grain, titles in a printed-program serif, a frosted bottom bar with Home, My Code, and Quests, one black main button, and frosted white cards and buttons. Join, Pick a PIN, and Log in match the design, and the PIN step has a Back button that keeps what was typed. A wrong login says how many wrong tries in a row lock an account. The final Home and My Code layouts come next |
+| 2026-11-03 | `screens.skeleton` `look.base` `look.screens` | Player screens | Every player screen exists, and every button and tab leads to the right next screen. Every page has the chosen look: a cream background with soft flower-colored streaks and a light film grain, titles in a printed-program serif, a frosted bottom bar with Home, My Code, and Quests, one black main button, and frosted white cards and buttons. Join, Pick a PIN, and Log in match the design, and the PIN step has a Back button that keeps what was typed. A wrong login says how many wrong tries in a row lock an account. Home says hi by first name over the big score, with the next box bar, Meet friends, Write, Read, and Redeem box. My Code shows the QR on a white card with a bar that empties until the code changes, then the Scan button. Quests lists every quest with its points, the Takeaways and Journal pages show note cards by session with a Back to home link, the Journal form has Cancel, and Redeem box shows the three boxes and how to claim them. Box progress, quest progress, and the note cards are still examples until their pieces are built |
 | 2026-10-27 | | Game rules | The full game rules are written down, and most open game questions are answered. Prizes and what goes inside the blind boxes are still to be decided |
 | 2026-11-02 | `app.foundation` `infra.hosting` `ready.load-test` `ready.backups` | Behind the scenes | A private test site updates with every change, and each proposed change gets its own preview link. Automatic tests check pages on the iPhone browser engine too. Game numbers live in one settings file, so they're easy to tune after playtests. Volunteers get a map of what's ready to build and a `/pick-task` helper to claim work. Every feature has a due week so all of them are done by January 15, before Playtest 1, and `/pick-task` offers what's due soonest. A load test pretends 300 phones join at once and keep My Code open, and the app stayed fast. Phones now refresh My Code at slightly different moments so they don't all hit the server in the same second, and a sign-up waits out a short server pause instead of failing. Railway saves a copy of the game's data every day, week, and month, and a test on staging proved a copy brings everything back, with the app down for about a minute |
 | 2026-10-29 | `connections.table` | Meeting people | The game has a place to remember who met whom. The same two people can only ever be saved as a pair once, whoever scans whom, and nobody can connect with themselves. It also remembers which new churches each player has met, so the new church bonus pays once. Scanning comes next |
@@ -57,7 +57,6 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| `look.screens` Home, My Code and the shared notes page match the chosen design | `feat/look-screens` | #64 | 2026-10-31 | Claude Opus 5.5 / @chrnso |
 | Test staff accounts on PR previews | `chore/preview-staff-seed` | #69 | 2026-11-01 | Claude Opus 5.5 / @jonathango98 |
 
 ### Planned
@@ -70,7 +69,6 @@ In the foundation, no branch yet. Order follows `foundation/12-team-timeline.md`
 | Scanner and connections, with icebreaker | `connections` | ARCH-025, GAME-017 | Core build |
 | Points service | `points` | ARCH-040 | Core build |
 | Game states and pause | `game-state` | `02-game-rules.md` section 9, UI-033 | Core build |
-| Mix look on player screens | `look` | UI-008, UI-009, DEC-037 | January build |
 | Home and Quests pages | `home` | GAME-070, `06-api-and-screens.md` | January build |
 | Session check-in | `checkin` | GAME-020 | January build |
 | Explore | `explore` | `02-game-rules.md` section 5 | January build |
