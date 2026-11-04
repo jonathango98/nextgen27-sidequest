@@ -48,8 +48,8 @@ def test_ui_037_scan_button_opens_scanner(page: Page, live_server):
 def test_ui_002_icebreaker_form_stacks_its_fields(page: Page, live_server):
     # A form section stacks label, field, and button. Only Join's Yes and No sit side by side.
     page.goto(f"{live_server}/connections/1")
-    label = page.get_by_text("Answer", exact=True).bounding_box()
-    field = page.get_by_label("Answer").bounding_box()
+    label = page.get_by_text("Test's answer", exact=True).bounding_box()
+    field = page.get_by_label("Test's answer").bounding_box()
     save = page.get_by_role("button", name="Save").bounding_box()
     assert label["y"] < field["y"] < save["y"]
     assert field["x"] <= label["x"] + 1

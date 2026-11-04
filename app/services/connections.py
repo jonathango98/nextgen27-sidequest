@@ -39,6 +39,9 @@ ALREADY_ANSWERED = (409, "ALREADY_DONE", "You already saved this answer.")
 # ENG-113: the hand test scans between two phones, so a preview also gets Test Player 2,
 # from another church. No pair is saved, so the first scan on the preview is a new one.
 PREVIEW_FRIEND = ("Test", "Player 2")
+# ENG-113: connections.answers also tests a same-church pair, and someone outside a pair,
+# so a preview gets Test Player 3 from Test Player 1's church.
+PREVIEW_SAME_CHURCH = ("Test", "Player 3")
 
 
 class AnswerRefused(ScanRefused):
@@ -256,7 +259,9 @@ def incoming(conn: sqlite3.Connection, player_id: int, after: int) -> list[Conne
 
 
 def seed_preview(conn: sqlite3.Connection, config: dict) -> list[str]:
-    """Adds Test Player 2 to a PR preview, with the preview PIN (ENG-113, AI-047)."""
+    """Adds Test Players 2 and 3 to a PR preview, with the preview PIN (ENG-113, AI-047)."""
     return players.seed_preview_player(
         conn, config, PREVIEW_FRIEND, churches.EXAMPLE_CHURCHES[1]
+    ) + players.seed_preview_player(
+        conn, config, PREVIEW_SAME_CHURCH, churches.EXAMPLE_CHURCHES[0]
     )
