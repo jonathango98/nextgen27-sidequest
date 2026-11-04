@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Ready in the tree, due 2026-12-11, and unlocks `leaderboards.screen`, `checkin.hall`, and `recap.screen`.
 - Rule IDs: ARCH-037, UI-040, UI-041, UI-042, UI-043, API-031, ARCH-074, ENG-101
 - Status: Started
-- PR: draft
+- PR: #77
 
 ## 2026-10-31 · feat/look-screens · Claude Opus 5.5 / @chrnso
 
