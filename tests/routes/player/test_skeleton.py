@@ -115,7 +115,7 @@ def test_ui_036_home_shows_big_score(client):
         ("Meet friends", "/scan"),
         ("Write", "/journal/new"),
         ("Read", "/summary"),
-        ("Redeem box", "/box"),
+        ("Claim box", "/box"),  # DEC-062
     ],
 )
 def test_ui_036_home_links(client, label, href):
@@ -205,9 +205,8 @@ def test_game_030_journal_word_count_uses_config_minimum(client):
 
 def test_game_036_journal_shows_a_session_name(client):
     html = client.get("/journal/new").text
-    assert (
-        f'<p class="page-sub">{journal.PLACEHOLDER_SUMMARY[-1]["session"]}</p>' in html
-    )
+    session = journal.PLACEHOLDER_SUMMARY[-1]["session"]
+    assert f'<p class="page-sub" id="journal-session">{session}</p>' in html
 
 
 def test_game_070_open_box_shows_each_box_and_its_points(client):
@@ -297,3 +296,30 @@ def test_game_031_journal_lists_own_notes_with_who_can_read_them(client):
     points = load_config()["points"]["journal_takeaway"]  # AI-013
     pills = re.findall(r'<span class="pill">\+(\d+)</span>', html)
     assert pills == [str(points)] * len(journal.PLACEHOLDER_NOTES)
+
+
+def test_dec_062_home_tile_labels(client):
+    text = page_text(client.get("/").text)
+    for words in ("Write A journal", "Read All journals", "Claim box"):
+        assert words in text
+    assert "Redeem box" not in text
+
+
+def test_ui_053_journal_title_labels_the_text_box(client):
+    html = client.get("/journal/new").text
+    assert '<h1 id="journal-title">Journal</h1>' in html
+    assert 'aria-labelledby="journal-title journal-session"' in html
+    assert 'for="takeaway"' not in html  # no visible Takeaway label (DEC-062)
+
+
+def test_ui_039_journal_submit_shows_its_points(client):
+    points = load_config()["points"]["journal_takeaway"]  # AI-013
+    html = client.get("/journal/new").text
+    assert re.search(
+        rf'<button class="button" type="submit">Submit <span class="pill">\+{points}</span></button>',
+        html,
+    )
+
+
+def test_ui_030_scan_has_a_back_link_to_my_code(client):
+    assert link_to("/code", "Back to My Code").search(client.get("/scan").text)

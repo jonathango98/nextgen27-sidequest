@@ -59,15 +59,15 @@
     {% endcall %}
     <div class="tile-row">
       {% call tile("/journal/new", playing, "button button-secondary button-tile") %}
-        <span class="tile-text"><span class="tile-title">Write</span> <span class="tile-sub">Journal</span></span>
+        <span class="tile-text"><span class="tile-title">Write</span> <span class="tile-sub">A journal</span></span>
         <span class="pill">+{{ journal_points }}</span>
       {% endcall %}
       {% call tile("/summary", reading, "button button-secondary button-tile") %}
-        <span class="tile-text"><span class="tile-title">Read</span> <span class="tile-sub">Takeaways</span></span>
+        <span class="tile-text"><span class="tile-title">Read</span> <span class="tile-sub">All journals</span></span>
       {% endcall %}
     </div>
     {% call tile("/box", reading, "button button-secondary button-tile") %}
-      <span class="tile-title">Redeem box</span>
+      <span class="tile-title">Claim box</span>
       <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg>
     {% endcall %}
   </nav>

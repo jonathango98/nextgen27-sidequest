@@ -73,11 +73,12 @@ def my_takeaways(request: Request, player: Player):
 
 @router.get("/journal/new")
 def new_takeaway(request: Request, player: Player):
-    limits = request.app.state.config["limits"]
+    cfg = request.app.state.config
     context = {
         # Pretend session until journal.notes offers the ended sessions (GAME-036).
         "session_name": PLACEHOLDER_SUMMARY[-1]["session"],
-        "min_words": limits["journal_min_words"],  # GAME-030
+        "min_words": cfg["limits"]["journal_min_words"],  # GAME-030
+        "journal_points": cfg["points"]["journal_takeaway"],  # UI-039
     }
     return templates.TemplateResponse(request, "player/journal_new.html", context)
 

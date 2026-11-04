@@ -62,7 +62,7 @@ def test_game_101_admin_switches_the_game_at_min_width(
             _fits(page)
         # Only Home stays open, with every button greyed out (GAME-102, DEC-068).
         page.goto(f"{live_server}/")
-        for name in ("Meet friends", "Write", "Read", "Redeem box"):
+        for name in ("Meet friends", "Write", "Read", "Claim box"):  # DEC-062
             expect(page.get_by_role("button", name=name)).to_be_disabled()
         page.screenshot(path=tmp_path / "home-paused.png", full_page=True)
         # My Code hides the code, and the camera stays off.

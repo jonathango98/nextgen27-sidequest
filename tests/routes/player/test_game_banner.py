@@ -199,3 +199,10 @@ def test_game_102_scan_page_has_the_camera_while_on(client):
     html = client.get("/scan").text
     assert "data-scanner" in html
     assert "Scanning is" not in html
+
+
+def test_ui_030_scan_keeps_one_back_link_while_off(client):
+    _set(client, "off")
+    html = client.get("/scan").text
+    assert "Scanning is closed right now." in html
+    assert html.count("Back to My Code") == 1

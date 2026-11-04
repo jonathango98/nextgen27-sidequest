@@ -5,11 +5,12 @@
 {% block title %}Scan · Side Quest{% endblock %}
 
 {% block content %}
+  {# UI-030, DEC-062: a back link to My Code at the top. #}
+  <a class="back-link" href="/code"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"></path></svg>Back to My Code</a>
   <h1>Scan</h1>
   {% if game_state() != "on" %}
   {# GAME-108: no camera while the game is off, so nobody scans for nothing. Paused shows the paused screen. #}
   <p class="card">Scanning is closed right now.</p>
-  <a class="button button-secondary" href="/code">Back to My Code</a>
   {% else %}
   {# Scanner frame (07 section 3): camera view with a square guide and one line of help text. #}
   <div class="scanner" data-scanner data-format="{{ qr_format }}"

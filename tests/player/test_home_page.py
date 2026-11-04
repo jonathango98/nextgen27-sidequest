@@ -2,7 +2,7 @@ from playwright.sync_api import Page, expect
 
 from app.config import load_config
 
-ACTIONS = ("Meet friends", "Write", "Read", "Redeem box")
+ACTIONS = ("Meet friends", "Write", "Read", "Claim box")
 
 
 def _action(page: Page, name: str):
@@ -36,7 +36,7 @@ def test_ui_003_home_actions_sit_in_the_lower_half(page: Page, live_server):
 def test_ui_036_home_actions_are_in_order(page: Page, live_server):
     page.goto(f"{live_server}/")
     meet, write, read, box = (_action(page, n).bounding_box() for n in ACTIONS)
-    # Meet friends, then Write and Read side by side, then Redeem box.
+    # Meet friends, then Write and Read side by side, then Claim box (DEC-062).
     assert meet["y"] < write["y"] < box["y"]
     assert write["y"] == read["y"] and write["x"] < read["x"]
 
