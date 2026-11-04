@@ -21,6 +21,7 @@ from app.services.retention import (
 )
 
 FAKE_PIN_HASH = "not-a-real-hash-zq7"  # fake data (ENG-047), easy to spot in raw bytes
+FAKE_ANSWER = "Example answer zq8"  # fake data (ENG-047), easy to spot in raw bytes
 
 # Columns that hold a player's id, with or without a foreign key (audit_log has none).
 PLAYER_ID_COLUMN = re.compile(r"player|^actor_id$|^target_id$")
@@ -67,6 +68,12 @@ def filled(conn):
     conn.execute(
         "INSERT INTO church_met (player_id, church_id, connection_id) VALUES (?, ?, ?)",
         (players[0], churches[1], connection),
+    )
+    conn.execute(
+        "INSERT INTO icebreaker_answer"
+        " (connection_id, about_player_id, typed_by_player_id, answer_text)"
+        " VALUES (?, ?, ?, ?)",
+        (connection, players[1], players[0], FAKE_ANSWER),
     )
     conn.execute(
         "INSERT INTO point_ledger (player_id, amount, reason_code, source_type, source_id)"
@@ -148,13 +155,15 @@ def test_safe_014_cleanup_deletes_player_data_on_the_date(filled, cfg):
     removed = run(filled, retention_date(cfg), cfg)
     assert removed == {
         "audit_log": 1,
+        "icebreaker_answer": 1,
         "church_met": 1,
         "connection": 1,
         "point_ledger": 1,
         "check_in": 1,
         "player": 2,
     }
-    for table in ("player", "connection", "church_met", "point_ledger", "check_in"):
+    tables = ("player", "connection", "icebreaker_answer", "church_met", "point_ledger")
+    for table in (*tables, "check_in"):
         assert _count(filled, table) == 0
     assert _count(filled, "church") == 2  # kept: not personal data
     assert _count(filled, "session") == 1  # kept: program titles, not personal data
@@ -162,7 +171,13 @@ def test_safe_014_cleanup_deletes_player_data_on_the_date(filled, cfg):
 
 def test_safe_014_deleted_data_is_gone_from_the_raw_files(filled, db_path, cfg):
     # A plain DELETE leaves the bytes in free pages and the -wal file, where a tool could read them.
-    secrets = (b"Player 1", b"Player 2", b"pub-1", FAKE_PIN_HASH.encode())
+    secrets = (
+        b"Player 1",
+        b"Player 2",
+        b"pub-1",
+        FAKE_PIN_HASH.encode(),
+        FAKE_ANSWER.encode(),
+    )
     assert all(s in _raw_bytes(db_path) for s in secrets)  # the check can see them
     run(filled, retention_date(cfg), cfg)
     raw = _raw_bytes(db_path)

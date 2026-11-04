@@ -5,8 +5,8 @@ import pytest
 
 from app.config import load_config
 from app.db import connect, migrate
-from app.services import churches, connections, players, qr
-from app.services.connections import ScanRefused
+from app.services import churches, connections, players, points, qr
+from app.services.connections import AnswerRefused, ScanRefused
 from app.services.game_state import GameNotOn, set_state
 from tests.conftest import make_fake_pin, seed_fake_players
 
@@ -239,6 +239,136 @@ def test_api_032_incoming_lists_only_scans_by_someone_else(conn, ids):
     notes = connections.incoming(conn, me, start)
     assert [n.id for n in notes] == [first.id]
     assert connections.incoming(conn, me, connections.latest_id(conn, me)) == []
+
+
+POINTS = CONFIG["points"]  # AI-013: every expected number comes from game-config.yaml
+
+
+def _move_to_church_b(conn, *public_ids):
+    conn.execute("INSERT OR IGNORE INTO church (name) VALUES ('Example Church B')")
+    church = conn.execute(
+        "SELECT id FROM church WHERE name = 'Example Church B'"
+    ).fetchone()[0]
+    for public_id in public_ids:
+        conn.execute(
+            "UPDATE player SET church_id = ? WHERE public_id = ?", (church, public_id)
+        )
+
+
+def _answer(conn, ids, met, typer, text="Example answer"):
+    return connections.save_answer(
+        conn,
+        connection_id=met.id,
+        player_id=ids[typer],
+        text=text,
+        config=CONFIG,
+    )
+
+
+def _score(conn, ids, public_id):
+    return points.score(conn, ids[public_id])
+
+
+def _answer_refused(call) -> AnswerRefused:
+    with pytest.raises(AnswerRefused) as refused:
+        call()
+    return refused.value
+
+
+def test_game_010_game_011_worked_example_e1(conn, ids):
+    # Test Player A (testpid01, Church A) meets Test Player B (testpid02, Church B).
+    # B has already met someone from Church A (testpid03).
+    _move_to_church_b(conn, "testpid02")
+    earlier = _scan(conn, scanner="testpid02", scanned="testpid03")
+    _answer(conn, ids, earlier, "testpid02")
+    b_before = _score(conn, ids, "testpid02")
+
+    met = _scan(conn)  # A scans B
+    a_earned = _answer(conn, ids, met, "testpid01")
+    b_earned = _answer(conn, ids, met, "testpid02")
+
+    base, bonus = POINTS["connect_other_church"], POINTS["connect_new_church_bonus"]
+    assert (a_earned, b_earned) == (base + bonus, base)
+    assert _score(conn, ids, "testpid01") == base + bonus
+    assert _score(conn, ids, "testpid02") == b_before + base
+
+
+def test_game_012_worked_example_e3_same_church(conn, ids):
+    met = _scan(conn)  # both in Example Church A
+    assert _answer(conn, ids, met, "testpid01") == POINTS["connect_same_church"]
+    assert _answer(conn, ids, met, "testpid02") == POINTS["connect_same_church"]
+    # No bonus: your own church is never "new".
+    assert conn.execute("SELECT count(*) FROM church_met").fetchone()[0] == 0
+
+
+def test_game_011_new_church_bonus_only_for_the_first_person_from_it(conn, ids):
+    _move_to_church_b(conn, "testpid02", "testpid03")
+    first = _scan(conn)
+    second = _scan(conn, scanned="testpid03")
+    base, bonus = POINTS["connect_other_church"], POINTS["connect_new_church_bonus"]
+    assert _answer(conn, ids, first, "testpid01") == base + bonus
+    assert _answer(conn, ids, second, "testpid01") == base
+
+
+def test_game_016_only_the_player_who_types_earns(conn, ids):
+    met = _scan(conn)
+    _answer(conn, ids, met, "testpid01")
+    assert _score(conn, ids, "testpid01") == POINTS["connect_same_church"]
+    assert _score(conn, ids, "testpid02") == 0  # never waits on the other phone
+
+
+def test_game_016_points_pay_once_per_answer(conn, ids):
+    met = _scan(conn)
+    _answer(conn, ids, met, "testpid01")
+    refused = _answer_refused(
+        lambda: _answer(conn, ids, met, "testpid01", text="Another answer")
+    )
+    assert (refused.status, refused.code) == (409, "ALREADY_DONE")
+    assert _score(conn, ids, "testpid01") == POINTS["connect_same_church"]
+
+
+def test_game_015_answer_is_saved_about_the_other_person(conn, ids):
+    met = _scan(conn)
+    _answer(conn, ids, met, "testpid01", text="  Example answer  ")
+    row = conn.execute("SELECT * FROM icebreaker_answer").fetchone()
+    assert row["typed_by_player_id"] == ids["testpid01"]
+    assert row["about_player_id"] == ids["testpid02"]
+    assert row["answer_text"] == "Example answer"
+
+
+@pytest.mark.parametrize(("state", "code"), [("paused", "PAUSED"), ("off", "GAME_OFF")])
+def test_game_102_game_108_answer_refused_unless_game_is_on(conn, ids, state, code):
+    met = _scan(conn)
+    set_state(conn, state)
+    with pytest.raises(GameNotOn) as refused:
+        _answer(conn, ids, met, "testpid01")
+    assert refused.value.error_code == code
+    assert conn.execute("SELECT count(*) FROM icebreaker_answer").fetchone()[0] == 0
+    assert _score(conn, ids, "testpid01") == 0
+
+
+def test_safe_006_someone_outside_the_pair_cannot_answer(conn, ids):
+    met = _scan(conn)
+    refused = _answer_refused(lambda: _answer(conn, ids, met, "testpid03"))
+    assert (refused.status, refused.code) == (404, "NOT_FOUND")
+    assert conn.execute("SELECT count(*) FROM icebreaker_answer").fetchone()[0] == 0
+
+
+def test_safe_006_each_player_sees_only_the_answer_they_typed(conn, ids):
+    met = _scan(conn)
+    _answer(conn, ids, met, "testpid01", text="Example answer")
+    mine = connections.for_player(conn, met.id, ids["testpid01"])
+    theirs = connections.for_player(conn, met.id, ids["testpid02"])
+    assert mine.my_answer == "Example answer"
+    assert theirs.my_answer is None
+
+
+@pytest.mark.parametrize("text", ["", "   ", "x" * (connections.ANSWER_MAX_CHARS + 1)])
+def test_safe_005_blank_or_too_long_answer_is_refused(conn, ids, text):
+    met = _scan(conn)
+    refused = _answer_refused(lambda: _answer(conn, ids, met, "testpid01", text=text))
+    assert (refused.status, refused.code) == (400, "BAD_INPUT")
+    assert _score(conn, ids, "testpid01") == 0
 
 
 @pytest.fixture
