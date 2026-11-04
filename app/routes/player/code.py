@@ -48,6 +48,8 @@ def _qr_context(request: Request, player: CurrentPlayer, now: float) -> dict:
         "refresh_seconds": qr.seconds_left(
             now, cfg, qr.refresh_offset(player.public_id, cfg)
         ),
+        # UI-037: the timer bar drains over the whole window, starting from where this code is.
+        "rotation_seconds": cfg["rotation_seconds"],
         "retry_seconds": cfg["poll_retry_seconds"],  # DEC-031
     }
 

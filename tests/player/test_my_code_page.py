@@ -80,3 +80,34 @@ def test_dec_061_my_code_goes_to_login_when_logged_out(page: Page, live_server):
     )
     page.goto(f"{live_server}/code")
     expect(page).to_have_url(f"{live_server}/login", timeout=REFRESH_TIMEOUT_MS)
+
+
+def test_ui_037_my_code_card_has_qr_timer_and_caption(page: Page, live_server):
+    page.goto(f"{live_server}/code")
+    card = page.locator(".qr-card")
+    expect(card.locator(".qr-panel svg")).to_be_visible()
+    expect(
+        card.get_by_role("progressbar", name="Time until your code changes")
+    ).to_be_visible()
+    expect(card.get_by_text("Show a friend")).to_be_visible()
+    expect(card.get_by_text("brightness")).to_be_visible()  # 07 section 3
+    scan = page.get_by_role("link", name="Scan", exact=True).bounding_box()
+    box = card.bounding_box()
+    assert scan["y"] >= box["y"] + box["height"]  # Scan sits under the panel
+
+
+def _timer_animation(page: Page):
+    return page.locator(".qr-timer-fill").evaluate(
+        "(el) => getComputedStyle(el).animationName"
+    )
+
+
+def test_ui_037_qr_timer_drains(page: Page, live_server):
+    page.goto(f"{live_server}/code")
+    assert _timer_animation(page) == "qr-drain"
+
+
+def test_ui_055_qr_timer_stays_still_with_reduce_motion(page: Page, live_server):
+    page.emulate_media(reduced_motion="reduce")
+    page.goto(f"{live_server}/code")
+    assert _timer_animation(page) == "none"

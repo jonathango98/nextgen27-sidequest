@@ -5,7 +5,7 @@
 
 Every planned piece of work and what it needs first (ENG-105 to ENG-108), grouped by the week it is due (PRD-054). Pieces flow left to right in time: finishing one unlocks the pieces it points to. Run `/pick-task` to claim one.
 
-**Working** 21 · **In progress** 0 · **Ready** 9 · **Waiting** 18 · **Needs decision** 0
+**Working** 22 · **In progress** 0 · **Ready** 8 · **Waiting** 18 · **Needs decision** 0
 
 Colors: green Working, blue In progress, gold Ready, gray Waiting, red dashed Needs decision.
 
@@ -168,19 +168,13 @@ flowchart LR
   classDef ready fill:#fff4d6,stroke:#a87400,stroke-width:3px,color:#14151a
   classDef waiting fill:#f1f0eb,stroke:#c3c0b6,color:#545a66
   classDef decision fill:#fdeeec,stroke:#b42318,stroke-dasharray:4 3,color:#14151a
-  class app_foundation,auth_join_login,code_my_code,connections_scanner_camera,connections_table,game_state_controls,game_state_core,infra_hosting,look_base,points_audit_log,points_ledger,points_score,ready_backups,ready_load_test,ready_logout,ready_rate_limits,ready_retention,screens_skeleton,staff_accounts,staff_login,usher_console working
-  class admin_players,admin_setup,checkin_sessions,connections_meet,explore_booths,home_pages,look_screens,screen_main,wrapped_cards ready
+  class app_foundation,auth_join_login,code_my_code,connections_scanner_camera,connections_table,game_state_controls,game_state_core,infra_hosting,look_base,look_screens,points_audit_log,points_ledger,points_score,ready_backups,ready_load_test,ready_logout,ready_rate_limits,ready_retention,screens_skeleton,staff_accounts,staff_login,usher_console working
+  class admin_players,admin_setup,checkin_sessions,connections_meet,explore_booths,home_pages,screen_main,wrapped_cards ready
   class admin_audit_view,admin_award_revoke,blind_box_close_redemption,blind_box_handout,checkin_hall,checkin_window,connections_answers,connections_verse_picker,explore_items,game_state_auto_pause,journal_notes,journal_share_review,leaderboards_in_app,leaderboards_screen,recap_screen,wrapped_collection,wrapped_save_image,wrapped_stat_cards waiting
 ```
 
 ## Ready now
 
-- `look.screens`: The Home, My Code and shared notes pages made to look like the chosen design. Home and the notes page use pretend numbers and fake note cards for now. (L, easy, design, due fri nov 27)
-  - Try it:
-    1. Open Home as Test Player 1 on a phone, or a browser 360px wide. It should match the mockup, with nothing spilling off the side.
-    2. Open My Code. The QR panel and the black Scan button should match the mockup and fit on screen, and Scan should open the scanner.
-    3. Open the summary page. The fake cards should match the mockup, with text wrapping and nothing cut off.
-    4. Check the browser console on each page. There should be no red errors.
 - `connections.meet`: When one player scans another player's code, the game saves that they met and both phones show the same fun question to talk about, like a favorite food. The scanned player's My Code page shows a note without them tapping anything. It says no if you scan yourself, scan an old code, or scan someone you already met. (L, hard, player-app, due fri dec 4)
   - Try it:
     1. On the PR preview, join as Test Player 1 and Test Player 2 on two phones.
