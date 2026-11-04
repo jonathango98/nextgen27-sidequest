@@ -283,6 +283,19 @@ h2 {
   cursor: not-allowed;
 }
 
+/* An Edit button that opens its form in place, with no JavaScript (admin sessions page) */
+.session-edit > summary {
+  list-style: none;
+}
+
+.session-edit > summary::-webkit-details-marker {
+  display: none;
+}
+
+.session-edit[open] > summary {
+  margin-bottom: var(--space-2);
+}
+
 /* Frosted glass card with a white top highlight and a soft two-layer shadow */
 .card {
   padding: var(--space-4);

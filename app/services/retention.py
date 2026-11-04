@@ -21,7 +21,14 @@ from app.services import churches
 from app.services.audit import record
 
 # Every table holding player-linked data, children before the tables they point to.
-DELETE_TABLES = ("audit_log", "church_met", "connection", "point_ledger", "player")
+DELETE_TABLES = (
+    "audit_log",
+    "church_met",
+    "connection",
+    "point_ledger",
+    "check_in",
+    "player",
+)
 
 # Earlier cleanup notes hold totals only, with no link to a person, so later runs keep them.
 KEEP_ROWS = {"audit_log": "action <> 'retention_cleanup'"}
@@ -31,6 +38,7 @@ KEEP_TABLES = {
     "church": "the public church list, not personal data",
     "game_state": "the one-row game switch. updated_by is a staff id, not a player (OPS-042)",
     "schema_migration": "bookkeeping for the migration runner",
+    "session": "the program's session titles and times, with no rooms or players (DATA-014)",
     "staff_account": "usher and admin accounts, not players. Switched off by hand (OPS-042)",
 }
 
