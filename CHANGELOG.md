@@ -20,6 +20,16 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-04 · feat/error-page · Claude Opus 5.5 / @jonathango98
+
+- What: Started. A wrong link shows a friendly Side Quest page instead of `{"detail":"Not Found"}`, and a server error shows one instead of plain text. Its button goes to Home when logged in, or to Log in when not.
+- Why: Jonathan saw the raw JSON on a mistyped staging link.
+- Rule IDs: API-005, API-021, UI-051, UI-003, DEC-061
+- Status: Started
+- PR: draft
+
+---
+
 ## 2026-11-04 · feat/screen-main · Claude Opus 5.5 / @jonathango98
 
 - What: Builds `screen.main`, changed with Jonathan's answers (DEC-069 to DEC-071). The main screen at `/screen` needs no login: its link carries a secret key from `SQ_SCREEN_KEY`, and a wrong or missing key, or no key set on the server, gets 404 (ARCH-037). Responses send no referrer and ask not to be indexed. While the game is on or paused it takes turns every `main_screen.rotate_seconds` through `/screen/players`, `/screen/churches`, `/screen/takeaways`, and `/screen/photobooth`, each loaded fresh and saying coming soon until `leaderboards.screen`, `recap.screen`, and `screen.photobooth` fill them in. A failed load keeps the last view and asks again at the next turn. While off it shows "Side Quest is offline" or the recap placeholder, picked by an admin on a new Main screen panel on the admin console (`POST /admin/screen-off-view`, audit logged, UI-044), which also shows the full link. Dark screen tokens, text sized from `main_screen.min_text_px_1080p` and scaled to the screen, slow fade in, none with Reduce Motion (UI-041 to UI-043). Migration `0008_add_screen_off_view.sql` (0007 is taken by #76). Foundation: UI-040, GAME-087, SAFE-013, SAFE-018, ARCH-035 (LOCKED) and ARCH-037, API-031, GAME-024, GAME-027, GAME-028 changed; UI-044, OPS-007, SAFE-038 (OPEN) added; `poll_seconds` replaced by `rotate_seconds`; `checkin.hall` and `recap.screen` reworded; new piece `screen.photobooth`, locked by SAFE-038. Screen mode and `POST /admin/screen-mode` are gone.
