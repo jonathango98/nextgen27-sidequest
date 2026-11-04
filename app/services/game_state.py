@@ -57,22 +57,28 @@ def change(
     # ARCH-013: IMMEDIATE takes the write lock first, so two admins pressing at once queue.
     conn.execute("BEGIN IMMEDIATE")
     try:
-        changed = current_state(conn) != state
-        if changed:
-            set_state(conn, state, updated_by=admin_id)
-            audit.record(
-                conn,
-                actor_type="admin",
-                actor_id=admin_id,
-                action=AUDIT_ACTIONS[state],
-                target_type="game_state",
-                target_id=1,
-            )
+        changed = change_in_transaction(conn, state, admin_id)
     except BaseException:
         conn.execute("ROLLBACK")
         raise
     conn.execute("COMMIT")
     return changed
+
+
+def change_in_transaction(conn: sqlite3.Connection, state: str, admin_id: int) -> bool:
+    """change() for a caller that already holds the write lock, like End session (GAME-026)."""
+    if current_state(conn) == state:
+        return False
+    set_state(conn, state, updated_by=admin_id)
+    audit.record(
+        conn,
+        actor_type="admin",
+        actor_id=admin_id,
+        action=AUDIT_ACTIONS[state],
+        target_type="game_state",
+        target_id=1,
+    )
+    return True
 
 
 def require_game_on(conn: sqlite3.Connection) -> None:

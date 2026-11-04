@@ -34,8 +34,9 @@ from app.routes.player import (
 from app.routes.screen import views as screen_views
 from app.routes.staff import console as staff_console
 from app.routes.staff import login as staff_login
+from app.routes.staff import sessions as staff_sessions
 from app.routes.staff import usher as staff_usher
-from app.services import churches, connections, players, staff
+from app.services import churches, connections, players, sessions, staff
 from app.services.game_state import GAME_NOT_ON_MESSAGES, GameNotOn
 
 
@@ -52,6 +53,7 @@ async def lifespan(app: FastAPI):
             staff.seed_preview(conn)
             players.seed_preview(conn, app.state.config)
             connections.seed_preview(conn, app.state.config)
+            sessions.seed_preview(conn)
     finally:
         conn.close()
     yield
@@ -95,6 +97,7 @@ def create_app() -> FastAPI:
     app.include_router(staff_console.router)
     app.include_router(staff_usher.router)
     app.include_router(screen_views.router)
+    app.include_router(staff_sessions.router)
     # Screen skeleton (UI-030): plain pages, no game logic yet.
     for module in (home, scan, quests, journal, box, wrapped):
         app.include_router(module.router)

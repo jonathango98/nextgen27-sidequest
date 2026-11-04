@@ -5,7 +5,7 @@
 
 Every planned piece of work and what it needs first (ENG-105 to ENG-108), grouped by the week it is due (PRD-054). Pieces flow left to right in time: finishing one unlocks the pieces it points to. Run `/pick-task` to claim one.
 
-**Working** 24 · **In progress** 0 · **Ready** 9 · **Waiting** 15 · **Needs decision** 1
+**Working** 25 · **In progress** 0 · **Ready** 11 · **Waiting** 12 · **Needs decision** 1
 
 Colors: green Working, blue In progress, gold Ready, gray Waiting, red dashed Needs decision.
 
@@ -170,14 +170,19 @@ flowchart LR
   classDef ready fill:#fff4d6,stroke:#a87400,stroke-width:3px,color:#14151a
   classDef waiting fill:#f1f0eb,stroke:#c3c0b6,color:#545a66
   classDef decision fill:#fdeeec,stroke:#b42318,stroke-dasharray:4 3,color:#14151a
-  class app_foundation,auth_join_login,code_my_code,connections_meet,connections_scanner_camera,connections_table,game_state_controls,game_state_core,infra_hosting,look_base,look_screens,points_audit_log,points_ledger,points_score,ready_backups,ready_load_test,ready_logout,ready_rate_limits,ready_retention,screen_main,screens_skeleton,staff_accounts,staff_login,usher_console working
-  class admin_audit_view,admin_players,admin_setup,checkin_sessions,connections_answers,explore_booths,home_pages,leaderboards_screen,wrapped_cards ready
-  class admin_award_revoke,blind_box_close_redemption,blind_box_handout,checkin_hall,checkin_window,connections_verse_picker,explore_items,game_state_auto_pause,journal_notes,journal_share_review,leaderboards_in_app,recap_screen,wrapped_collection,wrapped_save_image,wrapped_stat_cards waiting
+  class app_foundation,auth_join_login,checkin_sessions,code_my_code,connections_meet,connections_scanner_camera,connections_table,game_state_controls,game_state_core,infra_hosting,look_base,look_screens,points_audit_log,points_ledger,points_score,ready_backups,ready_load_test,ready_logout,ready_rate_limits,ready_retention,screen_main,screens_skeleton,staff_accounts,staff_login,usher_console working
+  class admin_audit_view,admin_players,admin_setup,checkin_window,connections_answers,explore_booths,game_state_auto_pause,home_pages,journal_notes,leaderboards_screen,wrapped_cards ready
+  class admin_award_revoke,blind_box_close_redemption,blind_box_handout,checkin_hall,connections_verse_picker,explore_items,journal_share_review,leaderboards_in_app,recap_screen,wrapped_collection,wrapped_save_image,wrapped_stat_cards waiting
   class screen_photobooth decision
 ```
 
 ## Ready now
 
+- `game-state.auto-pause`: An admin types in when each session starts, and the game pauses by itself at that time if it is on. It never turns on a game that is off, and never un-pauses it. (M, medium, backend, due fri dec 4)
+  - Try it:
+    1. As an admin, add a session whose start time is a minute or two from now, with the game on.
+    2. Wait for that time and refresh a player page, you should see the paused note.
+    3. Try to break it by setting the game to off before the time arrives, it should stay off and not become paused.
 - `connections.answers`: Each player can type in the answer their new friend gave, and gets points for meeting someone when they save it. Only those two players can ever see the answer. Friends from the same church get fewer points, and meeting a new church gives a bonus. (L, hard, player-app, due fri dec 4)
   - Try it:
     1. On the PR preview, connect Test Player 1 from Example Church A with Test Player 2 from Example Church B on two phones.
@@ -185,12 +190,6 @@ flowchart LR
     3. Connect two players from the same church and save an answer. They should get the smaller same-church points.
     4. Try to break it: log in as Test Player 3 and open that connection. You should be refused.
     5. Run `pytest -k 'game_010 or game_011 or game_012 or game_018'`. The worked examples from the rules should pass.
-- `checkin.sessions`: A list of the conference sessions, and an admin page to add one with a title, an optional start time, and how many minutes before the start check-in opens. An End session button turns the game back on and lets players write takeaways for that session. (L, medium, admin-screens, due fri dec 4)
-  - Try it:
-    1. On the PR preview, log in as Test Admin and add Example Session 1 with a start time and check-in minutes. Edit its title. It should show in the list after a refresh.
-    2. Pause the game, then press End session on Example Session 1. The game should be on again.
-    3. Press End session again. Nothing should break.
-    4. Try to break it: open the page as Test Usher. You should be refused.
 - `home.pages`: Home shows the player's real score and how close they are to the next blind box. A Quests page lists every quest and how many points it gives. An Open Box page shows how many blind boxes the player can collect and how to go and get them. (L, easy, player-app, due fri dec 11)
   - Try it:
     1. On the PR preview, join as a brand new Test Player 1. Home should show the starting score and the progress bar without breaking.
@@ -199,6 +198,12 @@ flowchart LR
     4. Tap Open Box. It should show how many boxes you can collect and clear steps for the game booth. It should never say how many boxes are left in total, and tapping it should not use up a box.
     5. On a local run, change one points number in game-config.yaml and restart. Quests should show the new number without touching any page file.
     6. Run `pytest -k 'game_070 or game_071'`. The worked examples from the rules should pass.
+- `checkin.window`: Check-in opens on its own a few minutes before a session starts and closes when it starts. A session with no start time gets an Open check-in button. An admin can also close check-in for any session whenever they choose. (L, medium, admin-screens, due fri dec 11)
+  - Try it:
+    1. On the PR preview, log in as Test Admin and give Example Session 1 a start time a few minutes away with 2 check-in minutes. The session should show check-in open 2 minutes before, and closed at the start time.
+    2. Add Example Session 2 with no start time and press Open check-in. It should open right away.
+    3. Press the close button on Example Session 2. It should show closed.
+    4. Try to break it: press the buttons as Test Usher. You should be refused.
 - `admin.players`: Admins can search for a player and see their account details, give them a fresh PIN after checking their badge, and change their church if they picked the wrong one at sign-up. Last names are shown to staff only, and every change is written down. (L, medium, admin-screens, due fri dec 11)
   - Try it:
     1. On a phone, lock Test Player 1 out by typing the wrong PIN several times.
@@ -229,6 +234,14 @@ flowchart LR
     2. Open the main screen link on a laptop. When the player board comes round, players should be ranked from highest score, with first name, last initial and church only.
     3. Churches should be ranked by the average per player, not the total. Give one test player many points and check their church does not jump ahead on its own.
     4. Switch the game off. The boards should stop and the off view should show.
+- `journal.notes`: A safe place to keep players' notes, and a way for a player to write a private note about what they learned in a session that has finished. They get points once for each session, and they can see a list of the notes they wrote themselves. (L, medium, player-app, due fri jan 8)
+  - Try it:
+    1. On the PR preview, end Example Session 1 as Test Admin. Then join as Test Player 1 on a phone and open Journal. It should offer that session.
+    2. Send a note with too few words. You should see a friendly message.
+    3. Send a long enough note. You should get the points once, and the note should show in your list.
+    4. Write a second note for the same session. You should get no new points.
+    5. Pause the game and try to write a note. It should say no.
+    6. Write a note as Test Player 2 on another phone. Each phone should list only its own notes.
 - `wrapped.cards`: An admin presses a button to open Wrapped, your personal story of the conference. Until then, players see a note saying when it will open. Once open, it's cards you swipe through like a little story, starting with a Welcome card. (L, medium, player-app, due fri jan 15)
   - Try it:
     1. On a phone at the PR preview, log in as Test Player 1 and open Wrapped. You should see the note about when it unlocks.
