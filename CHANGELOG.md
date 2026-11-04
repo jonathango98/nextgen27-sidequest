@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-04 · feat/leaderboards-screen · Claude Opus 5.5 / @jonathango98
+
+- What: Claims `leaderboards.screen`: the main screen's player and church leaderboards, with church score as a shrunk average and player rows showing first name, last initial, and church only.
+- Why: Picked through `/pick-task`. Due 2026-12-18. Unlocks `leaderboards.in-app`.
+- Rule IDs: GAME-081, GAME-082, GAME-083, GAME-084, GAME-086, GAME-087, GAME-088, GAME-089, SAFE-004, SAFE-019, ENG-101
+- Status: Started
+- PR: draft
+
 ## 2026-11-03 · feat/checkin-sessions · Claude Opus 5.5 / @marcjason2012
 
 - What: Builds `checkin.sessions`. Migration 0007 adds `session` (title, optional `starts_at`, `checkin_open_minutes` required with a start time, no rooms) and `check_in` with both DATA-022 uniques, which `checkin.window` fills. `app/services/sessions.py` adds and edits sessions and ends one. Start times are typed in `game.timezone` and saved in UTC. End session sets `ended_at`, sets `checkin_closed_at` if empty, and turns a paused game on, with the audit rows, in one transaction. `game_state.change_in_transaction()` lets it reuse the Start button's audited change. Agreed with @marcjason2012 before building: an off game stays off, and a session that already ended changes nothing, so a second press never resumes a re-paused game. New `GET`/`POST /admin/sessions` and `POST /admin/sessions/{public_id}/end` (both in 06), admin only, linked from the admin console. End session asks first and swaps the list with HTMX. Retention deletes `check_in` and keeps `session`. PR previews seed Example Session 2 with no start time (ENG-113). Checked at 360px in Chromium and WebKit.
