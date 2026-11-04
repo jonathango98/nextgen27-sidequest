@@ -6,6 +6,7 @@ from app.config import load_config
 from app.main import create_app
 from app.routes.player import code
 from app.services import qr
+from tests.conftest import seed_fake_players
 from tests.routes.player.test_skeleton import current_tab, link_to, main_buttons
 
 # Fake data (ENG-047), never a real key (SAFE-030).
@@ -27,9 +28,11 @@ def window_start(cfg):
 
 
 @pytest.fixture
-def client(monkeypatch, window_start):
+def client(monkeypatch, tmp_path, window_start):
     monkeypatch.setenv(qr.KEY_ENV, FAKE_KEY)
     app = create_app()
+    app.state.db_path = tmp_path / "code.db"
+    seed_fake_players(app.state.db_path, FAKE_PLAYER.public_id)
     app.dependency_overrides[get_current_player] = lambda: FAKE_PLAYER
     app.dependency_overrides[code.current_time] = lambda: window_start
     # Start the app, so pages can read the game state for the paused note (UI-033).

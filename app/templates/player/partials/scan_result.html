@@ -1,0 +1,7 @@
+{# GAME-017: the question this pair will both see. SAFE-004: first name and church only. #}
+<div class="card" data-connection="{{ connection.id }}">
+  <p class="scan-result">You met {{ connection.other_first_name }}!</p>
+  <p class="hint">{{ connection.other_church }}</p>
+  <h2>{{ connection.question }}</h2>
+  <a class="button" href="/connections/{{ connection.id }}">Open icebreaker</a>
+</div>

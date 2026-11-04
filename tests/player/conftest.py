@@ -14,9 +14,11 @@ from fastapi.responses import HTMLResponse
 from app.auth import session
 from app.auth.current import CurrentPlayer, get_current_player
 from app.config import load_config
+from app.db import connect
 from app.main import create_app, templates
 from app.routes.player import code
 from app.services import qr
+from tests.conftest import seed_fake_players
 
 FAKE_SCORE = 120  # fake data (ENG-047), not a game number
 FAKE_PLAYER = CurrentPlayer(public_id="testpid01", score=FAKE_SCORE)
@@ -126,6 +128,19 @@ def live_server(tmp_path_factory):
     while not server.started:
         assert time.monotonic() < deadline, "test server did not start"
         time.sleep(0.05)
+    # Pages that read the logged-in player's rows need FAKE_PLAYER in the database.
+    db_path = Path(os.environ["SQ_DB_PATH"])
+    ids = seed_fake_players(
+        db_path, FAKE_PLAYER.public_id, "testpid02", "testpid03", "testpid04"
+    )
+    conn = connect(db_path)
+    # Connection 1 between Test Player 1 and 2, so /connections/1 opens (SAFE-006).
+    conn.execute(
+        "INSERT OR IGNORE INTO connection (id, player_low_id, player_high_id,"
+        " scanner_id, question_category, is_same_church) VALUES (1, ?, ?, ?, 'food', 1)",
+        (ids[FAKE_PLAYER.public_id], ids["testpid02"], ids[FAKE_PLAYER.public_id]),
+    )
+    conn.close()
     yield f"https://127.0.0.1:{port}"
     server.should_exit = True
     thread.join()

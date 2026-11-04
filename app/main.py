@@ -35,7 +35,7 @@ from app.routes.screen import views as screen_views
 from app.routes.staff import console as staff_console
 from app.routes.staff import login as staff_login
 from app.routes.staff import usher as staff_usher
-from app.services import churches, players, staff
+from app.services import churches, connections, players, staff
 from app.services.game_state import GAME_NOT_ON_MESSAGES, GameNotOn
 
 
@@ -51,6 +51,7 @@ async def lifespan(app: FastAPI):
             churches.seed_examples(conn)
             staff.seed_preview(conn)
             players.seed_preview(conn, app.state.config)
+            connections.seed_preview(conn, app.state.config)
     finally:
         conn.close()
     yield

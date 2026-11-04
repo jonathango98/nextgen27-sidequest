@@ -6,8 +6,10 @@ from fastapi.testclient import TestClient
 
 from app.auth.current import CurrentPlayer, get_current_player
 from app.config import load_config
+from app.db import connect
 from app.main import create_app, templates
 from app.routes.player import journal, quests
+from tests.conftest import seed_fake_players
 
 FAKE_PLAYER = CurrentPlayer(public_id="testpid01", score=120)  # fake data (ENG-047)
 
@@ -49,8 +51,18 @@ def link_to(href, label):
 
 
 @pytest.fixture
-def client():
+def client(tmp_path):
     app = create_app()
+    app.state.db_path = tmp_path / "skeleton.db"
+    ids = seed_fake_players(app.state.db_path, FAKE_PLAYER.public_id, "testpid02")
+    conn = connect(app.state.db_path)
+    # Connection 1, so /connections/1 is a pair this player is in (SAFE-006).
+    conn.execute(
+        "INSERT INTO connection (id, player_low_id, player_high_id, scanner_id,"
+        " question_category, is_same_church) VALUES (1, ?, ?, ?, 'food', 1)",
+        (*sorted(ids.values()), ids[FAKE_PLAYER.public_id]),
+    )
+    conn.close()
     app.dependency_overrides[get_current_player] = lambda: FAKE_PLAYER
     # Start the app, so pages can read the game state for the paused note (UI-033).
     with TestClient(app) as c:
@@ -255,7 +267,9 @@ def page_text(html):
 
 
 def test_ui_036_no_greeting_without_a_player_row(client):
-    # FAKE_PLAYER is not in the database, so there is no first name to show.
+    # testpid99 is never seeded, so there is no first name to show.
+    no_row = CurrentPlayer(public_id="testpid99", score=FAKE_PLAYER.score)
+    client.app.dependency_overrides[get_current_player] = lambda: no_row
     assert 'class="greeting"' not in client.get("/").text
 
 

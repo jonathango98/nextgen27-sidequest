@@ -1,8 +1,11 @@
+import time
+
 import pytest
 import segno
 from playwright.sync_api import Page, expect
 
 from app.config import load_config
+from app.services import qr
 
 QR_FORMAT = load_config()["qr"]["format_version"]
 FAKE_SQ_CODE = f"{QR_FORMAT}.P.testpid02.000000"  # fake data (ENG-047)
@@ -10,6 +13,7 @@ OTHER_CODE = "https://example.com/menu"
 # Chromium's test camera: a moving test picture instead of a real one, allowed without a prompt.
 FAKE_CAMERA = ["--use-fake-device-for-media-stream", "--use-fake-ui-for-media-stream"]
 NOT_A_CODE = "This isn't a Side Quest code."
+EXPIRED = "That code expired. Ask them to show it again."
 
 
 @pytest.fixture
@@ -47,9 +51,23 @@ def test_arch_025_side_quest_code_is_read(scanner_page, live_server):
     # No empty button under the camera while it scans.
     expect(scanner_page.locator("[data-scan-again]")).to_be_hidden()
     scanner_page.evaluate("code => window.sqScanner.handle(code)", FAKE_SQ_CODE)
-    expect(scanner_page.get_by_role("status")).to_have_text("Got it!")
+    # GAME-014, ARCH-022: the server checks it. A made-up code is refused as expired.
+    expect(scanner_page.get_by_role("alert")).to_have_text(EXPIRED)
     expect(scanner_page.get_by_role("button", name="Scan again")).to_be_visible()
     assert not _camera_live(scanner_page)
+    # The 410 is the refusal the page shows, not a script error.
+    assert [p for p in scanner_page.problems if "410" not in p] == []
+
+
+def test_game_017_scan_shows_who_you_met_and_their_question(scanner_page, live_server):
+    _open_with_camera(scanner_page, live_server)
+    payload = qr.payload(qr.PLAYER_KIND, "testpid03", time.time(), load_config()["qr"])
+    scanner_page.evaluate("code => window.sqScanner.handle(code)", payload)
+    # SAFE-004: first name and church only.
+    expect(scanner_page.get_by_text("You met Test!")).to_be_visible()
+    expect(scanner_page.get_by_text("Example Church A")).to_be_visible()
+    expect(scanner_page.get_by_role("link", name="Open icebreaker")).to_be_visible()
+    expect(scanner_page.get_by_role("button", name="Scan again")).to_be_visible()
     assert scanner_page.problems == []
 
 

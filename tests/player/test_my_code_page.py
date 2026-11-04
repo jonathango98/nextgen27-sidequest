@@ -1,6 +1,10 @@
+import os
+from pathlib import Path
+
 from playwright.sync_api import Page, expect
 
 from app.config import load_config
+from app.db import connect
 
 REFRESH_TIMEOUT_MS = 5000  # test wait, not a game number
 
@@ -80,6 +84,31 @@ def test_dec_061_my_code_goes_to_login_when_logged_out(page: Page, live_server):
     )
     page.goto(f"{live_server}/code")
     expect(page).to_have_url(f"{live_server}/login", timeout=REFRESH_TIMEOUT_MS)
+
+
+def test_api_032_scanned_player_sees_note_without_tapping(page: Page, live_server):
+    db_path = Path(os.environ["SQ_DB_PATH"])
+    conn = connect(db_path)
+    ids = dict(conn.execute("SELECT public_id, id FROM player").fetchall())
+    me, them = ids["testpid01"], ids["testpid04"]
+    # Each browser run starts with the pair not yet saved.
+    conn.execute(
+        "DELETE FROM connection WHERE player_low_id = ? AND player_high_id = ?",
+        (me, them),
+    )
+    page.goto(f"{live_server}/code")
+    expect(page.locator(".qr-panel svg")).to_be_visible()
+    # Test Player 4 scans this player's code on another phone.
+    conn.execute(
+        "INSERT INTO connection (player_low_id, player_high_id, scanner_id,"
+        " question_category, is_same_church) VALUES (?, ?, ?, 'hobby', 1)",
+        (me, them, them),
+    )
+    conn.close()
+    poll_ms = load_config()["qr"]["incoming_poll_seconds"] * 1000
+    note = page.get_by_role("link", name="Test just scanned you!")
+    expect(note).to_be_visible(timeout=poll_ms + REFRESH_TIMEOUT_MS)
+    expect(note).to_contain_text("What do you do for fun?")
 
 
 def test_ui_037_my_code_card_has_qr_timer_and_caption(page: Page, live_server):

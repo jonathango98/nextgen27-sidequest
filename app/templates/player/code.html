@@ -13,6 +13,7 @@
     <p class="qr-caption">Show a friend</p>
     <p class="qr-tip">Turn your screen brightness up so it scans fast.</p>
   </section>
+  {% include "player/partials/code_incoming.html" %}
   {# UI-037: the black Scan button sits under the QR panel, in the lower half (UI-003).
      GAME-102: My Code stays, scanning waits. #}
   {% if game_state() == "on" %}

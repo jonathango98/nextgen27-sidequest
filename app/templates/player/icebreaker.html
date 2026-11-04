@@ -5,15 +5,21 @@
 {% block title %}Icebreaker · Side Quest{% endblock %}
 
 {% block content %}
-  <p class="hint">Placeholder: your friend's name.</p>
-  <h1>Icebreaker question</h1>
-  <p>Just you two</p>
-  {# Saving waits on GAME-015 and GAME-016, so the form is switched off. #}
-  <form class="form">
-    <fieldset disabled>
-      <label for="answer">Answer</label>
-      <input id="answer" name="answer" type="text" autocomplete="off">
-      <button class="button" type="submit">Save</button>
-    </fieldset>
-  </form>
+  {% if connection %}
+    {# SAFE-004: first name and church only. GAME-017: both phones show this same question. #}
+    <p class="hint">{{ connection.other_first_name }} · {{ connection.other_church }}</p>
+    <h1>{{ connection.question }}</h1>
+    <p>Just you two</p>
+    {# Saving waits on GAME-015 and GAME-016 (connections.answers), so the form is switched off. #}
+    <form class="form">
+      <fieldset disabled>
+        <label for="answer">Answer</label>
+        <input id="answer" name="answer" type="text" autocomplete="off">
+        <button class="button" type="submit">Save</button>
+      </fieldset>
+    </form>
+  {% else %}
+    <h1>Icebreaker</h1>
+    {% include "partials/error.html" %}
+  {% endif %}
 {% endblock %}
