@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-04 · feat/connections-answers · Claude Opus 5.5 / @OwenTjandra
+
+- What: Started `connections.answers`. Each player can save the answer their new friend gave and get the meeting points for it, with fewer points for the same church and a bonus for a new church. Only the two players can see the answer.
+- Why: Picked by Owen from the feature tree after `connections.meet` (#70). Due 2026-12-04 and unlocks 3 pieces.
+- Rule IDs: GAME-010, GAME-011, GAME-012, GAME-015, GAME-018, SAFE-006, ENG-101
+- Status: Started
+- PR: draft
+
 ## 2026-11-01 · feat/connections-meet · Claude Opus 5.5 / @OwenTjandra
 
 - What: Builds `connections.meet`. `POST /scan` checks a scanned My Code on the server (ARCH-026): the payload must be a player code (ARCH-020, else `NOT_A_CODE`), not your own (GAME-014, 400 `BAD_INPUT`, since 06 has no code of its own for it), signed and current (ARCH-022, else 410 `CODE_EXPIRED`), for a real player (404 `NOT_FOUND`), and the game must be on (GAME-102, GAME-108, 423). It then saves the pair low id first with one random question from `icebreaker.categories` and the same church flag, in one `BEGIN IMMEDIATE` write, so two phones scanning each other at once save one row and the other gets 409 `ALREADY_CONNECTED` (GAME-013, GAME-018, GAME-019). No points yet: they come with `connections.answers` (GAME-016). The scanner shows the other player's first name, church, and question (SAFE-004), with Open icebreaker as the one main button (UI-035). `/connections/{id}` shows the pair's question to the two players only, and a 404 to anyone else (SAFE-006). My Code polls `/code/incoming` and shows a note with the same question when someone scans it, without a tap, and never twice (API-030, API-032). Scanned codes are read by `players.public_id_from_scan`, shared with the usher console (#68), so both refuse the same codes the same way. PR previews also get Test Player 2 in Example Church B with the preview PIN, so the hand test has two players from different churches, and no pair is seeded so the first scan is new (ENG-113, AI-047). Foundation, needing Jonathan's approval (ENG-080): `qr.incoming_poll_seconds` (3) in `game-config.yaml` 1.7.0, since ARCH-074 keeps polling intervals in config, and its mention in API-030 (`06-api-and-screens.md` 1.8.1). Tests: 29 service tests, 23 route tests, and browser tests for a scan and the My Code note. Browser check at 360px in Chromium (three fake players on the real app) and WebKit, no console errors.

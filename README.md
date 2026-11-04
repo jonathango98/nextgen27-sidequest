@@ -59,6 +59,7 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
+| `connections.answers` Save your new friend's answer and get points for meeting | `feat/connections-answers` | draft | 2026-11-04 | Claude Opus 5.5 / @OwenTjandra |
 | Test staff accounts on PR previews | `chore/preview-staff-seed` | #69 | 2026-11-01 | Claude Opus 5.5 / @jonathango98 |
 
 ### Planned
