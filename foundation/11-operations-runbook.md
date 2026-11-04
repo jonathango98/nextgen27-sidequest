@@ -2,8 +2,8 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.3.1
-- Last updated: 2026-11-02
+- Version: 1.4.0
+- Last updated: 2026-11-04
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -24,6 +24,7 @@ This file is for game day and the weeks before it: who does what, what to do whe
 - **OPS-004** [LOCKED] Blind boxes are pre-packed and sealed before the event.
 - **OPS-005** [PROPOSED] At the end of each game day, an admin sets the game to off. There are no automatic game hours (GAME-106).
 - **OPS-006** [PROPOSED] Before each session, check that the hall screen shows the check-in code. It opens on its own from the session's start time and check-in minutes (GAME-021). For a session with no start time, an admin presses "Open check-in" (GAME-027). The game must be on, or every scan is refused (GAME-102, GAME-108).
+- **OPS-007** [PROPOSED] During every talk, screens inside the hall show the program, not the main screen. The main screen keeps running on screens outside the hall, like the TV outside (DEC-069).
 
 ## 2. Usher tasks
 
@@ -69,7 +70,7 @@ This file is for game day and the weeks before it: who does what, what to do whe
 | Forgot to pause | Pause now. Then decide whether to revoke points earned during the session | Admin, game director | |
 | Unusual activity (possible fake accounts) | Look at the activity view. Do not accuse anyone in public | Admin, game director | Before prizes, check top players in person (GAME-090) |
 | Concerning takeaway | Do not approve it. Tell the organizer responsible for child safety in person (SAFE-042) | Admin | Follow the organization's child safety policy |
-| Main screen frozen | Reload the page. If it is still stuck, log in again in screen mode | Admin | |
+| Main screen frozen | Reload the page. If it says not found, open the main screen link again from the admin console (ARCH-037) | Admin | |
 | Secret or real data posted on GitHub | Tell Jonathan right away (SAFE-034) | Whoever saw it | Jonathan rotates and cleans up |
 
 ## 5. Checklists
@@ -86,7 +87,7 @@ This file is for game day and the weeks before it: who does what, what to do whe
 - [ ] Paper fallback kit printed: blank paper logs and pens (ARCH-081)
 - [ ] Blind boxes sealed and counted, and `blind_box.stock_total` set (GAME-069)
 - [ ] Join QR on the intro slides points to the production sign-up page (ARCH-024)
-- [ ] Main screen device and hall screens tested in screen mode (ARCH-037)
+- [ ] `SQ_SCREEN_KEY` set in production, and the main screen link opened on the main screen device and the outside TV (ARCH-037)
 
 ### Venue walkthrough (mid-February)
 

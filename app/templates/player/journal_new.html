@@ -4,23 +4,32 @@
 {% block title %}Journal · Side Quest{% endblock %}
 
 {% block content %}
-  <h1>Journal</h1>
-  <p class="hint">Placeholder: the session name (GAME-036).</p>
-  {# Saving comes with the Journal feature, so the form is switched off. #}
-  <form class="form">
+  <div class="page-heading">
+    <h1 id="journal-title">Journal</h1>
+    <p class="page-sub" id="journal-session">{{ session_name }}</p>
+  </div>
+  {# Saving comes with the Journal feature (journal.notes), so the form is switched off. #}
+  <form class="form journal-form">
     <fieldset disabled>
-      <label for="takeaway">Takeaway</label>
-      <textarea id="takeaway" name="text" rows="4"></textarea>
-      {# GAME-031: who can see it. #}
-      <fieldset>
-        <legend>Share</legend>
-        <label class="choice"><input type="radio" name="visibility" value="private" checked> Just me</label>
-        <label class="choice"><input type="radio" name="visibility" value="shared_named"> With name</label>
-        <label class="choice"><input type="radio" name="visibility" value="shared_anonymous"> Anonymous</label>
-        {# UI-031, SAFE-009 #}
-        <p class="hint">Anonymous hides your name from other players. Game organizers can still see who wrote it.</p>
-      </fieldset>
-      <button class="button" type="submit">Save</button>
+      <div class="card form-card">
+        {# UI-053, DEC-062: the text box sits right under the page title, so the title labels it. #}
+        <textarea id="takeaway" name="text" rows="4" placeholder="Write here" aria-labelledby="journal-title journal-session"></textarea>
+        {# GAME-030: the minimum comes from game-config.yaml. journal.notes makes it count as you type. #}
+        <p class="word-count" aria-live="polite">0 / {{ min_words }} words</p>
+        {# GAME-031: who can see it. #}
+        <fieldset class="choice-list">
+          <legend class="form-title">Share</legend>
+          <label class="choice"><input type="radio" name="visibility" value="private" checked> Just me</label>
+          <label class="choice"><input type="radio" name="visibility" value="shared_named"> With name</label>
+          <label class="choice"><input type="radio" name="visibility" value="shared_anonymous"> Anonymous</label>
+          {# UI-031, SAFE-009 #}
+          <p class="hint">Anonymous hides your name from other players. Game organizers can still see who wrote it.</p>
+        </fieldset>
+      </div>
+      {# UI-039: Submit with its points pill. #}
+      <button class="button" type="submit">Submit <span class="pill">+{{ journal_points }}</span></button>
     </fieldset>
   </form>
+  {# UI-039: Cancel goes back to Home without saving. #}
+  <a class="button button-secondary button-cancel" href="/">Cancel</a>
 {% endblock %}

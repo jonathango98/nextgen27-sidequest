@@ -2,7 +2,7 @@ import time
 
 import pytest
 import segno
-from playwright.sync_api import expect
+from playwright.sync_api import Page, expect
 
 from app.config import load_config
 from app.services import qr
@@ -127,3 +127,12 @@ def test_arch_004_zxing_reads_sq1_code_from_our_server(scanner_page, live_server
     assert read == [FAKE_SQ_CODE]
     assert outside == []
     assert scanner_page.problems == []
+
+
+def test_ui_030_back_to_my_code_sits_above_the_title(page: Page, live_server):
+    page.goto(f"{live_server}/scan")
+    back = page.get_by_role("link", name="Back to My Code")
+    title = page.get_by_role("heading", level=1)
+    assert back.bounding_box()["y"] < title.bounding_box()["y"]
+    back.click()
+    expect(page).to_have_url(f"{live_server}/code")

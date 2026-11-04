@@ -4,13 +4,16 @@ import os
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
+from fastapi.exception_handlers import http_exception_handler
 from fastapi.responses import PlainTextResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
+from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app.access_log import keep_queries_out_of_log
 from app.auth.csrf import CsrfFailed
 from app.auth.current import LoginRequired
 from app.auth.rate_limit import RateLimiter
+from app.auth.session import SessionKeyMissing, session_public_id
 from app.auth.staff import StaffLoginRequired, WrongRole
 from app.config import load_config
 from app.db import connect, db_path_from_env, migrate
@@ -28,6 +31,7 @@ from app.routes.player import (
     scan,
     wrapped,
 )
+from app.routes.screen import views as screen_views
 from app.routes.staff import console as staff_console
 from app.routes.staff import login as staff_login
 from app.routes.staff import usher as staff_usher
@@ -53,6 +57,29 @@ async def lifespan(app: FastAPI):
     yield
 
 
+def _logged_in(request: Request) -> bool:
+    # Cookie only, no database, so this works even when the database is what failed.
+    try:
+        return session_public_id(request) is not None
+    except SessionKeyMissing:
+        return False
+
+
+def _error_page(
+    request: Request, status: int, error_code: str | None, title: str, message: str
+) -> Response:
+    context = {"error_code": error_code, "message": message}
+    if request.headers.get("HX-Request"):
+        # API-005: HTMX swaps in the small partial, not a whole page.
+        return templates.TemplateResponse(
+            request, "partials/error.html", context, status_code=status
+        )
+    context |= {"title": title, "logged_in": _logged_in(request)}
+    return templates.TemplateResponse(
+        request, "error.html", context, status_code=status
+    )
+
+
 def create_app() -> FastAPI:
     # API-001: only routes in 06-api-and-screens.md, so FastAPI's built-in docs pages are off.
     app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None, lifespan=lifespan)
@@ -67,6 +94,7 @@ def create_app() -> FastAPI:
     app.include_router(staff_login.router)
     app.include_router(staff_console.router)
     app.include_router(staff_usher.router)
+    app.include_router(screen_views.router)
     # Screen skeleton (UI-030): plain pages, no game logic yet.
     for module in (home, scan, quests, journal, box, wrapped):
         app.include_router(module.router)
@@ -125,6 +153,22 @@ def create_app() -> FastAPI:
                 "message": GAME_NOT_ON_MESSAGES[exc.error_code],
             },
             status_code=423,
+        )
+
+    @app.exception_handler(StarletteHTTPException)
+    async def not_found(request: Request, exc: StarletteHTTPException):
+        # API-005, API-021: 404 NOT_FOUND gets a friendly page. Other HTTP errors keep the default.
+        if exc.status_code != 404:
+            return await http_exception_handler(request, exc)
+        return _error_page(
+            request, 404, "NOT_FOUND", "Page not found", "We couldn't find that."
+        )
+
+    @app.exception_handler(Exception)
+    def server_error(request: Request, exc: Exception):
+        # A crash shows no details to the phone. The server still logs it.
+        return _error_page(
+            request, 500, None, "Something went wrong", "Please try again in a minute."
         )
 
     @app.get("/health", response_class=PlainTextResponse)

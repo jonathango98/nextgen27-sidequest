@@ -1,0 +1,61 @@
+/* The main screen (UI-040 to UI-043). Dark screen tokens, read from the back of a ballroom. */
+
+.screen {
+  /* UI-041: game-config.yaml gives the smallest sizes in pixels at 1920x1080. One unit is 1/1080
+     of the screen height, or of a 16:9 frame on a narrow screen, so every size scales together. */
+  --screen-unit: calc(min(100vh, 100vw * 9 / 16) / 1080);
+  --screen-text: calc(var(--screen-text-min) * var(--screen-unit));
+  margin: 0;
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: var(--screen-text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--screen-text);
+  background: var(--color-screen-bg); /* UI-042 */
+  color: var(--color-screen-text);
+  font-family: var(--font-family);
+  font-size: var(--screen-text);
+  text-align: center;
+}
+
+.screen-brand {
+  margin: 0;
+  font-family: var(--font-family-display);
+  color: var(--color-screen-gold);
+}
+
+.screen-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--screen-text);
+  /* UI-043: each new view fades in slowly, so people can read it. */
+  transition: opacity 1s ease;
+}
+
+/* htmx puts this class on a view it has just swapped in, then takes it off. */
+.screen-view.htmx-added {
+  opacity: 0;
+}
+
+.screen-title {
+  margin: 0;
+  font-family: var(--font-family-display);
+  font-size: calc(var(--screen-text) * 2);
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.screen-note {
+  margin: 0;
+  color: var(--color-screen-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .screen-view {
+    transition: none;
+  }
+}

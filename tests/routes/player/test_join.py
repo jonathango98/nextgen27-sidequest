@@ -75,6 +75,12 @@ def _post(client, data, htmx=False):
     )
 
 
+def home_heading(html):
+    # The big score heading on Home, as read aloud: "120 points" (UI-036).
+    h1 = re.search(r"<h1[^>]*>(.*?)</h1>", html, re.DOTALL).group(1)
+    return " ".join(re.sub(r"<[^>]+>", " ", h1).split())
+
+
 def _players(db_path):
     conn = connect(db_path)
     rows = conn.execute("SELECT * FROM player").fetchall()
@@ -432,14 +438,14 @@ def test_arch_051_slow_signup_save_logs_timings_only(
 
 def test_data_030_home_shows_real_score(client, details, fake_pin, join_points):
     _join(client, details, fake_pin)
-    assert f"<h1>{join_points} points</h1>" in client.get("/").text
+    assert home_heading(client.get("/").text) == f"{join_points} points"
 
 
 def test_data_030_score_is_read_from_the_ledger_each_time(
     client, details, fake_pin, db_path, join_points
 ):
     _join(client, details, fake_pin)
-    assert f"<h1>{join_points} points</h1>" in client.get("/").text
+    assert home_heading(client.get("/").text) == f"{join_points} points"
     conn = connect(db_path)
     award(
         conn,
@@ -450,7 +456,7 @@ def test_data_030_score_is_read_from_the_ledger_each_time(
         source_id=1,
     )
     conn.close()
-    assert f"<h1>{2 * join_points} points</h1>" in client.get("/").text
+    assert home_heading(client.get("/").text) == f"{2 * join_points} points"
 
 
 def test_game_040_logging_in_and_refreshing_do_not_add_points(
@@ -471,5 +477,14 @@ def test_game_040_logging_in_and_refreshing_do_not_add_points(
     )
     assert response.status_code == 303
     for _ in range(3):
-        assert f"<h1>{join_points} points</h1>" in client.get("/").text
+        assert home_heading(client.get("/").text) == f"{join_points} points"
     assert len(_ledger(db_path)) == 1
+
+
+def test_ui_036_home_says_hi_by_first_name(client, details, fake_pin):
+    _join(client, details, fake_pin)
+    html = client.get("/").text
+    assert f'<p class="greeting">Hi, {details["first_name"]}</p>' in html
+    # SAFE-004: the first name only, never the last name.
+    greeting = re.search(r'<p class="greeting">([^<]*)</p>', html).group(1)
+    assert details["last_name"] not in greeting
