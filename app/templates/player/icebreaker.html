@@ -10,14 +10,7 @@
     <p class="hint">{{ connection.other_first_name }} · {{ connection.other_church }}</p>
     <h1>{{ connection.question }}</h1>
     <p>Just you two</p>
-    {# Saving waits on GAME-015 and GAME-016 (connections.answers), so the form is switched off. #}
-    <form class="form">
-      <fieldset disabled>
-        <label for="answer">Answer</label>
-        <input id="answer" name="answer" type="text" autocomplete="off">
-        <button class="button" type="submit">Save</button>
-      </fieldset>
-    </form>
+    {% include "player/partials/icebreaker_answer.html" %}
   {% else %}
     <h1>Icebreaker</h1>
     {% include "partials/error.html" %}

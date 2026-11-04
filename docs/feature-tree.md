@@ -5,7 +5,7 @@
 
 Every planned piece of work and what it needs first (ENG-105 to ENG-108), grouped by the week it is due (PRD-054). Pieces flow left to right in time: finishing one unlocks the pieces it points to. Run `/pick-task` to claim one.
 
-**Working** 25 · **In progress** 1 · **Ready** 10 · **Waiting** 12 · **Needs decision** 1
+**Working** 26 · **In progress** 0 · **Ready** 11 · **Waiting** 11 · **Needs decision** 1
 
 Colors: green Working, blue In progress, gold Ready, gray Waiting, red dashed Needs decision.
 
@@ -170,10 +170,9 @@ flowchart LR
   classDef ready fill:#fff4d6,stroke:#a87400,stroke-width:3px,color:#14151a
   classDef waiting fill:#f1f0eb,stroke:#c3c0b6,color:#545a66
   classDef decision fill:#fdeeec,stroke:#b42318,stroke-dasharray:4 3,color:#14151a
-  class app_foundation,auth_join_login,checkin_sessions,code_my_code,connections_meet,connections_scanner_camera,connections_table,game_state_controls,game_state_core,infra_hosting,look_base,look_screens,points_audit_log,points_ledger,points_score,ready_backups,ready_load_test,ready_logout,ready_rate_limits,ready_retention,screen_main,screens_skeleton,staff_accounts,staff_login,usher_console working
-  class connections_answers in_progress
-  class admin_audit_view,admin_players,admin_setup,checkin_window,explore_booths,game_state_auto_pause,home_pages,journal_notes,leaderboards_screen,wrapped_cards ready
-  class admin_award_revoke,blind_box_close_redemption,blind_box_handout,checkin_hall,connections_verse_picker,explore_items,journal_share_review,leaderboards_in_app,recap_screen,wrapped_collection,wrapped_save_image,wrapped_stat_cards waiting
+  class app_foundation,auth_join_login,checkin_sessions,code_my_code,connections_answers,connections_meet,connections_scanner_camera,connections_table,game_state_controls,game_state_core,infra_hosting,look_base,look_screens,points_audit_log,points_ledger,points_score,ready_backups,ready_load_test,ready_logout,ready_rate_limits,ready_retention,screen_main,screens_skeleton,staff_accounts,staff_login,usher_console working
+  class admin_audit_view,admin_players,admin_setup,checkin_window,connections_verse_picker,explore_booths,game_state_auto_pause,home_pages,journal_notes,leaderboards_screen,wrapped_cards ready
+  class admin_award_revoke,blind_box_close_redemption,blind_box_handout,checkin_hall,explore_items,journal_share_review,leaderboards_in_app,recap_screen,wrapped_collection,wrapped_save_image,wrapped_stat_cards waiting
   class screen_photobooth decision
 ```
 
@@ -184,6 +183,11 @@ flowchart LR
     1. As an admin, add a session whose start time is a minute or two from now, with the game on.
     2. Wait for that time and refresh a player page, you should see the paused note.
     3. Try to break it by setting the game to off before the time arrives, it should stay off and not become paused.
+- `connections.verse-picker`: When the question is about a favorite verse, players choose the book, chapter and verse from lists instead of typing. It saves as something like John 3:16. (S, medium, player-app, due fri dec 4)
+  - Try it:
+    1. Scan between two test players until you get the favorite verse question.
+    2. Choose a book, chapter and verse from the lists, you should see it saved in the usual form.
+    3. Try to break it by picking a chapter that is too high for that book, the lists should not let you.
 - `home.pages`: Home shows the player's real score and how close they are to the next blind box. A Quests page lists every quest and how many points it gives. An Open Box page shows how many blind boxes the player can collect and how to go and get them. (L, easy, player-app, due fri dec 11)
   - Try it:
     1. On the PR preview, join as a brand new Test Player 1. Home should show the starting score and the progress bar without breaking.
@@ -246,7 +250,7 @@ flowchart LR
 
 ## In progress
 
-- `connections.answers`: Each player can type in the answer their new friend gave, and gets points for meeting someone when they save it. Only those two players can ever see the answer. Friends from the same church get fewer points, and meeting a new church gives a bonus.
+- None
 
 ## Needs a decision
 
