@@ -117,6 +117,10 @@
   --font-size-form-title: 21px; /* "Takeaway" and "Share" */
   --textarea-min: 108px;
 
+  /* Open Box, from the Mix Open Box mockup */
+  --box-tile-min: 140px;
+  --font-size-box-number: 44px;
+
   /* Box progress bar: a thin black bar on a faint track, always with numbers (UI-051) */
   --progress-height: 4px;
   --color-track: rgba(30, 26, 28, 0.15);

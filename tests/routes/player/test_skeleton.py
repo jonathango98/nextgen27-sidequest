@@ -5,7 +5,7 @@ from fastapi.testclient import TestClient
 
 from app.auth.current import CurrentPlayer, get_current_player
 from app.config import load_config
-from app.main import create_app
+from app.main import create_app, templates
 from app.routes.player import journal
 
 FAKE_PLAYER = CurrentPlayer(public_id="testpid01", score=120)  # fake data (ENG-047)
@@ -157,7 +157,8 @@ def test_ui_030_journal_links_to_new_takeaway(client):
 
 def test_game_073_open_box_says_where_to_claim(client):
     html = client.get("/box").text
-    assert "Go to the game booth when it's open." in html
+    for step in ("Visit booth", "Show code", "Get box"):
+        assert f"<li>{step}</li>" in html
     assert 'href="/code">My Code</a>' in html
 
 
@@ -206,3 +207,48 @@ def test_game_036_journal_shows_a_session_name(client):
     assert (
         f'<p class="page-sub">{journal.PLACEHOLDER_SUMMARY[-1]["session"]}</p>' in html
     )
+
+
+def test_game_070_open_box_shows_each_box_and_its_points(client):
+    cfg = load_config()["blind_box"]
+    html = client.get("/box").text
+    labels = re.findall(r'<span class="box-label">([^<]+)</span>', html)
+    # GAME-070, GAME-071: one box every milestone_points, up to max_per_player.
+    assert labels == [
+        f"{n * cfg['milestone_points']} pts"
+        for n in range(1, cfg["max_per_player"] + 1)
+    ]
+    assert '<p class="page-sub">0 ready</p>' in html  # pretend until home.pages
+
+
+def test_game_077_open_box_has_no_boxes_left_counter(client):
+    assert "left" not in page_text(client.get("/box").text).lower()
+
+
+def test_ui_051_a_ready_box_says_ready_in_words():
+    cfg = load_config()["blind_box"]
+    boxes = [
+        {"number": n, "points": n * cfg["milestone_points"], "ready": n == 1}
+        for n in range(1, cfg["max_per_player"] + 1)
+    ]
+    html = templates.get_template("player/box.html").render(boxes=boxes, ready=1)
+    assert re.search(
+        r'<li class="box-tile box-ready">\s*<span class="box-number">1</span>'
+        r'\s*<span class="box-label">Ready</span>',
+        html,
+    )
+
+
+def test_ui_039_journal_has_cancel_back_to_home(client):
+    html = client.get("/journal/new").text
+    assert (
+        '<a class="button button-secondary button-cancel" href="/">Cancel</a>' in html
+    )
+
+
+def test_ui_030_takeaways_has_a_back_link_to_home(client):
+    assert link_to("/", "Back to home").search(client.get("/summary").text)
+
+
+def page_text(html):
+    return " ".join(re.sub(r"<[^>]+>", " ", html).split())

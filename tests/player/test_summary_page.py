@@ -23,3 +23,15 @@ def test_ui_038_summary_cards_are_frosted_glass(page: Page, live_server):
     card = page.locator(".takeaway-card").first
     color = card.evaluate("(el) => getComputedStyle(el).backgroundColor")
     assert color.startswith("rgba(255, 255, 255")
+
+
+def test_ui_030_back_to_home_sits_above_the_title_and_goes_home(
+    page: Page, live_server
+):
+    page.goto(f"{live_server}/summary")
+    back = page.get_by_role("link", name="Back to home")
+    title = page.get_by_role("heading", level=1)
+    assert back.bounding_box()["y"] < title.bounding_box()["y"]
+    assert back.bounding_box()["height"] >= load_config()["ui"]["min_tap_target_px"]
+    back.click()
+    expect(page).to_have_url(f"{live_server}/")
