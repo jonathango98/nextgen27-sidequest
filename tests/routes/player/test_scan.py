@@ -192,6 +192,109 @@ def test_safe_006_icebreaker_hidden_from_everyone_else(db):
     assert c.get("/connections/999").text == response.text
 
 
+def _post_answer(c, connection_id, answer="Example answer", token=True, htmx=True):
+    data = {"answer": answer}
+    if token:
+        data["csrf_token"] = c.cookies.get(csrf.COOKIE)
+    headers = {"HX-Request": "true"} if htmx else {}
+    return c.post(f"/connections/{connection_id}/answer", data=data, headers=headers)
+
+
+def test_game_016_saving_an_answer_shows_the_points_earned(db):
+    c, _ = db
+    met_id = _connection_id(_post_scan(c, "testpid02"))
+    response = _post_answer(c, met_id)
+    assert response.status_code == 200
+    assert "<html" not in response.text  # API-002: only the answer card
+    points = load_config()["points"]["connect_same_church"]  # AI-013
+    assert f"Saved! You earned {points} points." in response.text
+    assert "Example answer" in response.text
+    assert "<form" not in response.text
+
+
+def test_game_015_icebreaker_shows_your_saved_answer_instead_of_the_form(db):
+    c, _ = db
+    met_id = _connection_id(_post_scan(c, "testpid02"))
+    form = c.get(f"/connections/{met_id}").text
+    assert f'hx-post="/connections/{met_id}/answer"' in form
+    assert "Test's answer" in form
+    _post_answer(c, met_id)
+    page = c.get(f"/connections/{met_id}").text
+    assert "Example answer" in page
+    assert 'name="answer"' not in page
+
+
+def test_safe_006_other_player_never_sees_your_answer(db):
+    c, _ = db
+    met_id = _connection_id(_post_scan(c, "testpid02"))
+    _post_answer(c, met_id, answer="Example answer zq9")
+    _as(c, "testpid02")
+    page = c.get(f"/connections/{met_id}").text
+    assert "Example answer zq9" not in page
+    assert 'name="answer"' in page  # they still type their own
+
+
+def test_safe_006_someone_outside_the_pair_cannot_save(db):
+    c, _ = db
+    met_id = _connection_id(_post_scan(c, "testpid02"))
+    _as(c, "testpid03")
+    response = _post_answer(c, met_id)
+    assert response.status_code == 404
+    assert 'data-error-code="NOT_FOUND"' in response.text
+    assert "<form" not in response.text
+
+
+def test_arch_038_answer_needs_csrf_token(db):
+    c, _ = db
+    met_id = _connection_id(_post_scan(c, "testpid02"))
+    response = _post_answer(c, met_id, token=False)
+    assert response.status_code == 400
+    assert 'data-error-code="BAD_INPUT"' in response.text
+
+
+def test_game_016_saving_twice_says_already_done(db):
+    c, _ = db
+    met_id = _connection_id(_post_scan(c, "testpid02"))
+    _post_answer(c, met_id)
+    response = _post_answer(c, met_id, answer="Another answer")
+    assert response.status_code == 409
+    assert 'data-error-code="ALREADY_DONE"' in response.text
+    assert "Example answer" in response.text  # the first answer stays
+
+
+def test_api_005_blank_answer_keeps_the_form(db):
+    c, _ = db
+    met_id = _connection_id(_post_scan(c, "testpid02"))
+    response = _post_answer(c, met_id, answer="   ")
+    assert response.status_code == 400
+    assert "Type their answer first." in response.text
+    assert 'name="answer"' in response.text
+
+
+@pytest.mark.parametrize(("state", "code"), [("paused", "PAUSED"), ("off", "GAME_OFF")])
+def test_api_020_answer_while_game_not_on_is_423(db, state, code):
+    c, _ = db
+    met_id = _connection_id(_post_scan(c, "testpid02"))
+    conn = connect(c.app.state.db_path)
+    set_state(conn, state)
+    conn.close()
+    response = _post_answer(c, met_id)
+    assert response.status_code == 423
+    assert f'data-error-code="{code}"' in response.text
+    assert (
+        'value="Example answer"' in response.text
+    )  # kept for when the game is back on
+
+
+def test_api_007_answer_works_without_javascript(db):
+    c, _ = db
+    met_id = _connection_id(_post_scan(c, "testpid02"))
+    response = _post_answer(c, met_id, htmx=False)
+    assert response.status_code == 200
+    assert "<html" in response.text
+    assert "Saved! You earned" in response.text
+
+
 def test_api_032_incoming_is_204_until_someone_scans(db):
     c, _ = db
     _as(c, "testpid02")

@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-04 · feat/connections-answers · Claude Opus 5.5 / @OwenTjandra
+
+- What: Builds `connections.answers`. Migration 0009 adds `icebreaker_answer` (one answer per person per connection, never about yourself, 1 to 200 characters). `POST /connections/{id}/answer` saves the answer the player typed for the other person and pays their points through the points service in the same transaction: `connect_same_church`, or `connect_other_church` plus `connect_new_church_bonus` the first time they meet someone from that church (saved in `church_met`). The icebreaker page shows the form, then the saved answer. Refused outside the pair (404), twice (409 `ALREADY_DONE`), blank or too long (400), and while paused or off (423). The retention cleanup deletes answers too. PR previews also seed Test Player 3 at Example Church A.
+- Why: Picked by Owen from the feature tree after `connections.meet` (#70). Due 2026-12-04 and unlocks 3 pieces.
+- Rule IDs: GAME-010, GAME-011, GAME-012, GAME-015, GAME-016, GAME-018, GAME-102, GAME-108, SAFE-005, SAFE-006, SAFE-014, DATA-021, DATA-027, DATA-032, API-002, API-005, API-007, API-020, AI-013, AI-041, AI-044, ENG-113, ENG-108
+- Status: Done
+- PR: #79
+
 ## 2026-11-03 · feat/checkin-sessions · Claude Opus 5.5 / @marcjason2012
 
 - What: Builds `checkin.sessions`. Migration 0007 adds `session` (title, optional `starts_at`, `checkin_open_minutes` required with a start time, no rooms) and `check_in` with both DATA-022 uniques, which `checkin.window` fills. `app/services/sessions.py` adds and edits sessions and ends one. Start times are typed in `game.timezone` and saved in UTC. End session sets `ended_at`, sets `checkin_closed_at` if empty, and turns a paused game on, with the audit rows, in one transaction. `game_state.change_in_transaction()` lets it reuse the Start button's audited change. Agreed with @marcjason2012 before building: an off game stays off, and a session that already ended changes nothing, so a second press never resumes a re-paused game. New `GET`/`POST /admin/sessions` and `POST /admin/sessions/{public_id}/end` (both in 06), admin only, linked from the admin console. End session asks first and swaps the list with HTMX. Retention deletes `check_in` and keeps `session`. PR previews seed Example Session 2 with no start time (ENG-113). Checked at 360px in Chromium and WebKit.

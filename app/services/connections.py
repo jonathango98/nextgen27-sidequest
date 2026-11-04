@@ -1,14 +1,14 @@
 """Meeting someone: one player scans another's My Code (GAME-013, GAME-014, GAME-017).
 
-The server checks every rule before it saves anything (ARCH-026). Points are not given here.
-They come when each player saves their answer (GAME-016, connections.answers).
+The server checks every rule before it saves anything (ARCH-026). A scan gives no points.
+They come when each player saves the answer they typed for the other (GAME-016).
 """
 
 import random
 import sqlite3
 from dataclasses import dataclass
 
-from app.services import churches, players
+from app.services import churches, players, points
 from app.services.game_state import require_game_on
 from app.services.players import NOT_FOUND, ScanRefused
 
@@ -29,9 +29,23 @@ QUESTIONS = {
 OWN_CODE = (400, "BAD_INPUT", "That's your own code! Scan a friend's.")
 ALREADY_CONNECTED = (409, "ALREADY_CONNECTED", "You two are already connected!")
 
+# Not a game number: the same limit as the check in migration 0009, so an answer can't
+# become a message (SAFE-005).
+ANSWER_MAX_CHARS = 200
+EMPTY_ANSWER = (400, "BAD_INPUT", "Type their answer first.")
+LONG_ANSWER = (400, "BAD_INPUT", f"Keep it to {ANSWER_MAX_CHARS} characters.")
+ALREADY_ANSWERED = (409, "ALREADY_DONE", "You already saved this answer.")
+
 # ENG-113: the hand test scans between two phones, so a preview also gets Test Player 2,
 # from another church. No pair is saved, so the first scan on the preview is a new one.
 PREVIEW_FRIEND = ("Test", "Player 2")
+# ENG-113: connections.answers also tests a same-church pair, and someone outside a pair,
+# so a preview gets Test Player 3 from Test Player 1's church.
+PREVIEW_SAME_CHURCH = ("Test", "Player 3")
+
+
+class AnswerRefused(ScanRefused):
+    """A refused answer, with a status, error code, and message like a refused scan (API-005)."""
 
 
 @dataclass(frozen=True)
@@ -40,6 +54,7 @@ class Connection:
     question: str
     other_first_name: str  # SAFE-004: other players see first name and church only
     other_church: str
+    my_answer: str | None = None  # SAFE-006: only ever the answer this player typed
 
 
 def _player_id(conn: sqlite3.Connection, public_id: str) -> int | None:
@@ -109,11 +124,14 @@ def for_player(
 ) -> Connection | None:
     """The connection as one of its two players sees it, or None for anyone else (SAFE-006)."""
     row = conn.execute(
-        "SELECT c.id, c.question_category, p.first_name, ch.name AS church"
+        "SELECT c.id, c.question_category, p.first_name, ch.name AS church,"
+        " a.answer_text"
         " FROM connection AS c"
         " JOIN player AS p ON p.id = CASE WHEN c.player_low_id = :me"
         "   THEN c.player_high_id ELSE c.player_low_id END"
         " JOIN church AS ch ON ch.id = p.church_id"
+        " LEFT JOIN icebreaker_answer AS a"
+        "   ON a.connection_id = c.id AND a.typed_by_player_id = :me"
         " WHERE c.id = :id AND :me IN (c.player_low_id, c.player_high_id)",
         {"id": connection_id, "me": player_id},
     ).fetchone()
@@ -124,7 +142,100 @@ def for_player(
         question=QUESTIONS[row["question_category"]],
         other_first_name=row["first_name"],
         other_church=row["church"],
+        my_answer=row["answer_text"],
     )
+
+
+def _insert_answer(conn, connection_id: int, about_id: int, me: int, text: str) -> int:
+    try:
+        return conn.execute(
+            "INSERT INTO icebreaker_answer"
+            " (connection_id, about_player_id, typed_by_player_id, answer_text)"
+            " VALUES (?, ?, ?, ?)",
+            (connection_id, about_id, me, text),
+        ).lastrowid
+    except sqlite3.IntegrityError as error:
+        # DATA-032: the unique row is the duplicate check, so two taps on Save pay once.
+        if str(error).startswith("UNIQUE constraint failed: icebreaker_answer."):
+            raise AnswerRefused(*ALREADY_ANSWERED) from error
+        raise
+
+
+def _awards(conn, pair, me: int, points_cfg: dict) -> list[tuple[str, int]]:
+    """The points this answer earns its typer (GAME-010, GAME-011, GAME-012)."""
+    # GAME-018: same church means the churches the two picked at sign-up, saved at the scan.
+    if pair["is_same_church"]:
+        return [("connect_same_church", points_cfg["connect_same_church"])]
+    awards = [("connect_other_church", points_cfg["connect_other_church"])]
+    # GAME-011, DATA-021: the bonus row is the "first time" check, judged for this player only.
+    first_time = conn.execute(
+        "INSERT OR IGNORE INTO church_met (player_id, church_id, connection_id)"
+        " VALUES (?, ?, ?)",
+        (me, pair["other_church_id"], pair["id"]),
+    ).rowcount
+    if first_time:
+        awards.append(
+            ("connect_new_church_bonus", points_cfg["connect_new_church_bonus"])
+        )
+    return awards
+
+
+def save_answer(
+    conn: sqlite3.Connection,
+    *,
+    connection_id: int,
+    player_id: int,
+    text: str,
+    config: dict,
+) -> int:
+    """Save the answer this player typed for the other person, and give their points.
+
+    Returns the points earned (GAME-016). Raises AnswerRefused, or GameNotOn while paused
+    or off (GAME-102, GAME-108), and then saves nothing.
+    """
+    text = text.strip()
+    if not text:
+        raise AnswerRefused(*EMPTY_ANSWER)
+    if len(text) > ANSWER_MAX_CHARS:
+        raise AnswerRefused(*LONG_ANSWER)
+
+    # ARCH-013: IMMEDIATE takes the write lock first, so two taps on Save queue.
+    conn.execute("BEGIN IMMEDIATE")
+    try:
+        # ARCH-042: read the state inside the transaction that saves the answer.
+        require_game_on(conn)
+        pair = conn.execute(
+            "SELECT c.id, c.is_same_church, other.id AS other_id,"
+            " other.church_id AS other_church_id"
+            " FROM connection AS c"
+            " JOIN player AS other ON other.id = CASE WHEN c.player_low_id = :me"
+            "   THEN c.player_high_id ELSE c.player_low_id END"
+            " WHERE c.id = :id AND :me IN (c.player_low_id, c.player_high_id)",
+            {"id": connection_id, "me": player_id},
+        ).fetchone()
+        if pair is None:
+            raise AnswerRefused(
+                *NOT_FOUND
+            )  # SAFE-006: outside the pair, same as missing
+        # GAME-015: each person types the other person's answer.
+        answer_id = _insert_answer(conn, pair["id"], pair["other_id"], player_id, text)
+        earned = 0
+        for reason, amount in _awards(conn, pair, player_id, config["points"]):
+            # AI-041: every award goes through the one points service, in this transaction.
+            points.award(
+                conn,
+                player_id=player_id,
+                reason_code=reason,
+                amount=amount,
+                source_type="icebreaker_answer",
+                source_id=answer_id,
+            )
+            earned += amount
+    except BaseException:
+        conn.execute("ROLLBACK")
+        raise
+    conn.execute("COMMIT")
+    return earned
 
 
 def latest_id(conn: sqlite3.Connection, player_id: int) -> int:
@@ -148,7 +259,9 @@ def incoming(conn: sqlite3.Connection, player_id: int, after: int) -> list[Conne
 
 
 def seed_preview(conn: sqlite3.Connection, config: dict) -> list[str]:
-    """Adds Test Player 2 to a PR preview, with the preview PIN (ENG-113, AI-047)."""
+    """Adds Test Players 2 and 3 to a PR preview, with the preview PIN (ENG-113, AI-047)."""
     return players.seed_preview_player(
         conn, config, PREVIEW_FRIEND, churches.EXAMPLE_CHURCHES[1]
+    ) + players.seed_preview_player(
+        conn, config, PREVIEW_SAME_CHURCH, churches.EXAMPLE_CHURCHES[0]
     )
