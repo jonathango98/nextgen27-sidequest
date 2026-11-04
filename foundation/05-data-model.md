@@ -2,8 +2,8 @@
 
 - Status: PROPOSED (developers confirm at kickoff; constraints marked LOCKED are required whatever the final schema looks like)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.4.0
-- Last updated: 2026-10-28
+- Version: 1.5.0
+- Last updated: 2026-11-04
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -64,6 +64,7 @@ This file lists the tables, their fields, and the database constraints that enfo
 | `state` | text | `on`, `paused`, or `off` (GAME-100) |
 | `wrapped_unlocked` | boolean | WRAP-002 |
 | `redemption_closed_at` | timestamp, nullable | Set when an admin closes blind box redemption on Sunday (GAME-078) |
+| `screen_off_view` | text | `offline` or `recap`: what the main screen shows while the game is off (UI-044). Starts as `offline` |
 | `updated_at`, `updated_by` | timestamp, staff ID | Every change is also audited |
 
 - **DATA-013** [LOCKED] GameState has exactly one row. A check constraint keeps `state` to the three allowed values.

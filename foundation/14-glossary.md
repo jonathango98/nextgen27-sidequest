@@ -2,8 +2,8 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.2.1
-- Last updated: 2026-10-28
+- Version: 1.2.2
+- Last updated: 2026-11-04
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -39,7 +39,7 @@ Use these words the same way in code, copy, issues, and PRs.
 | Last initial | The first letter of a player's last name, shown after the first name on leaderboards | GAME-088 |
 | Ledger | The PointLedger table. Score is the sum of its rows for a player | DATA-030 |
 | LOCKED | Decided. Build it | README |
-| Main screen | The big screen in the ballroom showing leaderboards and the takeaway wall between sessions | UI-040 |
+| Main screen | The big screen page, opened from a secret link, that takes turns showing leaderboards, the takeaway wall, and photobooth pictures while the game is on or paused | UI-040, ARCH-037 |
 | Milestone | Every 300 points of score, which unlocks one blind box | GAME-070 |
 | My Code | A player's personal QR code. It changes every 30 seconds | GAME-001 |
 | OPEN | Not decided. Do not build behavior that depends on it | README |
@@ -58,7 +58,7 @@ Use these words the same way in code, copy, issues, and PRs.
 | SQ1 | Version 1 of the QR payload format | ARCH-020 |
 | Summary page | Shared takeaways grouped by session, for signed-in players | SAFE-017 |
 | Takeaway | A short reflection of at least 15 words written after a session | GAME-030 |
-| Takeaway wall | The main screen view of approved shared takeaways | SAFE-018 |
+| Takeaway wall | The main screen view that shows one approved shared takeaway at a time | SAFE-018 |
 | TOTP | Time-based one-time code. How My Code and check-in codes rotate | ARCH-021 |
 | Usher | Game-day volunteer who scans for booths, the photobooth, hidden items, and blind boxes | GAME-112 |
 | Visibility | Private, shared with name, or shared anonymously | GAME-031 |

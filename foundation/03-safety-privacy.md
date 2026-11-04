@@ -2,8 +2,8 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.2.0
-- Last updated: 2026-10-27
+- Version: 1.3.0
+- Last updated: 2026-11-04
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -22,7 +22,7 @@ These are LOCKED. No feature, playtest, or deadline changes them without a Found
 - **SAFE-007** [LOCKED] Shared takeaways are reviewed before anyone else can see them.
 - **SAFE-009** [LOCKED] "Anonymous" means anonymous to other players only. Admins can still see who wrote an anonymous post, so a concerning post can be followed up. The Journal form says this in plain words next to the choice (UI-031).
 - **SAFE-011** [LOCKED] No money anywhere. Points cannot be bought. The blind box is a free mystery box earned through play.
-- **SAFE-013** [LOCKED] The game never competes with the program. It is paused during every session (GAME-101), and the main screen shows game content only between sessions (UI-040).
+- **SAFE-013** [LOCKED] The game never competes with the program. It is paused during every session (GAME-101), and screens inside the hall show the program during talks, not the main screen (OPS-007). The main screen itself stays on while paused, for screens outside the hall (UI-040, DEC-069).
 - **SAFE-024** [LOCKED] The main screen never shows a photo of a minor without consent.
 
 ## 2. Minors
@@ -30,6 +30,7 @@ These are LOCKED. No feature, playtest, or deadline changes them without a Found
 - **SAFE-019** [LOCKED] Under-18 players appear on leaderboards and the takeaway wall the same way as everyone else: first name and church, plus the last initial on leaderboards (GAME-088).
 - **SAFE-020** [PROPOSED] The under-18 answer is visible to admins only. Players, ushers, and the main screen never see it.
 - **SAFE-025** [PROPOSED] v1 has no photo upload of any kind. This keeps SAFE-024 simple: the app holds no photos. The photobooth is a physical booth, and the app only records the visit.
+- **SAFE-038** [OPEN] Whether the main screen may show pictures from the photobooth's own service, who runs that service, and how consent is checked for photos of under-18 players (SAFE-024). The app itself still stores no photos (SAFE-025). Until this is decided, the photobooth view on the main screen says only that it is coming soon (DEC-071).
 - **SAFE-026** [LOCKED] Hidden items stay in conference areas only. Never guest floors, restrooms, stairwells, or parking. See SAFE-010.
 - **SAFE-015** [LOCKED] Leadership checks these rules against the organization's child safety policy as part of approval.
 - **SAFE-027** [PROPOSED] The game has no automatic hours (GAME-106). An admin sets the game to off at the end of each game day by hand (OPS-005, DEC-049). Owner: leadership.
@@ -80,7 +81,7 @@ Legend: Yes = can see. No = cannot see. Own = only their own record.
 - **SAFE-012** [LOCKED] Prizes are claimed in person on Sunday (GAME-090).
 - **SAFE-014** [PROPOSED] Player data is kept for 365 days after the event, so Wrapped stays open for a year (WRAP-004, DEC-049). On that date every record linked to a player is deleted: names, the under-18 answer, PIN hashes, scores and point history, connections, icebreaker answers, takeaways, check-ins, claims, and audit rows (DEC-053). This covers the server, Railway backups (ARCH-053), and the real data folder (OPS-042). Only totals with no link to a person may stay. Owner: leadership, checked against the child safety policy (SAFE-015). Config: `data.retention_days_after_event`.
 - **SAFE-017** [LOCKED] The summary page (shared takeaways) is visible to signed-in players only. It is not a public web page.
-- **SAFE-018** [LOCKED] The main screen shows a takeaway wall with approved shared takeaways only, between sessions only. Named posts show first name and church. Anonymous posts show "Anonymous".
+- **SAFE-018** [LOCKED] The main screen shows a takeaway wall with approved shared takeaways only, one at a time, while the game is on or paused (DEC-069). Named posts show first name and church. Anonymous posts show "Anonymous".
 
 ## 7. Second-person review
 

@@ -5,7 +5,7 @@
 
 Every planned piece of work and what it needs first (ENG-105 to ENG-108), grouped by the week it is due (PRD-054). Pieces flow left to right in time: finishing one unlocks the pieces it points to. Run `/pick-task` to claim one.
 
-**Working** 22 · **In progress** 1 · **Ready** 7 · **Waiting** 18 · **Needs decision** 0
+**Working** 22 · **In progress** 1 · **Ready** 7 · **Waiting** 18 · **Needs decision** 1
 
 Colors: green Working, blue In progress, gold Ready, gray Waiting, red dashed Needs decision.
 
@@ -69,6 +69,7 @@ flowchart LR
     ready_retention["ready.retention<br/>M · hard"]
   end
   subgraph w_2027_01_15 ["Due Fri Jan 15"]
+    screen_photobooth["screen.photobooth<br/>M · medium"]
     wrapped_cards["wrapped.cards<br/>L · medium"]
     wrapped_stat_cards["wrapped.stat-cards<br/>L · medium"]
     wrapped_collection["wrapped.collection<br/>M · hard"]
@@ -143,6 +144,7 @@ flowchart LR
   staff_login --> screen_main
   game_state_core --> screen_main
   game_state_controls --> screen_main
+  screen_main --> screen_photobooth
   game_state_core --> wrapped_cards
   staff_login --> wrapped_cards
   points_audit_log --> wrapped_cards
@@ -172,6 +174,7 @@ flowchart LR
   class screen_main in_progress
   class admin_players,admin_setup,checkin_sessions,connections_meet,explore_booths,home_pages,wrapped_cards ready
   class admin_audit_view,admin_award_revoke,blind_box_close_redemption,blind_box_handout,checkin_hall,checkin_window,connections_answers,connections_verse_picker,explore_items,game_state_auto_pause,journal_notes,journal_share_review,leaderboards_in_app,leaderboards_screen,recap_screen,wrapped_collection,wrapped_save_image,wrapped_stat_cards waiting
+  class screen_photobooth decision
 ```
 
 ## Ready now
@@ -226,8 +229,8 @@ flowchart LR
 
 ## In progress
 
-- `screen.main`: The big-screen page for the room, with a dark look that is easy to read from far away. An admin sets up the screen so it can only show pages meant for everyone. It shows a waiting message while the game is paused, and it updates by itself.
+- `screen.main`: The big-screen page for the room and the TV outside, with a dark look that is easy to read from far away. It opens from a secret link with no login. It takes turns showing the player board, the church board, a takeaway and photobooth pictures, each saying coming soon until its own piece fills it in. When the game is off it shows "Side Quest is offline" or the recap, and an admin picks which one.
 
 ## Needs a decision
 
-- None
+- `screen.photobooth`: SAFE-038 (Jonathan)
