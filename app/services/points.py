@@ -9,6 +9,9 @@ import sqlite3
 from app.services import audit
 from app.services.game_state import current_state, require_game_on
 
+# GAME-040: the reason on join awards. Leaderboards read it to tell active players (GAME-089).
+JOIN_REASON = "join"
+
 
 class AlreadyAwarded(Exception):
     """This record already paid this player (DATA-027). Routes map it to their own 409 code."""
@@ -102,7 +105,7 @@ def award_join(
             return None
         if state != "paused":
             require_game_on(conn)
-        return _save_award(conn, player_id, "join", amount, "player", player_id)
+        return _save_award(conn, player_id, JOIN_REASON, amount, "player", player_id)
 
     return _in_transaction(conn, write)
 

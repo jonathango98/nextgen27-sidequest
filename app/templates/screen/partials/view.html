@@ -1,7 +1,7 @@
 {# UI-040, API-031: one main screen view. Every rotate_seconds it asks for the next view and swaps
    itself out. If that fails, it stays up and asks again at the next turn.
-   Coming soon until: players, churches (leaderboards.screen), takeaways and recap (recap.screen),
-   photobooth (screen.photobooth, SAFE-038). #}
+   Players and churches show the leaderboards (GAME-086, GAME-081). Coming soon until: takeaways
+   and recap (recap.screen), photobooth (screen.photobooth, SAFE-038). #}
 {% set titles = {
   "players": "Top players",
   "churches": "Top churches",
@@ -14,5 +14,24 @@
       hx-get="/screen/{{ next }}?{{ param }}={{ key | urlencode }}"
       hx-trigger="every {{ rotate_seconds }}s" hx-swap="outerHTML">
   <h1 class="screen-title">{{ titles[view] }}</h1>
-  {% if view != "offline" %}<p class="screen-note">Coming soon</p>{% endif %}
+  {% if view == "players" or view == "churches" %}
+    {% set rows = players if view == "players" else churches %}
+    {% if rows %}
+      <ol class="screen-board screen-board-{{ view }}">
+        {% for row in rows %}
+          <li class="screen-row">
+            <span class="screen-rank">{{ loop.index }}</span>
+            {# GAME-088, SAFE-004: first name and last initial only, never the full last name. #}
+            <span class="screen-name">
+              {%- if view == "players" %}{{ row.first_name }} {{ row.last_initial }}.{% else %}{{ row.church }}{% endif -%}
+            </span>
+            {% if view == "players" %}<span class="screen-church">{{ row.church }}</span>{% endif %}
+            <span class="screen-score">{{ row.score }}</span>
+          </li>
+        {% endfor %}
+      </ol>
+    {% else %}
+      <p class="screen-note">No points yet</p>
+    {% endif %}
+  {% elif view != "offline" %}<p class="screen-note">Coming soon</p>{% endif %}
 </main>

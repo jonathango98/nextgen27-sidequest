@@ -6,6 +6,7 @@ from playwright.sync_api import Browser, Page, expect
 from app.auth import screen_key
 from app.config import load_config
 from app.db import connect
+from app.services import points
 from app.services.game_state import set_state
 from app.services.staff import create_account
 
@@ -64,7 +65,9 @@ def test_ui_041_main_screen_at_1080p_is_dark_big_and_takes_turns(
             "e => getComputedStyle(e).backgroundColor"
         )
         assert background == "rgb(14, 16, 21)"  # --color-screen-bg
-        for selector in (".screen-brand", ".screen-title", ".screen-note"):
+        # The first view's body is the note while the board is empty, else its first name.
+        body = "#screen-view :is(.screen-note, .screen-name) >> nth=0"
+        for selector in (".screen-brand", ".screen-title", body):
             assert (
                 _px(page, selector, "font-size")
                 >= CFG["main_screen"]["min_text_px_1080p"]
@@ -143,3 +146,86 @@ def test_ui_044_admin_panel_at_min_width(
         conn.execute("UPDATE game_state SET screen_off_view = 'offline'")
         conn.commit()
         conn.close()
+
+
+def _fill_boards(test_db_path):
+    """A full board of fake players across fake churches (ENG-047), added once per test run."""
+    conn = connect(test_db_path)
+    try:
+        for n in range(CFG["leaderboard"]["main_screen_top_n"]):
+            church = f"Example Church Board {n}"
+            conn.execute("INSERT OR IGNORE INTO church (name) VALUES (?)", (church,))
+            if conn.execute(
+                "SELECT 1 FROM player WHERE public_id = ?", (f"fake-board-{n}",)
+            ).fetchone():
+                continue
+            player_id = conn.execute(
+                "INSERT INTO player"
+                " (public_id, first_name, last_name, church_id, is_under_18, pin_hash)"
+                " SELECT ?, 'Test Board', ?, id, 0, 'not-a-real-hash'"
+                " FROM church WHERE name = ?",
+                (f"fake-board-{n}", f"Player {n}", church),
+            ).lastrowid
+            points.award(
+                conn,
+                player_id=player_id,
+                reason_code="booth_visit",
+                amount=(n + 1) * CFG["points"]["booth_visit"],
+                source_type="booth",
+                source_id=1,
+            )
+    finally:
+        conn.close()
+
+
+@pytest.mark.parametrize("view", ["Top players", "Top churches"])
+def test_game_083_full_board_fits_a_1080p_screen(
+    browser: Browser, live_server, test_db_path, tmp_path, view
+):
+    _fill_boards(test_db_path)
+    context = browser.new_context(viewport=HD, ignore_https_errors=True)
+    page = context.new_page()
+    errors = _errors(page)
+    try:
+        # A fake clock moves the screen on a turn, instead of waiting on a real timer (API-031).
+        page.clock.install()
+        page.goto(_url(live_server))
+        expect(page.get_by_role("heading", name="Top players")).to_be_visible()
+        if view == "Top churches":
+            page.clock.run_for(CFG["main_screen"]["rotate_seconds"] * 1000)
+        expect(page.get_by_role("heading", name=view)).to_be_visible()
+        rows = page.locator(".screen-row")
+        expect(rows).to_have_count(CFG["leaderboard"]["main_screen_top_n"])
+        # UI-041: every row at least the config height, and no text under the config size.
+        for box in (rows.nth(i).bounding_box() for i in range(rows.count())):
+            assert box["height"] >= CFG["main_screen"]["min_row_px_1080p"]
+            assert (
+                box["y"] + box["height"] <= HD["height"]
+            )  # the whole board fits on screen
+        for selector in (".screen-rank", ".screen-name", ".screen-score"):
+            assert (
+                _px(page, f".screen-row >> nth=0 >> {selector}", "font-size")
+                >= CFG["main_screen"]["min_text_px_1080p"]
+            )
+        # UI-043: wait out the slow fade-in, so the screenshot shows the board as people see it.
+        expect(page.locator("#screen-view")).to_have_css("opacity", "1")
+        page.screenshot(path=tmp_path / "board-1080.png")
+        assert errors == []
+    finally:
+        context.close()
+
+
+def test_game_086_player_board_fits_min_width(
+    page: Page, live_server, test_db_path, tmp_path
+):
+    _fill_boards(test_db_path)
+    errors = _errors(page)
+    page.goto(_url(live_server))
+    expect(page.get_by_role("heading", name="Top players")).to_be_visible()
+    expect(page.locator(".screen-row").first).to_be_visible()
+    # SAFE-004, GAME-088: first name and last initial only.
+    expect(page.get_by_text("Test Board P.").first).to_be_visible()
+    width = CFG["ui"]["min_viewport_px"]
+    assert page.evaluate("document.documentElement.scrollWidth") <= width
+    page.screenshot(path=tmp_path / "board-360.png", full_page=True)
+    assert errors == []

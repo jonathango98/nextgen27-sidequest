@@ -28,6 +28,7 @@
 }
 
 .screen-view {
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -52,6 +53,52 @@
 .screen-note {
   margin: 0;
   color: var(--color-screen-muted);
+}
+
+/* GAME-083: one row per player or church, each at least the config row height (UI-041). */
+.screen-board {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  width: min(100%, calc(1600 * var(--screen-unit)));
+  display: flex;
+  flex-direction: column;
+}
+
+/* Fixed columns, so names, churches, and scores line up from row to row. */
+.screen-row {
+  min-height: calc(var(--screen-row-min) * var(--screen-unit));
+  display: grid;
+  grid-template-columns: 3ch minmax(0, 1fr) 5ch;
+  align-items: center;
+  gap: var(--screen-text);
+  text-align: left;
+  line-height: 1.2;
+}
+
+.screen-board-players .screen-row {
+  grid-template-columns: 3ch minmax(0, 1fr) minmax(0, 1fr) 5ch;
+}
+
+.screen-rank {
+  color: var(--color-screen-gold);
+}
+
+/* One line each, so a long name can't push the last row off the screen. */
+.screen-name,
+.screen-church {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.screen-church {
+  color: var(--color-screen-muted);
+}
+
+.screen-score {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 
 @media (prefers-reduced-motion: reduce) {

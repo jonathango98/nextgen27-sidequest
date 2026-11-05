@@ -1,8 +1,9 @@
 """The main screen (ARCH-037, UI-040, UI-044, API-031, DEC-069).
 GET /screen and the view partials in 06-api-and-screens.md only (API-001).
 
-No login: every page needs the screen key (ARCH-037). The views say coming soon until their own
-pieces fill them in: `leaderboards.screen`, `recap.screen`, and `screen.photobooth`.
+No login: every page needs the screen key (ARCH-037). The players and churches views show the
+leaderboards (GAME-086, GAME-081). The others say coming soon until their own pieces fill them in:
+`recap.screen` and `screen.photobooth`.
 """
 
 import sqlite3
@@ -14,7 +15,7 @@ from fastapi.responses import Response
 from app.auth.screen_key import PARAM, require_screen_key
 from app.db import get_db
 from app.rendering import templates
-from app.services import main_screen
+from app.services import leaderboards, main_screen
 
 VIEW = "screen/partials/view.html"
 # ARCH-037: never send the link, key and all, to another site, and stay out of search results.
@@ -33,7 +34,8 @@ def _render(
     request: Request, conn: sqlite3.Connection, key: str, view: str, name: str
 ) -> Response:
     shown = main_screen.showing(conn, view)
-    cfg = request.app.state.config["main_screen"]
+    config = request.app.state.config
+    cfg = config["main_screen"]
     context = {
         "view": shown,
         # UI-040: while the game is off, keep asking for the first view, so the screen comes back
@@ -47,6 +49,11 @@ def _render(
         "min_text": cfg["min_text_px_1080p"],  # UI-041
         "min_row": cfg["min_row_px_1080p"],  # UI-041
     }
+    # GAME-087: only read the boards when they are shown, never while the game is off.
+    if shown == "players":
+        context["players"] = leaderboards.top_players(conn, config["leaderboard"])
+    elif shown == "churches":
+        context["churches"] = leaderboards.top_churches(conn, config["leaderboard"])
     return templates.TemplateResponse(request, name, context, headers=HEADERS)
 
 
