@@ -200,7 +200,8 @@ def test_data_003_existing_takeaways_get_a_public_id_and_keep_their_data(tmp_pat
             (player, session, "Example takeaway two"),
         ],
     )
-    assert migrate(conn) == ["0011_add_takeaway_public_id.sql"]
+    # 0011 runs next. Later migrations may follow it, so only the first is checked.
+    assert migrate(conn)[0] == "0011_add_takeaway_public_id.sql"
     rows = conn.execute(
         "SELECT id, public_id, text, visibility, review_status FROM takeaway ORDER BY id"
     ).fetchall()
