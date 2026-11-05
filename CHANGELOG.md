@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Jonathan asked for a default view that shows everything without the lines, and a way to deselect a piece back to it.
 - Rule IDs: ENG-110, AI-042, AI-044
 - Status: Done
-- PR: draft
+- PR: #82
 
 ## 2026-11-04 · fix/55-migration-number-reuse · Claude Opus 5.5 / @jonathango98
 
