@@ -61,9 +61,11 @@
       <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
     {% endcall %}
     <div class="tile-row">
-      {% call tile("/journal/new", playing, "button button-secondary button-tile") %}
+      {# DEC-077: Write opens the player's own notes, which has Write a takeaway on top. GAME-108: own
+         notes stay readable while off, so it works like Read. The pill shows only while points can be earned. #}
+      {% call tile("/journal", reading, "button button-secondary button-tile") %}
         <span class="tile-text"><span class="tile-title">Write</span> <span class="tile-sub">A journal</span></span>
-        <span class="pill">+{{ journal_points }}</span>
+        {% if playing %}<span class="pill">+{{ journal_points }}</span>{% endif %}
       {% endcall %}
       {% call tile("/summary", reading, "button button-secondary button-tile") %}
         <span class="tile-text"><span class="tile-title">Read</span> <span class="tile-sub">All journals</span></span>

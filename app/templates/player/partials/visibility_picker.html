@@ -1,0 +1,13 @@
+{# GAME-031: who can read the note. The points are the same for every choice. #}
+<fieldset class="choice-list">
+  <legend class="form-title">Who can read this</legend>
+  {% for value, label in visibility_labels.items() %}
+    {# DEC-076: a note an admin turned down only offers Just me. #}
+    {% if value == "private" or can_share is not defined or can_share %}
+      <label class="choice"><input type="radio" name="visibility" value="{{ value }}" {% if visibility == value %}checked{% endif %} required> {{ label }}</label>
+    {% endif %}
+  {% endfor %}
+  {# UI-031, SAFE-009: these exact words, next to the choice. #}
+  <p class="hint">Anonymous hides your name from other players. Game organizers can still see who wrote it.</p>
+  <p class="hint">Shared notes show on All journals after an organizer reads them.</p>
+</fieldset>

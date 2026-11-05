@@ -20,6 +20,8 @@ UTC_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
 LOCAL_INPUT_FORMAT = "%Y-%m-%dT%H:%M"
 # Fake (SAFE-031). The hand test adds Example Session 1 itself (ENG-113).
 PREVIEW_SESSION = "Example Session 2"
+# An ended session, so players can write takeaways on the preview right away (journal.share-review).
+PREVIEW_ENDED_SESSION = "Example Ended Session"
 
 _COLUMNS = "id, public_id, title, starts_at, checkin_open_minutes, ended_at"
 
@@ -213,10 +215,20 @@ def end(conn: sqlite3.Connection, public_id: str, admin_id: int) -> Ended:
 
 
 def seed_preview(conn: sqlite3.Connection) -> list[str]:
-    """A PR preview starts with no sessions. Adds one fake session, once (ENG-113)."""
-    if conn.execute(
-        "SELECT 1 FROM session WHERE title = ?", (PREVIEW_SESSION,)
-    ).fetchone():
-        return []
-    _insert(conn, Details(PREVIEW_SESSION, None, None))
-    return [PREVIEW_SESSION]
+    """A PR preview starts with no sessions. Adds two fake sessions, once (ENG-113).
+
+    One is not ended yet, for End session. The other has ended, so takeaways are open.
+    """
+    added = []
+    for title, ended in ((PREVIEW_SESSION, False), (PREVIEW_ENDED_SESSION, True)):
+        if conn.execute("SELECT 1 FROM session WHERE title = ?", (title,)).fetchone():
+            continue
+        session_id = _insert(conn, Details(title, None, None))
+        if ended:
+            conn.execute(
+                "UPDATE session SET ended_at = strftime('%Y-%m-%dT%H:%M:%SZ', 'now')"
+                " WHERE id = ?",
+                (session_id,),
+            )
+        added.append(title)
+    return added

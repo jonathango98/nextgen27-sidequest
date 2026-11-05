@@ -2,7 +2,7 @@
 
 - Status: PROPOSED (developers confirm at kickoff)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.10.1
+- Version: 1.11.0
 - Last updated: 2026-11-04
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -43,6 +43,7 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 | GET | `/journal` | My takeaways | |
 | GET | `/journal/new` | Takeaway form for an ended session | GAME-036 |
 | POST | `/journal` | Submit a takeaway | GAME-030, GAME-033 |
+| POST | `/journal/{id}/visibility` | Change who can read your own takeaway. Refused while paused or off | GAME-031, DEC-076 |
 | GET | `/summary` | Shared takeaways grouped by session (signed-in only) | SAFE-017 |
 | GET | `/box` | Open Box: blind boxes earned, claimed, claimable, how to claim | GAME-073 |
 | GET | `/wrapped` | Wrapped cards (after unlock) | WRAP-002 |
@@ -70,8 +71,8 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 | POST | `/admin/sessions/{id}/end` | End a session: resume, open takeaways, close check-in if still open | GAME-026 |
 | POST | `/admin/sessions/{id}/open-checkin` | Open check-in by hand for a session with no start time | GAME-027 |
 | POST | `/admin/sessions/{id}/close-checkin` | Close check-in early | GAME-024 |
-| GET | `/admin/review` | Review queue for shared takeaways | SAFE-007 |
-| POST | `/admin/review/{id}` | Approve, reject, or hide | SAFE-040, SAFE-041 |
+| GET | `/admin/review` | Review queue for shared takeaways, one status at a time (waiting, approved, rejected, hidden) | SAFE-007, SAFE-029 |
+| POST | `/admin/review/{id}` | Approve, reject, or hide. Approve also undoes a reject or a hide | SAFE-040, SAFE-041, DEC-076 |
 | GET | `/admin/players` | Find players, see scores | |
 | POST | `/admin/players/{id}/award` | Manual award with a reason | GAME-111 |
 | POST | `/admin/players/{id}/revoke` | Manual revocation with a reason | GAME-111, GAME-114 |

@@ -8,6 +8,7 @@ from app.auth.current import CurrentPlayer, get_current_player
 from app.config import load_config
 from app.db import connect
 from app.main import create_app
+from app.services import journal
 from app.services.game_state import set_state
 from tests.conftest import seed_fake_players
 
@@ -42,8 +43,12 @@ def db(tmp_path):
     conn.close()
 
 
-def _post(c, text=None, session="pub-s1", token=True, htmx=True):
-    data = {"session": session, "text": words(MIN_WORDS) if text is None else text}
+def _post(c, text=None, session="pub-s1", token=True, htmx=True, visibility="private"):
+    data = {
+        "session": session,
+        "text": words(MIN_WORDS) if text is None else text,
+        "visibility": visibility,
+    }
     if token:
         data["csrf_token"] = c.cookies.get(csrf.COOKIE)
     headers = {"HX-Request": "true"} if htmx else {}
@@ -176,3 +181,198 @@ def test_game_031_notes_are_listed_by_session_as_just_me(db):
     texts = re.findall(r'<p class="takeaway-text">(\w+)', html)
     assert texts == ["third", "second", "first"]
     assert html.count('<span class="note-status">Just me</span>') == 3
+
+
+def test_game_031_each_note_shows_who_can_read_it(db):
+    c, _ = db
+    for visibility in ("shared_anonymous", "shared_named", "private"):
+        _post(c, visibility=visibility)
+    html = c.get("/journal").text
+    labels = re.findall(r'<span class="note-status">([^<]+)</span>', html)
+    assert labels == ["Just me", "Shared with my name", "Shared anonymously"]
+    # DEC-076: the player sees only their choice, never "waiting for review".
+    assert "review" not in html.lower()
+
+
+def test_game_031_a_missing_choice_saves_nothing(db):
+    c, conn = db
+    response = _post(c, visibility="")
+    assert response.status_code == 400
+    assert "Please choose who can read this." in response.text
+    assert _count(conn) == 0
+
+
+# DEC-076: change who can read a note from the Journal list.
+
+
+def _note(conn):
+    return conn.execute(
+        "SELECT public_id, visibility, review_status FROM takeaway ORDER BY id DESC"
+    ).fetchone()
+
+
+def _change(c, public_id, visibility, token=True, htmx=True):
+    data = {"visibility": visibility}
+    if token:
+        data["csrf_token"] = c.cookies.get(csrf.COOKIE)
+    headers = {"HX-Request": "true"} if htmx else {}
+    return c.post(
+        f"/journal/{public_id}/visibility",
+        data=data,
+        headers=headers,
+        follow_redirects=False,
+    )
+
+
+def test_dec_076_change_who_can_read_from_the_journal_list(db):
+    c, conn = db
+    _post(c)
+    note = _note(conn)["public_id"]
+    assert f'action="/journal/{note}/visibility"' in c.get("/journal").text
+    response = _change(c, note, "shared_anonymous")
+    assert response.status_code == 200
+    assert f'id="note-{note}"' in response.text
+    assert '<span class="note-status">Shared anonymously</span>' in response.text
+    assert 'role="status">Saved.' in response.text
+    assert tuple(_note(conn))[1:] == ("shared_anonymous", "pending")
+
+
+def test_dec_076_without_htmx_it_goes_back_to_the_journal(db):
+    c, conn = db
+    _post(c)
+    response = _change(c, _note(conn)["public_id"], "shared_named", htmx=False)
+    assert response.status_code == 303
+    assert response.headers["location"] == "/journal"
+    assert _note(conn)["visibility"] == "shared_named"
+
+
+@pytest.mark.parametrize("htmx", [True, False])
+def test_dec_076_someone_elses_note_is_not_found(db, htmx):
+    c, conn = db
+    _post(c)
+    note = _note(conn)["public_id"]
+    _as(c, "testpid02")
+    response = _change(c, note, "shared_named", htmx=htmx)
+    assert response.status_code == 404
+    assert "find that." in response.text
+    assert _note(conn)["visibility"] == "private"
+
+
+def test_dec_076_a_change_needs_the_csrf_token(db):
+    c, conn = db
+    _post(c)
+    response = _change(c, _note(conn)["public_id"], "shared_named", token=False)
+    assert response.status_code == 400
+    assert _note(conn)["visibility"] == "private"
+
+
+@pytest.mark.parametrize("state", ["paused", "off"])
+def test_dec_076_a_change_is_refused_while_paused_or_off(db, state):
+    c, conn = db
+    _post(c)
+    note = _note(conn)["public_id"]
+    set_state(conn, state)
+    response = _change(c, note, "shared_named")
+    assert response.status_code == 423
+    assert 'role="alert"' in response.text and f'id="note-{note}"' in response.text
+    assert _note(conn)["visibility"] == "private"
+
+
+def test_dec_076_a_turned_down_note_offers_only_just_me(db):
+    c, conn = db
+    _post(c, visibility="shared_named")
+    note = _note(conn)["public_id"]
+    admin = conn.execute(
+        "INSERT INTO staff_account (username, password_hash, role)"
+        " VALUES ('test-admin-1', 'not-a-real-hash', 'admin')"
+    ).lastrowid
+    journal.review(conn, admin_id=admin, takeaway_public_id=note, outcome="reject")
+    card = c.get("/journal").text
+    assert re.findall(r'name="visibility" value="(\w+)"', card) == ["private"]
+    response = _change(c, note, "shared_anonymous")
+    assert response.status_code == 400
+    assert "This note can only be kept private." in response.text
+    assert tuple(_note(conn))[1:] == ("shared_named", "rejected")
+
+
+# The Summary page: approved shared notes only (SAFE-007, SAFE-017, UI-038).
+
+
+def _admin(conn):
+    row = conn.execute(
+        "SELECT id FROM staff_account WHERE username = 'test-admin-1'"
+    ).fetchone()
+    if row:
+        return row[0]
+    return conn.execute(
+        "INSERT INTO staff_account (username, password_hash, role)"
+        " VALUES ('test-admin-1', 'not-a-real-hash', 'admin')"
+    ).lastrowid
+
+
+def _authors(html):
+    return re.findall(r'<p class="takeaway-author">([^<]+)</p>', html)
+
+
+def test_safe_007_summary_shows_only_approved_shared_notes(db):
+    c, conn = db
+    for word, visibility in (
+        ("named", "shared_named"),
+        ("anon", "shared_anonymous"),
+        ("waiting", "shared_named"),
+        ("private", "private"),
+    ):
+        _post(c, words(MIN_WORDS, word), visibility=visibility)
+    assert "No shared takeaways yet." in c.get("/summary").text
+    rows = conn.execute("SELECT public_id, text FROM takeaway").fetchall()
+    ids = {r["text"].split()[0]: r["public_id"] for r in rows}
+    for word in ("named", "anon"):
+        journal.review(
+            conn, admin_id=_admin(conn), takeaway_public_id=ids[word], outcome="approve"
+        )
+    _as(c, "testpid02")  # another signed-in player
+    html = c.get("/summary").text
+    texts = re.findall(r'<p class="takeaway-text">(\w+)', html)
+    assert texts == ["anon", "named"]  # newest first within the session
+    assert "waiting" not in html and "private" not in html
+
+
+def test_safe_009_summary_shows_anonymous_without_a_name(db):
+    c, conn = db
+    _post(c, words(MIN_WORDS, "anon"), visibility="shared_anonymous")
+    _post(c, words(MIN_WORDS, "named"), visibility="shared_named")
+    for (note,) in conn.execute("SELECT public_id FROM takeaway").fetchall():
+        journal.review(
+            conn, admin_id=_admin(conn), takeaway_public_id=note, outcome="approve"
+        )
+    html = c.get("/summary").text
+    assert _authors(html) == ["Test · Example Church A", "Anonymous"]
+    assert "Player 1" not in html  # SAFE-028: never the last name
+
+
+def test_ui_038_summary_is_grouped_newest_session_first(db):
+    c, conn = db
+    conn.execute(
+        "INSERT INTO session (public_id, title, ended_at)"
+        " VALUES ('pub-s3', 'Example Session 3', '2027-03-05T12:00:00Z')"
+    )
+    _post(c, words(MIN_WORDS, "early"), visibility="shared_named")
+    _post(c, words(MIN_WORDS, "late"), session="pub-s3", visibility="shared_named")
+    for (note,) in conn.execute("SELECT public_id FROM takeaway").fetchall():
+        journal.review(
+            conn, admin_id=_admin(conn), takeaway_public_id=note, outcome="approve"
+        )
+    html = c.get("/summary").text
+    titles = re.findall(r'<h2 class="session-title"[^>]*>([^<]+)</h2>', html)
+    assert titles == ["Example Session 3", "Example Session 1"]
+
+
+def test_safe_041_a_hidden_note_leaves_the_summary(db):
+    c, conn = db
+    _post(c, words(MIN_WORDS, "named"), visibility="shared_named")
+    note = _note(conn)["public_id"]
+    admin = _admin(conn)
+    journal.review(conn, admin_id=admin, takeaway_public_id=note, outcome="approve")
+    assert "named" in c.get("/summary").text
+    journal.review(conn, admin_id=admin, takeaway_public_id=note, outcome="hide")
+    assert "No shared takeaways yet." in c.get("/summary").text

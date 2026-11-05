@@ -2,7 +2,7 @@
 #
 # Status: Active
 # Owner: Jonathan (@jonathango98)
-# Version: 2.1.1
+# Version: 2.2.0
 # Last updated: 2026-11-04
 # Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 #
@@ -450,6 +450,7 @@ pieces:
       - Share one note with your name and keep another one private.
       - Open the summary as Test Player 2. Neither note should show yet.
       - Log in as Test Admin, approve the shared note, and reject another shared one. Test Player 2's summary should now show only the approved note, and each choice should be recorded.
+      - As Test Player 1, open your Journal list and change the private note to shared anonymously. It should not show on Test Player 2's summary until Test Admin approves it. The rejected note should only offer Just me.
       - "Try to break it: check the private note never shows for other players, and open the summary while logged out. It should send you to log in."
     needs: [journal.notes, staff.login, points.audit-log]
     open: []

@@ -3,7 +3,7 @@ import sqlite3
 import pytest
 from fastapi.testclient import TestClient
 
-from app.db import DatabaseError, connect, db_path_from_env, migrate
+from app.db import MIGRATIONS_DIR, DatabaseError, connect, db_path_from_env, migrate
 from app.main import create_app
 
 FAKE_PIN_HASH = "not-a-real-hash"  # fake data (ENG-047)
@@ -177,3 +177,36 @@ def test_arch_010_db_path_required(monkeypatch):
     monkeypatch.delenv("SQ_DB_PATH", raising=False)
     with pytest.raises(DatabaseError):
         db_path_from_env()
+
+
+def test_data_003_existing_takeaways_get_a_public_id_and_keep_their_data(tmp_path):
+    # journal.share-review: 0011 rebuilds the takeaway table, so notes saved before it must survive.
+    old = tmp_path / "old"
+    old.mkdir()
+    for path in sorted(MIGRATIONS_DIR.glob("*.sql")):
+        if int(path.name[:4]) <= 10:
+            (old / path.name).write_text(path.read_text())
+    conn = connect(tmp_path / "t.db")
+    migrate(conn, old)
+    player = _add_player(conn, _add_church(conn))
+    session = conn.execute(
+        "INSERT INTO session (public_id, title, ended_at)"
+        " VALUES ('pub-s1', 'Example Session 1', '2027-03-05T10:00:00Z')"
+    ).lastrowid
+    conn.executemany(
+        "INSERT INTO takeaway (player_id, session_id, text) VALUES (?, ?, ?)",
+        [
+            (player, session, "Example takeaway one"),
+            (player, session, "Example takeaway two"),
+        ],
+    )
+    assert migrate(conn) == ["0011_add_takeaway_public_id.sql"]
+    rows = conn.execute(
+        "SELECT id, public_id, text, visibility, review_status FROM takeaway ORDER BY id"
+    ).fetchall()
+    assert [(r["text"], r["visibility"], r["review_status"]) for r in rows] == [
+        ("Example takeaway one", "private", "not_needed"),
+        ("Example takeaway two", "private", "not_needed"),
+    ]
+    assert len({r["public_id"] for r in rows}) == 2
+    assert all(r["public_id"] for r in rows)

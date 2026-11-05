@@ -1,4 +1,4 @@
-{# GAME-030 to GAME-036: write a private takeaway for a session that has ended. #}
+{# GAME-030 to GAME-036: write a takeaway for a session that has ended. #}
 <div id="journal-form">
 {% if choices %}
   <form class="form journal-form" method="post" action="/journal" hx-post="/journal" hx-target="#journal-form" hx-swap="outerHTML" data-journal-form>
@@ -15,8 +15,9 @@
         {% for c in choices %}
           <label class="choice"><input type="radio" name="session" value="{{ c.public_id }}" data-paid="{{ c.paid|int }}" {% if c.public_id == picked %}checked{% endif %} required> {{ c.title }}{% if not c.paid %} <span class="pill">+{{ journal_points }}</span>{% endif %}</label>
         {% endfor %}
-        <p class="hint">Only you can read your notes. Points come once for each session.</p>
+        <p class="hint">Points come once for each session.</p>
       </fieldset>
+      {% include "player/partials/visibility_picker.html" %}
     </div>
     {# UI-039: Submit with its points pill, hidden when the picked session already paid. #}
     {% set picked_paid = choices | selectattr("public_id", "equalto", picked) | map(attribute="paid") | first %}

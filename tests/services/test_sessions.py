@@ -315,7 +315,12 @@ def test_arch_040_end_session_saves_all_or_nothing(conn, monkeypatch):
 # ENG-113: the PR preview seed.
 
 
-def test_eng_113_preview_seed_adds_one_fake_session_once(conn):
-    assert seed_preview(conn) == [sessions.PREVIEW_SESSION]
+def test_eng_113_preview_seed_adds_two_fake_sessions_once(conn):
+    both = [sessions.PREVIEW_SESSION, sessions.PREVIEW_ENDED_SESSION]
+    assert seed_preview(conn) == both
     assert seed_preview(conn) == []
-    assert [s.title for s in list_all(conn)] == [sessions.PREVIEW_SESSION]
+    by_title = {s.title: s for s in list_all(conn)}
+    assert sorted(by_title) == sorted(both)
+    # Only the second one has ended, so takeaways are open for it (GAME-036).
+    assert by_title[sessions.PREVIEW_SESSION].ended_at is None
+    assert by_title[sessions.PREVIEW_ENDED_SESSION].ended_at is not None
