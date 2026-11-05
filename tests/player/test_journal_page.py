@@ -3,18 +3,6 @@ from playwright.sync_api import Page, expect
 from app.config import load_config
 
 
-def test_ui_035_switched_off_submit_is_frosted_not_black(page: Page, live_server):
-    page.goto(f"{live_server}/journal/new")
-    save = page.get_by_role("button", name="Submit")
-    expect(save).to_be_disabled()
-    style = save.evaluate(
-        "(el) => { const s = getComputedStyle(el);"
-        " return {image: s.backgroundImage, color: s.backgroundColor}; }"
-    )
-    assert style["image"] == "none"
-    assert style["color"].startswith("rgba(255, 255, 255")
-
-
 def test_game_031_journal_fields_sit_on_a_card_with_submit_below(
     page: Page, live_server
 ):
@@ -22,8 +10,9 @@ def test_game_031_journal_fields_sit_on_a_card_with_submit_below(
     card = page.locator(".journal-form .card")
     # UI-053, DEC-062: the page title labels the text box.
     expect(card.get_by_role("textbox", name="Journal")).to_be_visible()
-    for choice in ("Just me", "With name", "Anonymous"):
-        expect(card.get_by_label(choice)).to_be_visible()
+    # GAME-036: the ended session is offered and picked. Sharing comes with journal.share-review.
+    expect(card.get_by_label("Example Session 1")).to_be_checked()
+    expect(card.get_by_label("Anonymous")).to_have_count(0)
     save = page.get_by_role("button", name="Submit").bounding_box()
     box = card.bounding_box()
     assert save["y"] >= box["y"] + box["height"]
@@ -72,5 +61,28 @@ def test_game_031_journal_list_fits_and_back_goes_home(page: Page, live_server):
 def test_ui_053_journal_text_box_is_named_by_the_title(page: Page, live_server):
     page.goto(f"{live_server}/journal/new")
     box = page.get_by_role("textbox")
-    expect(box).to_have_accessible_name("Journal Example Session 1")
+    expect(box).to_have_accessible_name("Journal What did you learn?")
     expect(page.get_by_text("Takeaway", exact=True)).to_have_count(0)
+
+
+def test_game_034_word_count_goes_up_as_you_type(page: Page, live_server):
+    page.goto(f"{live_server}/journal/new")
+    minimum = load_config()["limits"]["journal_min_words"]
+    page.get_by_role("textbox").fill("God is good - !")
+    expect(page.locator(".word-count")).to_have_text(f"3 / {minimum} words")
+
+
+def test_game_030_short_note_shows_how_many_more_words_and_keeps_text(
+    page: Page, live_server
+):
+    page.goto(f"{live_server}/journal/new")
+    minimum = load_config()["limits"]["journal_min_words"]
+    page.get_by_role("textbox").fill(" ".join(["listen"] * (minimum - 1)))
+    page.get_by_role("button", name="Submit").click()
+    expect(page.get_by_role("alert")).to_have_text("Add 1 more word to save this.")
+    expect(page.get_by_role("textbox")).to_have_value(
+        " ".join(["listen"] * (minimum - 1))
+    )
+    # The swapped-in form still counts words (journal.js wires it again).
+    page.get_by_role("textbox").fill("God is good")
+    expect(page.locator(".word-count")).to_have_text(f"3 / {minimum} words")

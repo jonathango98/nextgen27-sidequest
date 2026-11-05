@@ -53,19 +53,26 @@ def link_to(href, label):
 @pytest.fixture
 def client(tmp_path):
     app = create_app()
-    app.state.db_path = tmp_path / "skeleton.db"
-    ids = seed_fake_players(app.state.db_path, FAKE_PLAYER.public_id, "testpid02")
-    conn = connect(app.state.db_path)
+    db_path = tmp_path / "skeleton.db"
+    ids = seed_fake_players(db_path, FAKE_PLAYER.public_id, "testpid02")
+    conn = connect(db_path)
     # Connection 1, so /connections/1 is a pair this player is in (SAFE-006).
     conn.execute(
         "INSERT INTO connection (id, player_low_id, player_high_id, scanner_id,"
         " question_category, is_same_church) VALUES (1, ?, ?, ?, 'food', 1)",
         (*sorted(ids.values()), ids[FAKE_PLAYER.public_id]),
     )
+    # An ended session, so the Journal form has one to offer (GAME-036).
+    conn.execute(
+        "INSERT INTO session (public_id, title, ended_at)"
+        " VALUES ('pub-s1', 'Example Session 1', '2027-03-05T10:00:00Z')"
+    )
     conn.close()
     app.dependency_overrides[get_current_player] = lambda: FAKE_PLAYER
     # Start the app, so pages can read the game state for the paused note (UI-033).
     with TestClient(app) as c:
+        # Starting sets db_path from SQ_DB_PATH, so point it back at this test's database.
+        app.state.db_path = db_path
         yield c
 
 
@@ -146,24 +153,6 @@ def test_game_015_icebreaker_answer_is_switched_off(client):
     assert "<fieldset disabled>" in client.get("/connections/1").text
 
 
-def test_game_031_journal_form_offers_three_choices(client):
-    html = client.get("/journal/new").text
-    for value in ("private", "shared_named", "shared_anonymous"):
-        assert f'name="visibility" value="{value}"' in html
-
-
-def test_ui_031_journal_form_explains_anonymous(client):
-    note = (
-        "Anonymous hides your name from other players. "
-        "Game organizers can still see who wrote it."
-    )
-    assert note in client.get("/journal/new").text
-
-
-def test_game_036_journal_form_is_switched_off(client):
-    assert "<fieldset disabled>" in client.get("/journal/new").text
-
-
 def test_ui_030_journal_links_to_new_takeaway(client):
     assert 'href="/journal/new">Write a takeaway</a>' in client.get("/journal").text
 
@@ -208,17 +197,6 @@ def test_safe_004_summary_shows_first_name_and_church_or_anonymous(client):
     ]
     assert authors == expected
     assert "Anonymous" in authors
-
-
-def test_game_030_journal_word_count_uses_config_minimum(client):
-    minimum = load_config()["limits"]["journal_min_words"]
-    assert f"0 / {minimum} words" in client.get("/journal/new").text
-
-
-def test_game_036_journal_shows_a_session_name(client):
-    html = client.get("/journal/new").text
-    session = journal.PLACEHOLDER_SUMMARY[-1]["session"]
-    assert f'<p class="page-sub" id="journal-session">{session}</p>' in html
 
 
 def test_game_070_open_box_shows_each_box_and_its_points(client):
@@ -301,17 +279,6 @@ def test_ui_030_journal_has_a_back_link_to_home(client):
     assert link_to("/", "Back to home").search(client.get("/journal").text)
 
 
-def test_game_031_journal_lists_own_notes_with_who_can_read_them(client):
-    html = client.get("/journal").text
-    sessions = re.findall(r'<h2 class="session-title"[^>]*>([^<]+)</h2>', html)
-    assert sessions == [n["session"] for n in journal.PLACEHOLDER_NOTES]
-    statuses = re.findall(r'<span class="note-status">([^<]+)</span>', html)
-    assert statuses == [n["status"] for n in journal.PLACEHOLDER_NOTES]
-    points = load_config()["points"]["journal_takeaway"]  # AI-013
-    pills = re.findall(r'<span class="pill">\+(\d+)</span>', html)
-    assert pills == [str(points)] * len(journal.PLACEHOLDER_NOTES)
-
-
 def test_dec_062_home_tile_labels(client):
     text = page_text(client.get("/").text)
     for words in ("Write A journal", "Read All journals", "Claim box"):
@@ -322,7 +289,7 @@ def test_dec_062_home_tile_labels(client):
 def test_ui_053_journal_title_labels_the_text_box(client):
     html = client.get("/journal/new").text
     assert '<h1 id="journal-title">Journal</h1>' in html
-    assert 'aria-labelledby="journal-title journal-session"' in html
+    assert 'aria-labelledby="journal-title journal-prompt"' in html
     assert 'for="takeaway"' not in html  # no visible Takeaway label (DEC-062)
 
 
@@ -330,7 +297,7 @@ def test_ui_039_journal_submit_shows_its_points(client):
     points = load_config()["points"]["journal_takeaway"]  # AI-013
     html = client.get("/journal/new").text
     assert re.search(
-        rf'<button class="button" type="submit">Submit <span class="pill">\+{points}</span></button>',
+        rf'<button class="button" type="submit">Submit <span class="pill" data-submit-pill>\+{points}</span></button>',
         html,
     )
 
