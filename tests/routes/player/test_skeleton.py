@@ -132,7 +132,7 @@ def test_ui_036_home_shows_big_score(client):
     ("label", "href"),
     [
         ("Meet friends", "/scan"),
-        ("Write", "/journal/new"),
+        ("Write", "/journal"),  # DEC-077: your notes, with Write a takeaway on top
         ("Read", "/summary"),
         ("Claim box", "/box"),  # DEC-062
     ],

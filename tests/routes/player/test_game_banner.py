@@ -136,7 +136,7 @@ def test_game_102_home_play_buttons_wait_while_not_on(client, state):
     _set(client, state)
     html = client.get("/").text
     assert 'href="/scan"' not in html
-    assert 'href="/journal/new"' not in html
+    assert 'href="/journal"' not in html
     assert disabled_button("Meet friends").search(html)
 
 
@@ -160,7 +160,7 @@ def test_game_108_reading_stays_open_while_off(client):
 def test_game_102_home_play_buttons_work_while_on(client):
     html = client.get("/").text
     assert 'href="/scan"' in html
-    assert 'href="/journal/new"' in html
+    assert 'href="/journal"' in html
 
 
 @pytest.mark.parametrize("path", [p for p in PAGES if p != "/"])

@@ -123,3 +123,12 @@ def test_dec_076_change_who_can_read_a_note_in_place(page: Page, live_server):
     width = load_config()["ui"]["min_viewport_px"]
     assert page.evaluate("document.documentElement.scrollWidth") <= width
     assert problems == []
+
+
+def test_dec_077_home_write_opens_your_notes_then_the_form(page: Page, live_server):
+    page.goto(f"{live_server}/")
+    page.get_by_role("link", name="Write").click()
+    expect(page).to_have_url(f"{live_server}/journal")
+    expect(page.get_by_role("heading", level=1)).to_have_text("Journal")
+    page.get_by_role("link", name="Write a takeaway").click()
+    expect(page).to_have_url(f"{live_server}/journal/new")
