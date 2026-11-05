@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-04 · feat/feature-tree-no-lines · Claude Opus 5.5 / @jonathango98
+
+- What: The feature tree map on Pages now opens with no piece picked: every piece shows at full strength and no lines are drawn. Picking a piece draws only the lines to what it needs and what it unlocks, as before. Clicking the same piece again, clicking an empty spot on the map, or pressing Esc goes back to the whole tree. Before, the page opened with `points.audit-log` picked and drew every line at once. New test `test_eng_110_map_draws_lines_only_for_the_picked_piece`.
+- Why: Jonathan asked for a default view that shows everything without the lines, and a way to deselect a piece back to it.
+- Rule IDs: ENG-110, AI-042, AI-044
+- Status: Done
+- PR: draft
+
 ## 2026-11-04 · fix/55-migration-number-reuse · Claude Opus 5.5 / @jonathango98
 
 - What: Fixes issue #55. `migrate()` in `app/db.py` now reads each recorded migration's name as well as its number. Before applying anything, it checks every recorded number against the file with that number, and stops with a `DatabaseError` naming both files when they differ ("Migration 0002 is recorded as 0002_old.sql but the file is 0002_new.sql. Reset this database or fix the numbering."). Before, the runner skipped the new file without a word. No schema change: `schema_migration.name` already existed. Staging and production are unaffected because their recorded names match. New test `test_eng_050_stops_when_a_recorded_number_has_a_different_file` replays the #49 preview: it failed first with `table old already exists`, and passes now. A recorded number with no file at all is still skipped silently, which the issue does not cover.
