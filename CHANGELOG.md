@@ -22,10 +22,10 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-11-04 · feat/journal-share-review · Claude Opus 5.5 / @jonathango98
 
-- What: Builds `journal.share-review`. Done so far: migration 0011 rebuilds the takeaway table with a random `public_id` and lets a private note keep a reject or hide. The journal service saves the sharing choice, lets a player change it, runs admin approve, reject, hide, and approve-again with audit rows, and lists the review queue and the approved notes for Summary. The Journal form has the three choices with the UI-031 note. Each note card on the Journal list shows its choice, and Change opens the choices in place and saves with HTMX (a turned-down note offers only Just me). Admins open Review notes from the console: tabs for waiting, approved, rejected, and hidden with counts, the writer's name and church on every note, and Approve, Reject, Hide, or Approve again, each with an audit row. Still to come: the real Summary page, preview examples. Foundation: GAME-031, SAFE-040, SAFE-041, the takeaway table, two routes, a try_it step, and DEC-076 (needs Jonathan's approval, ENG-080).
-- Why: Next piece in the journal feature, due 2027-01-08 (PRD-054). It unlocks `recap.screen`. Jonathan chose the sharing rules in DEC-076.
-- Rule IDs: GAME-031, SAFE-007, SAFE-008, SAFE-009, SAFE-017, SAFE-029, SAFE-040, SAFE-041, SAFE-042, UI-031, UI-038, DATA-003, DEC-076, AI-042, AI-044
-- Status: In progress
+- What: Builds `journal.share-review`. Players choose who can read each note (Just me, Shared with my name, Shared anonymously) on the Journal form, with the UI-031 note, and can change it later from each card on their Journal list. Admins open Review notes from the console: tabs for waiting, approved, rejected, and hidden with counts, the writer's name and church on every note, and Approve, Reject, Hide, or Approve again, each with an audit row. A rejected or hidden note can only go private. The Takeaways page (`/summary`) shows approved shared notes to signed-in players, newest session first. Migration 0011 rebuilds the takeaway table with a random `public_id` and lets a private note keep a reject or hide. PR previews get an ended Example Ended Session and four fake shared notes, two approved and two waiting. Foundation: GAME-031, SAFE-040, SAFE-041, the takeaway table, two routes, a try_it step, and DEC-076 (needs Jonathan's approval, ENG-080).
+- Why: Next piece in the journal feature, due 2027-01-08 (PRD-054), and the last one, so the Journal row leaves Planned. It unlocks `recap.screen`. Jonathan chose the sharing rules in DEC-076.
+- Rule IDs: GAME-031, SAFE-007, SAFE-008, SAFE-009, SAFE-017, SAFE-028, SAFE-029, SAFE-040, SAFE-041, SAFE-042, UI-031, UI-038, DATA-003, DEC-076, ENG-108, ENG-113, AI-042, AI-044, AI-047
+- Status: Done
 - PR: #87
 
 ## 2026-11-04 · docs/dec-074-confirmed · Claude Opus 5.5 / @jonathango98

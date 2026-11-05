@@ -145,6 +145,23 @@ def live_server(tmp_path_factory):
         "INSERT OR IGNORE INTO session (public_id, title, ended_at)"
         " VALUES ('pub-s1', 'Example Session 1', '2027-03-05T10:00:00Z')"
     )
+    # Approved shared notes by Test Player 2, so the Summary page has cards (UI-038).
+    conn.executemany(
+        "INSERT INTO takeaway (player_id, session_id, text, visibility, review_status)"
+        " SELECT ?, id, ?, ?, 'approved' FROM session WHERE public_id = 'pub-s1'",
+        [
+            (
+                ids["testpid02"],
+                "Example takeaway: I want to listen first this week and ask more questions.",
+                "shared_named",
+            ),
+            (
+                ids["testpid02"],
+                "Example takeaway: showing up for my friends matters more than the right words.",
+                "shared_anonymous",
+            ),
+        ],
+    )
     conn.close()
     yield f"https://127.0.0.1:{port}"
     server.should_exit = True

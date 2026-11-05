@@ -498,3 +498,37 @@ def test_dec_076_choosing_the_same_option_writes_nothing(conn, players):
     before = audit_actions(conn)
     change(conn, players[0], note, "private")
     assert audit_actions(conn) == before
+
+
+# ENG-113, AI-047: preview examples for Review and Summary.
+
+
+def _preview_writers(conn, numbers=(3, 4, 5, 6)):
+    church = conn.execute("SELECT id FROM church").fetchone()[0]
+    for n in numbers:
+        conn.execute(
+            "INSERT INTO player (public_id, first_name, last_name, church_id, is_under_18, pin_hash)"
+            " VALUES (?, 'Test', ?, ?, 0, ?)",
+            (f"pub-{n}", f"Player {n}", church, FAKE_PIN_HASH),
+        )
+
+
+def test_eng_113_preview_seed_adds_shared_notes_once(conn, players, admin):
+    add_session(conn, 1)
+    _preview_writers(conn)
+    added = journal.seed_preview(conn, "Example Session 1")
+    assert added == ["Test Player 3", "Test Player 4", "Test Player 5", "Test Player 6"]
+    assert journal.seed_preview(conn, "Example Session 1") == []
+    assert [n.first_name for n in journal.list_approved(conn)] == [None, "Test"]
+    assert len(journal.review_queue(conn, "pending")) == 2
+    # No points, so the leaderboard preview stays as it was.
+    assert _count(conn, "point_ledger") == 0
+
+
+def test_eng_113_preview_seed_skips_what_is_missing(conn, players):
+    assert journal.seed_preview(conn, "Example Session 1") == []  # no session yet
+    add_session(conn, 1)
+    _preview_writers(conn, (3,))  # the others had no preview PIN
+    assert journal.seed_preview(conn, "Example Session 1") == ["Test Player 3"]
+    [note] = journal.list_approved(conn)
+    assert note.first_name == "Test"

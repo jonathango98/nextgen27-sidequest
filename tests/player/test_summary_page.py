@@ -35,3 +35,10 @@ def test_ui_030_back_to_home_sits_above_the_title_and_goes_home(
     assert back.bounding_box()["height"] >= load_config()["ui"]["min_tap_target_px"]
     back.click()
     expect(page).to_have_url(f"{live_server}/")
+
+
+def test_safe_009_summary_shows_name_and_church_or_anonymous(page: Page, live_server):
+    page.goto(f"{live_server}/summary")
+    authors = page.locator(".takeaway-author")
+    expect(authors.filter(has_text="Anonymous")).not_to_have_count(0)
+    expect(authors.filter(has_text="Example Church A")).not_to_have_count(0)

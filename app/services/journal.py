@@ -379,3 +379,80 @@ def list_approved(conn: sqlite3.Connection) -> list[SharedNote]:
         else SharedNote(r["title"], r["text"], None, None)
         for r in rows
     ]
+
+
+# ENG-113, AI-047: shared notes for the PR preview, so Review and Summary have something to show.
+# Written by the leaderboard preview players. Obviously fake (SAFE-031).
+PREVIEW_NOTES = (
+    (
+        ("Test", "Player 3"),
+        "shared_named",
+        "approved",
+        "Example takeaway: I want to listen first this week and ask more questions in small group.",
+    ),
+    (
+        ("Test", "Player 4"),
+        "shared_anonymous",
+        "approved",
+        "Example takeaway: showing up for my friends matters more than having the right words.",
+    ),
+    (
+        ("Test", "Player 5"),
+        "shared_named",
+        "pending",
+        "Example takeaway: serving doesn't need a stage. I'll help set up before youth group.",
+    ),
+    (
+        ("Test", "Player 6"),
+        "shared_anonymous",
+        "pending",
+        "Example takeaway: I can pray for one person by name every morning this month.",
+    ),
+)
+
+
+def seed_preview(conn: sqlite3.Connection, session_title: str) -> list[str]:
+    """Adds PREVIEW_NOTES to the ended preview session, once (ENG-113, AI-047).
+
+    Skips a writer who wasn't made (no preview PIN set) or already has a note there. Seeded notes
+    earn no points, so the leaderboard preview stays as it was.
+    """
+    session = conn.execute(
+        "SELECT id FROM session WHERE title = ?", (session_title,)
+    ).fetchone()
+    if session is None:
+        return []
+    admin = conn.execute(
+        "SELECT id FROM staff_account WHERE role = 'admin' ORDER BY id LIMIT 1"
+    ).fetchone()
+    added = []
+    for (first, last), visibility, status, text in PREVIEW_NOTES:
+        player = conn.execute(
+            "SELECT id FROM player WHERE first_name = ? AND last_name = ?",
+            (first, last),
+        ).fetchone()
+        if (
+            player is None
+            or conn.execute(
+                "SELECT 1 FROM takeaway WHERE player_id = ? AND session_id = ?",
+                (player["id"], session["id"]),
+            ).fetchone()
+        ):
+            continue
+        reviewed = status == "approved" and admin is not None
+        conn.execute(
+            "INSERT INTO takeaway (player_id, session_id, text, visibility, review_status,"
+            " reviewed_by, reviewed_at) VALUES (?, ?, ?, ?, ?, ?,"
+            " CASE WHEN ? THEN strftime('%Y-%m-%dT%H:%M:%SZ', 'now') END)",
+            (
+                player["id"],
+                session["id"],
+                text,
+                visibility,
+                status,
+                admin["id"] if reviewed else None,
+                reviewed,
+            ),
+        )
+        added.append(f"{first} {last}")
+    return added

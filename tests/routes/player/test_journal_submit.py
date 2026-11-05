@@ -293,3 +293,86 @@ def test_dec_076_a_turned_down_note_offers_only_just_me(db):
     assert response.status_code == 400
     assert "This note can only be kept private." in response.text
     assert tuple(_note(conn))[1:] == ("shared_named", "rejected")
+
+
+# The Summary page: approved shared notes only (SAFE-007, SAFE-017, UI-038).
+
+
+def _admin(conn):
+    row = conn.execute(
+        "SELECT id FROM staff_account WHERE username = 'test-admin-1'"
+    ).fetchone()
+    if row:
+        return row[0]
+    return conn.execute(
+        "INSERT INTO staff_account (username, password_hash, role)"
+        " VALUES ('test-admin-1', 'not-a-real-hash', 'admin')"
+    ).lastrowid
+
+
+def _authors(html):
+    return re.findall(r'<p class="takeaway-author">([^<]+)</p>', html)
+
+
+def test_safe_007_summary_shows_only_approved_shared_notes(db):
+    c, conn = db
+    for word, visibility in (
+        ("named", "shared_named"),
+        ("anon", "shared_anonymous"),
+        ("waiting", "shared_named"),
+        ("private", "private"),
+    ):
+        _post(c, words(MIN_WORDS, word), visibility=visibility)
+    assert "No shared takeaways yet." in c.get("/summary").text
+    rows = conn.execute("SELECT public_id, text FROM takeaway").fetchall()
+    ids = {r["text"].split()[0]: r["public_id"] for r in rows}
+    for word in ("named", "anon"):
+        journal.review(
+            conn, admin_id=_admin(conn), takeaway_public_id=ids[word], outcome="approve"
+        )
+    _as(c, "testpid02")  # another signed-in player
+    html = c.get("/summary").text
+    texts = re.findall(r'<p class="takeaway-text">(\w+)', html)
+    assert texts == ["anon", "named"]  # newest first within the session
+    assert "waiting" not in html and "private" not in html
+
+
+def test_safe_009_summary_shows_anonymous_without_a_name(db):
+    c, conn = db
+    _post(c, words(MIN_WORDS, "anon"), visibility="shared_anonymous")
+    _post(c, words(MIN_WORDS, "named"), visibility="shared_named")
+    for (note,) in conn.execute("SELECT public_id FROM takeaway").fetchall():
+        journal.review(
+            conn, admin_id=_admin(conn), takeaway_public_id=note, outcome="approve"
+        )
+    html = c.get("/summary").text
+    assert _authors(html) == ["Test · Example Church A", "Anonymous"]
+    assert "Player 1" not in html  # SAFE-028: never the last name
+
+
+def test_ui_038_summary_is_grouped_newest_session_first(db):
+    c, conn = db
+    conn.execute(
+        "INSERT INTO session (public_id, title, ended_at)"
+        " VALUES ('pub-s3', 'Example Session 3', '2027-03-05T12:00:00Z')"
+    )
+    _post(c, words(MIN_WORDS, "early"), visibility="shared_named")
+    _post(c, words(MIN_WORDS, "late"), session="pub-s3", visibility="shared_named")
+    for (note,) in conn.execute("SELECT public_id FROM takeaway").fetchall():
+        journal.review(
+            conn, admin_id=_admin(conn), takeaway_public_id=note, outcome="approve"
+        )
+    html = c.get("/summary").text
+    titles = re.findall(r'<h2 class="session-title"[^>]*>([^<]+)</h2>', html)
+    assert titles == ["Example Session 3", "Example Session 1"]
+
+
+def test_safe_041_a_hidden_note_leaves_the_summary(db):
+    c, conn = db
+    _post(c, words(MIN_WORDS, "named"), visibility="shared_named")
+    note = _note(conn)["public_id"]
+    admin = _admin(conn)
+    journal.review(conn, admin_id=admin, takeaway_public_id=note, outcome="approve")
+    assert "named" in c.get("/summary").text
+    journal.review(conn, admin_id=admin, takeaway_public_id=note, outcome="hide")
+    assert "No shared takeaways yet." in c.get("/summary").text

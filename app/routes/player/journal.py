@@ -1,6 +1,7 @@
-"""Journal: write a private takeaway and list your own (GAME-030 to GAME-036).
+"""Journal: write a takeaway, choose who can read it, and list your own (GAME-030 to GAME-036).
 
-The Summary page is still a skeleton until journal.share-review (GAME-031, SAFE-009, SAFE-017).
+The Summary page shows approved shared takeaways to signed-in players (GAME-031, SAFE-007,
+SAFE-009, SAFE-017, DEC-076).
 """
 
 import sqlite3
@@ -34,35 +35,6 @@ VISIBILITY_LABELS = {
 
 # The note on the Journal page after saving: with points, or a later note with none (DEC-072).
 SAVED = ("points", "extra")
-
-# Fake note cards until journal.share-review shows the approved shared takeaways (UI-038).
-# Obviously fake (SAFE-031). Newest session first, first name and church only, or Anonymous (SAFE-004).
-PLACEHOLDER_SUMMARY = [
-    {
-        "session": "Example Session 2",
-        "takeaways": [
-            {
-                "text": "Example takeaway: I want to listen first this week and ask more questions in small group.",
-                "first_name": "Test",
-                "church": "Example Church A",
-            },
-            {
-                "text": "Example takeaway: showing up for my friends matters more than having the right words.",
-                "anonymous": True,
-            },
-        ],
-    },
-    {
-        "session": "Example Session 1",
-        "takeaways": [
-            {
-                "text": "Example takeaway: serving doesn't need a stage. I'll help set up before youth group.",
-                "first_name": "Test",
-                "church": "Example Church B",
-            },
-        ],
-    },
-]
 
 
 def _journal_page(
@@ -237,8 +209,14 @@ def submit_takeaway(request: Request, player: Player, conn: Db, form: Form):
 
 
 @router.get("/summary")
-def summary(request: Request, player: Player):
+def summary(request: Request, player: Player, conn: Db):
     # SAFE-017: signed-in players only, so it needs the player like every page here.
+    # UI-038: approved shared notes only, one group per session, newest session first.
+    notes = journal.list_approved(conn)
+    sessions = [
+        {"title": title, "notes": list(group)}
+        for title, group in groupby(notes, key=lambda n: n.session_title)
+    ]
     return templates.TemplateResponse(
-        request, "player/summary.html", {"sessions": PLACEHOLDER_SUMMARY}
+        request, "player/summary.html", {"sessions": sessions}
     )
