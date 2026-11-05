@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Picked through `/pick-task`. Due 2026-12-04. Last piece of the Game states feature.
 - Rule IDs: GAME-107, DATA-014, OPS-001, ENG-101
 - Status: Started
-- PR: draft
+- PR: #88
 
 ## 2026-11-04 · feat/journal-share-review · Claude Opus 5.5 / @jonathango98
 

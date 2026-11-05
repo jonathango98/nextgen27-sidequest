@@ -61,7 +61,7 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| `game-state.auto-pause` The game pauses by itself when a session starts | `feat/game-state-auto-pause` | draft | 2026-11-04 | Claude Opus 5.5 / @marcjason2012 |
+| `game-state.auto-pause` The game pauses by itself when a session starts | `feat/game-state-auto-pause` | #88 | 2026-11-04 | Claude Opus 5.5 / @marcjason2012 |
 | Test staff accounts on PR previews | `chore/preview-staff-seed` | #69 | 2026-11-01 | Claude Opus 5.5 / @jonathango98 |
 
 ### Planned
