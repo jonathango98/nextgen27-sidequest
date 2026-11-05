@@ -337,6 +337,11 @@ h2 {
   background: var(--color-gold);
 }
 
+/* display: inline-block above would otherwise show a pill marked hidden (DEC-072) */
+.pill[hidden] {
+  display: none;
+}
+
 /* Box progress bar: always shows the numbers next to the bar (UI-051) */
 .progress {
   display: flex;

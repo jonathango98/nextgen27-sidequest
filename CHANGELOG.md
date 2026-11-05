@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-04 · feat/journal-notes · Claude Opus 5.5 / @jonathango98
+
+- What: Builds `journal.notes`. New `takeaway` table (migration 0010) and journal service: a player writes a private note for a session an admin has ended, words are counted on the server, and the first note per session earns `points.journal_takeaway` through the points service. Later notes for the same session save with no points. Notes are refused while paused or off. `/journal/new` offers ended sessions with a live word count, `/journal` lists only your own notes. Retention deletes takeaways. Foundation: DEC-072 allows many takeaways per session, removes DATA-023, and rewords GAME-030 (needs Jonathan's approval, ENG-080). Test fixtures now point back at their own database after app start, which also fixes 3 skeleton tests that failed when run alone.
+- Why: Next ready piece in the feature tree, due 2027-01-08 (PRD-054). Jonathan asked for more than one note per session, with points once.
+- Rule IDs: GAME-030, GAME-031, GAME-033, GAME-034, GAME-035, GAME-036, DATA-023, DATA-027, DEC-072, SAFE-007, SAFE-014, SAFE-016, AI-041, AI-042, AI-044
+- Status: Done
+- PR: #83
+
 ## 2026-11-04 · feat/feature-tree-no-lines · Claude Opus 5.5 / @jonathango98
 
 - What: The feature tree map on Pages now opens with no piece picked: every piece shows at full strength and no lines are drawn. Picking a piece draws only the lines to what it needs and what it unlocks, as before. Clicking the same piece again, clicking an empty spot on the map, or pressing Esc goes back to the whole tree. Before, the page opened with `points.audit-log` picked and drew every line at once. New test `test_eng_110_map_draws_lines_only_for_the_picked_piece`.

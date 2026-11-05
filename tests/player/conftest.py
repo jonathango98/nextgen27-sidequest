@@ -140,6 +140,11 @@ def live_server(tmp_path_factory):
         " scanner_id, question_category, is_same_church) VALUES (1, ?, ?, ?, 'food', 1)",
         (ids[FAKE_PLAYER.public_id], ids["testpid02"], ids[FAKE_PLAYER.public_id]),
     )
+    # An ended session, so the Journal form has one to offer (GAME-036).
+    conn.execute(
+        "INSERT OR IGNORE INTO session (public_id, title, ended_at)"
+        " VALUES ('pub-s1', 'Example Session 1', '2027-03-05T10:00:00Z')"
+    )
     conn.close()
     yield f"https://127.0.0.1:{port}"
     server.should_exit = True

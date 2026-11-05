@@ -2,7 +2,7 @@
 
 - Status: PROPOSED (developers confirm at kickoff; constraints marked LOCKED are required whatever the final schema looks like)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.5.0
+- Version: 1.6.0
 - Last updated: 2026-11-04
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -187,7 +187,7 @@ This file lists the tables, their fields, and the database constraints that enfo
 | **DATA-020** [LOCKED] | Connection: `UNIQUE (player_low_id, player_high_id)` and `CHECK (player_low_id < player_high_id)` | Each pair once, no self-connection (GAME-013, GAME-014) |
 | **DATA-021** [LOCKED] | ChurchMet: `UNIQUE (player_id, church_id)` | New church bonus once per church per player (GAME-011) |
 | **DATA-022** [LOCKED] | CheckIn: `UNIQUE (player_id, session_id)` and `UNIQUE (session_id, scan_order)` | Once per session, and a clean scan order (GAME-023, GAME-025) |
-| **DATA-023** [LOCKED] | Takeaway: `UNIQUE (player_id, session_id)` | One takeaway per session (GAME-030) |
+| **DATA-023** [REMOVED] | Was: Takeaway: `UNIQUE (player_id, session_id)` | A player can write many takeaways per session now. Points stay once per session through DATA-027 (GAME-030, DEC-072) |
 | **DATA-024** [LOCKED] | BoothVisit: `UNIQUE (player_id, booth_id)` | Once per booth (GAME-041) |
 | **DATA-025** [LOCKED] | HiddenItem: `UNIQUE (item_number)`, and `claimed_by` can be set only once | Each item claimed once in total (GAME-043) |
 | **DATA-026** [LOCKED] | BoxClaim: `UNIQUE (player_id, claim_number)` | No double claims (GAME-074) |
