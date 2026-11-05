@@ -58,6 +58,8 @@ def submit(conn, player, session_public_id="pub-s1", text=None, **overrides):
         "player_id": player,
         "session_public_id": session_public_id,
         "text": words(MIN_WORDS) if text is None else text,
+        "visibility": "private",
+        "review_scope": CFG["journal"]["review_scope"],
         "min_words": MIN_WORDS,
         "amount": AMOUNT,
         "require_checkin": False,
@@ -209,3 +211,290 @@ def test_game_031_players_list_only_their_own_notes(conn, players):
         ("Example Session 1", "first"),
     ]
     assert [n.text.split()[0] for n in journal.list_own(conn, players[1])] == ["other"]
+
+
+# journal.share-review: who can read a note, and the admin review (GAME-031, SAFE-007, DEC-076).
+
+SCOPE = CFG["journal"]["review_scope"]
+
+
+@pytest.fixture
+def admin(conn):
+    return conn.execute(
+        "INSERT INTO staff_account (username, password_hash, role)"
+        " VALUES ('test-admin-1', 'not-a-real-hash', 'admin')"
+    ).lastrowid
+
+
+def share(conn, player, visibility, text=None, session="pub-s1"):
+    submit(conn, player, session, text=text, visibility=visibility)
+    return journal.list_own(conn, player)[0].public_id
+
+
+def change(conn, player, public_id, visibility):
+    journal.change_visibility(
+        conn,
+        player_id=player,
+        takeaway_public_id=public_id,
+        visibility=visibility,
+        review_scope=SCOPE,
+    )
+
+
+def status(conn, public_id):
+    return tuple(
+        conn.execute(
+            "SELECT visibility, review_status FROM takeaway WHERE public_id = ?",
+            (public_id,),
+        ).fetchone()
+    )
+
+
+def audit_actions(conn):
+    return [r[0] for r in conn.execute("SELECT action FROM audit_log ORDER BY id")]
+
+
+def test_data_003_takeaways_get_a_random_public_id(conn, players):
+    add_session(conn, 1)
+    first = share(conn, players[0], "private")
+    second = share(conn, players[0], "private")
+    assert first != second
+    assert not first.isdigit() and len(first) >= 12
+
+
+@pytest.mark.parametrize("visibility", journal.VISIBILITIES)
+def test_game_031_same_points_for_every_choice(conn, players, visibility):
+    add_session(conn, 1)
+    assert submit(conn, players[0], visibility=visibility).points == AMOUNT
+    assert score(conn, players[0]) == AMOUNT
+
+
+def test_safe_007_a_shared_note_waits_for_review(conn, players):
+    add_session(conn, 1)
+    named = share(conn, players[0], "shared_named")
+    anon = share(conn, players[0], "shared_anonymous")
+    assert status(conn, named) == ("shared_named", "pending")
+    assert status(conn, anon) == ("shared_anonymous", "pending")
+    assert journal.list_approved(conn) == []
+
+
+def test_game_031_a_made_up_choice_is_refused(conn, players):
+    add_session(conn, 1)
+    with pytest.raises(journal.TakeawayRefused) as refused:
+        submit(conn, players[0], visibility="everyone")
+    assert refused.value.code == "BAD_INPUT"
+    assert _count(conn, "takeaway") == 0
+
+
+def test_safe_008_only_the_stricter_scope_is_known(conn, players):
+    add_session(conn, 1)
+    assert SCOPE == "all_shared"
+    with pytest.raises(ValueError):
+        submit(
+            conn, players[0], visibility="shared_named", review_scope="something_else"
+        )
+
+
+def test_safe_040_approve_shows_it_and_writes_an_audit_row(conn, players, admin):
+    add_session(conn, 1)
+    note = share(conn, players[0], "shared_named")
+    journal.review(conn, admin_id=admin, takeaway_public_id=note, outcome="approve")
+    assert status(conn, note) == ("shared_named", "approved")
+    assert [n.text for n in journal.list_approved(conn)] == [words(MIN_WORDS)]
+    row = conn.execute(
+        "SELECT actor_type, actor_id, action, target_type FROM audit_log"
+        " WHERE action = 'review_approve'"
+    ).fetchone()
+    assert tuple(row) == ("admin", admin, "review_approve", "takeaway")
+
+
+def test_safe_040_reject_keeps_it_hidden_and_keeps_the_points(conn, players, admin):
+    add_session(conn, 1)
+    note = share(conn, players[0], "shared_named")
+    journal.review(conn, admin_id=admin, takeaway_public_id=note, outcome="reject")
+    assert status(conn, note) == ("shared_named", "rejected")
+    assert journal.list_approved(conn) == []
+    assert score(conn, players[0]) == AMOUNT
+    assert "review_reject" in audit_actions(conn)
+
+
+def test_safe_041_hide_an_approved_note_with_an_audit_row(conn, players, admin):
+    add_session(conn, 1)
+    note = share(conn, players[0], "shared_anonymous")
+    with pytest.raises(journal.TakeawayRefused):  # only an approved note can be hidden
+        journal.review(conn, admin_id=admin, takeaway_public_id=note, outcome="hide")
+    journal.review(conn, admin_id=admin, takeaway_public_id=note, outcome="approve")
+    journal.review(conn, admin_id=admin, takeaway_public_id=note, outcome="hide")
+    assert status(conn, note) == ("shared_anonymous", "hidden")
+    assert journal.list_approved(conn) == []
+    assert audit_actions(conn)[-1] == "review_hide"
+
+
+@pytest.mark.parametrize("undo", ["reject", "hide"])
+def test_dec_076_admin_can_approve_again_after_reject_or_hide(
+    conn, players, admin, undo
+):
+    add_session(conn, 1)
+    note = share(conn, players[0], "shared_named")
+    if undo == "hide":
+        journal.review(conn, admin_id=admin, takeaway_public_id=note, outcome="approve")
+    journal.review(conn, admin_id=admin, takeaway_public_id=note, outcome=undo)
+    journal.review(conn, admin_id=admin, takeaway_public_id=note, outcome="approve")
+    assert status(conn, note) == ("shared_named", "approved")
+
+
+def test_safe_040_a_second_review_of_the_same_note_is_refused(conn, players, admin):
+    add_session(conn, 1)
+    note = share(conn, players[0], "shared_named")
+    journal.review(conn, admin_id=admin, takeaway_public_id=note, outcome="approve")
+    with pytest.raises(journal.TakeawayRefused) as refused:
+        journal.review(conn, admin_id=admin, takeaway_public_id=note, outcome="reject")
+    assert refused.value.code == "ALREADY_DONE"
+    assert status(conn, note) == ("shared_named", "approved")
+
+
+def test_safe_029_private_notes_are_never_in_the_review_queue(conn, players, admin):
+    add_session(conn, 1)
+    private = share(conn, players[0], "private")
+    share(conn, players[1], "shared_named")
+    queue = journal.review_queue(conn, "pending")
+    assert len(queue) == 1 and queue[0].public_id != private
+    with pytest.raises(journal.TakeawayRefused) as refused:
+        journal.review(
+            conn, admin_id=admin, takeaway_public_id=private, outcome="approve"
+        )
+    assert refused.value.code == "NOT_FOUND"
+    assert status(conn, private) == ("private", "not_needed")
+
+
+def test_safe_009_admins_see_who_wrote_an_anonymous_note(conn, players):
+    add_session(conn, 1)
+    share(conn, players[1], "shared_anonymous")
+    [note] = journal.review_queue(conn, "pending")
+    assert (note.first_name, note.last_name, note.church) == (
+        "Test",
+        "Player 2",
+        "Example Church A",
+    )
+
+
+def test_safe_009_players_never_get_the_author_of_an_anonymous_note(
+    conn, players, admin
+):
+    add_session(conn, 1)
+    note = share(conn, players[0], "shared_anonymous")
+    journal.review(conn, admin_id=admin, takeaway_public_id=note, outcome="approve")
+    [shared] = journal.list_approved(conn)
+    assert (shared.first_name, shared.church) == (None, None)
+
+
+def test_ui_038_summary_is_newest_session_first_with_first_name_and_church(
+    conn, players, admin
+):
+    add_session(conn, 1)
+    add_session(conn, 2)
+    for session, word in (("pub-s1", "early"), ("pub-s2", "late")):
+        note = share(conn, players[0], "shared_named", words(MIN_WORDS, word), session)
+        journal.review(conn, admin_id=admin, takeaway_public_id=note, outcome="approve")
+    shared = journal.list_approved(conn)
+    assert [(n.session_title, n.text.split()[0]) for n in shared] == [
+        ("Example Session 2", "late"),
+        ("Example Session 1", "early"),
+    ]
+    # SAFE-028: first name and church only, never the last name.
+    assert vars(shared[0]).keys() == {"session_title", "text", "first_name", "church"}
+    assert (shared[0].first_name, shared[0].church) == ("Test", "Example Church A")
+
+
+def test_dec_076_sharing_a_private_note_sends_it_for_review(conn, players):
+    add_session(conn, 1)
+    note = share(conn, players[0], "private")
+    change(conn, players[0], note, "shared_named")
+    assert status(conn, note) == ("shared_named", "pending")
+    assert audit_actions(conn)[-1] == "visibility_shared_named"
+
+
+def test_dec_076_named_to_anonymous_keeps_the_approval(conn, players, admin):
+    add_session(conn, 1)
+    note = share(conn, players[0], "shared_named")
+    journal.review(conn, admin_id=admin, takeaway_public_id=note, outcome="approve")
+    change(conn, players[0], note, "shared_anonymous")
+    assert status(conn, note) == ("shared_anonymous", "approved")
+    change(conn, players[0], note, "shared_named")
+    assert status(conn, note) == ("shared_named", "approved")
+
+
+def test_dec_076_making_an_approved_note_private_then_sharing_reviews_again(
+    conn, players, admin
+):
+    add_session(conn, 1)
+    note = share(conn, players[0], "shared_named")
+    journal.review(conn, admin_id=admin, takeaway_public_id=note, outcome="approve")
+    change(conn, players[0], note, "private")
+    assert status(conn, note) == ("private", "not_needed")
+    assert journal.list_approved(conn) == []
+    change(conn, players[0], note, "shared_named")
+    assert status(conn, note) == ("shared_named", "pending")
+
+
+@pytest.mark.parametrize("outcome", ["reject", "hide"])
+def test_dec_076_a_turned_down_note_can_only_go_private(conn, players, admin, outcome):
+    add_session(conn, 1)
+    note = share(conn, players[0], "shared_named")
+    if outcome == "hide":
+        journal.review(conn, admin_id=admin, takeaway_public_id=note, outcome="approve")
+    journal.review(conn, admin_id=admin, takeaway_public_id=note, outcome=outcome)
+    with pytest.raises(journal.TakeawayRefused):
+        change(conn, players[0], note, "shared_anonymous")
+    change(conn, players[0], note, "private")
+    locked = "rejected" if outcome == "reject" else "hidden"
+    assert status(conn, note) == ("private", locked)
+    assert journal.list_own(conn, players[0])[0].can_share is False
+    for visibility in journal.SHARED:
+        with pytest.raises(journal.TakeawayRefused):
+            change(conn, players[0], note, visibility)
+    assert status(conn, note) == ("private", locked)
+
+
+def test_dec_076_a_turned_down_note_cannot_be_shared_in_the_database(conn, players):
+    session = add_session(conn, 1)
+    for bad in [
+        ("shared_named", "not_needed"),
+        ("private", "pending"),
+        ("private", "approved"),
+    ]:
+        with pytest.raises(sqlite3.IntegrityError):
+            conn.execute(
+                "INSERT INTO takeaway (player_id, session_id, text, visibility, review_status)"
+                " VALUES (?, ?, 'Example takeaway', ?, ?)",
+                (players[0], session, *bad),
+            )
+
+
+def test_dec_076_players_change_only_their_own_notes(conn, players):
+    add_session(conn, 1)
+    note = share(conn, players[0], "private")
+    with pytest.raises(journal.TakeawayRefused) as refused:
+        change(conn, players[1], note, "shared_named")
+    assert refused.value.code == "NOT_FOUND"
+    assert status(conn, note) == ("private", "not_needed")
+
+
+@pytest.mark.parametrize("state", ["paused", "off"])
+def test_dec_076_changing_who_can_read_is_blocked_while_paused_or_off(
+    conn, players, state
+):
+    add_session(conn, 1)
+    note = share(conn, players[0], "private")
+    set_state(conn, state)
+    with pytest.raises(GameNotOn):
+        change(conn, players[0], note, "shared_named")
+    assert status(conn, note) == ("private", "not_needed")
+
+
+def test_dec_076_choosing_the_same_option_writes_nothing(conn, players):
+    add_session(conn, 1)
+    note = share(conn, players[0], "private")
+    before = audit_actions(conn)
+    change(conn, players[0], note, "private")
+    assert audit_actions(conn) == before

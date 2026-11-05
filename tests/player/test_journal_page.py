@@ -14,8 +14,12 @@ def test_game_031_journal_fields_sit_on_a_card_with_submit_below(
     # staff tests add sessions with similar titles to the shared test database.
     expect(card.locator('input[name="session"][value="pub-s1"]')).to_be_visible()
     expect(card.locator('input[name="session"]:checked')).to_have_count(1)
-    # Sharing comes with journal.share-review.
-    expect(card.get_by_label("Anonymous")).to_have_count(0)
+    # GAME-031: three choices, private picked until the player chooses, with the UI-031 note.
+    expect(card.locator('input[name="visibility"]')).to_have_count(3)
+    expect(card.get_by_label("Just me")).to_be_checked()
+    expect(
+        card.get_by_text("Game organizers can still see who wrote it.")
+    ).to_be_visible()
     save = page.get_by_role("button", name="Submit").bounding_box()
     box = card.bounding_box()
     assert save["y"] >= box["y"] + box["height"]

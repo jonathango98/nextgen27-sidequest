@@ -42,8 +42,12 @@ def db(tmp_path):
     conn.close()
 
 
-def _post(c, text=None, session="pub-s1", token=True, htmx=True):
-    data = {"session": session, "text": words(MIN_WORDS) if text is None else text}
+def _post(c, text=None, session="pub-s1", token=True, htmx=True, visibility="private"):
+    data = {
+        "session": session,
+        "text": words(MIN_WORDS) if text is None else text,
+        "visibility": visibility,
+    }
     if token:
         data["csrf_token"] = c.cookies.get(csrf.COOKIE)
     headers = {"HX-Request": "true"} if htmx else {}
@@ -176,3 +180,22 @@ def test_game_031_notes_are_listed_by_session_as_just_me(db):
     texts = re.findall(r'<p class="takeaway-text">(\w+)', html)
     assert texts == ["third", "second", "first"]
     assert html.count('<span class="note-status">Just me</span>') == 3
+
+
+def test_game_031_each_note_shows_who_can_read_it(db):
+    c, _ = db
+    for visibility in ("shared_anonymous", "shared_named", "private"):
+        _post(c, visibility=visibility)
+    html = c.get("/journal").text
+    labels = re.findall(r'<span class="note-status">([^<]+)</span>', html)
+    assert labels == ["Just me", "Shared with my name", "Shared anonymously"]
+    # DEC-076: the player sees only their choice, never "waiting for review".
+    assert "review" not in html.lower()
+
+
+def test_game_031_a_missing_choice_saves_nothing(db):
+    c, conn = db
+    response = _post(c, visibility="")
+    assert response.status_code == 400
+    assert "Please choose who can read this." in response.text
+    assert _count(conn) == 0

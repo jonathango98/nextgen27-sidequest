@@ -25,6 +25,13 @@ Player = Annotated[CurrentPlayer, Depends(get_current_player)]
 Db = Annotated[sqlite3.Connection, Depends(get_db)]
 Form = Annotated[dict[str, str], Depends(read_form)]
 
+# GAME-031: who can read a note, in the words the picker and the note cards use.
+VISIBILITY_LABELS = {
+    "private": "Just me",
+    "shared_named": "Shared with my name",
+    "shared_anonymous": "Shared anonymously",
+}
+
 # The note on the Journal page after saving: with points, or a later note with none (DEC-072).
 SAVED = ("points", "extra")
 
@@ -66,12 +73,13 @@ def my_takeaways(request: Request, player: Player, conn: Db):
     notes = journal.list_own(conn, player_id(conn, player))
     context = {
         "sessions": [
-            {"title": title, "notes": [n.text for n in group]}
+            {"title": title, "notes": list(group)}
             for title, group in groupby(notes, key=lambda n: n.session_title)
         ],
         # Only these values, so a typed-in link can't show a made-up message.
         "saved": saved if saved in SAVED else None,
         "journal_points": request.app.state.config["points"]["journal_takeaway"],
+        "visibility_labels": VISIBILITY_LABELS,
     }
     return templates.TemplateResponse(request, "player/journal.html", context)
 
@@ -95,6 +103,9 @@ def _render_form(
         "choices": choices,
         "picked": form.get("session") or (choices[0].public_id if choices else ""),
         "text": form.get("text", ""),
+        # GAME-031: private unless they choose.
+        "visibility": form.get("visibility", "private"),
+        "visibility_labels": VISIBILITY_LABELS,
         "min_words": cfg["limits"]["journal_min_words"],  # GAME-030
         "journal_points": cfg["points"]["journal_takeaway"],  # UI-039
     }
@@ -127,6 +138,8 @@ def submit_takeaway(request: Request, player: Player, conn: Db, form: Form):
             player_id=player_id(conn, player),
             session_public_id=form.get("session", ""),
             text=form.get("text", ""),
+            visibility=form.get("visibility", ""),
+            review_scope=cfg["journal"]["review_scope"],  # SAFE-008
             min_words=cfg["limits"]["journal_min_words"],
             amount=cfg["points"]["journal_takeaway"],
             require_checkin=cfg["journal"]["require_checkin"],

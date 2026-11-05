@@ -97,7 +97,7 @@ Tier size: 10 scans per tier. Config: `checkin.tier_size`.
 ### Journal
 
 - **GAME-030** [PROPOSED] A player can write any number of takeaways for a session, each of at least 15 words. The first one earns 20 points, and later ones for the same session earn none (DEC-072). Config: `points.journal_takeaway`, `limits.journal_min_words`.
-- **GAME-031** [LOCKED] The player chooses who can see each takeaway: private, shared with name, or shared anonymously. Points are the same for every choice, so nobody shares publicly just for points.
+- **GAME-031** [LOCKED] The player chooses who can see each takeaway: private, shared with name, or shared anonymously. Points are the same for every choice, so nobody shares publicly just for points. The player can change the choice later from their Journal list (DEC-076).
 - **GAME-032** [PROPOSED] Points are given when the takeaway is submitted. Review only controls whether a shared post becomes visible (SAFE-007). An admin can revoke points for a junk entry (GAME-111).
 - **GAME-033** [LOCKED] Takeaways cannot be submitted while the game is paused. Config: `journal.allow_while_paused`.
 - **GAME-034** [PROPOSED] Words are counted by splitting the text on spaces and line breaks. "God is good" is 3 words. Punctuation alone, like "-", does not count as a word.

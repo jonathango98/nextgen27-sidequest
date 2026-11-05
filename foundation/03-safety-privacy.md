@@ -2,7 +2,7 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.3.1
+- Version: 1.4.0
 - Last updated: 2026-11-04
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -63,8 +63,8 @@ Legend: Yes = can see. No = cannot see. Own = only their own record.
 ## 4. Anonymity and moderation
 
 - **SAFE-008** [PROPOSED] Review scope. Until leadership decides, every shared post is reviewed (the stricter option). The other option is to review only posts from under-18 players. Config: `journal.review_scope`.
-- **SAFE-040** [LOCKED] Review outcomes: approve (the post becomes visible) or reject (the post stays hidden from everyone but the writer and admins). Rejecting a post does not remove its points. Removing points is a separate admin revocation with a reason (GAME-111).
-- **SAFE-041** [PROPOSED] An admin can hide an approved post at any time. Hiding writes an audit row.
+- **SAFE-040** [LOCKED] Review outcomes: approve (the post becomes visible) or reject (the post stays hidden from everyone but the writer and admins). Rejecting a post does not remove its points. Removing points is a separate admin revocation with a reason (GAME-111). An admin can approve a rejected or hidden post later, which writes an audit row. A rejected or hidden post can only be made private by its writer, never shared again (DEC-076).
+- **SAFE-041** [PROPOSED] An admin can hide an approved post at any time. Hiding writes an audit row. Approving it again undoes the hide (DEC-076).
 - **SAFE-042** [LOCKED] A concerning post (for example, one that suggests someone may be at risk) is followed up by organizers in person, following the organization's child safety policy. The app's job is only to let admins see the author. Nobody follows up inside the app.
 - **SAFE-043** [PROPOSED] Icebreaker questions never ask for contact details, social media handles, room numbers, or where someone is staying. Free-text answers could otherwise become a way to message (SAFE-005). The game director checks the question pool for this.
 

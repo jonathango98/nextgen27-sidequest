@@ -2,7 +2,7 @@
 
 - Status: PROPOSED (developers confirm at kickoff; constraints marked LOCKED are required whatever the final schema looks like)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.6.0
+- Version: 1.7.0
 - Last updated: 2026-11-04
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -129,10 +129,11 @@ This file lists the tables, their fields, and the database constraints that enfo
 | Field | Type | Notes |
 |---|---|---|
 | `id` | integer | Primary key |
+| `public_id` | text | Unique, random. Used in the review and visibility URLs (DATA-003, DEC-076) |
 | `player_id`, `session_id` | integer | |
 | `text` | text | At least 15 words (GAME-030) |
 | `visibility` | text | `private`, `shared_named`, or `shared_anonymous` (GAME-031) |
-| `review_status` | text | `not_needed` (private), `pending`, `approved`, `rejected`, `hidden` |
+| `review_status` | text | `not_needed` (private), `pending`, `approved`, `rejected`, `hidden`. A shared post is never `not_needed`. A private post is `not_needed`, or keeps `rejected` or `hidden` so it can't be shared again (DEC-076) |
 | `reviewed_by`, `reviewed_at` | staff ID, timestamp | Nullable |
 
 ### Booth, BoothVisit, PhotoboothVisit, HiddenItem
