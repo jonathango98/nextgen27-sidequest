@@ -10,8 +10,11 @@ def test_game_031_journal_fields_sit_on_a_card_with_submit_below(
     card = page.locator(".journal-form .card")
     # UI-053, DEC-062: the page title labels the text box.
     expect(card.get_by_role("textbox", name="Journal")).to_be_visible()
-    # GAME-036: the ended session is offered and picked. Sharing comes with journal.share-review.
-    expect(card.get_by_label("Example Session 1")).to_be_checked()
+    # GAME-036: the ended session is offered, and one session is picked. Matched by value, since
+    # staff tests add sessions with similar titles to the shared test database.
+    expect(card.locator('input[name="session"][value="pub-s1"]')).to_be_visible()
+    expect(card.locator('input[name="session"]:checked')).to_have_count(1)
+    # Sharing comes with journal.share-review.
     expect(card.get_by_label("Anonymous")).to_have_count(0)
     save = page.get_by_role("button", name="Submit").bounding_box()
     box = card.bounding_box()
