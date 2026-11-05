@@ -2,8 +2,8 @@
 
 - Status: Active (dates are approximate until the event date is confirmed, PRD-022)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.3.0
-- Last updated: 2026-10-28
+- Version: 1.4.0
+- Last updated: 2026-11-05
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -50,7 +50,7 @@ This file lists the roles, which folders each role owns, the milestones, and wha
 | Friday January 15 | Every feature done (target) | Every feature works end to end, about a week before the gate (PRD-054) |
 | Late January | Feature complete (gate) | Every feature works end to end. Nothing new after this (ENG-070) |
 | Late January | Playtest 1 | 20 to 30 people from a youth group. Point values reviewed after |
-| Early February | Blind boxes ordered | Contents decided (GAME-068). Order size recalculated (GAME-080) |
+| Early February | Blind boxes ordered | Contents chosen by the game director. Order size recalculated (GAME-080) |
 | Mid February | Playtest 2 and venue walkthrough | Hotel Wi-Fi load test of the join moment (OPS-030). Ends with a test Wrapped |
 | Late February | Final prep | Polish continues, usher training, intro slides |
 | 5 to 7 March 2027 | NextGen Conference 2027 | Game runs Day 1 evening and Day 2. Results Sunday |
@@ -98,4 +98,4 @@ Budget amounts are not written in this repo.
 | Stage time | Day 1 evening intro, Day 2 reminders, Sunday results | When the program schedule is set |
 | Budget | Server hosting, hardware and printed materials, blind box contents. Amount set after the design locks | Early November for approval. Blind boxes ordered early February |
 
-- **PRD-053** [OPEN] Prizes are not in the budget ask yet. Leadership confirms whether prizes come from this budget or another (GAME-092).
+- **PRD-053** [REMOVED] Was: leadership confirms whether prizes come from this budget or another. Handled offline by leadership (DEC-078).

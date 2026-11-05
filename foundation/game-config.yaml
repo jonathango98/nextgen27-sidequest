@@ -2,8 +2,8 @@
 #
 # Status: Active
 # Owner: Jonathan (@jonathango98)
-# Version: 1.9.1
-# Last updated: 2026-11-04
+# Version: 1.10.0
+# Last updated: 2026-11-05
 # Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 #
 # How to read this file
@@ -44,7 +44,6 @@ limits:
 blind_box:
   milestone_points: 300               # GAME-070 PROPOSED: one blind box unlocks every this many points of score
   max_per_player: 3                   # GAME-071 PROPOSED: most blind boxes one player can earn
-  stock_total: null                   # GAME-069 OPEN: boxes available, set from the final blind box order
   live_counter: false                 # GAME-077 LOCKED: no "boxes left" counter anywhere
   redemption_window: [day1_evening, day2_breaks, sunday_before_service]  # GAME-078 PROPOSED: when claims are open
   trading: false                      # GAME-079 PROPOSED: no blind box trading
@@ -92,7 +91,6 @@ join:
 
 prizes:
   raffle: false                       # GAME-091 PROPOSED: no raffle, prizes go by rank
-  categories: null                    # GAME-092 OPEN: final prize list (top player, top church, others)
 
 wrapped:
   unlock: admin_manual                # WRAP-002 LOCKED: an admin unlocks Wrapped on Sunday right after results

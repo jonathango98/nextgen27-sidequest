@@ -3,7 +3,7 @@ GET /screen and the view partials in 06-api-and-screens.md only (API-001).
 
 No login: every page needs the screen key (ARCH-037). The players and churches views show the
 leaderboards (GAME-086, GAME-081). The others say coming soon until their own pieces fill them in:
-`recap.screen` and `screen.photobooth`.
+`recap.screen`. No photobooth view in v1 (DEC-078).
 """
 
 import sqlite3

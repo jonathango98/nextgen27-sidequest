@@ -2,8 +2,8 @@
 
 - Status: PROPOSED (developers confirm at kickoff; constraints marked LOCKED are required whatever the final schema looks like)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.7.0
-- Last updated: 2026-11-04
+- Version: 1.8.0
+- Last updated: 2026-11-05
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -64,6 +64,7 @@ This file lists the tables, their fields, and the database constraints that enfo
 | `state` | text | `on`, `paused`, or `off` (GAME-100) |
 | `wrapped_unlocked` | boolean | WRAP-002 |
 | `redemption_closed_at` | timestamp, nullable | Set when an admin closes blind box redemption on Sunday (GAME-078) |
+| `blind_boxes_out` | boolean, default false | True while an admin has marked the blind boxes ran out (GAME-076) |
 | `screen_off_view` | text | `offline` or `recap`: what the main screen shows while the game is off (UI-044). Starts as `offline` |
 | `updated_at`, `updated_by` | timestamp, staff ID | Every change is also audited |
 
@@ -198,7 +199,7 @@ This file lists the tables, their fields, and the database constraints that enfo
 Rules that a unique constraint cannot express are checked by the points service inside the same transaction (ARCH-040):
 
 - **DATA-028** [LOCKED] Photobooth cap: count that player's PhotoboothVisit rows for that `event_day` before inserting (GAME-042).
-- **DATA-029** [LOCKED] Blind box cap and stock: `claim_number` must be at most `blind_box.max_per_player` and at most the blind boxes earned. Once `blind_box.stock_total` is set, a claim is refused when total claims already equal it (GAME-071, GAME-074, GAME-076).
+- **DATA-029** [LOCKED] Blind box cap: `claim_number` must be at most `blind_box.max_per_player` and at most the blind boxes earned. Stock is not counted. A claim is refused while `game_state.blind_boxes_out` is true (GAME-071, GAME-074, GAME-076, DEC-078).
 
 ## 4. Score
 

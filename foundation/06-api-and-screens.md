@@ -2,8 +2,8 @@
 
 - Status: PROPOSED (developers confirm at kickoff)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.11.0
-- Last updated: 2026-11-04
+- Version: 1.12.0
+- Last updated: 2026-11-05
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -86,6 +86,7 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 | GET | `/admin/activity` | Unusual activity view | ARCH-062 |
 | GET | `/admin/audit` | Audit log | ARCH-050 |
 | POST | `/admin/redemption/close` | Close blind box redemption on Sunday when the service starts | GAME-078, GAME-110 |
+| POST | `/admin/blind-box/out` | Mark blind boxes ran out, or back in stock | GAME-076, GAME-110 |
 | POST | `/admin/wrapped/unlock` | Unlock Wrapped | WRAP-002 |
 | POST | `/admin/screen-off-view` | Choose what the main screen shows while the game is off: the offline message or the recap | UI-044 |
 
@@ -97,7 +98,6 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 | GET | `/screen/players` | Partial: player leaderboard | GAME-086 |
 | GET | `/screen/churches` | Partial: church leaderboard | GAME-081 |
 | GET | `/screen/takeaways` | Partial: takeaway wall, one approved shared takeaway picked at random | SAFE-018 |
-| GET | `/screen/photobooth` | Partial: photobooth pictures. Says coming soon until SAFE-038 is decided | SAFE-038 |
 | GET | `/screen/checkin/{session_id}` | Rotating session check-in QR and countdown for the hall screen. Opens only from the link an admin makes for that session, not with the main screen key. `checkin.hall` adds the route that makes the link | GAME-020, GAME-028, DEC-070 |
 | GET | `/screen/recap` | Conference recap on Sunday | WRAP-020 |
 
@@ -120,11 +120,11 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 | 404 | `NOT_FOUND` | No such record | "We couldn't find that." |
 | 409 | `ALREADY_CONNECTED` | The pair already exists | "You two are already connected!" |
 | 409 | `ALREADY_DONE` | Once-only quest already done | "You already checked in to this session." |
+| 409 | `OUT_OF_STOCK` | An admin marked the blind boxes ran out | "All the blind boxes are gone." |
 | 409 | `ITEM_CLAIMED` | Hidden item already claimed | "This item was already turned in." |
 | 409 | `LIMIT_REACHED` | A daily or total cap is reached | "That's all the photobooth points for today." |
 | 409 | `NAME_TAKEN` | Sign-up with a full name already used in that church | "Someone from your church already joined with this name. Please find an usher at the game booth." |
 | 409 | `NOTHING_TO_CLAIM` | No claimable blind boxes | "Keep playing to unlock your next box." |
-| 409 | `OUT_OF_STOCK` | No blind boxes left | "All the blind boxes are gone." |
 | 410 | `CODE_EXPIRED` | The rotating code is too old | "That code expired. Ask them to show it again." |
 | 423 | `PAUSED` | The game is paused | "The game is paused during the session." |
 | 423 | `GAME_OFF` | The game is off | "The game is closed right now." |
@@ -161,7 +161,6 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 | Admin console | Admin | `/admin` | Game state switch first, then queues | GAME-110 |
 | Main screen: leaderboards | Screen | `/screen/players`, `/screen/churches` | Readable from the back of the room | UI-041 |
 | Main screen: takeaway wall | Screen | `/screen/takeaways` | One approved shared post at a time | SAFE-018 |
-| Main screen: photobooth | Screen | `/screen/photobooth` | Coming soon until SAFE-038 is decided | SAFE-038 |
 | Main screen: check-in QR | Screen | `/screen/checkin/{id}` | Opened from the link an admin makes, with a countdown to the close time the admin entered | GAME-020, GAME-028, DEC-070 |
 | Main screen: off | Screen | `/screen` | "Side Quest is offline", or the recap, as an admin chooses | UI-044 |
 | Main screen: conference recap | Screen | `/screen/recap` | Sunday before prizes | WRAP-020 |

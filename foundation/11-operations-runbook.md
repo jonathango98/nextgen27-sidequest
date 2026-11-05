@@ -2,8 +2,8 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.4.0
-- Last updated: 2026-11-04
+- Version: 1.4.1
+- Last updated: 2026-11-05
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -64,7 +64,7 @@ This file is for game day and the weeks before it: who does what, what to do whe
 | Dead phone or no battery | Usher looks the player up by name and records the quest (GAME-113) | Usher | |
 | Wrong score | Admin checks the player's history and makes a manual award or revocation with a reason | Admin | If it is a bug, open an issue with fake data |
 | Long booth line | Use the separate blind box line. Add a second usher | Usher lead | |
-| Blind boxes run out | The server refuses new claims (GAME-076). Ushers explain kindly | Ushers | |
+| Blind boxes run out | An admin presses Blind boxes ran out on the admin console, so phones say so and claims are refused. Ushers explain kindly (GAME-076) | Admin, ushers | |
 | Locked PIN | Admin checks the name badge, then resets (SAFE-044). Or the player waits: the account unlocks itself after 60 minutes (SAFE-022) | Admin | |
 | Game left on overnight | Set the game to off now (OPS-005). Then decide whether to revoke points earned overnight | Admin, game director | |
 | Forgot to pause | Pause now. Then decide whether to revoke points earned during the session | Admin, game director | |
@@ -85,7 +85,7 @@ This file is for game day and the weeks before it: who does what, what to do whe
 - [ ] Usher and admin accounts created, one per person (ARCH-036)
 - [ ] Usher training done (OPS-010)
 - [ ] Paper fallback kit printed: blank paper logs and pens (ARCH-081)
-- [ ] Blind boxes sealed and counted, and `blind_box.stock_total` set (GAME-069)
+- [ ] Blind boxes sealed and counted, and admins know to press Blind boxes ran out when they're gone (GAME-076)
 - [ ] Join QR on the intro slides points to the production sign-up page (ARCH-024)
 - [ ] `SQ_SCREEN_KEY` set in production, and the main screen link opened on the main screen device and the outside TV (ARCH-037)
 

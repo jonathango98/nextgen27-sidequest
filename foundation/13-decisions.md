@@ -2,8 +2,8 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.37.0
-- Last updated: 2026-11-04
+- Version: 1.38.0
+- Last updated: 2026-11-05
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -97,6 +97,7 @@ Sources, in order of precedence:
 | DEC-075 | 2026-11-04 | The game director confirmed DEC-074: the phone shows the player's own standing in v1. GAME-085 is LOCKED. Its numbers, 10 places (`leaderboard.in_app_rank_top_n`) and the 50% cutoff (`leaderboard.in_app_percent_cutoff`), stay PROPOSED | DEC-074 was PROPOSED until the game director confirmed it. The numbers can still be tuned with playtest data | Game director, via Jonathan (2026-11-04) |
 | DEC-076 | 2026-11-04 | Sharing and review for takeaways (`journal.share-review`). A player can change who can read a note later from their Journal list, but not while the game is paused or off. Switching an approved note between named and anonymous keeps the approval. Sharing a private note, or sharing again after making it private, sends it for review. A note an admin rejected or hid can only be made private, and keeps its status so it can't be shared again. An admin can approve a rejected or hidden note later. Every change writes an audit row. The player sees only their own choice, never the review status. Takeaways get a random `public_id` for these URLs (DATA-003) | Jonathan's call. Players may change their mind after writing, and admins can fix a wrong reject or hide. Keeping the reject on a private note stops turned-down text from going back into the queue again and again (SAFE-007). Showing only the choice keeps the Journal list from feeling like a grade (UI-050) | Jonathan (2026-11-04, PR #87) |
 | DEC-077 | 2026-11-04 | Home's Write button opens the player's own journal list, not the form. The list has Write a takeaway at the top, and each note's Change control (DEC-076). Write works like Read: open while the game is on or off, greyed out while paused (GAME-102). While off, the player can read their notes (GAME-108), but Write hides its points pill, Write a takeaway is greyed out, and the change arrow is hidden, since nothing can be written or changed. This changes the Write part of UI-036 | Jonathan's call. Nothing on Home led to a player's own notes, so they could only see them right after submitting one, and couldn't change who reads them. Writing takes one more tap | Jonathan (2026-11-04, PR #87) |
+| DEC-078 | 2026-11-05 | The last six OPEN items are removed, not decided: PRD-011 (metric targets), PRD-053 and GAME-092 (prize budget and prize list), GAME-068 (what goes inside a blind box), GAME-069 (how many blind boxes), and SAFE-038 (photobooth pictures on the main screen). Blind box contents, prizes, and the prize budget are handled offline by the game director and leadership. The server does not count blind box stock. Instead an admin presses Blind boxes ran out when the booth is empty: Open Box and Home's Claim box then say so, the box progress bar hides, and claims are refused with `OUT_OF_STOCK` until Back in stock. Each press writes an audit row. `blind-box.close-redemption` builds it. GAME-076, GAME-110, DATA-029, and the GameState table change. The main screen shows no photobooth pictures in v1: its photobooth view and `screen.photobooth` are gone, and UI-040 changes. `blind_box.stock_total` and `prizes.categories` leave `game-config.yaml`. Section 3 is now empty | Jonathan's call: none of them is needed for the app to work. A switch tells players the boxes ran out without anyone typing a count. Dropping photobooth pictures also keeps photos of under-18 players off the main screen with no consent check to build (SAFE-024, SAFE-025) | Jonathan (2026-11-05) |
 
 ## 2. Resolved conflicts
 
@@ -119,14 +120,7 @@ Sources, in order of precedence:
 
 Every OPEN rule in the foundation. Until an item is decided, do not build behavior that depends on it. Config values stay null and flags stay off. The "needed by" column is a suggestion.
 
-| Rule | Question | Options | Owner | Needed by |
-|---|---|---|---|---|
-| PRD-011 | Target numbers for success metrics | Set from Playtest 1 results | Jonathan | After Playtest 1 |
-| PRD-053 | Whether prizes come from the game budget | This budget or another | Leadership | Early November |
-| GAME-068 | What goes inside a blind box | | Game director | Early February |
-| GAME-069 | Number of blind boxes | From the final order | Game director | Early February |
-| GAME-092 | Final prize list | | Game director, leadership | Before Playtest 2 |
-| SAFE-038 | Photobooth pictures on the main screen: who runs the photobooth's service, how the app reads it, and how consent for under-18 photos is checked | Show them with consent checked by the photobooth, or not in v1 | Jonathan | Before `screen.photobooth` |
+None. Every OPEN item has been decided or removed (DEC-078).
 
 ## 4. PROPOSED values to review after Playtest 1
 

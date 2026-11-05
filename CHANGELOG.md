@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-05 · docs/drop-open-decisions · Claude Opus 5.5 / @jonathango98
+
+- What: Removes the last six OPEN items instead of deciding them (DEC-078): PRD-011 metric targets, PRD-053 and GAME-092 prize budget and list, GAME-068 blind box contents, GAME-069 blind box count, and SAFE-038 photobooth pictures. Each is marked REMOVED and the open table in `13-decisions.md` is empty. The server no longer plans to count blind box stock. Instead an admin presses Blind boxes ran out (and Back in stock to undo): Open Box and Home's Claim box then say so and claims are refused with `OUT_OF_STOCK`. GAME-076, GAME-110, DATA-029, a GameState field, a route, the runbook, and the `blind-box.close-redemption` piece, which builds it, say so. The main screen drops its photobooth view, in the code and in UI-040, the routes, and the glossary, and `screen.photobooth` leaves the feature tree, so the `screen` row leaves Planned. `blind_box.stock_total` and `prizes.categories` leave `game-config.yaml`. Foundation changes need Jonathan's approval (ENG-080).
+- Why: Jonathan's call: none of the six is needed for the app to work, and they were the only items left on the open list.
+- Rule IDs: PRD-011, PRD-053, GAME-068, GAME-069, GAME-072, GAME-076, GAME-110, GAME-092, SAFE-038, DATA-029, UI-040, DEC-078, ENG-087, ENG-088, ENG-108
+- Status: Done
+- PR: draft
+
 ## 2026-11-04 · feat/journal-share-review · Claude Opus 5.5 / @jonathango98
 
 - What: Builds `journal.share-review`. Players choose who can read each note (Just me, Shared with my name, Shared anonymously) on the Journal form, with the UI-031 note, and can change it later from each card on their Journal list. Write on Home now opens that list, with Write a takeaway on top, and it stays open while the game is off so players can read their notes (DEC-077, GAME-108). Admins open Review notes from the console: tabs for waiting, approved, rejected, and hidden with counts, the writer's name and church on every note, and Approve, Reject, Hide, or Approve again, each with an audit row. A rejected or hidden note can only go private. The Takeaways page (`/summary`) shows approved shared notes to signed-in players, newest session first. Migration 0011 rebuilds the takeaway table with a random `public_id` and lets a private note keep a reject or hide. PR previews get an ended Example Ended Session and four fake shared notes, two approved and two waiting. Foundation: GAME-031, SAFE-040, SAFE-041, the takeaway table, two routes, a try_it step, UI-036, DEC-076, and DEC-077 (needs Jonathan's approval, ENG-080).

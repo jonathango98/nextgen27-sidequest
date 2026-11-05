@@ -2,8 +2,8 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.2.2
-- Last updated: 2026-11-04
+- Version: 1.2.3
+- Last updated: 2026-11-05
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -17,7 +17,7 @@ Use these words the same way in code, copy, issues, and PRs.
 | Area label | A GitHub label (`area:backend` and so on) that says which part of the app an issue or PR touches | ENG-040 |
 | Audit row | A record of who did what, to which record, when, and why | ARCH-050 |
 | Auto-unlock | A locked account unlocks itself after 60 minutes | SAFE-022 |
-| Blind box | A sealed box with a mystery item, unlocked every 300 points of score. Contents are OPEN | GAME-072, GAME-068 |
+| Blind box | A sealed box with a mystery item, unlocked every 300 points of score. The game director chooses the contents | GAME-072 |
 | Booth | A staffed table that gives points once per player, for example the mission booth | GAME-041 |
 | Check-in | Scanning a session's rotating code on the hall screen before the session starts | GAME-020, GAME-021 |
 | Church list | The preloaded list of churches players pick from at sign-up | SAFE-002 |
@@ -39,7 +39,7 @@ Use these words the same way in code, copy, issues, and PRs.
 | Last initial | The first letter of a player's last name, shown after the first name on leaderboards | GAME-088 |
 | Ledger | The PointLedger table. Score is the sum of its rows for a player | DATA-030 |
 | LOCKED | Decided. Build it | README |
-| Main screen | The big screen page, opened from a secret link, that takes turns showing leaderboards, the takeaway wall, and photobooth pictures while the game is on or paused | UI-040, ARCH-037 |
+| Main screen | The big screen page, opened from a secret link, that takes turns showing leaderboards and the takeaway wall while the game is on or paused | UI-040, ARCH-037 |
 | Milestone | Every 300 points of score, which unlocks one blind box | GAME-070 |
 | My Code | A player's personal QR code. It changes every 30 seconds | GAME-001 |
 | OPEN | Not decided. Do not build behavior that depends on it | README |

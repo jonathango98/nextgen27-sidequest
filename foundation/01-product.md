@@ -2,8 +2,8 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.2.0
-- Last updated: 2026-10-29
+- Version: 1.3.0
+- Last updated: 2026-11-05
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -32,7 +32,7 @@ It also supports the program. Small rewards go to attending sessions, visiting t
 | Takeaways | Takeaways shared, and how often the summary page is read |
 | Feedback | Attendee feedback, and how many leaders want to reuse the ideas at home |
 
-- **PRD-011** [OPEN] Target numbers for each metric. They are set after Playtest 1.
+- **PRD-011** [REMOVED] Was: target numbers for each metric, set after Playtest 1. Not needed (DEC-078).
 
 ## 4. Audience and event shape
 

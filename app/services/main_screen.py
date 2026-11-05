@@ -10,7 +10,7 @@ from app.services import audit
 from app.services.game_state import current_state
 
 # UI-040: the views in the order they take turns. The first one follows the last.
-VIEWS = ("players", "churches", "takeaways", "photobooth")
+VIEWS = ("players", "churches", "takeaways")
 # UI-044: what the main screen can show while the game is off.
 OFF_VIEWS = ("offline", "recap")
 # ARCH-050: the audit action for each off view an admin picks.
