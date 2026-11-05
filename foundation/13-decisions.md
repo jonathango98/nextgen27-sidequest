@@ -2,7 +2,7 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.34.0
+- Version: 1.35.0
 - Last updated: 2026-11-04
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -92,6 +92,7 @@ Sources, in order of precedence:
 | DEC-070 | 2026-11-04 | The hall check-in page opens from a link an admin makes for a session, not from the main screen link. The admin enters the time check-in closes, the page counts down to it, and check-in closes then (GAME-024, GAME-027, GAME-028). `checkin.window` and `checkin.hall` work out the fields and routes | A public check-in link would let anyone check in from outside the hall (GAME-020). The admin picks the close time to fit the day | Jonathan (2026-11-04, PR #77) |
 | DEC-071 | 2026-11-04 | Photobooth pictures on the main screen are their own piece, `screen.photobooth`, locked by SAFE-038 until we know who runs the photobooth's service and how consent for under-18 photos is checked. Until then the main screen's photobooth view says it is coming soon | SAFE-024 forbids photos of minors without consent, and the app stores no photos (SAFE-025) | Jonathan (2026-11-04, PR #77) |
 | DEC-072 | 2026-11-04 | A player can write any number of takeaways for a session. Every one needs at least 15 words, and only the first one for a session earns points (GAME-030). DATA-023 (one takeaway per session) is removed, and the point ledger's unique award (DATA-027) keeps points once per session. No cap on notes per session for now | Jonathan's call. Players may want to add a thought later, and the feature tree's `journal.notes` try_it and `wrapped.stat-cards` already count more than one note per session. Points don't stack, so there is little reason to spam. `journal.share-review` should look again at many shared notes in the review queue | Jonathan (2026-11-04, PR #83) |
+| DEC-073 | 2026-11-04 | If the phone rank switch (GAME-085) is ever turned on, the phone shows only the player's own standing: their place in the top 10, else their top percent rounded up down to the top 50%, else nothing. A top 10 place always shows, even in a small game. It counts every player with points, in the main screen order (GAME-084). DEC-040 stands, so the switch stays off in v1 | Jonathan's call. Showing only the player's own standing keeps other players' scores off phones (SAFE table), and showing nothing in the bottom half never shames anyone (UI-050) | Jonathan (2026-11-04, PR #85) |
 
 ## 2. Resolved conflicts
 

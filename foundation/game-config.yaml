@@ -2,7 +2,7 @@
 #
 # Status: Active
 # Owner: Jonathan (@jonathango98)
-# Version: 1.8.0
+# Version: 1.9.0
 # Last updated: 2026-11-04
 # Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 #
@@ -56,6 +56,8 @@ leaderboard:
   main_screen_top_n: 10               # GAME-083 PROPOSED: rows shown on the main screen leaderboards
   tie_break: first_to_reach           # GAME-084 PROPOSED: the earlier latest point award ranks higher
   in_app_leaderboard: false           # GAME-085 PROPOSED: no leaderboard and no rank on the phone
+  in_app_rank_top_n: 10               # GAME-085 PROPOSED: with the switch on, these top places see "#N"
+  in_app_percent_cutoff: 50           # GAME-085 PROPOSED: below the top places, show "top X%" down to this percent, then nothing
 
 journal:
   review_scope: all_shared            # SAFE-008 PROPOSED: review every shared post (stricter option) until leadership decides
