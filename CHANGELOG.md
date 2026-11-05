@@ -22,10 +22,10 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-11-04 · fix/55-migration-number-reuse · Claude Opus 5.5 / @jonathango98
 
-- What: Claims issue #55. The migration runner will stop at start with a clear error when a recorded migration number belongs to a different file, instead of skipping the new file without a word.
+- What: Fixes issue #55. `migrate()` in `app/db.py` now reads each recorded migration's name as well as its number. Before applying anything, it checks every recorded number against the file with that number, and stops with a `DatabaseError` naming both files when they differ ("Migration 0002 is recorded as 0002_old.sql but the file is 0002_new.sql. Reset this database or fix the numbering."). Before, the runner skipped the new file without a word. No schema change: `schema_migration.name` already existed. Staging and production are unaffected because their recorded names match. New test `test_eng_050_stops_when_a_recorded_number_has_a_different_file` replays the #49 preview: it failed first with `table old already exists`, and passes now. A recorded number with no file at all is still skipped silently, which the issue does not cover.
 - Why: Picked through `/pick-task`. Issue #55: a renumbered migration on the #49 preview was skipped, so the app could start with a missing table.
-- Rule IDs: DATA-040, ENG-050, ENG-101, ENG-109
-- Status: Started
+- Rule IDs: DATA-040, ENG-050, AI-042, ENG-101, ENG-108, ENG-109
+- Status: Done
 - PR: #81
 
 ## 2026-11-04 · feat/leaderboards-screen · Claude Opus 5.5 / @jonathango98

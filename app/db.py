@@ -74,10 +74,19 @@ def migrate(
         ") STRICT"
     )
     done = {
-        row["version"] for row in conn.execute("SELECT version FROM schema_migration")
+        row["version"]: row["name"]
+        for row in conn.execute("SELECT version, name FROM schema_migration")
     }
+    files = _migration_files(migrations_dir)
+    # Issue #55: a reused number must stop the app, not skip the new file. Check before applying any.
+    for number, path in files:
+        if number in done and done[number] != path.name:
+            raise DatabaseError(
+                f"Migration {number:04d} is recorded as {done[number]} but the file is"
+                f" {path.name}. Reset this database or fix the numbering."
+            )
     applied = []
-    for number, path in _migration_files(migrations_dir):
+    for number, path in files:
         if number in done:
             continue
         conn.execute("BEGIN IMMEDIATE")

@@ -74,6 +74,25 @@ def test_eng_050_rejects_two_migrations_with_one_number(tmp_path):
         migrate(connect(tmp_path / "t.db"), tmp_path)
 
 
+def test_eng_050_stops_when_a_recorded_number_has_a_different_file(tmp_path):
+    # Issue #55: a preview ran 0002_old, then it was renumbered to 0003 and a new 0002 merged.
+    (tmp_path / "0001_first.sql").write_text(
+        "CREATE TABLE first (id INTEGER PRIMARY KEY);"
+    )
+    (tmp_path / "0002_old.sql").write_text("CREATE TABLE old (id INTEGER PRIMARY KEY);")
+    conn = connect(tmp_path / "t.db")
+    migrate(conn, tmp_path)
+    (tmp_path / "0002_old.sql").rename(tmp_path / "0003_old.sql")
+    (tmp_path / "0002_new.sql").write_text("CREATE TABLE new (id INTEGER PRIMARY KEY);")
+    with pytest.raises(DatabaseError, match=r"0002_old\.sql.*0002_new\.sql"):
+        migrate(conn, tmp_path)
+    tables = {
+        r["name"]
+        for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
+    }
+    assert "new" not in tables
+
+
 def test_data_005_foreign_keys_on(conn):
     assert conn.execute("PRAGMA foreign_keys").fetchone()[0] == 1
     with pytest.raises(sqlite3.IntegrityError):
