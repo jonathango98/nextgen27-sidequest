@@ -5,7 +5,7 @@
 
 Every planned piece of work and what it needs first (ENG-105 to ENG-108), grouped by the week it is due (PRD-054). Pieces flow left to right in time: finishing one unlocks the pieces it points to. Run `/pick-task` to claim one.
 
-**Working** 26 · **In progress** 0 · **Ready** 11 · **Waiting** 11 · **Needs decision** 1
+**Working** 26 · **In progress** 1 · **Ready** 10 · **Waiting** 11 · **Needs decision** 1
 
 Colors: green Working, blue In progress, gold Ready, gray Waiting, red dashed Needs decision.
 
@@ -171,7 +171,8 @@ flowchart LR
   classDef waiting fill:#f1f0eb,stroke:#c3c0b6,color:#545a66
   classDef decision fill:#fdeeec,stroke:#b42318,stroke-dasharray:4 3,color:#14151a
   class app_foundation,auth_join_login,checkin_sessions,code_my_code,connections_meet,connections_scanner_camera,connections_table,game_state_controls,game_state_core,infra_hosting,leaderboards_screen,look_base,look_screens,points_audit_log,points_ledger,points_score,ready_backups,ready_load_test,ready_logout,ready_rate_limits,ready_retention,screen_main,screens_skeleton,staff_accounts,staff_login,usher_console working
-  class admin_audit_view,admin_players,admin_setup,checkin_window,connections_answers,explore_booths,game_state_auto_pause,home_pages,journal_notes,leaderboards_in_app,wrapped_cards ready
+  class journal_notes in_progress
+  class admin_audit_view,admin_players,admin_setup,checkin_window,connections_answers,explore_booths,game_state_auto_pause,home_pages,leaderboards_in_app,wrapped_cards ready
   class admin_award_revoke,blind_box_close_redemption,blind_box_handout,checkin_hall,connections_verse_picker,explore_items,journal_share_review,recap_screen,wrapped_collection,wrapped_save_image,wrapped_stat_cards waiting
   class screen_photobooth decision
 ```
@@ -233,14 +234,6 @@ flowchart LR
     1. Log in as Test Player 1 on a phone with the switch off.
     2. You should see only your own points and no leaderboard or rank.
     3. Turn the switch on in the local config, reload, and the leaderboard or rank should appear.
-- `journal.notes`: A safe place to keep players' notes, and a way for a player to write a private note about what they learned in a session that has finished. They get points once for each session, and they can see a list of the notes they wrote themselves. (L, medium, player-app, due fri jan 8)
-  - Try it:
-    1. On the PR preview, end Example Session 1 as Test Admin. Then join as Test Player 1 on a phone and open Journal. It should offer that session.
-    2. Send a note with too few words. You should see a friendly message.
-    3. Send a long enough note. You should get the points once, and the note should show in your list.
-    4. Write a second note for the same session. You should get no new points.
-    5. Pause the game and try to write a note. It should say no.
-    6. Write a note as Test Player 2 on another phone. Each phone should list only its own notes.
 - `wrapped.cards`: An admin presses a button to open Wrapped, your personal story of the conference. Until then, players see a note saying when it will open. Once open, it's cards you swipe through like a little story, starting with a Welcome card. (L, medium, player-app, due fri jan 15)
   - Try it:
     1. On a phone at the PR preview, log in as Test Player 1 and open Wrapped. You should see the note about when it unlocks.
@@ -251,7 +244,7 @@ flowchart LR
 
 ## In progress
 
-- None
+- `journal.notes`: A safe place to keep players' notes, and a way for a player to write a private note about what they learned in a session that has finished. They get points once for each session, and they can see a list of the notes they wrote themselves.
 
 ## Needs a decision
 

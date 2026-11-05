@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-04 · feat/journal-notes · Claude Opus 5.5 / @jonathango98
+
+- What: Claimed `journal.notes`: a safe table for players' notes, a form to write a private note about a finished session with points once per session, and a list of your own notes.
+- Why: Next ready piece in the feature tree, due 2027-01-08 (PRD-054).
+- Rule IDs: DATA-023, SAFE-016, SAFE-017, GAME-030, GAME-031, GAME-032, GAME-033, GAME-034, GAME-036, ENG-101
+- Status: Started
+- PR: draft
+
 ## 2026-11-04 · feat/feature-tree-no-lines · Claude Opus 5.5 / @jonathango98
 
 - What: The feature tree map on Pages now opens with no piece picked: every piece shows at full strength and no lines are drawn. Picking a piece draws only the lines to what it needs and what it unlocks, as before. Clicking the same piece again, clicking an empty spot on the map, or pressing Esc goes back to the whole tree. Before, the page opened with `points.audit-log` picked and drew every line at once. New test `test_eng_110_map_draws_lines_only_for_the_picked_piece`.
