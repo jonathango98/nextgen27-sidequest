@@ -411,8 +411,18 @@ h2 {
 }
 
 .standing {
+  /* GAME-085: a frosted pill, since gold is for points only (07 section 3). */
+  align-self: flex-start;
   margin: 0;
-  font-weight: 600;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-small);
+  font-weight: 700;
+  line-height: 1.4;
+  background: var(--color-surface);
+  -webkit-backdrop-filter: var(--glass-filter);
+  backdrop-filter: var(--glass-filter);
+  box-shadow: var(--shadow-glass);
 }
 
 .home-progress {
