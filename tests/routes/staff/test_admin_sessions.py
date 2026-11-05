@@ -1,3 +1,4 @@
+import copy
 import re
 
 import pytest
@@ -233,6 +234,16 @@ def test_data_014_page_has_no_room_or_place_field(client):
 def test_game_110_admin_console_links_to_sessions(client):
     _log_in(client, *ADMIN)
     assert 'href="/admin/sessions"' in client.get("/admin").text
+
+
+def test_ops_001_sessions_page_says_auto_pause_is_only_a_backup(client, monkeypatch):
+    _log_in(client, *ADMIN)
+    assert "still press Pause" in client.get("/admin/sessions").text
+    # A copy, so the cached config other tests read stays as it is.
+    config = copy.deepcopy(client.app.state.config)
+    config["game"]["auto_pause_schedule"] = False  # GAME-107 switched off
+    monkeypatch.setattr(client.app.state, "config", config)
+    assert "data-auto-pause" not in client.get("/admin/sessions").text
 
 
 @pytest.mark.parametrize(

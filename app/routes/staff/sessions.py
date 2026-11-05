@@ -61,6 +61,7 @@ def _page(
         "state": game_state.current_state(conn),
         "rows": [_row(s, timezone) for s in sessions.list_all(conn)],
         "title_max": sessions.TITLE_MAX_CHARS,
+        "auto_pause": request.app.state.config["game"]["auto_pause_schedule"],
         "notice": notice,
         # Typed values come back after a refused form, so the admin doesn't type them again.
         "form": form or {},
