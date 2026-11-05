@@ -22,10 +22,10 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-11-04 · feat/leaderboards-in-app · Claude Opus 5.5 / @jonathango98
 
-- What: Claimed `leaderboards.in-app`: an optional switch that shows a leaderboard or own rank on the phone, off by default.
-- Why: Next ready piece in the feature tree (ENG-101, ENG-108).
-- Rule IDs: GAME-085, DEC-040
-- Status: Started
+- What: Builds `leaderboards.in-app`. With `leaderboard.in_app_leaderboard` on, Home shows one line under the score with the player's own standing: "You're #N" in the top `in_app_rank_top_n` places (always, even in a small game), else "You're in the top X%" rounded up down to `in_app_percent_cutoff`, else nothing. Same order and tie rule as the main screen. The switch stays off, so Home is unchanged today. Foundation: two new config keys, GAME-085 reworded, DEC-073 (needs Jonathan's approval, ENG-080).
+- Why: Next ready piece in the feature tree, due 2026-12-18 (PRD-054). Jonathan chose own standing only, so no other player's score reaches a phone, and nothing for the bottom half.
+- Rule IDs: GAME-084, GAME-085, DEC-040, DEC-073, SAFE-028, UI-036, UI-050, AI-013, AI-042, AI-044
+- Status: Done
 - PR: #85
 
 ## 2026-11-05 · fix/journal-test-session-label · Claude Opus 5.5 / @jonathango98
