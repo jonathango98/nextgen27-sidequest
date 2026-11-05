@@ -59,7 +59,7 @@ def test_ui_041_main_screen_at_1080p_is_dark_big_and_takes_turns(
     errors = _errors(page)
     try:
         page.goto(_url(live_server))
-        expect(page.get_by_role("heading", name="Top players")).to_be_visible()
+        expect(page.get_by_role("heading", name="Player leaderboard")).to_be_visible()
         # UI-042: the dark screen background. UI-041: no text below the config size at 1080p.
         background = page.locator("body").evaluate(
             "e => getComputedStyle(e).backgroundColor"
@@ -75,7 +75,7 @@ def test_ui_041_main_screen_at_1080p_is_dark_big_and_takes_turns(
         page.screenshot(path=tmp_path / "screen-1080.png")
         # API-031: the next view comes in by itself after one turn.
         turn_ms = (CFG["main_screen"]["rotate_seconds"] + 5) * 1000
-        expect(page.get_by_role("heading", name="Top churches")).to_be_visible(
+        expect(page.get_by_role("heading", name="Church leaderboard")).to_be_visible(
             timeout=turn_ms
         )
         assert errors == []
@@ -86,7 +86,7 @@ def test_ui_041_main_screen_at_1080p_is_dark_big_and_takes_turns(
 def test_ui_002_main_screen_fits_min_width(page: Page, live_server, tmp_path):
     errors = _errors(page)
     page.goto(_url(live_server))
-    expect(page.get_by_role("heading", name="Top players")).to_be_visible()
+    expect(page.get_by_role("heading", name="Player leaderboard")).to_be_visible()
     width = CFG["ui"]["min_viewport_px"]
     assert page.evaluate("document.documentElement.scrollWidth") <= width
     page.screenshot(path=tmp_path / "screen-360.png", full_page=True)
@@ -178,7 +178,7 @@ def _fill_boards(test_db_path):
         conn.close()
 
 
-@pytest.mark.parametrize("view", ["Top players", "Top churches"])
+@pytest.mark.parametrize("view", ["Player leaderboard", "Church leaderboard"])
 def test_game_083_full_board_fits_a_1080p_screen(
     browser: Browser, live_server, test_db_path, tmp_path, view
 ):
@@ -190,8 +190,8 @@ def test_game_083_full_board_fits_a_1080p_screen(
         # A fake clock moves the screen on a turn, instead of waiting on a real timer (API-031).
         page.clock.install()
         page.goto(_url(live_server))
-        expect(page.get_by_role("heading", name="Top players")).to_be_visible()
-        if view == "Top churches":
+        expect(page.get_by_role("heading", name="Player leaderboard")).to_be_visible()
+        if view == "Church leaderboard":
             page.clock.run_for(CFG["main_screen"]["rotate_seconds"] * 1000)
         expect(page.get_by_role("heading", name=view)).to_be_visible()
         rows = page.locator(".screen-row")
@@ -202,7 +202,10 @@ def test_game_083_full_board_fits_a_1080p_screen(
             assert (
                 box["y"] + box["height"] <= HD["height"]
             )  # the whole board fits on screen
-        for selector in (".screen-rank", ".screen-name", ".screen-score"):
+        cells = [".screen-rank", ".screen-name", ".screen-score"]
+        if view == "Player leaderboard":
+            cells.append(".screen-church")
+        for selector in cells:
             assert (
                 _px(page, f".screen-row >> nth=0 >> {selector}", "font-size")
                 >= CFG["main_screen"]["min_text_px_1080p"]
@@ -221,7 +224,7 @@ def test_game_086_player_board_fits_min_width(
     _fill_boards(test_db_path)
     errors = _errors(page)
     page.goto(_url(live_server))
-    expect(page.get_by_role("heading", name="Top players")).to_be_visible()
+    expect(page.get_by_role("heading", name="Player leaderboard")).to_be_visible()
     expect(page.locator(".screen-row").first).to_be_visible()
     # SAFE-004, GAME-088: first name and last initial only.
     expect(page.get_by_text("Test Board P.").first).to_be_visible()

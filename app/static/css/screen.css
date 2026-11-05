@@ -1,19 +1,27 @@
 /* The main screen (UI-040 to UI-043). Dark screen tokens, read from the back of a ballroom. */
 
+/* With a background here, the dark color stays inside the body's layer below, so the grain can
+   blend with it. */
+html {
+  background: var(--color-screen-bg);
+}
+
 .screen {
   /* UI-041: game-config.yaml gives the smallest sizes in pixels at 1920x1080. One unit is 1/1080
      of the screen height, or of a 16:9 frame on a narrow screen, so every size scales together. */
   --screen-unit: calc(min(100vh, 100vw * 9 / 16) / 1080);
   --screen-text: calc(var(--screen-text-min) * var(--screen-unit));
+  position: relative;
+  isolation: isolate; /* keeps the background layers below behind the page, above the dark */
   margin: 0;
   min-height: 100vh;
   box-sizing: border-box;
-  padding: var(--screen-text);
+  padding: calc(var(--screen-pad-y) * var(--screen-unit))
+    calc(var(--screen-pad-x) * var(--screen-unit));
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: var(--screen-text);
   background: var(--color-screen-bg); /* UI-042 */
   color: var(--color-screen-text);
   font-family: var(--font-family);
@@ -21,10 +29,72 @@
   text-align: center;
 }
 
+/* Mix main screen mockups: faint bloom streaks, then film grain, as on the phone (UI-008), but
+   dimmed for the dark screen. Decoration only, and nothing is downloaded. */
+.screen::before,
+.screen::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.screen::before {
+  inset: var(--bloom-overhang);
+  background: var(--bloom-streaks);
+  transform: rotate(var(--bloom-angle));
+  opacity: var(--screen-bloom-opacity);
+}
+
+.screen::after {
+  background: var(--grain);
+  opacity: var(--screen-grain-opacity);
+  mix-blend-mode: overlay;
+}
+
+/* White corner marks */
+.screen-frame span {
+  position: fixed;
+  width: calc(var(--screen-frame-size) * var(--screen-unit));
+  height: calc(var(--screen-frame-size) * var(--screen-unit));
+  border: 0 solid var(--color-screen-text);
+  --screen-frame-edge: calc(var(--screen-frame-inset) * var(--screen-unit));
+  --screen-frame-width: calc(var(--screen-frame-line) * var(--screen-unit));
+}
+
+.screen-frame span:nth-child(1) {
+  top: var(--screen-frame-edge);
+  left: var(--screen-frame-edge);
+  border-top-width: var(--screen-frame-width);
+  border-left-width: var(--screen-frame-width);
+}
+
+.screen-frame span:nth-child(2) {
+  top: var(--screen-frame-edge);
+  right: var(--screen-frame-edge);
+  border-top-width: var(--screen-frame-width);
+  border-right-width: var(--screen-frame-width);
+}
+
+.screen-frame span:nth-child(3) {
+  bottom: var(--screen-frame-edge);
+  left: var(--screen-frame-edge);
+  border-bottom-width: var(--screen-frame-width);
+  border-left-width: var(--screen-frame-width);
+}
+
+.screen-frame span:nth-child(4) {
+  bottom: var(--screen-frame-edge);
+  right: var(--screen-frame-edge);
+  border-bottom-width: var(--screen-frame-width);
+  border-right-width: var(--screen-frame-width);
+}
+
 .screen-brand {
   margin: 0;
   font-family: var(--font-family-display);
-  color: var(--color-screen-gold);
+  font-size: calc(var(--screen-text) * var(--screen-scale-brand));
 }
 
 .screen-view {
@@ -46,6 +116,7 @@
   margin: 0;
   font-family: var(--font-family-display);
   font-size: calc(var(--screen-text) * 2);
+  font-weight: 400;
   line-height: 1.1;
   overflow-wrap: anywhere;
 }
@@ -55,50 +126,163 @@
   color: var(--color-screen-muted);
 }
 
-/* GAME-083: one row per player or church, each at least the config row height (UI-041). */
+/* Leaderboards (GAME-083), from the Mix main screen leaderboard mockups: the title column on the
+   left, then one frosted row per player or church. */
+.screen-view-board {
+  flex: 1;
+  align-self: stretch;
+  flex-direction: row;
+  align-items: stretch;
+  gap: calc(var(--screen-column-gap) * var(--screen-unit));
+  text-align: left;
+}
+
+.screen-side {
+  width: calc(var(--screen-side-width) * var(--screen-unit));
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.screen-heading {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--screen-heading-gap) * var(--screen-unit));
+}
+
+.screen-view-board .screen-title {
+  font-size: calc(var(--screen-text) * var(--screen-scale-title));
+  line-height: 1;
+}
+
+.screen-lede {
+  margin: 0;
+  max-width: 18ch;
+  font-size: calc(var(--screen-text) * var(--screen-scale-lede));
+  line-height: 1.25;
+  color: var(--color-screen-muted);
+}
+
 .screen-board {
+  flex: 1;
+  min-width: 0;
   margin: 0;
   padding: 0;
   list-style: none;
-  width: min(100%, calc(1600 * var(--screen-unit)));
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  gap: calc(var(--screen-row-gap) * var(--screen-unit));
 }
 
-/* Fixed columns, so names, churches, and scores line up from row to row. */
+.screen-board-empty {
+  flex: 1;
+  align-self: center;
+  text-align: center;
+}
+
+/* UI-041: each row is the mockup height, and never below the config row height. */
 .screen-row {
-  min-height: calc(var(--screen-row-min) * var(--screen-unit));
-  display: grid;
-  grid-template-columns: 3ch minmax(0, 1fr) 5ch;
+  min-height: max(
+    calc(var(--screen-row-height) * var(--screen-unit)),
+    calc(var(--screen-row-min) * var(--screen-unit))
+  );
+  box-sizing: border-box;
+  padding: 0 calc(var(--screen-row-pad) * var(--screen-unit));
+  display: flex;
   align-items: center;
-  gap: var(--screen-text);
-  text-align: left;
-  line-height: 1.2;
+  gap: calc(var(--screen-cell-gap) * var(--screen-unit));
+  border-radius: var(--radius-pill);
+  background: var(--color-screen-glass);
+  -webkit-backdrop-filter: var(--screen-glass-filter);
+  backdrop-filter: var(--screen-glass-filter);
+  box-shadow: var(--shadow-screen-glass);
 }
 
-.screen-board-players .screen-row {
-  grid-template-columns: 3ch minmax(0, 1fr) minmax(0, 1fr) 5ch;
+.screen-rank,
+.screen-score {
+  flex-shrink: 0;
+  font-family: var(--font-family-display);
+  font-variant-numeric: tabular-nums;
 }
 
 .screen-rank {
+  width: calc(var(--screen-rank-width) * var(--screen-unit));
+  font-size: calc(var(--screen-text) * var(--screen-scale-rank));
+}
+
+.screen-score {
+  font-size: calc(var(--screen-text) * var(--screen-scale-score));
   color: var(--color-screen-gold);
 }
 
-/* One line each, so a long name can't push the last row off the screen. */
-.screen-name,
-.screen-church {
+/* One line each, and a long church name is cut off, so no row can push the board off screen. */
+.screen-who {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: calc(var(--screen-church-gap) * var(--screen-unit));
   white-space: nowrap;
+  overflow: hidden;
+}
+
+.screen-name {
+  flex-shrink: 0;
+  font-size: calc(var(--screen-text) * var(--screen-scale-name));
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.screen-who.screen-name {
+  flex-shrink: 1;
+}
+
+.screen-church {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: calc(var(--screen-dot) * var(--screen-unit) / 2);
+  line-height: 1.1;
+  color: var(--color-screen-muted);
+}
+
+.screen-clip {
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.screen-church {
-  color: var(--color-screen-muted);
+.screen-dot {
+  width: calc(var(--screen-dot) * var(--screen-unit));
+  height: calc(var(--screen-dot) * var(--screen-unit));
+  flex-shrink: 0;
+  border-radius: 50%;
 }
 
-.screen-score {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
+.screen-dot-0 {
+  background: var(--color-bloom-marigold);
+}
+
+.screen-dot-1 {
+  background: var(--color-bloom-orange);
+}
+
+.screen-dot-2 {
+  background: var(--color-bloom-magenta);
+}
+
+.screen-dot-3 {
+  background: var(--color-bloom-pink);
+}
+
+.screen-dot-4 {
+  background: var(--color-bloom-leaf);
+}
+
+.screen-dot-5 {
+  background: var(--color-bloom-sky);
 }
 
 @media (prefers-reduced-motion: reduce) {

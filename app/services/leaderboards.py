@@ -15,6 +15,9 @@ from app.services.game_state import GameNotOn
 # refused at start, so a config change can't quietly rank by a rule nobody built.
 DENOMINATORS = ("active_players",)
 TIE_BREAKS = ("first_to_reach",)
+# The Mix main screen mockups give each church a dot in one of the six bloom colors in
+# tokens.css. The church id picks it, so a church keeps its color on both boards.
+DOT_COLORS = 6
 
 # ENG-113: fake adults a PR preview adds, so the boards have something to rank (AI-047). Church A
 # gets several players and Church B one big scorer, to show one player can't carry a church.
@@ -46,12 +49,14 @@ class PlayerRow:
     first_name: str
     last_initial: str
     church: str
+    dot: int
     score: int
 
 
 @dataclass(frozen=True)
 class ChurchRow:
     church: str
+    dot: int
     score: int
 
 
@@ -76,7 +81,7 @@ def top_players(conn: sqlite3.Connection, cfg: dict) -> list[PlayerRow]:
     check_config(cfg)
     rows = conn.execute(
         "SELECT p.first_name, substr(p.last_name, 1, 1) AS last_initial,"
-        " c.name AS church, t.score"
+        " c.id AS church_id, c.name AS church, t.score"
         f" FROM ({_TOTALS}) t"
         " JOIN player p ON p.id = t.player_id JOIN church c ON c.id = p.church_id"
         # Same second: the earlier ledger row was saved first. Then the id, so the order is fixed.
@@ -84,7 +89,13 @@ def top_players(conn: sqlite3.Connection, cfg: dict) -> list[PlayerRow]:
         (points.JOIN_REASON, cfg["main_screen_top_n"]),
     ).fetchall()
     return [
-        PlayerRow(r["first_name"], r["last_initial"], r["church"], r["score"])
+        PlayerRow(
+            r["first_name"],
+            r["last_initial"],
+            r["church"],
+            r["church_id"] % DOT_COLORS,
+            r["score"],
+        )
         for r in rows
     ]
 
@@ -142,9 +153,10 @@ def top_churches(conn: sqlite3.Connection, cfg: dict) -> list[ChurchRow]:
             if c["count"] >= cfg["church_min_players"]
         )
     )
-    return [ChurchRow(name, shown(-score)) for score, _, _, name in ranked][
-        : cfg["main_screen_top_n"]
-    ]
+    return [
+        ChurchRow(name, church_id % DOT_COLORS, shown(-score))
+        for score, _, church_id, name in ranked
+    ][: cfg["main_screen_top_n"]]
 
 
 def seed_preview(conn: sqlite3.Connection, config: dict) -> list[str]:

@@ -15,7 +15,8 @@
 </head>
 {# UI-041: the smallest text and row sizes from game-config.yaml, in pixels at 1920x1080. #}
 <body class="screen" style="--screen-text-min: {{ min_text }}; --screen-row-min: {{ min_row }}">
-  <p class="screen-brand">Side Quest</p>
+  {# Mix main screen mockups: white corner marks. Decoration only. #}
+  <div class="screen-frame" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
   {% include "screen/partials/view.html" %}
 </body>
 </html>

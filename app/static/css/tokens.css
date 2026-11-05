@@ -129,4 +129,36 @@
   /* Box progress bar: a thin black bar on a faint track, always with numbers (UI-051) */
   --progress-height: 4px;
   --color-track: rgba(30, 26, 28, 0.15);
+
+  /* Main screen (UI-040 to UI-043), from the Mix main screen mockups. The mockups are drawn at
+     1920x1080, so these plain numbers are mockup pixels that screen.css scales by --screen-unit. */
+  --screen-bloom-opacity: 0.32; /* the bloom streaks, faint on the dark screen */
+  --screen-grain-opacity: 0.18;
+  --color-screen-glass: rgba(255, 255, 255, 0.08); /* dark frosted rows */
+  --shadow-screen-glass:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14), inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 20px 40px -14px rgba(0, 0, 0, 0.5);
+  --screen-glass-filter: blur(24px) saturate(1.2);
+  --screen-pad-y: 96;
+  --screen-pad-x: 120;
+  --screen-frame-inset: 40; /* white corner marks */
+  --screen-frame-size: 40;
+  --screen-frame-line: 3;
+  --screen-column-gap: 120; /* title column, then the board */
+  --screen-side-width: 620;
+  --screen-heading-gap: 28;
+  --screen-row-height: 80;
+  --screen-row-gap: 8;
+  --screen-row-pad: 40;
+  --screen-cell-gap: 28;
+  --screen-church-gap: 24;
+  --screen-rank-width: 56;
+  --screen-dot: 28;
+  /* Font sizes as multiples of main_screen.min_text_px_1080p, so none is ever below it (UI-041) */
+  --screen-scale-title: 2.7;
+  --screen-scale-brand: 1.4;
+  --screen-scale-lede: 1.1;
+  --screen-scale-name: 1.1;
+  --screen-scale-rank: 1.2;
+  --screen-scale-score: 1.3;
 }

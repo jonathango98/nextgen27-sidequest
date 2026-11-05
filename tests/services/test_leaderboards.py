@@ -96,9 +96,9 @@ def test_game_089_join_only_players_do_not_count(conn):
     a, b = JOIN + 4 * BOOTH, JOIN + 2 * BOOTH
     average = Fraction(a + b, 2)
     board = leaderboards.top_churches(conn, CFG)
-    assert board == [
-        leaderboards.ChurchRow("Example Church A", _expected(a, 1, average)),
-        leaderboards.ChurchRow("Example Church B", _expected(b, 1, average)),
+    assert [(r.church, r.score) for r in board] == [
+        ("Example Church A", _expected(a, 1, average)),
+        ("Example Church B", _expected(b, 1, average)),
     ]
 
 
@@ -201,6 +201,7 @@ def test_game_086_safe_004_rows_never_hold_a_last_name(conn):
         "first_name",
         "last_initial",
         "church",
+        "dot",
         "score",
     }
     [row] = leaderboards.top_players(conn, CFG)
@@ -275,3 +276,12 @@ def test_eng_113_preview_seed_gives_no_points_while_paused(conn, monkeypatch, fa
     set_state(conn, "paused")
     leaderboards.seed_preview(conn, CONFIG)
     assert tuple(_preview_points(conn)) == (0, 0)
+
+
+def test_ui_008_a_church_keeps_one_dot_color_on_both_boards(conn):
+    for n in range(leaderboards.DOT_COLORS + 1):
+        _player(conn, n + 1, f"Example Church {n}", earned=BOOTH)
+    players = {p.church: p.dot for p in leaderboards.top_players(conn, CFG)}
+    church_board = {r.church: r.dot for r in leaderboards.top_churches(conn, CFG)}
+    assert players == church_board
+    assert set(players.values()) <= set(range(leaderboards.DOT_COLORS))
