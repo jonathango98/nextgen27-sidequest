@@ -22,10 +22,10 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-11-04 · feat/journal-notes · Claude Opus 5.5 / @jonathango98
 
-- What: Claimed `journal.notes`: a safe table for players' notes, a form to write a private note about a finished session with points once per session, and a list of your own notes.
-- Why: Next ready piece in the feature tree, due 2027-01-08 (PRD-054).
-- Rule IDs: DATA-023, SAFE-016, SAFE-017, GAME-030, GAME-031, GAME-032, GAME-033, GAME-034, GAME-036, ENG-101
-- Status: Started
+- What: Builds `journal.notes`. New `takeaway` table (migration 0010) and journal service: a player writes a private note for a session an admin has ended, words are counted on the server, and the first note per session earns `points.journal_takeaway` through the points service. Later notes for the same session save with no points. Notes are refused while paused or off. `/journal/new` offers ended sessions with a live word count, `/journal` lists only your own notes. Retention deletes takeaways. Foundation: DEC-072 allows many takeaways per session, removes DATA-023, and rewords GAME-030 (needs Jonathan's approval, ENG-080). Test fixtures now point back at their own database after app start, which also fixes 3 skeleton tests that failed when run alone.
+- Why: Next ready piece in the feature tree, due 2027-01-08 (PRD-054). Jonathan asked for more than one note per session, with points once.
+- Rule IDs: GAME-030, GAME-031, GAME-033, GAME-034, GAME-035, GAME-036, DATA-023, DATA-027, DEC-072, SAFE-007, SAFE-014, SAFE-016, AI-041, AI-042, AI-044
+- Status: Done
 - PR: #83
 
 ## 2026-11-04 · feat/feature-tree-no-lines · Claude Opus 5.5 / @jonathango98
