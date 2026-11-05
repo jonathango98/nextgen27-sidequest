@@ -61,6 +61,7 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
+| `leaderboards.in-app` Optional switch to show a leaderboard or rank on the phone (off by default) | `feat/leaderboards-in-app` | draft | 2026-11-04 | Claude Opus 5.5 / @jonathango98 |
 | Test staff accounts on PR previews | `chore/preview-staff-seed` | #69 | 2026-11-01 | Claude Opus 5.5 / @jonathango98 |
 
 ### Planned

@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-04 · feat/leaderboards-in-app · Claude Opus 5.5 / @jonathango98
+
+- What: Claimed `leaderboards.in-app`: an optional switch that shows a leaderboard or own rank on the phone, off by default.
+- Why: Next ready piece in the feature tree (ENG-101, ENG-108).
+- Rule IDs: GAME-085, DEC-040
+- Status: Started
+- PR: draft
+
 ## 2026-11-05 · fix/journal-test-session-label · Claude Opus 5.5 / @jonathango98
 
 - What: The Journal form browser test finds the session radio by its value instead of its label, and checks that exactly one session is picked.
