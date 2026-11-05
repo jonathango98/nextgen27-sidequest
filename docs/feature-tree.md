@@ -5,7 +5,7 @@
 
 Every planned piece of work and what it needs first (ENG-105 to ENG-108), grouped by the week it is due (PRD-054). Pieces flow left to right in time: finishing one unlocks the pieces it points to. Run `/pick-task` to claim one.
 
-**Working** 29 · **In progress** 0 · **Ready** 9 · **Waiting** 10 · **Needs decision** 1
+**Working** 29 · **In progress** 1 · **Ready** 8 · **Waiting** 10 · **Needs decision** 1
 
 Colors: green Working, blue In progress, gold Ready, gray Waiting, red dashed Needs decision.
 
@@ -171,18 +171,14 @@ flowchart LR
   classDef waiting fill:#f1f0eb,stroke:#c3c0b6,color:#545a66
   classDef decision fill:#fdeeec,stroke:#b42318,stroke-dasharray:4 3,color:#14151a
   class app_foundation,auth_join_login,checkin_sessions,code_my_code,connections_meet,connections_scanner_camera,connections_table,game_state_controls,game_state_core,infra_hosting,journal_notes,journal_share_review,leaderboards_in_app,leaderboards_screen,look_base,look_screens,points_audit_log,points_ledger,points_score,ready_backups,ready_load_test,ready_logout,ready_rate_limits,ready_retention,screen_main,screens_skeleton,staff_accounts,staff_login,usher_console working
-  class admin_audit_view,admin_players,admin_setup,checkin_window,connections_answers,explore_booths,game_state_auto_pause,home_pages,wrapped_cards ready
+  class game_state_auto_pause in_progress
+  class admin_audit_view,admin_players,admin_setup,checkin_window,connections_answers,explore_booths,home_pages,wrapped_cards ready
   class admin_award_revoke,blind_box_close_redemption,blind_box_handout,checkin_hall,connections_verse_picker,explore_items,recap_screen,wrapped_collection,wrapped_save_image,wrapped_stat_cards waiting
   class screen_photobooth decision
 ```
 
 ## Ready now
 
-- `game-state.auto-pause`: An admin types in when each session starts, and the game pauses by itself at that time if it is on. It never turns on a game that is off, and never un-pauses it. (M, medium, backend, due fri dec 4)
-  - Try it:
-    1. As an admin, add a session whose start time is a minute or two from now, with the game on.
-    2. Wait for that time and refresh a player page, you should see the paused note.
-    3. Try to break it by setting the game to off before the time arrives, it should stay off and not become paused.
 - `connections.answers`: Each player can type in the answer their new friend gave, and gets points for meeting someone when they save it. Only those two players can ever see the answer. Friends from the same church get fewer points, and meeting a new church gives a bonus. (L, hard, player-app, due fri dec 4)
   - Try it:
     1. On the PR preview, connect Test Player 1 from Example Church A with Test Player 2 from Example Church B on two phones.
@@ -238,7 +234,7 @@ flowchart LR
 
 ## In progress
 
-- None
+- `game-state.auto-pause`: An admin types in when each session starts, and the game pauses by itself at that time if it is on. It never turns on a game that is off, and never un-pauses it.
 
 ## Needs a decision
 
