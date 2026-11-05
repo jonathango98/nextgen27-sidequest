@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Next ready piece in the feature tree, due 2027-01-08 (PRD-054).
 - Rule IDs: DATA-023, SAFE-016, SAFE-017, GAME-030, GAME-031, GAME-032, GAME-033, GAME-034, GAME-036, ENG-101
 - Status: Started
-- PR: draft
+- PR: #83
 
 ## 2026-11-04 · feat/feature-tree-no-lines · Claude Opus 5.5 / @jonathango98
 
