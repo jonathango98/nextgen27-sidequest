@@ -33,7 +33,7 @@ This is the full list of ways to earn points. If an action is not in this table,
 | Sessions | Journal takeaway | GAME-030 | 20 | `points.journal_takeaway` | First takeaway per session | Server checks word count |
 | Explore | Join the game | GAME-040 | 10 | `points.join` | Once | Automatic at sign-up |
 | Explore | Booth visit | GAME-041 | 10 | `points.booth_visit` | Once per booth | Usher scans My Code |
-| Explore | Photobooth | GAME-042 | 5 | `points.photobooth` | 5 per day | Usher scans My Code |
+| Explore | Photobooth | GAME-042 | 5 | `points.photobooth` | 5 per day | Photobooth kiosk scans My Code |
 | Explore | Hidden item | GAME-043 | 15 | `points.hidden_item` | Each item once in total | Usher at the game booth |
 
 ### Check-in tiers
@@ -108,7 +108,7 @@ Tier size: 10 scans per tier. Config: `checkin.tier_size`.
 
 - **GAME-040** [PROPOSED] A player earns 10 points for joining the game. This is given once per player, on any day they join. Config: `points.join`.
 - **GAME-041** [PROPOSED] A player earns 10 points per booth visit, once per booth. An usher at the booth scans the player's My Code. Examples of booths: the mission booth and the merch table. The booth list is entered by an admin before the event. Config: `points.booth_visit`.
-- **GAME-042** [PROPOSED] A player earns 5 points per photobooth visit, up to 5 visits per day. An usher scans My Code. The day boundary is midnight in the venue timezone (GAME-105). Config: `points.photobooth`, `limits.photobooth_per_day`.
+- **GAME-042** [PROPOSED] A player earns 5 points per photobooth visit, up to 5 visits per day. Before the first shot, the photobooth kiosk scans My Code, and the points arrive after the shot is saved (DEC-079). A player can skip the scan and take photos without points. For a dead phone, an usher records the visit (GAME-113). The day boundary is midnight in the venue timezone (GAME-105). Config: `points.photobooth`, `limits.photobooth_per_day`, `photobooth.ticket_minutes`.
 - **GAME-043** [PROPOSED] Numbered hidden items are placed in conference areas only (SAFE-010). A player who finds one brings it to the game booth. An usher records the item number and scans the player's My Code. The player earns 15 points. Each item can be claimed once in total, by the first player who turns it in. The booth keeps the item. Config: `points.hidden_item`.
 - **GAME-044** [PROPOSED] Join points are given at sign-up even while the game is paused, so players see their first points during the Day 1 stage intro. This is the only earning allowed while paused (GAME-102, DEC-043). Config: `join.points_while_paused`.
 - **GAME-045** [PROPOSED] The game booth does not count as a booth for GAME-041 (DEC-040).
@@ -218,7 +218,7 @@ All names are fake.
 
 **E7. Takeaway while paused (GAME-033).** Player E starts typing during a break, and the next session starts before they submit. Submit returns "paused". The phone keeps the text so they can submit after the session.
 
-**E8. Photobooth cap (GAME-042).** Player F visits the photobooth for the 6th time on Day 2. The usher scan is refused with "daily limit reached". On the next day, Player F can earn again.
+**E8. Photobooth cap (GAME-042).** Player F visits the photobooth for the 6th time on Day 2. The kiosk scan is refused with "daily limit reached", and Player F can still take photos without points. On the next day, Player F can earn again.
 
 **E9. Hidden item claimed once (GAME-043).** Player G turns in item 7 and earns 15. Later, Player H brings in a second item with the number 7 on it. The server refuses because item 7 is already claimed. The usher tells the game director, since a duplicate number means a printing or placement mistake.
 

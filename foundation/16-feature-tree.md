@@ -56,13 +56,13 @@ The tree is the source. If this table and the tree disagree, the tree wins.
 | `look` Mix look on player screens | January build | 2026-11-27 | 2 | Working pieces only | None |
 | `home` Home and Quests pages | January build | 2026-12-11 | 1 | `points.ledger` | None |
 | `checkin` Session check-in | January build | 2026-12-11 | 3 | `staff.login`, `points.audit-log`, `game-state.controls`, `screen.main`, `connections.scanner-camera`, `points.ledger` | None |
-| `explore` Explore | January build | 2026-12-18 | 2 | `staff.login`, `points.audit-log`, `usher.console`, `points.ledger` | None |
+| `explore` Explore | January build | 2026-12-18 | 3 | `staff.login`, `points.audit-log`, `usher.console`, `points.ledger` | None |
 | `journal` Journal and Summary page | January build | 2027-01-08 | 2 | `checkin.sessions`, `points.ledger`, `staff.login`, `points.audit-log` | None |
 | `blind-box` Blind boxes (Open Box) | January build | 2026-12-18 | 2 | `usher.console`, `home.pages`, `game-state.core`, `game-state.controls` | None |
 | `leaderboards` Leaderboards and church score | January build | 2026-12-18 | 2 | `points.ledger`, `screen.main` | None |
 | `usher` Usher console | January build | 2026-12-04 | 1 | `staff.login`, `connections.scanner-camera` | None |
 | `admin` Admin console | January build | 2026-12-11 | 4 | `staff.login`, `points.audit-log`, `points.ledger`, `connections.meet` | None |
-| `screen` Main screen views | January build | 2027-01-15 | 1 | `staff.login`, `game-state.core`, `game-state.controls` | None |
+| `screen` Main screen views | January build | 2027-01-15 | 2 | `staff.login`, `game-state.core`, `game-state.controls` | None |
 | `wrapped` Wrapped cards | January build | 2027-01-15 | 4 | `game-state.core`, `staff.login`, `points.audit-log`, `look.base`, `connections.meet`, `journal.notes`, `home.pages`, `connections.answers` | None |
 | `recap` Conference recap screen | January build | 2027-01-15 | 1 | `screen.main`, `connections.meet`, `journal.share-review`, `connections.answers` | None |
 | `ready` Game day readiness | January build | 2027-01-08 | 5 | `points.audit-log` | None |

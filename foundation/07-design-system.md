@@ -108,7 +108,7 @@ The Mix mockup shows a scan going to the icebreaker first and the points result 
 
 ## 5. Main screen
 
-- **UI-040** [LOCKED] While the game is on or paused, the main screen takes turns showing the player leaderboard, the church leaderboard, and one approved shared takeaway (API-031, DEC-069). While the game is off, it shows the off view (UI-044). It shows no photos (DEC-078). It never shows a "boxes left" counter (GAME-077).
+- **UI-040** [LOCKED] While the game is on or paused, the main screen takes turns showing the player leaderboard, the church leaderboard, one approved shared takeaway, and photobooth pictures (API-031, DEC-069, DEC-079). While the game is off, it shows the off view (UI-044). It shows only photobooth photos an admin approved, and never a photo of a minor without consent (SAFE-024, SAFE-038). It never shows a "boxes left" counter (GAME-077).
 - **UI-041** [PROPOSED] Readable from the back of a ballroom. At 1920x1080, no text is smaller than 40px, and leaderboard rows are at least 56px tall. Check this from the back of the room at the venue walkthrough (OPS-030). Config: `main_screen.min_text_px_1080p`, `main_screen.min_row_px_1080p`.
 - **UI-042** [PROPOSED] The main screen uses the dark screen tokens (white text on near-black) to reduce glare in a dim room.
 - **UI-043** [PROPOSED] No fast animation on the main screen. Views change slowly so people can read them.

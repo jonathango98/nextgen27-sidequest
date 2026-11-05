@@ -2,8 +2,8 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.10.0
-- Last updated: 2026-11-04
+- Version: 1.11.0
+- Last updated: 2026-11-05
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -116,6 +116,7 @@ Example payload (fake): `SQ1.P.k3x9q2mf.482913`
 - **ARCH-036** [PROPOSED] Usher and admin accounts are personal (one per person, no shared logins). An admin creates them. They log in with a password, not a 4-digit PIN. The first admin account is created with a server command that reads its password from an environment variable.
 - **ARCH-037** [PROPOSED] The main screen needs no login. Its link carries a secret key, set in the `SQ_SCREEN_KEY` environment variable on the server and never in the repo. A wrong or missing key gets 404, and so does every main screen page while `SQ_SCREEN_KEY` is not set. The key opens only the views meant for the main screen. Changing the variable cuts off every old link. Admins see the full link on the admin console (DEC-069). This replaces signing in a device in screen mode.
 - **ARCH-038** [LOCKED] Every request that changes data (POST) is protected against cross-site request forgery. The mechanism is PROPOSED: a token in each form and in an HTMX request header.
+- **ARCH-039** [PROPOSED] Only the photobooth's server calls `/api/photobooth/start` and `/api/photobooth/finish`. It sends a secret key in the `X-Photobooth-Key` header, set in the `SQ_PHOTOBOOTH_KEY` environment variable on both servers and never in either repo or the kiosk page. A wrong or missing key gets 404, and so do both routes while `SQ_PHOTOBOOTH_KEY` is not set. No browser calls these routes, so the key replaces the CSRF token (ARCH-038). The ticket from start is signed on the server, holds no name, and expires after `photobooth.ticket_minutes`. Changing the variable cuts the photobooth off (DEC-079).
 
 ## 6. Points service and pause
 
@@ -167,6 +168,8 @@ Weak or overloaded Wi-Fi is the biggest risk (see `11-operations-runbook.md`).
 | Guessing IDs | Walking through player IDs one by one | Random public IDs, role checks | ARCH-020 |
 | Scraping takeaways | Reading the summary page from outside | Summary page needs login | SAFE-017 |
 | Leaked secret | A key committed to the repo | Push protection, rotate the key, never rely on secrecy of code | SAFE-030, SAFE-034 |
+| Fake photobooth points | Someone calls the photobooth routes from their own phone | The routes need the server-only photobooth key, the My Code is still checked, each ticket pays once, and the daily limit holds | ARCH-039, DATA-028, GAME-042 |
+| Leaked photobooth key | The key ends up in a kiosk page or a screenshot | It lives only on the two servers. Change `SQ_PHOTOBOOTH_KEY` on both to cut off the old key | ARCH-039, SAFE-034 |
 | Leaked main screen link | Someone outside the venue watches the main screen | It is read-only and shows only main screen fields (SAFE-028). Change `SQ_SCREEN_KEY` to cut off old links | ARCH-037 |
 
 - **ARCH-061** [LOCKED] Jinja2 autoescape stays on. User-written text (names, answers, takeaways) is never marked as safe HTML.

@@ -2,7 +2,7 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.4.1
+- Version: 1.5.0
 - Last updated: 2026-11-05
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -31,7 +31,7 @@ This file is for game day and the weeks before it: who does what, what to do whe
 | Task | Steps | Rule |
 |---|---|---|
 | Booth visit | Pick the booth, scan the player's My Code, check the green message | GAME-041 |
-| Photobooth | Scan My Code after the photo. If it says "daily limit", explain kindly | GAME-042 |
+| Photobooth | Help players scan My Code on the kiosk before the first shot. If it says "daily limit", explain kindly. For a dead phone, record the visit on the usher console | GAME-042, GAME-113 |
 | Hidden item | Take the item, type its number, scan My Code, keep the item at the booth | GAME-043 |
 | Blind box claim | Scan My Code, check that the screen says "1 box to claim" (or more), hand over one sealed blind box per claim | GAME-073 |
 | Help someone join | Show them the join QR or link, help them pick their church, remind them to remember their PIN | SAFE-002 |
@@ -49,6 +49,7 @@ This file is for game day and the weeks before it: who does what, what to do whe
 | Start of every session | Pause | OPS-001 |
 | End of every session | End session (resumes, opens takeaways) | OPS-002 |
 | During breaks | Work the review queue. Check unusual activity | SAFE-007, ARCH-062 |
+| During breaks | Approve photobooth photos for the big screen on the photobooth's admin page. Never approve a photo of an under-18 player without consent | SAFE-038, SAFE-024 |
 | Any time | Fix scores with a reason. Reset locked PINs after checking the badge | GAME-111, SAFE-044 |
 | End of each game day | Set the game to off | OPS-005 |
 | Sunday | Game off. Blind box claims stay open until the service, then close redemption. Show results. Run the conference recap. Unlock Wrapped right after results | GAME-104, GAME-078, WRAP-002, WRAP-020 |
@@ -110,6 +111,7 @@ Real event data is any information about real people or the real venue. Examples
 - playtest results and notes about real players
 - database exports (database files and backups stay on the server, ARCH-052, ARCH-053)
 - any schedule that ties sessions to rooms
+- photobooth photos (they stay in the photobooth app's own storage, never in this repo)
 
 - **OPS-040** [LOCKED] Real event data is stored in a private Google Drive folder owned by Jonathan, shared only with the people who need it (DEC-049). Ask Jonathan for access.
 - **OPS-041** [LOCKED] Whatever the location: real event data never goes in this repo, in issues, in PR comments, or in screenshots (SAFE-030). Access is limited to the people who need it. Links to it are never posted in the repo.

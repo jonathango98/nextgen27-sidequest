@@ -143,7 +143,7 @@ This file lists the tables, their fields, and the database constraints that enfo
 |---|---|---|
 | Booth | `id`, `name` | Entered by an admin |
 | BoothVisit | `player_id`, `booth_id`, `recorded_by`, `created_at` | |
-| PhotoboothVisit | `player_id`, `event_day`, `recorded_by`, `created_at` | `event_day` is the date in the venue timezone (GAME-042) |
+| PhotoboothVisit | `player_id`, `event_day`, `recorded_by`, `ticket_id`, `created_at` | `event_day` is the date in the venue timezone (GAME-042). `recorded_by` is the usher, or empty for a kiosk visit. `ticket_id` is set only for a kiosk visit (DEC-079) |
 | HiddenItem | `id`, `item_number`, `claimed_by`, `claimed_at`, `recorded_by` | No location field, ever (SAFE-010) |
 
 ### BoxClaim
@@ -198,7 +198,7 @@ This file lists the tables, their fields, and the database constraints that enfo
 
 Rules that a unique constraint cannot express are checked by the points service inside the same transaction (ARCH-040):
 
-- **DATA-028** [LOCKED] Photobooth cap: count that player's PhotoboothVisit rows for that `event_day` before inserting (GAME-042).
+- **DATA-028** [LOCKED] Photobooth cap: count that player's PhotoboothVisit rows for that `event_day` before inserting (GAME-042). `ticket_id` is unique when set, so one kiosk ticket pays once (DEC-079).
 - **DATA-029** [LOCKED] Blind box cap: `claim_number` must be at most `blind_box.max_per_player` and at most the blind boxes earned. Stock is not counted. A claim is refused while `game_state.blind_boxes_out` is true (GAME-071, GAME-074, GAME-076, DEC-078).
 
 ## 4. Score

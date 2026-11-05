@@ -92,7 +92,7 @@ features:
     milestone: January build
     due: "2026-12-11"
   - id: screen
-    name: Main screen views (leaderboards, takeaway wall, check-in QR, offline)
+    name: Main screen views (leaderboards, takeaway wall, photobooth, check-in QR, offline)
     milestone: January build
     due: "2027-01-15"
   - id: wrapped
@@ -480,20 +480,35 @@ pieces:
     learn: how to keep secret game data out of the database, and how a constraint enforces once per booth
   - id: explore.items
     feature: explore
-    what: An usher records that a player turned in a hidden item, which only the first player can do. An usher also records photobooth visits, which give points up to a limit each day.
+    what: An usher records that a player turned in a hidden item, which only the first player can do.
     try_it:
       - As Test Usher on the PR preview, record test item number 1 for Test Player 1. The score should go up.
       - Record the same number for Test Player 2. It should be refused with a clear message.
-      - Scan Test Player 1's My Code at the photobooth. The score should go up.
-      - Keep scanning until the daily limit. The next try should be refused with a clear message.
     needs: [usher.console, explore.booths, points.ledger]
-    open: [GAME-105]
+    open: []
     area: admin-screens
     size: M
     level: medium
     safety_review: false
-    rules: [GAME-043, DATA-025, SAFE-010, SAFE-026, GAME-042, DATA-028]
-    learn: how a second claim gets a clear refusal, and how a daily limit depends on the venue timezone
+    rules: [GAME-043, DATA-025, SAFE-010, SAFE-026]
+    learn: how a second claim gets a clear refusal
+  - id: explore.photobooth
+    feature: explore
+    what: The photobooth kiosk scans a player's My Code before the first shot, and the player gets photobooth points after the shot, up to a limit each day. Only the photobooth's own server can ask for points, and it never learns the player's name. An usher can still record a visit for a player whose phone is dead. The kiosk side is built in the photobooth app's own repo.
+    try_it:
+      - Point the test photobooth at the PR preview. As Test Player 1 on a phone, scan My Code on the kiosk, then take the photos. Test Player 1's score should go up.
+      - Scan and shoot again until the daily limit. The next scan should say the daily limit is reached, and the kiosk should still let you take photos.
+      - As Test Admin, pause the game, then scan on the kiosk again. It should say the game is paused.
+      - Show the kiosk a screenshot of My Code from a few minutes ago. It should be refused.
+      - As Test Usher, find Test Player 2 by name and record a photobooth visit. The score should go up.
+    needs: [usher.console, points.ledger, game-state.core]
+    open: []
+    area: backend
+    size: M
+    level: hard
+    safety_review: true
+    rules: [GAME-042, GAME-105, GAME-113, DATA-028, ARCH-039, API-004, API-008, SAFE-038, DEC-079]
+    learn: how two servers trust each other with a shared secret, how a signed ticket carries a scan across a photo shoot, and how a daily limit depends on the venue timezone
 
   # Usher console
   - id: usher.console
@@ -652,10 +667,10 @@ pieces:
   # Main screen views
   - id: screen.main
     feature: screen
-    what: The big-screen page for the room and the TV outside, with a dark look that is easy to read from far away. It opens from a secret link with no login. It takes turns showing the player board, the church board, and a takeaway, each saying coming soon until its own piece fills it in. When the game is off it shows "Side Quest is offline" or the recap, and an admin picks which one.
+    what: The big-screen page for the room and the TV outside, with a dark look that is easy to read from far away. It opens from a secret link with no login. It takes turns showing the player board, the church board, a takeaway and photobooth pictures, each saying coming soon until its own piece fills it in. When the game is off it shows "Side Quest is offline" or the recap, and an admin picks which one.
     try_it:
       - On the PR preview, log in as Test Admin and copy the main screen link from the admin console. Open it on a laptop. It should be a dark page with big readable text.
-      - Wait a little. It should move by itself from the player board to the church board and the takeaway, then start again.
+      - Wait a little. It should move by itself from the player board to the church board, the takeaway and the photobooth, then start again.
       - Change one letter of the key in the link and open it. You should get a not found page. Open the link without the key. Same.
       - On a phone, pause the game as Test Admin. The main screen should keep taking turns.
       - Switch the game off. After a short wait, the main screen should say Side Quest is offline. On the admin console, press Recap under Main screen. The main screen should change to the recap by itself.
@@ -668,6 +683,22 @@ pieces:
     safety_review: true
     rules: [ARCH-037, ARCH-035, UI-040, UI-044, UI-041, UI-042, UI-043, API-031, ARCH-074, DEC-069]
     learn: how a big-screen layout differs from a phone layout, how HTMX polling takes turns between views, and how a secret key guards a page with no login
+  - id: screen.photobooth
+    feature: screen
+    what: The photobooth view on the main screen shows the photobooth app's own slideshow, with only the photos an admin approved for the big screen. The app never saves the photos. The approve step is built in the photobooth app's own repo.
+    try_it:
+      - On the PR preview, open the main screen link and wait for the photobooth view. It should show the test photobooth event's slideshow.
+      - On the test photobooth's admin page, approve one photo. Within a minute it should show up in the view. A photo you didn't approve should never show.
+      - Remove the slideshow link from the preview's Railway variables. The photobooth view should say coming soon, and the other views should keep taking turns.
+      - Look through the database and the server files. No photo should be saved anywhere.
+    needs: [screen.main]
+    open: []
+    area: admin-screens
+    size: S
+    level: medium
+    safety_review: true
+    rules: [SAFE-038, SAFE-024, SAFE-025, UI-040, DEC-079]
+    learn: how a page shows pictures from another service without saving them
 
   # Wrapped cards
   - id: wrapped.cards

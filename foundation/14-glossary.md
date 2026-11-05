@@ -2,7 +2,7 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.2.3
+- Version: 1.3.0
 - Last updated: 2026-11-05
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -39,13 +39,14 @@ Use these words the same way in code, copy, issues, and PRs.
 | Last initial | The first letter of a player's last name, shown after the first name on leaderboards | GAME-088 |
 | Ledger | The PointLedger table. Score is the sum of its rows for a player | DATA-030 |
 | LOCKED | Decided. Build it | README |
-| Main screen | The big screen page, opened from a secret link, that takes turns showing leaderboards and the takeaway wall while the game is on or paused | UI-040, ARCH-037 |
+| Main screen | The big screen page, opened from a secret link, that takes turns showing leaderboards, the takeaway wall, and photobooth pictures while the game is on or paused | UI-040, ARCH-037 |
 | Milestone | Every 300 points of score, which unlocks one blind box | GAME-070 |
 | My Code | A player's personal QR code. It changes every 30 seconds | GAME-001 |
 | OPEN | Not decided. Do not build behavior that depends on it | README |
 | Open Box | The app screen that shows blind boxes earned, claimed, and claimable, and how to claim | GAME-073 |
 | Pause | The game state during sessions. No earning and no claims, except join points at sign-up | GAME-102, GAME-044 |
 | Paper fallback | Ushers writing quests on paper when Wi-Fi fails, entered later by an admin | ARCH-081 |
+| Photobooth | Jonathan's own photo booth app, kept outside this repo. Its iPad kiosk scans My Code before the first shot for points, and its slideshow of admin-approved photos runs on the main screen. Side Quest stores no photos | GAME-042, SAFE-038 |
 | Player | Anyone who signed up to play | |
 | Points service | The one piece of server code that gives or removes points | ARCH-040 |
 | PROPOSED | The default to build against. May change after a playtest | README |

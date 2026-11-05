@@ -1,11 +1,12 @@
 {# UI-040, API-031: one main screen view. Every rotate_seconds it asks for the next view and swaps
    itself out. If that fails, it stays up and asks again at the next turn.
    Players and churches show the leaderboards (GAME-086, GAME-081). Coming soon until: takeaways
-   and recap (recap.screen). No photobooth view in v1 (DEC-078). #}
+   and recap (recap.screen), photobooth (screen.photobooth, SAFE-038). #}
 {% set titles = {
   "players": "Player leaderboard",
   "churches": "Church leaderboard",
   "takeaways": "Takeaways",
+  "photobooth": "Photobooth",
   "offline": "Side Quest is offline",
   "recap": "Conference recap",
 } %}

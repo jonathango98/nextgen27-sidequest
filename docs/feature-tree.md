@@ -5,7 +5,7 @@
 
 Every planned piece of work and what it needs first (ENG-105 to ENG-108), grouped by the week it is due (PRD-054). Pieces flow left to right in time: finishing one unlocks the pieces it points to. Run `/pick-task` to claim one.
 
-**Working** 29 · **In progress** 0 · **Ready** 9 · **Waiting** 10 · **Needs decision** 0
+**Working** 29 · **In progress** 0 · **Ready** 11 · **Waiting** 10 · **Needs decision** 0
 
 Colors: green Working, blue In progress, gold Ready, gray Waiting, red dashed Needs decision.
 
@@ -54,6 +54,7 @@ flowchart LR
   subgraph w_2026_12_18 ["Due Fri Dec 18"]
     explore_booths["explore.booths<br/>L · medium"]
     explore_items["explore.items<br/>M · medium"]
+    explore_photobooth["explore.photobooth<br/>M · hard"]
     blind_box_handout["blind-box.handout<br/>L · medium"]
     blind_box_close_redemption["blind-box.close-redemption<br/>M · medium"]
     leaderboards_screen["leaderboards.screen<br/>L · medium"]
@@ -69,6 +70,7 @@ flowchart LR
     ready_retention["ready.retention<br/>M · hard"]
   end
   subgraph w_2027_01_15 ["Due Fri Jan 15"]
+    screen_photobooth["screen.photobooth<br/>S · medium"]
     wrapped_cards["wrapped.cards<br/>L · medium"]
     wrapped_stat_cards["wrapped.stat-cards<br/>L · medium"]
     wrapped_collection["wrapped.collection<br/>M · hard"]
@@ -120,6 +122,9 @@ flowchart LR
   usher_console --> explore_items
   explore_booths --> explore_items
   points_ledger --> explore_items
+  usher_console --> explore_photobooth
+  points_ledger --> explore_photobooth
+  game_state_core --> explore_photobooth
   staff_login --> usher_console
   connections_scanner_camera --> usher_console
   code_my_code --> usher_console
@@ -143,6 +148,7 @@ flowchart LR
   staff_login --> screen_main
   game_state_core --> screen_main
   game_state_controls --> screen_main
+  screen_main --> screen_photobooth
   game_state_core --> wrapped_cards
   staff_login --> wrapped_cards
   points_audit_log --> wrapped_cards
@@ -169,7 +175,7 @@ flowchart LR
   classDef waiting fill:#f1f0eb,stroke:#c3c0b6,color:#545a66
   classDef decision fill:#fdeeec,stroke:#b42318,stroke-dasharray:4 3,color:#14151a
   class app_foundation,auth_join_login,checkin_sessions,code_my_code,connections_meet,connections_scanner_camera,connections_table,game_state_controls,game_state_core,infra_hosting,journal_notes,journal_share_review,leaderboards_in_app,leaderboards_screen,look_base,look_screens,points_audit_log,points_ledger,points_score,ready_backups,ready_load_test,ready_logout,ready_rate_limits,ready_retention,screen_main,screens_skeleton,staff_accounts,staff_login,usher_console working
-  class admin_audit_view,admin_players,admin_setup,checkin_window,connections_answers,explore_booths,game_state_auto_pause,home_pages,wrapped_cards ready
+  class admin_audit_view,admin_players,admin_setup,checkin_window,connections_answers,explore_booths,explore_photobooth,game_state_auto_pause,home_pages,screen_photobooth,wrapped_cards ready
   class admin_award_revoke,blind_box_close_redemption,blind_box_handout,checkin_hall,connections_verse_picker,explore_items,recap_screen,wrapped_collection,wrapped_save_image,wrapped_stat_cards waiting
 ```
 
@@ -225,6 +231,19 @@ flowchart LR
     2. Look through the page and the form. There should be no spot for where an item is hidden.
     3. As Test Usher on a phone, scan Test Player 1's My Code at Example Booth A. Test Player 1's score should go up.
     4. Scan again at Example Booth A. It should be refused with no extra points. Example Booth B should still work.
+- `explore.photobooth`: The photobooth kiosk scans a player's My Code before the first shot, and the player gets photobooth points after the shot, up to a limit each day. Only the photobooth's own server can ask for points, and it never learns the player's name. An usher can still record a visit for a player whose phone is dead. The kiosk side is built in the photobooth app's own repo. (M, hard, backend, due fri dec 18)
+  - Try it:
+    1. Point the test photobooth at the PR preview. As Test Player 1 on a phone, scan My Code on the kiosk, then take the photos. Test Player 1's score should go up.
+    2. Scan and shoot again until the daily limit. The next scan should say the daily limit is reached, and the kiosk should still let you take photos.
+    3. As Test Admin, pause the game, then scan on the kiosk again. It should say the game is paused.
+    4. Show the kiosk a screenshot of My Code from a few minutes ago. It should be refused.
+    5. As Test Usher, find Test Player 2 by name and record a photobooth visit. The score should go up.
+- `screen.photobooth`: The photobooth view on the main screen shows the photobooth app's own slideshow, with only the photos an admin approved for the big screen. The app never saves the photos. The approve step is built in the photobooth app's own repo. (S, medium, admin-screens, due fri jan 15)
+  - Try it:
+    1. On the PR preview, open the main screen link and wait for the photobooth view. It should show the test photobooth event's slideshow.
+    2. On the test photobooth's admin page, approve one photo. Within a minute it should show up in the view. A photo you didn't approve should never show.
+    3. Remove the slideshow link from the preview's Railway variables. The photobooth view should say coming soon, and the other views should keep taking turns.
+    4. Look through the database and the server files. No photo should be saved anywhere.
 - `wrapped.cards`: An admin presses a button to open Wrapped, your personal story of the conference. Until then, players see a note saying when it will open. Once open, it's cards you swipe through like a little story, starting with a Welcome card. (L, medium, player-app, due fri jan 15)
   - Try it:
     1. On a phone at the PR preview, log in as Test Player 1 and open Wrapped. You should see the note about when it unlocks.

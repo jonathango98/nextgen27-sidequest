@@ -41,6 +41,9 @@ limits:
   photobooth_per_day: 5               # GAME-042 PROPOSED: photobooth visits that earn points, per player per day
   journal_min_words: 15               # GAME-030 PROPOSED: minimum words in a takeaway
 
+photobooth:
+  ticket_minutes: 10                  # GAME-042 PROPOSED: how long a kiosk scan of My Code stays good for the shot that follows (DEC-079)
+
 blind_box:
   milestone_points: 300               # GAME-070 PROPOSED: one blind box unlocks every this many points of score
   max_per_player: 3                   # GAME-071 PROPOSED: most blind boxes one player can earn
