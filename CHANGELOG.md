@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Next piece in the journal feature, due 2027-01-08 (PRD-054). It unlocks `recap.screen`.
 - Rule IDs: GAME-031, SAFE-009, UI-031, SAFE-007, SAFE-008, SAFE-040, SAFE-041, SAFE-042, SAFE-017, UI-038, ENG-101
 - Status: Started
-- PR: draft
+- PR: #87
 
 ## 2026-11-04 · docs/dec-074-confirmed · Claude Opus 5.5 / @jonathango98
 
