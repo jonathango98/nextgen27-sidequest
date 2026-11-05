@@ -13,7 +13,12 @@
   {% elif saved == "extra" %}
     <p class="card journal-saved" role="status">Saved. Points come once for each session.</p>
   {% endif %}
-  <a class="button button-write" href="/journal/new">Write a takeaway</a>
+  {# GAME-108, DEC-077: while off, notes stay readable, but nothing new can be written. #}
+  {% if game_state() == "on" %}
+    <a class="button button-write" href="/journal/new">Write a takeaway</a>
+  {% else %}
+    <button class="button button-write" type="button" disabled>Write a takeaway</button>
+  {% endif %}
   {# GAME-031: the player's own notes, newest session first, then newest note first. #}
   {% for session in sessions %}
     <section class="takeaway-session" aria-labelledby="note-{{ loop.index }}">

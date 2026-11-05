@@ -1,6 +1,10 @@
 {# GAME-031, DEC-076: one of the player's own notes, who can read it, and a way to change that. #}
 <article class="card takeaway-card" id="note-{{ note.public_id }}">
   <p class="takeaway-text">{{ note.text }}</p>
+  {% if game_state() != "on" and not error %}
+    {# DEC-076: changes are refused while paused or off, so only the choice shows (GAME-108). #}
+    <span class="note-meta"><span class="note-status">{{ visibility_labels[note.visibility] }}</span></span>
+  {% else %}
   {# Opens in place with no JavaScript, like the admin session Edit (UI-003: the summary is tap-sized). #}
   <details class="note-share"{% if error %} open{% endif %}>
     <summary>
@@ -20,5 +24,6 @@
       <button class="button button-secondary" type="submit">Save</button>
     </form>
   </details>
+  {% endif %}
   {% if changed %}<p class="hint" role="status">Saved.</p>{% endif %}
 </article>
