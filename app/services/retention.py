@@ -26,6 +26,7 @@ DELETE_TABLES = (
     "church_met",
     "connection",
     "point_ledger",
+    "takeaway",
     "check_in",
     "player",
 )

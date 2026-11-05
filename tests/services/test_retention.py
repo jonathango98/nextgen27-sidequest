@@ -21,6 +21,7 @@ from app.services.retention import (
 )
 
 FAKE_PIN_HASH = "not-a-real-hash-zq7"  # fake data (ENG-047), easy to spot in raw bytes
+FAKE_TAKEAWAY = "Example takeaway zq7: listen first and ask more questions in small group this week."
 
 # Columns that hold a player's id, with or without a foreign key (audit_log has none).
 PLAYER_ID_COLUMN = re.compile(r"player|^actor_id$|^target_id$")
@@ -79,6 +80,10 @@ def filled(conn):
     conn.execute(
         "INSERT INTO check_in (player_id, session_id, scan_order) VALUES (?, ?, 1)",
         (players[0], session),
+    )
+    conn.execute(
+        "INSERT INTO takeaway (player_id, session_id, text) VALUES (?, ?, ?)",
+        (players[0], session, FAKE_TAKEAWAY),
     )
     record(
         conn,
@@ -151,10 +156,18 @@ def test_safe_014_cleanup_deletes_player_data_on_the_date(filled, cfg):
         "church_met": 1,
         "connection": 1,
         "point_ledger": 1,
+        "takeaway": 1,
         "check_in": 1,
         "player": 2,
     }
-    for table in ("player", "connection", "church_met", "point_ledger", "check_in"):
+    for table in (
+        "player",
+        "connection",
+        "church_met",
+        "point_ledger",
+        "takeaway",
+        "check_in",
+    ):
         assert _count(filled, table) == 0
     assert _count(filled, "church") == 2  # kept: not personal data
     assert _count(filled, "session") == 1  # kept: program titles, not personal data
@@ -162,7 +175,13 @@ def test_safe_014_cleanup_deletes_player_data_on_the_date(filled, cfg):
 
 def test_safe_014_deleted_data_is_gone_from_the_raw_files(filled, db_path, cfg):
     # A plain DELETE leaves the bytes in free pages and the -wal file, where a tool could read them.
-    secrets = (b"Player 1", b"Player 2", b"pub-1", FAKE_PIN_HASH.encode())
+    secrets = (
+        b"Player 1",
+        b"Player 2",
+        b"pub-1",
+        FAKE_PIN_HASH.encode(),
+        FAKE_TAKEAWAY.encode(),
+    )
     assert all(s in _raw_bytes(db_path) for s in secrets)  # the check can see them
     run(filled, retention_date(cfg), cfg)
     raw = _raw_bytes(db_path)
