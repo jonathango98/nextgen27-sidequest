@@ -43,6 +43,10 @@ def test_game_026_admin_adds_edits_and_ends_a_session_at_min_width(
         page.screenshot(path=tmp_path / "admin-console.png", full_page=True)
         page.get_by_role("link", name="Sessions").click()
         page.wait_for_url(f"{live_server}/admin/sessions")
+        # GAME-107, OPS-001: says the timetable pause is only a backup.
+        expect(
+            page.get_by_text("This is only a backup: still press Pause.")
+        ).to_be_visible()
         _fits(page)
         page.screenshot(path=tmp_path / "sessions-empty.png", full_page=True)
 

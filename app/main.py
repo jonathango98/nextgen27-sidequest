@@ -1,9 +1,12 @@
 """App factory (ARCH-008)."""
 
+import logging
 import os
+import sqlite3
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
+from fastapi.concurrency import run_in_threadpool
 from fastapi.exception_handlers import http_exception_handler
 from fastapi.responses import PlainTextResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
@@ -41,6 +44,10 @@ from app.services import churches, connections, leaderboards, players, sessions,
 from app.services import journal as journal_service
 from app.services.game_state import GAME_NOT_ON_MESSAGES, GameNotOn
 
+log = logging.getLogger(__name__)
+# Never touch the database for these: files, and /health (DEC-029).
+NO_AUTO_PAUSE_PATHS = ("/static/", "/health")
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -61,6 +68,25 @@ async def lifespan(app: FastAPI):
     finally:
         conn.close()
     yield
+
+
+def _apply_auto_pause(app: FastAPI) -> None:
+    db_path = getattr(app.state, "db_path", None)
+    if db_path is None:  # the app has not started, as in some tests
+        return
+    try:
+        conn = connect(db_path)
+        try:
+            sessions.apply_auto_pause(
+                conn,
+                sessions.now_utc(),
+                app.state.config["game"]["auto_pause_schedule"],
+            )
+        finally:
+            conn.close()
+    except sqlite3.Error:
+        # OPS-001: a backup to the admin's Pause button, so it never breaks a page.
+        log.exception("auto-pause check failed")
 
 
 def _logged_in(request: Request) -> bool:
@@ -107,6 +133,14 @@ def create_app() -> FastAPI:
     # Screen skeleton (UI-030): plain pages, no game logic yet.
     for module in (home, scan, quests, journal, box, wrapped):
         app.include_router(module.router)
+
+    @app.middleware("http")
+    async def auto_pause(request: Request, call_next):
+        # GAME-107: before anything reads the game state, so this request already sees the
+        # pause (ARCH-042). No timer thread, so a restart can't skip a start time.
+        if not request.url.path.startswith(NO_AUTO_PAUSE_PATHS):
+            await run_in_threadpool(_apply_auto_pause, app)
+        return await call_next(request)
 
     @app.exception_handler(LoginRequired)
     def login_required(request: Request, exc: LoginRequired):

@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-04 · feat/game-state-auto-pause · Claude Opus 5.5 / @marcjason2012
+
+- What: Builds `game-state.auto-pause`. A middleware in `app/main.py` runs `sessions.apply_auto_pause()` before every request except `/static/` and `/health` (DEC-029): once a session's start time has passed, it pauses an on game, with a `system` / `auto_pause` audit row, and the same request already sees it (ARCH-042). No timer thread or new library, and no new tick number, so a restart can't skip a start time. Migration 0012 adds `session.auto_pause_done_at`, set once the start time is handled whatever the state was, so it never repeats after a manual resume and never wakes an off game. Agreed with @marcjason2012: a start time already past when saved counts as handled, and moving one later clears it. A failed check is logged and never breaks the page. `game.auto_pause_schedule: false` turns it off. The admin Sessions page says it is only a backup (OPS-001). `foundation/05-data-model.md` 1.8.0 lists the new field (protected, needs Jonathan's approval, ENG-080, ENG-087). `tests/test_db.py`'s takeaway migration test now checks only that 0011 runs first, so later migrations don't break it. Checked at 360px in Chromium and WebKit. Preview seed: N/A, the hand test adds its own session.
+- Why: Picked through `/pick-task`. Due 2026-12-04. Last piece of the Game states feature, so its Planned row is removed (ENG-108).
+- Rule IDs: GAME-107, DATA-014, OPS-001, ARCH-042, ARCH-050, ARCH-013, ARCH-040, DEC-029, DEC-049, DEC-051, AI-013, AI-021, AI-042, AI-044, ENG-080, ENG-087, ENG-101, ENG-108
+- Status: Done
+- PR: #88
+
 ## 2026-11-04 · feat/journal-share-review · Claude Opus 5.5 / @jonathango98
 
 - What: Builds `journal.share-review`. Players choose who can read each note (Just me, Shared with my name, Shared anonymously) on the Journal form, with the UI-031 note, and can change it later from each card on their Journal list. Write on Home now opens that list, with Write a takeaway on top, and it stays open while the game is off so players can read their notes (DEC-077, GAME-108). Admins open Review notes from the console: tabs for waiting, approved, rejected, and hidden with counts, the writer's name and church on every note, and Approve, Reject, Hide, or Approve again, each with an audit row. A rejected or hidden note can only go private. The Takeaways page (`/summary`) shows approved shared notes to signed-in players, newest session first. Migration 0011 rebuilds the takeaway table with a random `public_id` and lets a private note keep a reject or hide. PR previews get an ended Example Ended Session and four fake shared notes, two approved and two waiting. Foundation: GAME-031, SAFE-040, SAFE-041, the takeaway table, two routes, a try_it step, UI-036, DEC-076, and DEC-077 (needs Jonathan's approval, ENG-080).
