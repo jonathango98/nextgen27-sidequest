@@ -60,6 +60,13 @@ class ChurchRow:
     score: int
 
 
+@dataclass(frozen=True)
+class Standing:
+    # GAME-085, DEC-073: one of the two is set. A place in the top places, else a top percent.
+    place: int | None = None
+    top_percent: int | None = None
+
+
 def check_config(cfg: dict) -> None:
     if cfg["church_score_denominator"] not in DENOMINATORS:
         raise LeaderboardConfigError(
@@ -98,6 +105,38 @@ def top_players(conn: sqlite3.Connection, cfg: dict) -> list[PlayerRow]:
         )
         for r in rows
     ]
+
+
+def own_standing(
+    conn: sqlite3.Connection, cfg: dict, public_id: str
+) -> Standing | None:
+    """The player's own place for the phone, or None to show nothing (GAME-085, DEC-073).
+
+    Nothing while in_app_leaderboard is off. With it on: the place in the top in_app_rank_top_n,
+    else the top percent rounded up down to in_app_percent_cutoff, else nothing. Only the
+    player's own standing is read, so no other score can reach a phone (SAFE-028). The order
+    is the main screen's, over every player with points (GAME-084).
+    """
+    if not cfg["in_app_leaderboard"]:
+        return None
+    check_config(cfg)
+    row = conn.execute(
+        "SELECT place, total FROM ("
+        " SELECT p.public_id,"
+        " row_number() OVER (ORDER BY t.score DESC, t.last_at, t.last_id, p.id) AS place,"
+        " count(*) OVER () AS total"
+        f" FROM ({_TOTALS}) t JOIN player p ON p.id = t.player_id"
+        ") WHERE public_id = ?",
+        (points.JOIN_REASON, public_id),
+    ).fetchone()
+    if row is None:
+        return None
+    if row["place"] <= cfg["in_app_rank_top_n"]:
+        return Standing(place=row["place"])
+    top_percent = math.ceil(Fraction(row["place"] * 100, row["total"]))
+    if top_percent <= cfg["in_app_percent_cutoff"]:
+        return Standing(top_percent=top_percent)
+    return None
 
 
 def church_score(

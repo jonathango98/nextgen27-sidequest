@@ -9,6 +9,7 @@ from app.auth import csrf
 from app.auth.current import CurrentPlayer, get_current_player
 from app.db import get_db
 from app.rendering import templates
+from app.services import leaderboards
 
 router = APIRouter()
 
@@ -32,6 +33,10 @@ def home(request: Request, player: Player, conn: Db):
     context = {
         "score": player.score,
         "first_name": first_name(conn, player.public_id),
+        # GAME-085, DEC-073: own place or top percent, only if the switch is on.
+        "standing": leaderboards.own_standing(
+            conn, cfg["leaderboard"], player.public_id
+        ),
         "csrf_token": token,
         "journal_points": cfg["points"]["journal_takeaway"],
         "box_milestone": cfg["blind_box"]["milestone_points"],

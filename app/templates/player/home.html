@@ -30,6 +30,9 @@
     {# UI-036, DEC-062: say hi by first name, over the score. #}
     {% if first_name %}<p class="greeting">Hi, {{ first_name }}</p>{% endif %}
     <h1 class="score-hero"><span class="score-hero-number">{{ score }}</span> <span class="score-hero-label">points</span></h1>
+    {# GAME-085, DEC-073: only your own standing, and nothing in the bottom half (UI-050). #}
+    {% if standing and standing.place %}<p class="standing">You're #{{ standing.place }}</p>
+    {% elif standing %}<p class="standing">You're in the top {{ standing.top_percent }}%</p>{% endif %}
     <div class="progress home-progress">
       <span class="progress-label"><span>Next box</span><span>{{ box_progress }} / {{ box_milestone }}</span></span>
       <div class="progress-track" role="progressbar" aria-label="Points toward your next blind box" aria-valuemin="0" aria-valuemax="{{ box_milestone }}" aria-valuenow="{{ box_progress }}">

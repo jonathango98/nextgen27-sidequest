@@ -410,6 +410,11 @@ h2 {
   font-size: var(--font-size-points-label);
 }
 
+.standing {
+  margin: 0;
+  font-weight: 600;
+}
+
 .home-progress {
   max-width: var(--progress-max);
 }
