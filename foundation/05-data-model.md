@@ -2,8 +2,8 @@
 
 - Status: PROPOSED (developers confirm at kickoff; constraints marked LOCKED are required whatever the final schema looks like)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.8.0
-- Last updated: 2026-11-05
+- Version: 1.9.0
+- Last updated: 2026-11-10
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -82,6 +82,7 @@ This file lists the tables, their fields, and the database constraints that enfo
 | `checkin_opened_at` | timestamp, nullable | Set when an admin presses "Open check-in" on a session with no start time (GAME-027) |
 | `starts_at` | timestamp, nullable | Entered by an admin. Check-in closes and the server pauses the game then (GAME-024, GAME-107). Admin only, except the hall countdown (DATA-014) |
 | `checkin_open_minutes` | integer, nullable | Entered by an admin with the start time: check-in opens this many minutes before it (GAME-021). Required when `starts_at` is set |
+| `auto_pause_done_at` | timestamp, nullable | Set when the server handles the start time, whether or not it paused the game, so auto-pause happens once (GAME-107). A start time already past when saved counts as handled. Moving the start time later clears it |
 
 - **DATA-014** [LOCKED] The Session table holds no room names or places (SAFE-037). It holds a title, an optional start time, and how many minutes before the start check-in opens (GAME-021, GAME-107, DEC-051, DEC-057). Start times are seen only by admins, never by players. The one exception: while check-in is open, the hall screen counts down to the start time (GAME-028).
 
