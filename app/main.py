@@ -36,7 +36,7 @@ from app.routes.staff import console as staff_console
 from app.routes.staff import login as staff_login
 from app.routes.staff import sessions as staff_sessions
 from app.routes.staff import usher as staff_usher
-from app.services import churches, connections, players, sessions, staff
+from app.services import churches, connections, leaderboards, players, sessions, staff
 from app.services.game_state import GAME_NOT_ON_MESSAGES, GameNotOn
 
 
@@ -54,6 +54,7 @@ async def lifespan(app: FastAPI):
             players.seed_preview(conn, app.state.config)
             connections.seed_preview(conn, app.state.config)
             sessions.seed_preview(conn)
+            leaderboards.seed_preview(conn, app.state.config)
     finally:
         conn.close()
     yield
@@ -86,6 +87,7 @@ def create_app() -> FastAPI:
     # API-001: only routes in 06-api-and-screens.md, so FastAPI's built-in docs pages are off.
     app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None, lifespan=lifespan)
     app.state.config = load_config()
+    leaderboards.check_config(app.state.config["leaderboard"])
     app.state.rate_limiter = RateLimiter()  # ARCH-031
     # ARCH-010: the app serves its own static files.
     app.mount("/static", StaticFiles(directory=APP_DIR / "static"), name="static")
