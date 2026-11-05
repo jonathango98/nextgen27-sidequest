@@ -5,7 +5,7 @@
 
 Every planned piece of work and what it needs first (ENG-105 to ENG-108), grouped by the week it is due (PRD-054). Pieces flow left to right in time: finishing one unlocks the pieces it points to. Run `/pick-task` to claim one.
 
-**Working** 25 · **In progress** 1 · **Ready** 10 · **Waiting** 12 · **Needs decision** 1
+**Working** 26 · **In progress** 0 · **Ready** 11 · **Waiting** 11 · **Needs decision** 1
 
 Colors: green Working, blue In progress, gold Ready, gray Waiting, red dashed Needs decision.
 
@@ -170,10 +170,9 @@ flowchart LR
   classDef ready fill:#fff4d6,stroke:#a87400,stroke-width:3px,color:#14151a
   classDef waiting fill:#f1f0eb,stroke:#c3c0b6,color:#545a66
   classDef decision fill:#fdeeec,stroke:#b42318,stroke-dasharray:4 3,color:#14151a
-  class app_foundation,auth_join_login,checkin_sessions,code_my_code,connections_meet,connections_scanner_camera,connections_table,game_state_controls,game_state_core,infra_hosting,look_base,look_screens,points_audit_log,points_ledger,points_score,ready_backups,ready_load_test,ready_logout,ready_rate_limits,ready_retention,screen_main,screens_skeleton,staff_accounts,staff_login,usher_console working
-  class leaderboards_screen in_progress
-  class admin_audit_view,admin_players,admin_setup,checkin_window,connections_answers,explore_booths,game_state_auto_pause,home_pages,journal_notes,wrapped_cards ready
-  class admin_award_revoke,blind_box_close_redemption,blind_box_handout,checkin_hall,connections_verse_picker,explore_items,journal_share_review,leaderboards_in_app,recap_screen,wrapped_collection,wrapped_save_image,wrapped_stat_cards waiting
+  class app_foundation,auth_join_login,checkin_sessions,code_my_code,connections_meet,connections_scanner_camera,connections_table,game_state_controls,game_state_core,infra_hosting,leaderboards_screen,look_base,look_screens,points_audit_log,points_ledger,points_score,ready_backups,ready_load_test,ready_logout,ready_rate_limits,ready_retention,screen_main,screens_skeleton,staff_accounts,staff_login,usher_console working
+  class admin_audit_view,admin_players,admin_setup,checkin_window,connections_answers,explore_booths,game_state_auto_pause,home_pages,journal_notes,leaderboards_in_app,wrapped_cards ready
+  class admin_award_revoke,blind_box_close_redemption,blind_box_handout,checkin_hall,connections_verse_picker,explore_items,journal_share_review,recap_screen,wrapped_collection,wrapped_save_image,wrapped_stat_cards waiting
   class screen_photobooth decision
 ```
 
@@ -229,6 +228,11 @@ flowchart LR
     2. Look through the page and the form. There should be no spot for where an item is hidden.
     3. As Test Usher on a phone, scan Test Player 1's My Code at Example Booth A. Test Player 1's score should go up.
     4. Scan again at Example Booth A. It should be refused with no extra points. Example Booth B should still work.
+- `leaderboards.in-app`: An optional switch that lets a player see a leaderboard or their own rank on their phone. It stays off unless the team decides to use it. (S, medium, player-app, due fri dec 18)
+  - Try it:
+    1. Log in as Test Player 1 on a phone with the switch off.
+    2. You should see only your own points and no leaderboard or rank.
+    3. Turn the switch on in the local config, reload, and the leaderboard or rank should appear.
 - `journal.notes`: A safe place to keep players' notes, and a way for a player to write a private note about what they learned in a session that has finished. They get points once for each session, and they can see a list of the notes they wrote themselves. (L, medium, player-app, due fri jan 8)
   - Try it:
     1. On the PR preview, end Example Session 1 as Test Admin. Then join as Test Player 1 on a phone and open Journal. It should offer that session.
@@ -247,7 +251,7 @@ flowchart LR
 
 ## In progress
 
-- `leaderboards.screen`: Lists for the big screen: the top players, and churches ranked by a fair average so a small church can beat a big one. Players show only a first name, last initial and church.
+- None
 
 ## Needs a decision
 
