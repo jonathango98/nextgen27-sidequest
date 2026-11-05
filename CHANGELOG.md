@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Next ready piece in the feature tree (ENG-101, ENG-108).
 - Rule IDs: GAME-085, DEC-040
 - Status: Started
-- PR: draft
+- PR: #85
 
 ## 2026-11-05 · fix/journal-test-session-label · Claude Opus 5.5 / @jonathango98
 
