@@ -146,7 +146,6 @@
   --screen-frame-line: 3;
   --screen-column-gap: 120; /* title column, then the board */
   --screen-side-width: 620;
-  --screen-heading-gap: 28;
   --screen-row-height: 80;
   --screen-row-gap: 8;
   --screen-row-pad: 40;
@@ -157,7 +156,6 @@
   /* Font sizes as multiples of main_screen.min_text_px_1080p, so none is ever below it (UI-041) */
   --screen-scale-title: 2.7;
   --screen-scale-brand: 1.4;
-  --screen-scale-lede: 1.1;
   --screen-scale-name: 1.1;
   --screen-scale-rank: 1.2;
   --screen-scale-score: 1.3;

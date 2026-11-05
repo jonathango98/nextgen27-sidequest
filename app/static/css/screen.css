@@ -145,23 +145,9 @@ html {
   justify-content: space-between;
 }
 
-.screen-heading {
-  display: flex;
-  flex-direction: column;
-  gap: calc(var(--screen-heading-gap) * var(--screen-unit));
-}
-
 .screen-view-board .screen-title {
   font-size: calc(var(--screen-text) * var(--screen-scale-title));
   line-height: 1;
-}
-
-.screen-lede {
-  margin: 0;
-  max-width: 18ch;
-  font-size: calc(var(--screen-text) * var(--screen-scale-lede));
-  line-height: 1.25;
-  color: var(--color-screen-muted);
 }
 
 .screen-board {

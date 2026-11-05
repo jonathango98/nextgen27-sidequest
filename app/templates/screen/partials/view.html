@@ -10,10 +10,6 @@
   "offline": "Side Quest is offline",
   "recap": "Conference recap",
 } %}
-{% set ledes = {
-  "players": "Most points so far. Keep meeting new friends.",
-  "churches": "Average points per active player, fair to every church size.",
-} %}
 {% set board = view == "players" or view == "churches" %}
 <main id="screen-view" class="screen-view{% if board %} screen-view-board{% endif %}" data-view="{{ view }}"
       hx-get="/screen/{{ next }}?{{ param }}={{ key | urlencode }}"
@@ -21,10 +17,7 @@
   {% if board %}
     {# Mix main screen leaderboard mockups: title column on the left, the board on the right. #}
     <div class="screen-side">
-      <div class="screen-heading">
-        <h1 class="screen-title">{{ titles[view] }}</h1>
-        <p class="screen-lede">{{ ledes[view] }}</p>
-      </div>
+      <h1 class="screen-title">{{ titles[view] }}</h1>
       <p class="screen-brand">Side Quest</p>
     </div>
     {% set rows = players if view == "players" else churches %}
