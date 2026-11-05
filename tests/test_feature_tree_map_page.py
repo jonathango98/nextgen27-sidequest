@@ -143,3 +143,38 @@ def test_eng_110_map_zooms_in_out_and_fits(page: Page, map_page):
     expect(level).not_to_have_text(fitted)
     expect(page.get_by_role("button", name="Zoom out")).to_be_enabled()
     assert errors == []
+
+
+def test_eng_110_map_draws_lines_only_for_the_picked_piece(page: Page, map_page):
+    url, tree, _ = map_page
+    fake_github(page, MAIN_README, "")
+    errors = []
+    page.on("console", lambda m: m.type == "error" and errors.append(m.text))
+    page.goto(url)
+    expect(page.locator("#live")).to_contain_text("Live status")
+    picked = next(p["id"] for p in tree["pieces"] if p["needs"])
+    lit = page.locator("#edges path.up, #edges path.down")
+    no_lines = (
+        "() => [...document.querySelectorAll('#edges path')]"
+        ".every(p => getComputedStyle(p).opacity === '0')"
+    )
+
+    page.wait_for_function(no_lines)
+    expect(page.locator(".node.faded")).to_have_count(0)
+    expect(page.locator("aside")).to_contain_text("Click a piece")
+
+    for back_to_whole_tree in (
+        lambda: node(page, picked).click(),
+        lambda: page.keyboard.press("Escape"),
+        lambda: page.locator("#mapbox").click(position={"x": 4, "y": 4}),
+    ):
+        node(page, picked).click()
+        expect(node(page, picked)).to_have_class(re.compile(r"\bsel\b"))
+        expect(lit.first).to_be_attached()
+        expect(page.locator("aside h2")).to_have_text(picked)
+
+        back_to_whole_tree()
+        expect(lit).to_have_count(0)
+        expect(page.locator(".node.sel, .node.faded")).to_have_count(0)
+        page.wait_for_function(no_lines)
+    assert errors == []
