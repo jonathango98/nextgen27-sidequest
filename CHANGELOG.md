@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Picked through `/pick-task`. Issue #55: a renumbered migration on the #49 preview was skipped, so the app could start with a missing table.
 - Rule IDs: DATA-040, ENG-050, ENG-101, ENG-109
 - Status: Started
-- PR: draft
+- PR: #81
 
 ## 2026-11-04 · feat/leaderboards-screen · Claude Opus 5.5 / @jonathango98
 

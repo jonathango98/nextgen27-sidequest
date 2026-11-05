@@ -60,7 +60,7 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| Issue #55: Reused migration numbers stop the app instead of being skipped | `fix/55-migration-number-reuse` | draft | 2026-11-04 | Claude Opus 5.5 / @jonathango98 |
+| Issue #55: Reused migration numbers stop the app instead of being skipped | `fix/55-migration-number-reuse` | #81 | 2026-11-04 | Claude Opus 5.5 / @jonathango98 |
 | Test staff accounts on PR previews | `chore/preview-staff-seed` | #69 | 2026-11-01 | Claude Opus 5.5 / @jonathango98 |
 
 ### Planned
