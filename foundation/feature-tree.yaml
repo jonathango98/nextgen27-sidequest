@@ -2,7 +2,7 @@
 #
 # Status: Active
 # Owner: Jonathan (@jonathango98)
-# Version: 2.1.0
+# Version: 2.1.1
 # Last updated: 2026-11-04
 # Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 #
@@ -565,11 +565,11 @@ pieces:
     learn: how to rank players fairly and show only safe fields
   - id: leaderboards.in-app
     feature: leaderboards
-    what: An optional switch that lets a player see a leaderboard or their own rank on their phone. It stays off unless the team decides to use it.
+    what: Home shows a player their own place if they are in the top 10, or their top percent down to the top half, and nothing below that. It never shows a leaderboard or anyone else's score.
     try_it:
-      - Log in as Test Player 1 on a phone with the switch off.
-      - You should see only your own points and no leaderboard or rank.
-      - Turn the switch on in the local config, reload, and the leaderboard or rank should appear.
+      - On the PR preview, log in as Test Player 1 on a phone. Under your points you should see your place, like "You're #6", and no other player's name or score.
+      - Get more points than another player and reload. Your place should go up.
+      - Turn the switch off in the local config and reload. The line should be gone.
     needs: [leaderboards.screen]
     open: [GAME-085]
     area: player-app

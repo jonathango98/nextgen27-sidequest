@@ -55,8 +55,8 @@ leaderboard:
   church_min_players: 1               # GAME-082 PROPOSED: minimum active players for a church to appear on the board
   main_screen_top_n: 10               # GAME-083 PROPOSED: rows shown on the main screen leaderboards
   tie_break: first_to_reach           # GAME-084 PROPOSED: the earlier latest point award ranks higher
-  in_app_leaderboard: false           # GAME-085 PROPOSED: no leaderboard and no rank on the phone
-  in_app_rank_top_n: 10               # GAME-085 PROPOSED: with the switch on, these top places see "#N"
+  in_app_leaderboard: true            # GAME-085 PROPOSED: the phone shows the player's own standing, never a leaderboard (DEC-074)
+  in_app_rank_top_n: 10               # GAME-085 PROPOSED: these top places see "#N"
   in_app_percent_cutoff: 50           # GAME-085 PROPOSED: below the top places, show "top X%" down to this percent, then nothing
 
 journal:

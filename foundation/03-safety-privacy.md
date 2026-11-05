@@ -2,7 +2,7 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.3.0
+- Version: 1.3.1
 - Last updated: 2026-11-04
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -46,7 +46,7 @@ Legend: Yes = can see. No = cannot see. Own = only their own record.
 | Church | Own | Yes | Yes | Yes | Yes |
 | Under-18 answer | Own | No | No | Yes | No |
 | PIN | No (only the person knows it) | No | No | No (stored hashed, never shown) | No |
-| Score | Own | No (GAME-085) | Yes | Yes | Yes (top of leaderboard) |
+| Score | Own, plus own place or top percent (GAME-085) | No (GAME-085) | Yes | Yes | Yes (top of leaderboard) |
 | Blind boxes earned and claimed | Own | No | Yes (at claim time) | Yes | No |
 | People you connected with | Own (first name and church) | No | No | Yes (pairs only, for fixing scores) | No |
 | Icebreaker answers | Own pairs only | Only the other person in that pair | No | No | No |
