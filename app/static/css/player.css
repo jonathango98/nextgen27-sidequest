@@ -636,9 +636,11 @@ h2 {
 }
 
 .note-change {
-  font-size: var(--font-size-small);
-  font-weight: 600;
-  text-decoration: underline;
+  flex: none;
+}
+
+.note-share[open] .note-change {
+  transform: rotate(180deg);
 }
 
 /* Admin review: the four status tabs, two by two so they fit the smallest phone (UI-002) */

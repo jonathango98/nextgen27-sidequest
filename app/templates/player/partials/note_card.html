@@ -7,7 +7,8 @@
       <span class="note-meta">
         {# Who can read it, in words (UI-051). Only the player's choice, never the review (DEC-076). #}
         <span class="note-status">{{ visibility_labels[note.visibility] }}</span>
-        <span class="note-change">Change</span>
+        {# An open arrow that flips when open. Its label tells screen readers what it does (UI-051). #}
+        <svg class="note-change" role="img" aria-label="Change who can read this" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg>
       </span>
     </summary>
     <form class="form" method="post" action="/journal/{{ note.public_id }}/visibility" hx-post="/journal/{{ note.public_id }}/visibility" hx-target="#note-{{ note.public_id }}" hx-swap="outerHTML">

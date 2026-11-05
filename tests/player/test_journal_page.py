@@ -109,7 +109,7 @@ def test_dec_076_change_who_can_read_a_note_in_place(page: Page, live_server):
     # The newest note is the first card. Change opens the choices with the UI-031 note.
     card = page.locator(".takeaway-card").first
     expect(card.locator(".note-status")).to_have_text("Just me")
-    card.get_by_text("Change", exact=True).click()
+    card.get_by_role("img", name="Change who can read this").click()
     expect(
         card.get_by_text("Game organizers can still see who wrote it.")
     ).to_be_visible()
