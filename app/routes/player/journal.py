@@ -7,7 +7,7 @@ import sqlite3
 from itertools import groupby
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import RedirectResponse, Response
 
 from app.auth import csrf
@@ -65,13 +65,21 @@ PLACEHOLDER_SUMMARY = [
 ]
 
 
-@router.get("/journal")
-def my_takeaways(request: Request, player: Player, conn: Db):
-    saved = request.query_params.get("saved")
+def _journal_page(
+    request: Request,
+    conn: sqlite3.Connection,
+    player: CurrentPlayer,
+    *,
+    saved: str | None = None,
+    error_note: str | None = None,
+    error: tuple[int, str, str] | None = None,
+) -> Response:
+    token = csrf.token_for(request)
     # Only the player's own notes (03 section 3: a private takeaway is Own), one group per
     # session in the order list_own gives.
     notes = journal.list_own(conn, player_id(conn, player))
     context = {
+        "csrf_token": token,
         "sessions": [
             {"title": title, "notes": list(group)}
             for title, group in groupby(notes, key=lambda n: n.session_title)
@@ -81,7 +89,78 @@ def my_takeaways(request: Request, player: Player, conn: Db):
         "journal_points": request.app.state.config["points"]["journal_takeaway"],
         "visibility_labels": VISIBILITY_LABELS,
     }
-    return templates.TemplateResponse(request, "player/journal.html", context)
+    status = 200
+    if error:
+        status, code, message = error
+        context |= {"error_note": error_note, "error_code": code, "message": message}
+    response = templates.TemplateResponse(
+        request, "player/journal.html", context, status_code=status
+    )
+    csrf.set_token(response, token)
+    return response
+
+
+@router.get("/journal")
+def my_takeaways(request: Request, player: Player, conn: Db):
+    return _journal_page(request, conn, player, saved=request.query_params.get("saved"))
+
+
+@router.post(
+    "/journal/{public_id}/visibility", dependencies=[Depends(csrf.require_csrf)]
+)
+def change_visibility(
+    request: Request, player: Player, conn: Db, form: Form, public_id: str
+):
+    """Change who can read one of your own notes (GAME-031, DEC-076)."""
+    own_id = player_id(conn, player)
+    htmx = request.headers.get("HX-Request")
+    error = None
+    try:
+        journal.change_visibility(
+            conn,
+            player_id=own_id,
+            takeaway_public_id=public_id,
+            visibility=form.get("visibility", ""),
+            review_scope=request.app.state.config["journal"]["review_scope"],
+        )
+    except journal.TakeawayRefused as refused:
+        if refused.code == "NOT_FOUND":
+            # Someone else's note looks like no note. HTMX gets only the message for the card.
+            if not htmx:
+                raise HTTPException(404)
+            return templates.TemplateResponse(
+                request,
+                "partials/error.html",
+                {"error_code": refused.code, "message": refused.message},
+                status_code=404,
+            )
+        error = (refused.status, refused.code, refused.message)
+    except GameNotOn as exc:
+        error = (423, exc.error_code, GAME_NOT_ON_MESSAGES[exc.error_code])  # DEC-076
+    if not htmx:
+        if error:
+            return _journal_page(
+                request, conn, player, error_note=public_id, error=error
+            )
+        return RedirectResponse("/journal", status_code=303)
+    # API-002: HTMX gets only this note's card, with the message or a Saved note.
+    note = next(n for n in journal.list_own(conn, own_id) if n.public_id == public_id)
+    token = csrf.token_for(request)
+    context = {
+        "csrf_token": token,
+        "note": note,
+        "visibility_labels": VISIBILITY_LABELS,
+        "changed": error is None,
+    }
+    status = 200
+    if error:
+        status, code, message = error
+        context |= {"error": True, "error_code": code, "message": message}
+    response = templates.TemplateResponse(
+        request, "player/partials/note_card.html", context, status_code=status
+    )
+    csrf.set_token(response, token)
+    return response
 
 
 def _render_form(

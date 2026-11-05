@@ -1,3 +1,5 @@
+import re
+
 from playwright.sync_api import Page, expect
 
 from app.config import load_config
@@ -93,3 +95,31 @@ def test_game_030_short_note_shows_how_many_more_words_and_keeps_text(
     # The swapped-in form still counts words (journal.js wires it again).
     page.get_by_role("textbox").fill("God is good")
     expect(page.locator(".word-count")).to_have_text(f"3 / {minimum} words")
+
+
+def test_dec_076_change_who_can_read_a_note_in_place(page: Page, live_server):
+    problems = []
+    page.on("console", lambda m: problems.append(m.text) if m.type == "error" else None)
+    page.on("pageerror", lambda e: problems.append(str(e)))
+    minimum = load_config()["limits"]["journal_min_words"]
+    page.goto(f"{live_server}/journal/new")
+    page.get_by_role("textbox").fill(" ".join(["kindness"] * minimum))
+    page.get_by_role("button", name="Submit").click()
+    expect(page).to_have_url(re.compile(r"/journal\?saved="))
+    # The newest note is the first card. Change opens the choices with the UI-031 note.
+    card = page.locator(".takeaway-card").first
+    expect(card.locator(".note-status")).to_have_text("Just me")
+    card.get_by_text("Change", exact=True).click()
+    expect(
+        card.get_by_text("Game organizers can still see who wrote it.")
+    ).to_be_visible()
+    card.get_by_label("Shared anonymously").check()
+    card.get_by_role("button", name="Save").click()
+    # HTMX swaps only this card, so the page stays put.
+    card = page.locator(".takeaway-card").first
+    expect(card.locator(".note-status")).to_have_text("Shared anonymously")
+    expect(card.get_by_role("status")).to_have_text("Saved.")
+    expect(page).to_have_url(re.compile(r"/journal\?saved="))
+    width = load_config()["ui"]["min_viewport_px"]
+    assert page.evaluate("document.documentElement.scrollWidth") <= width
+    assert problems == []

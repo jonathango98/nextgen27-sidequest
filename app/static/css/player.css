@@ -617,6 +617,30 @@ h2 {
   gap: var(--space-3);
 }
 
+/* Who can read a note, with Change opening the choices in place (DEC-076). Tap-sized (UI-003). */
+.note-share > summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+.note-share > summary::-webkit-details-marker {
+  display: none;
+}
+
+.note-share .note-meta {
+  min-height: var(--tap-min);
+}
+
+.note-share[open] > summary {
+  margin-bottom: var(--space-2);
+}
+
+.note-change {
+  font-size: var(--font-size-small);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
 /* Muted gray is fine here: the card is glass (07 section 2) */
 .note-status {
   font-size: var(--font-size-small);

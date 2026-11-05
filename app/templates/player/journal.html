@@ -19,13 +19,9 @@
     <section class="takeaway-session" aria-labelledby="note-{{ loop.index }}">
       <h2 class="session-title" id="note-{{ loop.index }}">{{ session.title }}</h2>
       {% for note in session.notes %}
-        <article class="card takeaway-card">
-          <p class="takeaway-text">{{ note.text }}</p>
-          <div class="note-meta">
-            {# Who can read it, in words (UI-051). Only the player's choice, never the review (DEC-076). #}
-            <span class="note-status">{{ visibility_labels[note.visibility] }}</span>
-          </div>
-        </article>
+        {% with error=note.public_id == error_note %}
+          {% include "player/partials/note_card.html" %}
+        {% endwith %}
       {% endfor %}
     </section>
   {% else %}

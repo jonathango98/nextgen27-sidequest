@@ -1,0 +1,23 @@
+{# GAME-031, DEC-076: one of the player's own notes, who can read it, and a way to change that. #}
+<article class="card takeaway-card" id="note-{{ note.public_id }}">
+  <p class="takeaway-text">{{ note.text }}</p>
+  {# Opens in place with no JavaScript, like the admin session Edit (UI-003: the summary is tap-sized). #}
+  <details class="note-share"{% if error %} open{% endif %}>
+    <summary>
+      <span class="note-meta">
+        {# Who can read it, in words (UI-051). Only the player's choice, never the review (DEC-076). #}
+        <span class="note-status">{{ visibility_labels[note.visibility] }}</span>
+        <span class="note-change">Change</span>
+      </span>
+    </summary>
+    <form class="form" method="post" action="/journal/{{ note.public_id }}/visibility" hx-post="/journal/{{ note.public_id }}/visibility" hx-target="#note-{{ note.public_id }}" hx-swap="outerHTML">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      {% if error %}{% include "partials/error.html" %}{% endif %}
+      {% with visibility=note.visibility, can_share=note.can_share %}
+        {% include "player/partials/visibility_picker.html" %}
+      {% endwith %}
+      <button class="button button-secondary" type="submit">Save</button>
+    </form>
+  </details>
+  {% if changed %}<p class="hint" role="status">Saved.</p>{% endif %}
+</article>
