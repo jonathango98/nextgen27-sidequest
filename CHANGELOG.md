@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: DEC-074 was PROPOSED until the game director confirmed it.
 - Rule IDs: GAME-085, DEC-074, DEC-075, ENG-087
 - Status: Done
-- PR: draft
+- PR: #86
 
 ## 2026-11-04 · feat/leaderboards-in-app · Claude Opus 5.5 / @jonathango98
 
