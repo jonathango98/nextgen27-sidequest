@@ -41,6 +41,7 @@ source .venv/bin/activate && python .claude/skills/pick-task/unlocked.py
 - **READY**: pieces anyone can claim now, soonest due first, with size, level, area, safety review, due date, and how many pieces each one unlocks. `LATE` means the due date has passed.
 - **IN PROGRESS**: pieces with a row in the README In progress table.
 - **WAITING ON OTHER PIECES** and **NEEDS A DECISION**: locked. Never offer these as claimable (AI-003).
+- **RESERVED**: pieces of a feature with an owner. Only the owner builds them. Never offer or claim these, even when asked by ID (ENG-114).
 
 Then cross out READY pieces that are taken but not yet in the README. If an open branch or PR clearly covers one (match the piece ID, branch slug, or PR title), drop it. If you're unsure, keep it but say "might be taken by @someone, check with them" (AI-072).
 
@@ -65,7 +66,7 @@ Skip the two questions and steps 3 and 4.
 
 1. Run `source .venv/bin/activate && python .claude/skills/pick-task/unlocked.py --tree` in place of the plain call above. It prints every READY piece, numbered and grouped under its feature, features in due date order, with how many of that feature's pieces are still locked.
 2. Cross out taken pieces the same way as above. Show the tree as printed, minus taken pieces, plus open unassigned issues as a last group. Keep the numbers so they can reply with one.
-3. If they named a piece ID, skip the tree. Check that the piece is READY and not taken. If it's locked, say what it waits on, then show the tree.
+3. If they named a piece ID, skip the tree. Check that the piece is READY and not taken. If it's locked, say what it waits on, then show the tree. If it's RESERVED, say only its owner builds it, then show the tree.
 4. Once they pick, show that one piece in the step 4 format (size, due, read first, unlocks, heads-up). Say plainly if it's a safety review piece, an M piece (about two sessions), or an L piece (three to four sessions), but don't block their choice. Then go to step 5.
 
 ### Two quick questions

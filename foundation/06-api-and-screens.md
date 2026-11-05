@@ -2,8 +2,8 @@
 
 - Status: PROPOSED (developers confirm at kickoff)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.11.0
-- Last updated: 2026-11-04
+- Version: 1.12.0
+- Last updated: 2026-11-05
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -15,7 +15,7 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 
 - **API-002** [PROPOSED] A normal browser request gets a full page. A request with the `HX-Request` header gets only the fragment (partial) it needs.
 - **API-003** [PROPOSED] Partials live in `app/templates/<role>/partials/`. Shared partials, such as the paused banner and error messages, live in `app/templates/partials/`.
-- **API-004** [LOCKED] Every POST carries a CSRF token (ARCH-038). With HTMX, the token is sent in a request header set once on the page.
+- **API-004** [LOCKED] Every POST from a browser carries a CSRF token (ARCH-038). With HTMX, the token is sent in a request header set once on the page. The photobooth routes are called only by the photobooth's server and use its key instead (ARCH-039, DEC-079).
 - **API-005** [PROPOSED] Errors return the right HTTP status and a small HTML error partial with a friendly message. The error code (section 3) is included in the partial as a data attribute so tests can check it.
 - **API-006** [PROPOSED] By default, HTMX does not swap in responses with 4xx or 5xx status codes. Configure HTMX so error partials are shown. Check the docs for the HTMX version you install, because this setting has changed between versions.
 - **API-007** [PROPOSED] Pages work without JavaScript where possible (plain forms that submit and reload). The scanner is the main exception.
@@ -56,7 +56,7 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 | POST | `/staff/login` | Check the password and start a staff session. Ushers land on `/usher`, admins on `/admin` | ARCH-035, ARCH-036, DEC-063 |
 | GET | `/usher` | Usher console | |
 | POST | `/usher/booth` | Scan My Code for a booth visit | GAME-041 |
-| POST | `/usher/photobooth` | Scan My Code for a photobooth visit | GAME-042 |
+| POST | `/usher/photobooth` | Record a photobooth visit for a player found by name, when their phone is dead. The kiosk scans everyone else | GAME-042, GAME-113, DEC-079 |
 | POST | `/usher/hidden-item` | Record an item number and scan My Code | GAME-043 |
 | POST | `/usher/box-claim` | Scan My Code and record a blind box handed over | GAME-073 |
 | GET | `/usher/players` | Look up a player by name (dead phone) | GAME-113 |
@@ -86,6 +86,7 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 | GET | `/admin/activity` | Unusual activity view | ARCH-062 |
 | GET | `/admin/audit` | Audit log | ARCH-050 |
 | POST | `/admin/redemption/close` | Close blind box redemption on Sunday when the service starts | GAME-078, GAME-110 |
+| POST | `/admin/blind-box/out` | Mark blind boxes ran out, or back in stock | GAME-076, GAME-110 |
 | POST | `/admin/wrapped/unlock` | Unlock Wrapped | WRAP-002 |
 | POST | `/admin/screen-off-view` | Choose what the main screen shows while the game is off: the offline message or the recap | UI-044 |
 
@@ -96,10 +97,29 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 | GET | `/screen?k=<key>` | Main screen: rotates between the views below while the game is on or paused, and shows the off view while it is off. Every main screen page needs the key | UI-040, ARCH-037, API-031 |
 | GET | `/screen/players` | Partial: player leaderboard | GAME-086 |
 | GET | `/screen/churches` | Partial: church leaderboard | GAME-081 |
+| GET | `/screen/photobooth` | Partial: the photobooth app's slideshow, with admin-approved photos only. Says coming soon while `SQ_PHOTOBOOTH_SLIDESHOW_URL` is not set | SAFE-038, DEC-079 |
 | GET | `/screen/takeaways` | Partial: takeaway wall, one approved shared takeaway picked at random | SAFE-018 |
-| GET | `/screen/photobooth` | Partial: photobooth pictures. Says coming soon until SAFE-038 is decided | SAFE-038 |
 | GET | `/screen/checkin/{session_id}` | Rotating session check-in QR and countdown for the hall screen. Opens only from the link an admin makes for that session, not with the main screen key. `checkin.hall` adds the route that makes the link | GAME-020, GAME-028, DEC-070 |
 | GET | `/screen/recap` | Conference recap on Sunday | WRAP-020 |
+
+### Photobooth (server to server)
+
+| Method | Path | What it does | Rules |
+|---|---|---|---|
+| POST | `/api/photobooth/start` | The photobooth's server sends the My Code the kiosk scanned before the first shot. Answers with a signed ticket, or why the player can't earn | GAME-042, ARCH-039, DEC-079 |
+| POST | `/api/photobooth/finish` | The photobooth's server sends the ticket after the shot is saved. Awards the points once per ticket | GAME-042, DATA-028, ARCH-039 |
+
+- **API-008** [PROPOSED] The photobooth routes answer in JSON, not HTML: `{"ok": true, ...}`, or `{"ok": false, "code": "<error code>"}` with the HTTP status from section 3. They never return a name, church, or under-18 answer (SAFE-038, DEC-079).
+- **API-009** [PROPOSED] The photobooth contract (DEC-079). `start` takes `{"code": "<scanned SQ1 payload>"}` and answers `{"ok": true, "ticket": "<opaque>", "expires_in": <seconds>}`, or an error with `NOT_A_CODE`, `CODE_EXPIRED`, `LIMIT_REACHED`, `PAUSED`, `GAME_OFF`, or `RATE_LIMITED`. `finish` takes `{"ticket": "<opaque>", "booth_session_id": "<photobooth session id>"}` and answers `{"ok": true}`. The same ticket sent twice pays once and still answers `ok` (DATA-028). The ticket expires after `photobooth.ticket_minutes`.
+
+The photobooth side is built in the photobooth app's own repos, not here. Side Quest's pieces (`photobooth.points`, `photobooth.screen`) count on it to:
+
+- switch the link on per photobooth event, off by default, with that event's Side Quest address and key, which never reach the kiosk page or any response
+- add a kiosk step before the first shot that scans My Code, with a Skip (no points) button, and calls `start` through the photobooth's server
+- call `finish` from the photobooth's server after the photos are saved, retry while the ticket is good, and never block a photo because of Side Quest
+- keep only the opaque ticket, and never log the code, the ticket, or the key
+- give each photo an approved-for-big-screen flag that admins set on the photobooth's admin page, and list only approved photos in that event's slideshow (SAFE-038)
+- let only the Side Quest domains show the slideshow page inside their own page, and keep every other photobooth page from being shown that way
 
 ### System
 
@@ -120,11 +140,11 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 | 404 | `NOT_FOUND` | No such record | "We couldn't find that." |
 | 409 | `ALREADY_CONNECTED` | The pair already exists | "You two are already connected!" |
 | 409 | `ALREADY_DONE` | Once-only quest already done | "You already checked in to this session." |
+| 409 | `OUT_OF_STOCK` | An admin marked the blind boxes ran out | "All the blind boxes are gone." |
 | 409 | `ITEM_CLAIMED` | Hidden item already claimed | "This item was already turned in." |
 | 409 | `LIMIT_REACHED` | A daily or total cap is reached | "That's all the photobooth points for today." |
 | 409 | `NAME_TAKEN` | Sign-up with a full name already used in that church | "Someone from your church already joined with this name. Please find an usher at the game booth." |
 | 409 | `NOTHING_TO_CLAIM` | No claimable blind boxes | "Keep playing to unlock your next box." |
-| 409 | `OUT_OF_STOCK` | No blind boxes left | "All the blind boxes are gone." |
 | 410 | `CODE_EXPIRED` | The rotating code is too old | "That code expired. Ask them to show it again." |
 | 423 | `PAUSED` | The game is paused | "The game is paused during the session." |
 | 423 | `GAME_OFF` | The game is off | "The game is closed right now." |
@@ -161,7 +181,7 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 | Admin console | Admin | `/admin` | Game state switch first, then queues | GAME-110 |
 | Main screen: leaderboards | Screen | `/screen/players`, `/screen/churches` | Readable from the back of the room | UI-041 |
 | Main screen: takeaway wall | Screen | `/screen/takeaways` | One approved shared post at a time | SAFE-018 |
-| Main screen: photobooth | Screen | `/screen/photobooth` | Coming soon until SAFE-038 is decided | SAFE-038 |
+| Main screen: photobooth | Screen | `/screen/photobooth` | The photobooth's slideshow, admin-approved photos only. Coming soon until its link is set | SAFE-038, DEC-079 |
 | Main screen: check-in QR | Screen | `/screen/checkin/{id}` | Opened from the link an admin makes, with a countdown to the close time the admin entered | GAME-020, GAME-028, DEC-070 |
 | Main screen: off | Screen | `/screen` | "Side Quest is offline", or the recap, as an admin chooses | UI-044 |
 | Main screen: conference recap | Screen | `/screen/recap` | Sunday before prizes | WRAP-020 |

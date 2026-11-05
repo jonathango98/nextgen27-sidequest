@@ -12,6 +12,12 @@
 /.editorconfig      @jonathango98
 /.env.example       @jonathango98
 
+# Reserved features (ENG-114): only the owner builds these, so their code merges only with the owner's approval.
+/app/routes/photobooth/                        @jonathango98
+/app/services/photobooth.py                    @jonathango98
+/app/templates/screen/partials/photobooth.html @jonathango98
+/tests/photobooth/                             @jonathango98
+
 # Safety reviewer (SAFE-016). Until one is named, Jonathan reviews safety-review PRs.
 # When named, replace SAFETY_REVIEWER with their handle and uncomment (15-repo-setup-checklist.md step 9).
 # Paths follow the PROPOSED app layout (ARCH-008).

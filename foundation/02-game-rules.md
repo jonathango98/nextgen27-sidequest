@@ -2,8 +2,8 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.8.0
-- Last updated: 2026-11-04
+- Version: 1.9.0
+- Last updated: 2026-11-05
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -33,7 +33,7 @@ This is the full list of ways to earn points. If an action is not in this table,
 | Sessions | Journal takeaway | GAME-030 | 20 | `points.journal_takeaway` | First takeaway per session | Server checks word count |
 | Explore | Join the game | GAME-040 | 10 | `points.join` | Once | Automatic at sign-up |
 | Explore | Booth visit | GAME-041 | 10 | `points.booth_visit` | Once per booth | Usher scans My Code |
-| Explore | Photobooth | GAME-042 | 5 | `points.photobooth` | 5 per day | Usher scans My Code |
+| Explore | Photobooth | GAME-042 | 5 | `points.photobooth` | 5 per day | Photobooth kiosk scans My Code |
 | Explore | Hidden item | GAME-043 | 15 | `points.hidden_item` | Each item once in total | Usher at the game booth |
 
 ### Check-in tiers
@@ -108,7 +108,7 @@ Tier size: 10 scans per tier. Config: `checkin.tier_size`.
 
 - **GAME-040** [PROPOSED] A player earns 10 points for joining the game. This is given once per player, on any day they join. Config: `points.join`.
 - **GAME-041** [PROPOSED] A player earns 10 points per booth visit, once per booth. An usher at the booth scans the player's My Code. Examples of booths: the mission booth and the merch table. The booth list is entered by an admin before the event. Config: `points.booth_visit`.
-- **GAME-042** [PROPOSED] A player earns 5 points per photobooth visit, up to 5 visits per day. An usher scans My Code. The day boundary is midnight in the venue timezone (GAME-105). Config: `points.photobooth`, `limits.photobooth_per_day`.
+- **GAME-042** [PROPOSED] A player earns 5 points per photobooth visit, up to 5 visits per day. Before the first shot, the photobooth kiosk scans My Code, and the points arrive after the shot is saved (DEC-079). A player can skip the scan and take photos without points. For a dead phone, an usher records the visit (GAME-113). The day boundary is midnight in the venue timezone (GAME-105). Config: `points.photobooth`, `limits.photobooth_per_day`, `photobooth.ticket_minutes`.
 - **GAME-043** [PROPOSED] Numbered hidden items are placed in conference areas only (SAFE-010). A player who finds one brings it to the game booth. An usher records the item number and scans the player's My Code. The player earns 15 points. Each item can be claimed once in total, by the first player who turns it in. The booth keeps the item. Config: `points.hidden_item`.
 - **GAME-044** [PROPOSED] Join points are given at sign-up even while the game is paused, so players see their first points during the Day 1 stage intro. This is the only earning allowed while paused (GAME-102, DEC-043). Config: `join.points_while_paused`.
 - **GAME-045** [PROPOSED] The game booth does not count as a booth for GAME-041 (DEC-040).
@@ -119,13 +119,13 @@ Blind boxes replace the coin system from the Blueprint (DEC-002). They replaced 
 
 - **GAME-070** [PROPOSED] A player earns one blind box every 300 points of score. Blind boxes earned = score divided by 300, rounded down, capped at the max (GAME-071). This is computed from score every time. Nothing is stored or reset. The progress bar on the phone shows points since the last milestone, for example 120 of 300. Config: `blind_box.milestone_points`.
 - **GAME-071** [PROPOSED] A player can earn at most 3 blind boxes. Config: `blind_box.max_per_player`.
-- **GAME-072** [LOCKED] Each blind box is a sealed box with a mystery item inside. What goes inside is OPEN (GAME-068). All milestone rewards are blind boxes. There are no separate milestone rewards and no "Side Quest Legend" (DEC-052).
-- **GAME-068** [OPEN] What goes inside a blind box. Owner: game director. Building the claim flow does not depend on it (DEC-052).
+- **GAME-072** [LOCKED] Each blind box is a sealed box with a mystery item inside. The game director chooses what goes inside, offline (DEC-078). All milestone rewards are blind boxes. There are no separate milestone rewards and no "Side Quest Legend" (DEC-052).
+- **GAME-068** [REMOVED] Was: what goes inside a blind box. The game director chooses it offline, and the app does not need it (DEC-078).
 - **GAME-073** [LOCKED] To claim: the player taps Open Box in the app, goes to the game booth while redemption is open (GAME-078), an usher scans their My Code, the usher hands over a sealed blind box, and the claim is saved. Tapping Open Box does not reserve a box. It only opens the claim screen.
 - **GAME-074** [LOCKED] Blind boxes the player can claim now = blind boxes earned minus blind boxes already claimed. This is never below 0.
 - **GAME-075** [LOCKED] Claims happen during breaks only. The booth closes during sessions, so the server refuses claims while the game is paused. On Sunday the game is off, but claims stay open until the service (GAME-078).
-- **GAME-076** [LOCKED] Blind boxes are limited and first come, first served. When they run out, they are gone. When claims reach the stock number (GAME-069), the server refuses new claims with `OUT_OF_STOCK`.
-- **GAME-069** [OPEN] The number of blind boxes. It comes from the final blind box order. Until it is set, the server does not limit claims by stock. Config: `blind_box.stock_total`.
+- **GAME-076** [LOCKED] Blind boxes are limited and first come, first served. When they run out, they are gone. The server does not count stock. When the booth runs out, an admin presses Blind boxes ran out on the admin console. Then Open Box and the Claim box button on Home say the blind boxes ran out, the box progress bar hides, and the server refuses new claims with `OUT_OF_STOCK`. Back in stock undoes it. Each press writes an audit row (DEC-078).
+- **GAME-069** [REMOVED] Was: the number of blind boxes, set in config from the final order. The server does not count stock (GAME-076, DEC-078).
 - **GAME-077** [LOCKED] There is no "boxes left" counter anywhere: not on the main screen, not in the app. Config: `blind_box.live_counter`.
 - **GAME-078** [PROPOSED] Claims are open on Day 1 evening, during Day 2 breaks, and on Sunday before the service (option B, DEC-045). On Sunday the game is off, so nothing earns points, but blind box claims still work until an admin taps Close redemption when the service starts (GAME-110, DEC-051). Unclaimed blind boxes are lost when redemption closes. Config: `blind_box.redemption_window`.
 - **GAME-079** [PROPOSED] No blind box trading (option B, DEC-040). Config: `blind_box.trading`.
@@ -165,7 +165,7 @@ Example Church B has 1 player with 300 points. Its church score is (300 + 5 × 9
 
 - **GAME-090** [LOCKED] Prizes are given at the Sunday service and claimed in person. This stops fake accounts from winning.
 - **GAME-091** [PROPOSED] No raffle. Prizes go by rank only (DEC-040). Config: `prizes.raffle`.
-- **GAME-092** [OPEN] The final prize list (for example top player and top church) and whether prizes come from the game budget or another budget. Owner: game director and leadership. Config: `prizes.categories`.
+- **GAME-092** [REMOVED] Was: the final prize list and whether prizes come from the game budget. The game director and leadership handle prizes offline (DEC-078).
 
 ## 9. Game states and pause
 
@@ -181,7 +181,7 @@ Example Church B has 1 player with 300 points. Its church score is (300 + 5 × 9
 
 ## 10. Admin and usher powers
 
-- **GAME-110** [LOCKED] Admins can: pause and resume the game, set the game to off, end a session (GAME-026), review shared takeaways, award and revoke points by hand, reset a locked PIN (SAFE-023), fix a player's church, manage the church list, booths, hidden item numbers, sessions, and usher accounts, close blind box redemption on Sunday (GAME-078), and unlock Wrapped (WRAP-002).
+- **GAME-110** [LOCKED] Admins can: pause and resume the game, set the game to off, end a session (GAME-026), review shared takeaways, award and revoke points by hand, reset a locked PIN (SAFE-023), fix a player's church, manage the church list, booths, hidden item numbers, sessions, and usher accounts, close blind box redemption on Sunday (GAME-078), mark blind boxes ran out or back in stock (GAME-076), and unlock Wrapped (WRAP-002).
 - **GAME-111** [LOCKED] Every manual award or revocation needs a written reason and writes an audit row (ARCH-050). Revocation is the only action that lowers a score (GAME-004).
 - **GAME-112** [LOCKED] Ushers can: scan My Code for booth visits, photobooth visits, hidden item turn-ins, and blind box claims, and look up a player by name to help them. Ushers cannot give arbitrary points. Only admins can (GAME-110).
 - **GAME-113** [PROPOSED] If a player's phone is dead, an usher looks the player up by name and records the same quest (booth, photobooth, hidden item, blind box claim) without a scan. The usher's account is saved on the record.
@@ -218,7 +218,7 @@ All names are fake.
 
 **E7. Takeaway while paused (GAME-033).** Player E starts typing during a break, and the next session starts before they submit. Submit returns "paused". The phone keeps the text so they can submit after the session.
 
-**E8. Photobooth cap (GAME-042).** Player F visits the photobooth for the 6th time on Day 2. The usher scan is refused with "daily limit reached". On the next day, Player F can earn again.
+**E8. Photobooth cap (GAME-042).** Player F visits the photobooth for the 6th time on Day 2. The kiosk scan is refused with "daily limit reached", and Player F can still take photos without points. On the next day, Player F can earn again.
 
 **E9. Hidden item claimed once (GAME-043).** Player G turns in item 7 and earns 15. Later, Player H brings in a second item with the number 7 on it. The server refuses because item 7 is already claimed. The usher tells the game director, since a duplicate number means a printing or placement mistake.
 

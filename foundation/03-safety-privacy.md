@@ -2,8 +2,8 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.4.0
-- Last updated: 2026-11-04
+- Version: 1.5.0
+- Last updated: 2026-11-05
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -30,7 +30,7 @@ These are LOCKED. No feature, playtest, or deadline changes them without a Found
 - **SAFE-019** [LOCKED] Under-18 players appear on leaderboards and the takeaway wall the same way as everyone else: first name and church, plus the last initial on leaderboards (GAME-088).
 - **SAFE-020** [PROPOSED] The under-18 answer is visible to admins only. Players, ushers, and the main screen never see it.
 - **SAFE-025** [PROPOSED] v1 has no photo upload of any kind. This keeps SAFE-024 simple: the app holds no photos. The photobooth is a physical booth, and the app only records the visit.
-- **SAFE-038** [OPEN] Whether the main screen may show pictures from the photobooth's own service, who runs that service, and how consent is checked for photos of under-18 players (SAFE-024). The app itself still stores no photos (SAFE-025). Until this is decided, the photobooth view on the main screen says only that it is coming soon (DEC-071).
+- **SAFE-038** [LOCKED] The main screen shows photobooth pictures only through the photobooth app's own slideshow, and only photos an admin approved there for the big screen. Admins approve no photo of an under-18 player without consent (SAFE-024). Side Quest stores no photos (SAFE-025), and the photobooth gets no name, church, or under-18 answer from Side Quest (DEC-079).
 - **SAFE-026** [LOCKED] Hidden items stay in conference areas only. Never guest floors, restrooms, stairwells, or parking. See SAFE-010.
 - **SAFE-015** [LOCKED] Leadership checks these rules against the organization's child safety policy as part of approval.
 - **SAFE-027** [PROPOSED] The game has no automatic hours (GAME-106). An admin sets the game to off at the end of each game day by hand (OPS-005, DEC-049). Owner: leadership.

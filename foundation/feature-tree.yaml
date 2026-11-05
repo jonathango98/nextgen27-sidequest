@@ -2,8 +2,8 @@
 #
 # Status: Active
 # Owner: Jonathan (@jonathango98)
-# Version: 2.2.0
-# Last updated: 2026-11-04
+# Version: 2.3.0
+# Last updated: 2026-11-05
 # Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 #
 # How to read this file (rules in 16-feature-tree.md, ENG-105 to ENG-112)
@@ -17,6 +17,8 @@
 #   A piece is Working when its id is in the README Working table, or in already_working below.
 # - A piece is unlocked when every id in "needs" is Working and no rule in "open" is still
 #   listed in 13-decisions.md section 3 (AI-003).
+# - owner (optional, on a feature): the GitHub handle of the only person who builds its pieces (ENG-114).
+#   /pick-task never offers them to anyone.
 # - due (on each feature): the Friday every piece of the feature should be Working by (PRD-054).
 #   A piece other pieces need is due by the earliest due date among them. /pick-task works this out.
 # - size: S fits one agent session. M takes about two. L takes three to four. Nothing is bigger (ENG-106).
@@ -93,6 +95,11 @@ features:
     due: "2026-12-11"
   - id: screen
     name: Main screen views (leaderboards, takeaway wall, photobooth, check-in QR, offline)
+    milestone: January build
+    due: "2027-01-15"
+  - id: photobooth
+    name: Photobooth link, Jonathan only (kiosk points, approved photos on the main screen)
+    owner: jonathango98
     milestone: January build
     due: "2027-01-15"
   - id: wrapped
@@ -480,20 +487,18 @@ pieces:
     learn: how to keep secret game data out of the database, and how a constraint enforces once per booth
   - id: explore.items
     feature: explore
-    what: An usher records that a player turned in a hidden item, which only the first player can do. An usher also records photobooth visits, which give points up to a limit each day.
+    what: An usher records that a player turned in a hidden item, which only the first player can do.
     try_it:
       - As Test Usher on the PR preview, record test item number 1 for Test Player 1. The score should go up.
       - Record the same number for Test Player 2. It should be refused with a clear message.
-      - Scan Test Player 1's My Code at the photobooth. The score should go up.
-      - Keep scanning until the daily limit. The next try should be refused with a clear message.
     needs: [usher.console, explore.booths, points.ledger]
-    open: [GAME-105]
+    open: []
     area: admin-screens
     size: M
     level: medium
     safety_review: false
-    rules: [GAME-043, DATA-025, SAFE-010, SAFE-026, GAME-042, DATA-028]
-    learn: how a second claim gets a clear refusal, and how a daily limit depends on the venue timezone
+    rules: [GAME-043, DATA-025, SAFE-010, SAFE-026]
+    learn: how a second claim gets a clear refusal
 
   # Usher console
   - id: usher.console
@@ -516,13 +521,13 @@ pieces:
   # Blind boxes (Open Box)
   - id: blind-box.handout
     feature: blind-box
-    what: An usher hands a player a blind box and the game remembers it, so the same box is never given twice. When all the blind boxes have been given out, the game stops letting anyone collect more.
+    what: An usher hands a player a blind box and the game remembers it, so the same box is never given twice. The game does not count how many boxes are left.
     try_it:
       - On the PR preview, after Test Player 1 reaches a box milestone, log in as Test Usher, scan their code and save the claim.
       - Test Player 1's Open Box page should show one fewer box to collect.
       - Try to claim more boxes than the player has earned. It should be refused.
       - Pause the game as Test Admin and try again. It should be refused.
-      - On a local run, set the stock in the test config to a tiny number and claim until it is used up. The next claim should be refused with a friendly message, and the phone should still show no count of boxes left.
+      - Look at Test Player 1's Open Box page and the main screen. Neither should show a count of boxes left.
     needs: [usher.console, home.pages, game-state.core]
     open: []
     area: admin-screens
@@ -533,18 +538,21 @@ pieces:
     learn: how to stop two ushers from claiming the same blind box at once
   - id: blind-box.close-redemption
     feature: blind-box
-    what: On Sunday the game is off, but players can still collect their blind boxes until an admin presses a button to close collecting.
+    what: On Sunday the game is off, but players can still collect their blind boxes until an admin presses a button to close collecting. Admins also get a button to say the blind boxes ran out, which players see on their phone, and a button to undo it.
     try_it:
       - With the game set to off, log in as Test Usher and claim a box for Test Player 1, which should work.
       - Then log in as Test Admin, tap Close redemption, and try another claim, which should now be refused.
       - Also check that points still cannot be earned while the game is off.
+      - As Test Admin, tap Blind boxes ran out. On Test Player 1's phone, Open Box and the Claim box button on Home should say the blind boxes ran out, with no box progress bar and no count.
+      - As Test Usher, try to claim a box for Test Player 1. It should be refused with a friendly message.
+      - As Test Admin, tap Back in stock. The phone should go back to normal, and a claim should work again.
     needs: [blind-box.handout, game-state.controls]
     open: []
     area: admin-screens
     size: M
     level: medium
     safety_review: true
-    rules: [GAME-078, GAME-108, GAME-110, API-020]
+    rules: [GAME-078, GAME-108, GAME-110, API-020, GAME-076, GAME-077, DATA-029, DEC-078]
     learn: how one narrow exception is added to a rule without weakening it
 
   # Leaderboards and church score
@@ -665,20 +673,40 @@ pieces:
     safety_review: true
     rules: [ARCH-037, ARCH-035, UI-040, UI-044, UI-041, UI-042, UI-043, API-031, ARCH-074, DEC-069]
     learn: how a big-screen layout differs from a phone layout, how HTMX polling takes turns between views, and how a secret key guards a page with no login
-  - id: screen.photobooth
-    feature: screen
-    what: The photobooth view on the main screen gets pictures from the photobooth's own service and shows them, only with consent checked for under-18 players. The app never saves the photos.
+
+  # Photobooth link
+  - id: photobooth.points
+    feature: photobooth
+    what: Jonathan only (ENG-114). The photobooth kiosk scans a player's My Code before the first shot, and the player gets photobooth points after the shot, up to a limit each day. Only the photobooth's own server can ask for points, and it never learns the player's name. An usher can still record a visit for a player whose phone is dead. The kiosk and the photobooth's server are built in the photobooth app's own repos (06 section 2, Photobooth). Until they are, tests stand in for the photobooth's server.
     try_it:
-      - On the PR preview, open the main screen link and wait for the photobooth view. It should show test pictures from a test photobooth service.
-      - Turn the test photobooth service off. The photobooth view should say it has no pictures right now, and the other views should keep taking turns.
+      - On the photobooth's superadmin page, make a test event with Side Quest switched on, the PR preview's address, and the preview's photobooth key. Open that event's booth link on an iPad. As Test Player 1 on a phone, scan My Code on the kiosk, then take the photos. Test Player 1's score should go up.
+      - Scan and shoot again until the daily limit. The next scan should say the daily limit is reached, and the kiosk should still let you take photos.
+      - As Test Admin, pause the game, then scan on the kiosk again. It should say the game is paused.
+      - Show the kiosk a screenshot of My Code from a few minutes ago. It should be refused.
+      - As Test Usher, find Test Player 2 by name and record a photobooth visit. The score should go up.
+    needs: [usher.console, points.ledger, game-state.core]
+    open: []
+    area: backend
+    size: M
+    level: hard
+    safety_review: true
+    rules: [GAME-042, GAME-105, GAME-113, DATA-028, ARCH-039, API-004, API-008, API-009, SAFE-038, DEC-079]
+    learn: how two servers trust each other with a shared secret, how a signed ticket carries a scan across a photo shoot, and how a daily limit depends on the venue timezone
+  - id: photobooth.screen
+    feature: photobooth
+    what: Jonathan only (ENG-114). The photobooth view on the main screen shows the photobooth app's own slideshow, with only the photos an admin approved for the big screen. The app never saves the photos. The approve step and the permission to show the slideshow inside Side Quest are built in the photobooth app's own repos (06 section 2, Photobooth).
+    try_it:
+      - On the PR preview, open the main screen link and wait for the photobooth view. It should show the test photobooth event's slideshow, with the link in the preview's `SQ_PHOTOBOOTH_SLIDESHOW_URL` variable.
+      - On the test photobooth's admin page, approve one photo. Within a minute it should show up in the view. A photo you didn't approve should never show.
+      - Remove the slideshow link from the preview's Railway variables. The photobooth view should say coming soon, and the other views should keep taking turns.
       - Look through the database and the server files. No photo should be saved anywhere.
     needs: [screen.main]
-    open: [SAFE-038]
+    open: []
     area: admin-screens
-    size: M
+    size: S
     level: medium
     safety_review: true
-    rules: [SAFE-038, SAFE-024, SAFE-025, UI-040, DEC-071]
+    rules: [SAFE-038, SAFE-024, SAFE-025, UI-040, API-009, DEC-079]
     learn: how a page shows pictures from another service without saving them
 
   # Wrapped cards
