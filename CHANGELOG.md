@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: In the full two-browser run, staff tests add "Example Session 1 webkitb" to the shared test database, so the label matched two radios and the WebKit run failed.
 - Rule IDs: GAME-036, AI-042
 - Status: Done
-- PR: draft
+- PR: #84
 
 ## 2026-11-04 · feat/journal-notes · Claude Opus 5.5 / @jonathango98
 
