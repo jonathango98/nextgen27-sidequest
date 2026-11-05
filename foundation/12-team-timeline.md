@@ -74,7 +74,7 @@ The weeks follow the order pieces need each other (`16-feature-tree.md`), spread
 | 7 | December 14 to 18 | `explore` Explore, `blind-box` Blind boxes, `leaderboards` Leaderboards and church score |
 | Break | December 21 to January 3 | Nothing due. Bonus work only (ENG-072) |
 | 8 | January 4 to 8 | `journal` Journal and Summary page, `ready` Game day readiness |
-| 9 | January 11 to 15 | `screen` Main screen views, `wrapped` Wrapped cards, `recap` Conference recap screen |
+| 9 | January 11 to 15 | `screen` Main screen views, `photobooth` Photobooth link, `wrapped` Wrapped cards, `recap` Conference recap screen |
 | Buffer | January 18 to feature complete | Fixes and late pieces only |
 
 ## 4. What is frozen when

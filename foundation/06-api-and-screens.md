@@ -110,6 +110,16 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 | POST | `/api/photobooth/finish` | The photobooth's server sends the ticket after the shot is saved. Awards the points once per ticket | GAME-042, DATA-028, ARCH-039 |
 
 - **API-008** [PROPOSED] The photobooth routes answer in JSON, not HTML: `{"ok": true, ...}`, or `{"ok": false, "code": "<error code>"}` with the HTTP status from section 3. They never return a name, church, or under-18 answer (SAFE-038, DEC-079).
+- **API-009** [PROPOSED] The photobooth contract (DEC-079). `start` takes `{"code": "<scanned SQ1 payload>"}` and answers `{"ok": true, "ticket": "<opaque>", "expires_in": <seconds>}`, or an error with `NOT_A_CODE`, `CODE_EXPIRED`, `LIMIT_REACHED`, `PAUSED`, `GAME_OFF`, or `RATE_LIMITED`. `finish` takes `{"ticket": "<opaque>", "booth_session_id": "<photobooth session id>"}` and answers `{"ok": true}`. The same ticket sent twice pays once and still answers `ok` (DATA-028). The ticket expires after `photobooth.ticket_minutes`.
+
+The photobooth side is built in the photobooth app's own repos, not here. Side Quest's pieces (`photobooth.points`, `photobooth.screen`) count on it to:
+
+- switch the link on per photobooth event, off by default, with that event's Side Quest address and key, which never reach the kiosk page or any response
+- add a kiosk step before the first shot that scans My Code, with a Skip (no points) button, and calls `start` through the photobooth's server
+- call `finish` from the photobooth's server after the photos are saved, retry while the ticket is good, and never block a photo because of Side Quest
+- keep only the opaque ticket, and never log the code, the ticket, or the key
+- give each photo an approved-for-big-screen flag that admins set on the photobooth's admin page, and list only approved photos in that event's slideshow (SAFE-038)
+- let only the Side Quest domains show the slideshow page inside their own page, and keep every other photobooth page from being shown that way
 
 ### System
 

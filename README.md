@@ -80,6 +80,7 @@ In the foundation, no branch yet. Order follows `foundation/12-team-timeline.md`
 | Leaderboards and church score | `leaderboards` | `02-game-rules.md` section 7, UI-041 | January build |
 | Admin console | `admin` | GAME-110 | January build |
 | Main screen views (leaderboards, takeaway wall, photobooth, check-in QR, offline) | `screen` | UI-040, UI-041, SAFE-018, GAME-020, ARCH-037 | January build |
+| Photobooth link: kiosk points and approved photos on the main screen (Jonathan only) | `photobooth` | DEC-079, GAME-042, SAFE-038 | January build |
 | Wrapped cards | `wrapped` | WRAP-010 | January build |
 | Conference recap screen | `recap` | WRAP-020 | January build |
 | Game day readiness: log out, rate limits, backups, load test, data cleanup | `ready` | ARCH-031, ARCH-053, ARCH-071, SAFE-014 | January build |

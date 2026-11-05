@@ -17,6 +17,8 @@
 #   A piece is Working when its id is in the README Working table, or in already_working below.
 # - A piece is unlocked when every id in "needs" is Working and no rule in "open" is still
 #   listed in 13-decisions.md section 3 (AI-003).
+# - owner (optional, on a feature): the GitHub handle of the only person who builds its pieces (ENG-114).
+#   /pick-task never offers them to anyone.
 # - due (on each feature): the Friday every piece of the feature should be Working by (PRD-054).
 #   A piece other pieces need is due by the earliest due date among them. /pick-task works this out.
 # - size: S fits one agent session. M takes about two. L takes three to four. Nothing is bigger (ENG-106).
@@ -93,6 +95,11 @@ features:
     due: "2026-12-11"
   - id: screen
     name: Main screen views (leaderboards, takeaway wall, photobooth, check-in QR, offline)
+    milestone: January build
+    due: "2027-01-15"
+  - id: photobooth
+    name: Photobooth link, Jonathan only (kiosk points, approved photos on the main screen)
+    owner: jonathango98
     milestone: January build
     due: "2027-01-15"
   - id: wrapped
@@ -492,23 +499,6 @@ pieces:
     safety_review: false
     rules: [GAME-043, DATA-025, SAFE-010, SAFE-026]
     learn: how a second claim gets a clear refusal
-  - id: explore.photobooth
-    feature: explore
-    what: The photobooth kiosk scans a player's My Code before the first shot, and the player gets photobooth points after the shot, up to a limit each day. Only the photobooth's own server can ask for points, and it never learns the player's name. An usher can still record a visit for a player whose phone is dead. The kiosk side is built in the photobooth app's own repo.
-    try_it:
-      - Point the test photobooth at the PR preview. As Test Player 1 on a phone, scan My Code on the kiosk, then take the photos. Test Player 1's score should go up.
-      - Scan and shoot again until the daily limit. The next scan should say the daily limit is reached, and the kiosk should still let you take photos.
-      - As Test Admin, pause the game, then scan on the kiosk again. It should say the game is paused.
-      - Show the kiosk a screenshot of My Code from a few minutes ago. It should be refused.
-      - As Test Usher, find Test Player 2 by name and record a photobooth visit. The score should go up.
-    needs: [usher.console, points.ledger, game-state.core]
-    open: []
-    area: backend
-    size: M
-    level: hard
-    safety_review: true
-    rules: [GAME-042, GAME-105, GAME-113, DATA-028, ARCH-039, API-004, API-008, SAFE-038, DEC-079]
-    learn: how two servers trust each other with a shared secret, how a signed ticket carries a scan across a photo shoot, and how a daily limit depends on the venue timezone
 
   # Usher console
   - id: usher.console
@@ -683,11 +673,30 @@ pieces:
     safety_review: true
     rules: [ARCH-037, ARCH-035, UI-040, UI-044, UI-041, UI-042, UI-043, API-031, ARCH-074, DEC-069]
     learn: how a big-screen layout differs from a phone layout, how HTMX polling takes turns between views, and how a secret key guards a page with no login
-  - id: screen.photobooth
-    feature: screen
-    what: The photobooth view on the main screen shows the photobooth app's own slideshow, with only the photos an admin approved for the big screen. The app never saves the photos. The approve step is built in the photobooth app's own repo.
+
+  # Photobooth link
+  - id: photobooth.points
+    feature: photobooth
+    what: Jonathan only (ENG-114). The photobooth kiosk scans a player's My Code before the first shot, and the player gets photobooth points after the shot, up to a limit each day. Only the photobooth's own server can ask for points, and it never learns the player's name. An usher can still record a visit for a player whose phone is dead. The kiosk and the photobooth's server are built in the photobooth app's own repos (06 section 2, Photobooth). Until they are, tests stand in for the photobooth's server.
     try_it:
-      - On the PR preview, open the main screen link and wait for the photobooth view. It should show the test photobooth event's slideshow.
+      - On the photobooth's superadmin page, make a test event with Side Quest switched on, the PR preview's address, and the preview's photobooth key. Open that event's booth link on an iPad. As Test Player 1 on a phone, scan My Code on the kiosk, then take the photos. Test Player 1's score should go up.
+      - Scan and shoot again until the daily limit. The next scan should say the daily limit is reached, and the kiosk should still let you take photos.
+      - As Test Admin, pause the game, then scan on the kiosk again. It should say the game is paused.
+      - Show the kiosk a screenshot of My Code from a few minutes ago. It should be refused.
+      - As Test Usher, find Test Player 2 by name and record a photobooth visit. The score should go up.
+    needs: [usher.console, points.ledger, game-state.core]
+    open: []
+    area: backend
+    size: M
+    level: hard
+    safety_review: true
+    rules: [GAME-042, GAME-105, GAME-113, DATA-028, ARCH-039, API-004, API-008, API-009, SAFE-038, DEC-079]
+    learn: how two servers trust each other with a shared secret, how a signed ticket carries a scan across a photo shoot, and how a daily limit depends on the venue timezone
+  - id: photobooth.screen
+    feature: photobooth
+    what: Jonathan only (ENG-114). The photobooth view on the main screen shows the photobooth app's own slideshow, with only the photos an admin approved for the big screen. The app never saves the photos. The approve step and the permission to show the slideshow inside Side Quest are built in the photobooth app's own repos (06 section 2, Photobooth).
+    try_it:
+      - On the PR preview, open the main screen link and wait for the photobooth view. It should show the test photobooth event's slideshow, with the link in the preview's `SQ_PHOTOBOOTH_SLIDESHOW_URL` variable.
       - On the test photobooth's admin page, approve one photo. Within a minute it should show up in the view. A photo you didn't approve should never show.
       - Remove the slideshow link from the preview's Railway variables. The photobooth view should say coming soon, and the other views should keep taking turns.
       - Look through the database and the server files. No photo should be saved anywhere.
@@ -697,7 +706,7 @@ pieces:
     size: S
     level: medium
     safety_review: true
-    rules: [SAFE-038, SAFE-024, SAFE-025, UI-040, DEC-079]
+    rules: [SAFE-038, SAFE-024, SAFE-025, UI-040, API-009, DEC-079]
     learn: how a page shows pictures from another service without saving them
 
   # Wrapped cards
