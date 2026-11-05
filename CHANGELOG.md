@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-04 · feat/game-state-auto-pause · Claude Opus 5.5 / @marcjason2012
+
+- What: Claims `game-state.auto-pause`: at a session's start time the server pauses the game if it is on, as a backup to the admin's Pause button. It never turns an off game to paused and never resumes the game.
+- Why: Picked through `/pick-task`. Due 2026-12-04. Last piece of the Game states feature.
+- Rule IDs: GAME-107, DATA-014, OPS-001, ENG-101
+- Status: Started
+- PR: draft
+
 ## 2026-11-05 · docs/drop-open-decisions · Claude Opus 5.5 / @jonathango98
 
 - What: Removes five of the last six OPEN items instead of deciding them (DEC-078): PRD-011 metric targets, PRD-053 and GAME-092 prize budget and list, GAME-068 blind box contents, and GAME-069 blind box count. Each is marked REMOVED. The sixth, SAFE-038, is decided (DEC-079), so the open table in `13-decisions.md` is empty. The server no longer plans to count blind box stock. Instead an admin presses Blind boxes ran out (and Back in stock to undo): Open Box and Home's Claim box then say so and claims are refused with `OUT_OF_STOCK`. GAME-076, GAME-110, DATA-029, a GameState field, a route, the runbook, and the `blind-box.close-redemption` piece, which builds it, say so. The photobooth links to Side Quest (DEC-079). The main screen keeps its photobooth view, which will embed the photobooth app's own slideshow from `SQ_PHOTOBOOTH_SLIDESHOW_URL`, showing only photos an admin approved there (SAFE-038, UI-040). Before the first shot, the kiosk scans My Code. The photobooth's server calls two new routes, `/api/photobooth/start` and `/api/photobooth/finish`, with the `SQ_PHOTOBOOTH_KEY` secret (ARCH-039, API-004, API-008), and the points arrive after the shot, once per ticket (GAME-042, DATA-028, PhotoboothVisit `ticket_id`). The photobooth gets no name or under-18 answer. Ushers record visits only for dead phones. `photobooth.ticket_minutes` joins `game-config.yaml`, the runbook adds approving photos, and the tree gets a new `photobooth` feature, due with `screen`, holding `photobooth.points` and `photobooth.screen`. API-009 writes down the contract and what the photobooth app's own repos build. The feature has `owner: jonathango98`, so only Jonathan builds it: `/pick-task` lists its pieces as RESERVED, and CODEOWNERS gives him its code paths (ENG-114). `blind_box.stock_total` and `prizes.categories` leave `game-config.yaml`. Foundation changes need Jonathan's approval (ENG-080).
