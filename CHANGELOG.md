@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-04 · feat/journal-share-review · Claude Opus 5.5 / @jonathango98
+
+- What: Claims `journal.share-review`: a player picks only me, shared with my name, or shared without my name for each note, admins approve, reject, or hide shared notes, and signed-in players read approved notes on the Summary page.
+- Why: Next piece in the journal feature, due 2027-01-08 (PRD-054). It unlocks `recap.screen`.
+- Rule IDs: GAME-031, SAFE-009, UI-031, SAFE-007, SAFE-008, SAFE-040, SAFE-041, SAFE-042, SAFE-017, UI-038, ENG-101
+- Status: Started
+- PR: draft
+
 ## 2026-11-04 · docs/dec-074-confirmed · Claude Opus 5.5 / @jonathango98
 
 - What: Logs the game director's confirmation of DEC-074 as DEC-075. GAME-085 and `leaderboard.in_app_leaderboard` are now LOCKED. The 10 places and the 50% cutoff stay PROPOSED and are listed for review after Playtest 1. Needs Jonathan's approval (ENG-080).
