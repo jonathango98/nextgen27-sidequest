@@ -2,7 +2,7 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.35.0
+- Version: 1.36.0
 - Last updated: 2026-11-04
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
@@ -94,6 +94,7 @@ Sources, in order of precedence:
 | DEC-072 | 2026-11-04 | A player can write any number of takeaways for a session. Every one needs at least 15 words, and only the first one for a session earns points (GAME-030). DATA-023 (one takeaway per session) is removed, and the point ledger's unique award (DATA-027) keeps points once per session. No cap on notes per session for now | Jonathan's call. Players may want to add a thought later, and the feature tree's `journal.notes` try_it and `wrapped.stat-cards` already count more than one note per session. Points don't stack, so there is little reason to spam. `journal.share-review` should look again at many shared notes in the review queue | Jonathan (2026-11-04, PR #83) |
 | DEC-073 | 2026-11-04 | If the phone rank switch (GAME-085) is ever turned on, the phone shows only the player's own standing: their place in the top 10, else their top percent rounded up down to the top 50%, else nothing. A top 10 place always shows, even in a small game. It counts every player with points, in the main screen order (GAME-084) | Jonathan's call. Showing only the player's own standing keeps other players' scores off phones (SAFE table), and showing nothing in the bottom half never shames anyone (UI-050) | Jonathan (2026-11-04, PR #85) |
 | DEC-074 | 2026-11-04 | The phone rank switch (GAME-085) is on for v1: Home shows the player's own standing as set in DEC-073. This changes only the "no rank on the phone" part of DEC-040. The phone still shows no leaderboard and no other player's score. PROPOSED until the game director confirms | Jonathan's call. A player's own place or top percent is a nudge to keep playing, while the full boards stay on the main screen | Jonathan (2026-11-04, PR #85) |
+| DEC-075 | 2026-11-04 | The game director confirmed DEC-074: the phone shows the player's own standing in v1. GAME-085 is LOCKED. Its numbers, 10 places (`leaderboard.in_app_rank_top_n`) and the 50% cutoff (`leaderboard.in_app_percent_cutoff`), stay PROPOSED | DEC-074 was PROPOSED until the game director confirmed it. The numbers can still be tuned with playtest data | Game director, via Jonathan (2026-11-04) |
 
 ## 2. Resolved conflicts
 
@@ -137,3 +138,4 @@ These are built as written, then reviewed with playtest data.
 | SAFE-008 | Review every shared post | Every shared post, or only posts from under-18 players | Leadership |
 | GAME-016 | Each player earns on typing their own answer, no time limit | Keep, or add a time limit if many players never type | Game director |
 | GAME-089 | Shrunk average, k = 5 | Keep, or change k after seeing real church sizes | Game director |
+| GAME-085 | Place shown in the top 10, top percent down to 50% | Keep, or change after seeing how players react | Game director |

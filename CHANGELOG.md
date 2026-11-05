@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-04 · docs/dec-074-confirmed · Claude Opus 5.5 / @jonathango98
+
+- What: Logs the game director's confirmation of DEC-074 as DEC-075. GAME-085 and `leaderboard.in_app_leaderboard` are now LOCKED. The 10 places and the 50% cutoff stay PROPOSED and are listed for review after Playtest 1. Needs Jonathan's approval (ENG-080).
+- Why: DEC-074 was PROPOSED until the game director confirmed it.
+- Rule IDs: GAME-085, DEC-074, DEC-075, ENG-087
+- Status: Done
+- PR: draft
+
 ## 2026-11-04 · feat/leaderboards-in-app · Claude Opus 5.5 / @jonathango98
 
 - What: Builds `leaderboards.in-app`, switched on. Home shows a frosted pill under the score with the player's own standing: "You're #N" in the top `in_app_rank_top_n` places (always, even in a small game), else "You're in the top X%" rounded up down to `in_app_percent_cutoff`, else nothing. Same order and tie rule as the main screen. Phones still show no leaderboard and no other player's score. Foundation: two new config keys and `in_app_leaderboard: true`, GAME-085 reworded, SAFE table Score row, feature tree piece text, DEC-073 and DEC-074 (needs Jonathan's approval, ENG-080). Design canvas Home board shows the pill (v99).
