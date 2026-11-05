@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-05 · fix/journal-test-session-label · Claude Opus 5.5 / @jonathango98
+
+- What: The Journal form browser test finds the session radio by its value instead of its label, and checks that exactly one session is picked.
+- Why: In the full two-browser run, staff tests add "Example Session 1 webkitb" to the shared test database, so the label matched two radios and the WebKit run failed.
+- Rule IDs: GAME-036, AI-042
+- Status: Done
+- PR: draft
+
 ## 2026-11-04 · feat/journal-notes · Claude Opus 5.5 / @jonathango98
 
 - What: Builds `journal.notes`. New `takeaway` table (migration 0010) and journal service: a player writes a private note for a session an admin has ended, words are counted on the server, and the first note per session earns `points.journal_takeaway` through the points service. Later notes for the same session save with no points. Notes are refused while paused or off. `/journal/new` offers ended sessions with a live word count, `/journal` lists only your own notes. Retention deletes takeaways. Foundation: DEC-072 allows many takeaways per session, removes DATA-023, and rewords GAME-030 (needs Jonathan's approval, ENG-080). Test fixtures now point back at their own database after app start, which also fixes 3 skeleton tests that failed when run alone.
