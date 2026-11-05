@@ -285,3 +285,82 @@ def test_ui_008_a_church_keeps_one_dot_color_on_both_boards(conn):
     church_board = {r.church: r.dot for r in leaderboards.top_churches(conn, CFG)}
     assert players == church_board
     assert set(players.values()) <= set(range(leaderboards.DOT_COLORS))
+
+
+# GAME-085, DEC-073: the phone standing, with the switch turned on for these tests only.
+ON = {**CFG, "in_app_leaderboard": True}
+TOP_N = CFG["in_app_rank_top_n"]
+CUTOFF = CFG["in_app_percent_cutoff"]
+# Enough players that some places fall below the top places but inside the cutoff, and some below.
+CROWD = 2 * (TOP_N * 100 // CUTOFF + 1)
+
+
+def _crowd(conn, size=CROWD):
+    # Test Player n is in place n: each earns less than the one before.
+    for n in range(1, size + 1):
+        _player(conn, n, earned=(size - n + 1) * BOOTH)
+
+
+def _top_percent(place, size=CROWD):
+    return math.ceil(Fraction(place * 100, size))
+
+
+def test_game_085_switch_off_shows_nothing(conn):
+    _crowd(conn)
+    off = {**CFG, "in_app_leaderboard": False}
+    assert all(
+        leaderboards.own_standing(conn, off, f"fake-{n}") is None
+        for n in range(1, CROWD + 1)
+    )
+
+
+def test_game_085_top_places_show_their_place(conn):
+    _crowd(conn)
+    for n in range(1, TOP_N + 1):
+        assert leaderboards.own_standing(
+            conn, ON, f"fake-{n}"
+        ) == leaderboards.Standing(place=n)
+
+
+def test_game_085_top_places_show_even_in_a_small_game(conn):
+    # DEC-073: a top place always shows, even when it is in the bottom half.
+    _crowd(conn, TOP_N)
+    last = leaderboards.own_standing(conn, ON, f"fake-{TOP_N}")
+    assert last == leaderboards.Standing(place=TOP_N)
+
+
+def test_game_085_below_top_places_shows_top_percent_rounded_up(conn):
+    _crowd(conn)
+    shown = 0
+    for n in range(TOP_N + 1, CROWD + 1):
+        if _top_percent(n) <= CUTOFF:
+            expected = leaderboards.Standing(top_percent=_top_percent(n))
+            shown += 1
+        else:
+            expected = None
+        assert leaderboards.own_standing(conn, ON, f"fake-{n}") == expected
+    assert shown
+
+
+def test_game_085_bottom_half_shows_nothing(conn):
+    _crowd(conn)
+    assert _top_percent(CROWD) > CUTOFF
+    assert leaderboards.own_standing(conn, ON, f"fake-{CROWD}") is None
+
+
+def test_game_085_shows_only_your_own_standing(conn):
+    # SAFE-028: the standing holds no name or score, so nobody else's data reaches a phone.
+    assert {f.name for f in fields(leaderboards.Standing)} == {"place", "top_percent"}
+
+
+def test_game_084_own_place_uses_the_main_screen_tie_break(conn):
+    later = _player(conn, 1, "Example Church A", earned=BOOTH)
+    earlier = _player(conn, 2, "Example Church B", earned=BOOTH)
+    _at(conn, _last_award(conn, later), "2027-01-10T12:00:05Z")
+    _at(conn, _last_award(conn, earlier), "2027-01-10T12:00:01Z")
+    assert leaderboards.own_standing(conn, ON, "fake-2") == leaderboards.Standing(
+        place=1
+    )
+    assert leaderboards.own_standing(conn, ON, "fake-1") == leaderboards.Standing(
+        place=2
+    )
