@@ -34,6 +34,7 @@ from app.routes.player import (
 from app.routes.screen import views as screen_views
 from app.routes.staff import console as staff_console
 from app.routes.staff import login as staff_login
+from app.routes.staff import review as staff_review
 from app.routes.staff import sessions as staff_sessions
 from app.routes.staff import usher as staff_usher
 from app.services import churches, connections, leaderboards, players, sessions, staff
@@ -100,6 +101,7 @@ def create_app() -> FastAPI:
     app.include_router(staff_usher.router)
     app.include_router(screen_views.router)
     app.include_router(staff_sessions.router)
+    app.include_router(staff_review.router)
     # Screen skeleton (UI-030): plain pages, no game logic yet.
     for module in (home, scan, quests, journal, box, wrapped):
         app.include_router(module.router)

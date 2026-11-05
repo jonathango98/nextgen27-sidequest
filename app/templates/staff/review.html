@@ -1,0 +1,54 @@
+{% extends "player/plain.html" %}
+
+{% block title %}Review · Side Quest{% endblock %}
+
+{% block content %}
+  <div class="stack">
+    <h1>Review</h1>
+    {# SAFE-007: shared notes wait here before players can read them. Never private notes (SAFE-029). #}
+    <p class="hint">Shared notes show on All journals only after you approve them.</p>
+    {# SAFE-042: the app only shows who wrote it. Follow-up happens in person. #}
+    <p class="hint">If a note suggests someone may be at risk, follow the child safety policy in person.</p>
+
+    {# API-002: each button swaps only this part, picked out of the page with hx-select. #}
+    <section id="review" class="stack" aria-labelledby="review-title">
+      {# Inside the swapped part, so the counts stay right after each button. #}
+      <nav class="review-tabs" aria-label="Review status">
+        {% for value, label in tabs.items() %}
+          <a class="button {{ '' if value == status else 'button-secondary' }}" href="/admin/review?status={{ value }}"{% if value == status %} aria-current="page"{% endif %}>{{ label }} ({{ counts[value] }})</a>
+        {% endfor %}
+      </nav>
+      <h2 id="review-title">{{ tabs[status] }}</h2>
+      {% if notice %}<p class="card" role="status">{{ notice }}</p>{% endif %}
+      {% if error_code %}{% include "partials/error.html" %}{% endif %}
+      {% for note in notes %}
+        <article class="card stack" data-note="{{ note.public_id }}">
+          <p class="hint">{{ note.session_title }}</p>
+          <p class="takeaway-text">{{ note.text }}</p>
+          {# SAFE-009: admins always see the writer, even when players see Anonymous. #}
+          <p class="takeaway-author">{{ note.first_name }} {{ note.last_name }}, {{ note.church }}</p>
+          <p class="hint">{% if note.visibility == "shared_anonymous" %}Shared anonymously. Players see "Anonymous".{% else %}Shared with name. Players see first name and church.{% endif %}</p>
+          {# SAFE-040, SAFE-041, DEC-076: the buttons this status allows. One form per button (API-007). #}
+          {% set buttons = {
+            "pending": [("approve", "Approve", None), ("reject", "Reject", "Reject this note? Only the writer and admins will see it.")],
+            "approved": [("hide", "Hide", "Hide this note from players?")],
+            "rejected": [("approve", "Approve", None)],
+            "hidden": [("approve", "Approve again", None)],
+          }[note.review_status] %}
+          {% for outcome, label, confirm in buttons %}
+            <form method="post" action="/admin/review/{{ note.public_id }}" hx-post="/admin/review/{{ note.public_id }}" hx-target="#review" hx-select="#review" hx-swap="outerHTML"{% if confirm %} hx-confirm="{{ confirm }}"{% endif %}>
+              <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+              <input type="hidden" name="status" value="{{ status }}">
+              <input type="hidden" name="outcome" value="{{ outcome }}">
+              <button class="button {{ 'button-secondary' if outcome != 'approve' else '' }}" type="submit">{{ label }}</button>
+            </form>
+          {% endfor %}
+        </article>
+      {% else %}
+        <p class="hint">Nothing here right now.</p>
+      {% endfor %}
+    </section>
+
+    <a class="button button-secondary" href="/admin">Admin console</a>
+  </div>
+{% endblock %}

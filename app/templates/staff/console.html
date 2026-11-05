@@ -33,6 +33,8 @@
     {% if page == "admin" %}{% include "staff/partials/game_state.html" %}{% endif %}
     {% if page == "admin" %}{% include "staff/partials/main_screen.html" %}{% endif %}
     {% if page == "admin" %}<a class="button button-secondary" href="/admin/sessions">Sessions</a>{% endif %}
+    {# SAFE-007: shared notes wait for an admin. #}
+    {% if page == "admin" %}<a class="button button-secondary" href="/admin/review">Review notes</a>{% endif %}
     {# DEC-063: admins can open usher pages too. #}
     {% if page == "admin" %}<a class="button button-secondary" href="/usher">Usher console</a>{% endif %}
     {% if page == "usher" and staff.role == "admin" %}<a class="button button-secondary" href="/admin">Admin console</a>{% endif %}

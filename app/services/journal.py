@@ -350,6 +350,17 @@ def review_queue(conn: sqlite3.Connection, status: str) -> list[ForReview]:
     ]
 
 
+def review_counts(conn: sqlite3.Connection) -> dict[str, int]:
+    """How many shared notes have each review status, for the review page tabs (SAFE-029)."""
+    counts = dict.fromkeys(REVIEW_STATUSES, 0)
+    for r in conn.execute(
+        "SELECT review_status, count(*) AS n FROM takeaway"
+        " WHERE visibility <> 'private' GROUP BY review_status"
+    ):
+        counts[r["review_status"]] = r["n"]
+    return counts
+
+
 def list_approved(conn: sqlite3.Connection) -> list[SharedNote]:
     """Approved shared notes for the Summary page, newest session first (UI-038, SAFE-007).
 
