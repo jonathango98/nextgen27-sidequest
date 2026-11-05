@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Jonathan's call: none of the six is needed for the app to work, and they were the only items left on the open list.
 - Rule IDs: PRD-011, PRD-053, GAME-068, GAME-069, GAME-072, GAME-076, GAME-110, GAME-092, SAFE-038, DATA-029, UI-040, DEC-078, ENG-087, ENG-088, ENG-108
 - Status: Done
-- PR: draft
+- PR: #89
 
 ## 2026-11-04 · feat/journal-share-review · Claude Opus 5.5 / @jonathango98
 
