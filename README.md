@@ -61,6 +61,7 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
+| `home.pages` Home shows your real score and box progress, Quests lists every quest's points, and Open Box says how many boxes you can collect | `feat/home-pages` | draft | 2026-11-07 | Claude Opus 5.5 / @marcjason2012 |
 | Test staff accounts on PR previews | `chore/preview-staff-seed` | #69 | 2026-11-01 | Claude Opus 5.5 / @jonathango98 |
 
 ### Planned

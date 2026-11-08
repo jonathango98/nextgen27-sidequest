@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-07 · feat/home-pages · Claude Opus 5.5 / @marcjason2012
+
+- What: Claims `home.pages` from the feature tree: Home shows the player's real score and how close they are to the next blind box, Quests lists every quest and its points from `game-config.yaml`, and Open Box shows how many blind boxes the player can collect and how to get them.
+- Why: Ready piece due 2026-12-11 (PRD-054). It unlocks `blind-box.handout` and `wrapped.stat-cards`.
+- Rule IDs: GAME-070, GAME-071, GAME-074, DATA-031, GAME-073, GAME-077, UI-036, UI-051, AI-013, ENG-031, ENG-101
+- Status: Started
+- PR: draft
+
 ## 2026-11-04 · feat/game-state-auto-pause · Claude Opus 5.5 / @marcjason2012
 
 - What: Builds `game-state.auto-pause`. A middleware in `app/main.py` runs `sessions.apply_auto_pause()` before every request except `/static/` and `/health` (DEC-029): once a session's start time has passed, it pauses an on game, with a `system` / `auto_pause` audit row, and the same request already sees it (ARCH-042). No timer thread or new library, and no new tick number, so a restart can't skip a start time. Migration 0012 adds `session.auto_pause_done_at`, set once the start time is handled whatever the state was, so it never repeats after a manual resume and never wakes an off game. Agreed with @marcjason2012: a start time already past when saved counts as handled, and moving one later clears it. A failed check is logged and never breaks the page. `game.auto_pause_schedule: false` turns it off. The admin Sessions page says it is only a backup (OPS-001). `foundation/05-data-model.md` 1.9.0 lists the new field (protected, needs Jonathan's approval, ENG-080, ENG-087). `tests/test_db.py`'s takeaway migration test now checks only that 0011 runs first, so later migrations don't break it. Checked at 360px in Chromium and WebKit. Preview seed: N/A, the hand test adds its own session.
