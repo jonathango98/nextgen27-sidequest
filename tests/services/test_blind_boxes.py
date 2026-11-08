@@ -67,7 +67,7 @@ def test_game_074_nothing_claimed_before_handout(tmp_path):
     # The BoxClaim table comes with blind-box.handout (DATA-026). Until then, nobody has claimed.
     conn = connect(tmp_path / "side-quest.db")
     migrate(conn)
-    assert claimed_count(conn, 1) == 0
+    assert claimed_count(conn, "testpid01") == 0
     conn.close()
 
 

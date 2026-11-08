@@ -33,10 +33,15 @@
     {# GAME-085, DEC-073: only your own standing, and nothing in the bottom half (UI-050). #}
     {% if standing and standing.place %}<p class="standing">You're #{{ standing.place }}</p>
     {% elif standing %}<p class="standing">You're in the top {{ standing.top_percent }}%</p>{% endif %}
+    {# GAME-071: once every box is earned there is no next box, so the bar is full and says so in words. #}
     <div class="progress home-progress">
-      <span class="progress-label"><span>Next box</span><span>{{ box_progress }} / {{ box_milestone }}</span></span>
-      <div class="progress-track" role="progressbar" aria-label="Points toward your next blind box" aria-valuemin="0" aria-valuemax="{{ box_milestone }}" aria-valuenow="{{ box_progress }}">
-        <div class="progress-fill" style="width: {{ box_progress * 100 // box_milestone }}%"></div>
+      {% if box.all_earned %}
+      <span class="progress-label"><span>Boxes</span><span>All boxes earned</span></span>
+      {% else %}
+      <span class="progress-label"><span>Next box</span><span>{{ box.points }} / {{ box.milestone }}</span></span>
+      {% endif %}
+      <div class="progress-track" role="progressbar" aria-label="Points toward your next blind box" aria-valuemin="0" aria-valuemax="{{ box.milestone }}" aria-valuenow="{{ box.points }}"{% if box.all_earned %} aria-valuetext="All boxes earned"{% endif %}>
+        <div class="progress-fill" style="width: {{ box.percent }}%"></div>
       </div>
     </div>
   </section>

@@ -22,7 +22,7 @@ def claimable(earned_boxes: int, claimed_boxes: int) -> int:
     return max(earned_boxes - claimed_boxes, 0)
 
 
-def claimed_count(conn: sqlite3.Connection, player_id: int) -> int:
+def claimed_count(conn: sqlite3.Connection, public_id: str) -> int:
     """Blind boxes already handed to this player at the game booth (GAME-073).
 
     Always 0 for now: the BoxClaim table and the usher's claim button come with
