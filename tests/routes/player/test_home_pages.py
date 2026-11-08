@@ -13,7 +13,8 @@ from app.auth.current import CurrentPlayer, get_current_player
 from app.config import load_config
 from app.db import connect
 from app.main import create_app
-from app.services import qr
+from app.services import journal, points, qr
+from app.services.game_state import set_state
 from tests.conftest import seed_fake_players
 
 FAKE_QR_KEY = "test-only-fake-signing-key"  # never a real key (SAFE-030)
@@ -118,3 +119,54 @@ def test_game_077_no_boxes_left_counter_at_any_score(client, score):
     _as(client, score)
     for path in ("/", "/box"):
         assert "left" not in page_text(client.get(path).text).lower(), path
+
+
+def _quest_progress(html, title):
+    row = re.search(rf"{title}.*?</li>", html, re.DOTALL).group(0)
+    return re.search(r'<span class="quest-progress">([^<]+)</span>', row).group(1)
+
+
+def _ledger(client):
+    conn = connect(client.app.state.db_path)
+    player_id = conn.execute(
+        "SELECT id FROM player WHERE public_id = ?", (PUBLIC_ID,)
+    ).fetchone()[0]
+    return conn, player_id
+
+
+def test_game_040_quests_join_done_only_after_the_join_award(client):
+    _as(client, 0)
+    assert _quest_progress(client.get("/quests").text, "Join the game") == "Not yet"
+    conn, player_id = _ledger(client)
+    try:
+        points.award_join(
+            conn,
+            player_id=player_id,
+            amount=load_config()["points"]["join"],
+            while_paused=True,
+        )
+    finally:
+        conn.close()
+    html = client.get("/quests").text
+    assert _quest_progress(html, "Join the game") == "Earned"
+    assert '<span class="quest-done">Done</span>' in html
+
+
+def test_game_030_quests_count_paid_journal_notes(client):
+    _as(client, 0)
+    assert _quest_progress(client.get("/quests").text, "Journal") == "0 done"
+    conn, player_id = _ledger(client)
+    try:
+        set_state(conn, "on")
+        for session_id in (1, 2):  # two sessions, fake ids
+            points.award(
+                conn,
+                player_id=player_id,
+                reason_code=journal.REASON,
+                amount=load_config()["points"]["journal_takeaway"],
+                source_type="session",
+                source_id=session_id,
+            )
+    finally:
+        conn.close()
+    assert _quest_progress(client.get("/quests").text, "Journal") == "2 done"

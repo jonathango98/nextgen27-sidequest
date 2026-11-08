@@ -110,6 +110,20 @@ def award_join(
     return _in_transaction(conn, write)
 
 
+def award_counts(conn: sqlite3.Connection, public_id: str) -> dict[str, int]:
+    """How many awards this player has had, per reason, for quest progress. Read only.
+
+    Admin revocations (negative amounts, GAME-004) are not counted as quests done.
+    """
+    rows = conn.execute(
+        "SELECT l.reason_code, count(*) AS n FROM point_ledger l"
+        " JOIN player p ON p.id = l.player_id"
+        " WHERE p.public_id = ? AND l.amount > 0 GROUP BY l.reason_code",
+        (public_id,),
+    ).fetchall()
+    return {row["reason_code"]: row["n"] for row in rows}
+
+
 def score(conn: sqlite3.Connection, player_id: int) -> int:
     # DATA-030: the score is the sum of the ledger, never a stored number that could drift.
     return conn.execute(

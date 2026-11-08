@@ -3,9 +3,13 @@
 Every number is built from game-config.yaml, never hardcoded (AI-013).
 """
 
+import pytest
+
 from app.config import load_config
 from app.db import connect, migrate
+from app.services import blind_boxes, churches
 from app.services.blind_boxes import claimable, claimed_count, earned, progress
+from app.services.game_state import set_state
 
 CFG = load_config()
 BOX = CFG["blind_box"]
@@ -88,3 +92,52 @@ def test_game_074_worked_example_e11_revocation_after_claim():
     assert earned(after, BOX) == 1
     # Claimed stays 2, so claimable is 0, never below 0. Player K keeps both boxes.
     assert claimable(earned(after, BOX), 2) == 0
+
+
+FAKE_PIN_ENV = "SQ_PREVIEW_PLAYER_PIN"
+
+
+@pytest.fixture
+def conn(tmp_path):
+    conn = connect(tmp_path / "side-quest.db")
+    migrate(conn)
+    churches.seed_examples(conn)
+    yield conn
+    conn.close()
+
+
+def _preview_score(conn):
+    first, last = blind_boxes.PREVIEW_PLAYER
+    return conn.execute(
+        "SELECT coalesce(sum(l.amount), 0) FROM point_ledger l"
+        " JOIN player p ON p.id = l.player_id WHERE p.first_name = ? AND p.last_name = ?",
+        (first, last),
+    ).fetchone()[0]
+
+
+def test_eng_113_preview_player_has_a_ready_box_once(conn, monkeypatch, fake_pin):
+    monkeypatch.setenv(FAKE_PIN_ENV, fake_pin)
+    added = blind_boxes.seed_preview(conn, CFG)
+    assert added == [" ".join(blind_boxes.PREVIEW_PLAYER)]
+    score = _preview_score(conn)
+    # Past the first milestone but short of the next, so Home shows a part-full bar.
+    assert earned(score, BOX) == 1
+    assert 0 < progress(score, BOX).points < STEP
+    # A restart adds no one and gives nothing twice (AI-047).
+    assert blind_boxes.seed_preview(conn, CFG) == []
+    assert _preview_score(conn) == score
+
+
+def test_eng_113_preview_box_seed_needs_the_preview_pin(conn, monkeypatch):
+    monkeypatch.delenv(FAKE_PIN_ENV, raising=False)
+    assert blind_boxes.seed_preview(conn, CFG) == []
+    assert _preview_score(conn) == 0
+
+
+def test_eng_113_preview_box_seed_gives_no_points_while_paused(
+    conn, monkeypatch, fake_pin
+):
+    monkeypatch.setenv(FAKE_PIN_ENV, fake_pin)
+    set_state(conn, "paused")
+    blind_boxes.seed_preview(conn, CFG)
+    assert earned(_preview_score(conn), BOX) == 0

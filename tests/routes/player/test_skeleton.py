@@ -9,6 +9,7 @@ from app.config import load_config
 from app.db import connect
 from app.main import create_app, templates
 from app.routes.player import quests
+from app.services import points
 from tests.conftest import seed_fake_players
 
 FAKE_PLAYER = CurrentPlayer(public_id="testpid01", score=120)  # fake data (ENG-047)
@@ -66,6 +67,13 @@ def client(tmp_path):
     conn.execute(
         "INSERT INTO session (public_id, title, ended_at)"
         " VALUES ('pub-s1', 'Example Session 1', '2027-03-05T10:00:00Z')"
+    )
+    # The join award, as at sign-up, so Quests shows Join the game as done (GAME-040).
+    points.award_join(
+        conn,
+        player_id=ids[FAKE_PLAYER.public_id],
+        amount=load_config()["points"]["join"],
+        while_paused=True,
     )
     conn.close()
     app.dependency_overrides[get_current_player] = lambda: FAKE_PLAYER

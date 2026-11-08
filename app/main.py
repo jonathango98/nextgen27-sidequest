@@ -40,7 +40,15 @@ from app.routes.staff import login as staff_login
 from app.routes.staff import review as staff_review
 from app.routes.staff import sessions as staff_sessions
 from app.routes.staff import usher as staff_usher
-from app.services import churches, connections, leaderboards, players, sessions, staff
+from app.services import (
+    blind_boxes,
+    churches,
+    connections,
+    leaderboards,
+    players,
+    sessions,
+    staff,
+)
 from app.services import journal as journal_service
 from app.services.game_state import GAME_NOT_ON_MESSAGES, GameNotOn
 
@@ -64,6 +72,7 @@ async def lifespan(app: FastAPI):
             connections.seed_preview(conn, app.state.config)
             sessions.seed_preview(conn)
             leaderboards.seed_preview(conn, app.state.config)
+            blind_boxes.seed_preview(conn, app.state.config)
             journal_service.seed_preview(conn, sessions.PREVIEW_ENDED_SESSION)
     finally:
         conn.close()

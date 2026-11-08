@@ -7,6 +7,15 @@ game-config.yaml (AI-013, ENG-031), passed in as `cfg`.
 import sqlite3
 from dataclasses import dataclass
 
+from app.services import churches, players, points
+from app.services.game_state import GameNotOn
+
+# ENG-113: a fake adult a PR preview adds, past the first box milestone, so testers see a
+# Ready box on Open Box and a part-full bar on Home (AI-047). The other preview players
+# stay below the first milestone.
+PREVIEW_PLAYER = ("Test", "Player 7")
+PREVIEW_REASON = "preview_box_example"
+
 
 def earned(score: int, cfg: dict) -> int:
     """Blind boxes earned from score: one per milestone, capped at the max (GAME-070, GAME-071).
@@ -55,3 +64,33 @@ def progress(score: int, cfg: dict) -> Progress:
     return Progress(
         points=max(score, 0) % milestone, milestone=milestone, all_earned=False
     )
+
+
+def seed_preview(conn: sqlite3.Connection, config: dict) -> list[str]:
+    """Adds PREVIEW_PLAYER with points past the first milestone, once (ENG-113, AI-047).
+
+    The points go through the points service, with audit rows (AI-041). Nothing is given
+    while the game is paused or off, and a restart gives nothing twice.
+    """
+    church_name = churches.EXAMPLE_CHURCHES[1]
+    added = players.seed_preview_player(conn, config, PREVIEW_PLAYER, church_name)
+    player = conn.execute(
+        "SELECT p.id FROM player p JOIN church c ON c.id = p.church_id"
+        " WHERE p.first_name = ? AND p.last_name = ? AND c.name = ?",
+        (*PREVIEW_PLAYER, church_name),
+    ).fetchone()
+    if player is None:
+        return added  # no preview PIN set, so the player wasn't made
+    step = config["blind_box"]["milestone_points"]
+    try:
+        points.award(
+            conn,
+            player_id=player["id"],
+            reason_code=PREVIEW_REASON,
+            amount=step + step // 3,
+            source_type="player",
+            source_id=player["id"],
+        )
+    except points.AlreadyAwarded, GameNotOn:
+        pass
+    return added
