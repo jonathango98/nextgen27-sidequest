@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Ready piece due 2026-12-11 (PRD-054). It unlocks `blind-box.handout` and `wrapped.stat-cards`.
 - Rule IDs: GAME-070, GAME-071, GAME-074, DATA-031, GAME-073, GAME-077, UI-036, UI-051, AI-013, ENG-031, ENG-101
 - Status: Started
-- PR: draft
+- PR: #90
 
 ## 2026-11-04 · feat/game-state-auto-pause · Claude Opus 5.5 / @marcjason2012
 
