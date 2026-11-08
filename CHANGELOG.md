@@ -22,10 +22,10 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-11-07 · feat/home-pages · Claude Opus 5.5 / @marcjason2012
 
-- What: Claims `home.pages` from the feature tree: Home shows the player's real score and how close they are to the next blind box, Quests lists every quest and its points from `game-config.yaml`, and Open Box shows how many blind boxes the player can collect and how to get them.
+- What: Builds `home.pages`. A new `app/services/blind_boxes.py` works out boxes earned, the bar's points since the last milestone, and boxes ready to claim from score every time, with every number from `game-config.yaml`. Home's Next box bar shows real progress and says All boxes earned once the player has the max. Open Box says how many boxes are ready, marks each box Ready, Claimed, or its points, and says to go to the game booth when it's open. Opening it saves nothing. Quests counts join and journal awards from the ledger, and quests whose pieces don't pay yet stay at 0. Boxes claimed is always 0 until `blind-box.handout` adds the BoxClaim table (DATA-026), and the Blind boxes ran out switch (GAME-076) is left to `blind-box.close-redemption`. PR previews add Test Player 7 past the first milestone so testers see a Ready box. The claim commit also regenerated `docs/feature-tree.md`.
 - Why: Ready piece due 2026-12-11 (PRD-054). It unlocks `blind-box.handout` and `wrapped.stat-cards`.
-- Rule IDs: GAME-070, GAME-071, GAME-074, DATA-031, GAME-073, GAME-077, UI-036, UI-051, AI-013, ENG-031, ENG-101
-- Status: Started
+- Rule IDs: GAME-070, GAME-071, GAME-073, GAME-074, GAME-077, DATA-031, UI-036, UI-051, GAME-030, GAME-040, AI-013, ENG-031, ENG-101, ENG-108, ENG-113, AI-042, AI-044, AI-047
+- Status: Done
 - PR: #90
 
 ## 2026-11-04 · feat/game-state-auto-pause · Claude Opus 5.5 / @marcjason2012
