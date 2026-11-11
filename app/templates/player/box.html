@@ -12,12 +12,12 @@
     {# GAME-074: boxes this player can claim now. GAME-077: never a "boxes left" count. #}
     <p class="page-sub">{{ ready }} ready</p>
   </div>
-  {# UI-051: a ready box says Ready in words, not only in gold. #}
+  {# UI-051: a ready box says Ready in words, not only in gold. A box already handed over says Claimed. #}
   <ol class="box-row">
     {% for box in boxes %}
-      <li class="box-tile{% if box.ready %} box-ready{% endif %}">
+      <li class="box-tile{% if box.state == 'ready' %} box-ready{% endif %}">
         <span class="box-number">{{ box.number }}</span>
-        <span class="box-label">{% if box.ready %}Ready{% else %}{{ box.points }} pts{% endif %}</span>
+        <span class="box-label">{% if box.state == "ready" %}Ready{% elif box.state == "claimed" %}Claimed{% else %}{{ box.points }} pts{% endif %}</span>
       </li>
     {% endfor %}
   </ol>
@@ -25,9 +25,9 @@
   <section class="card how-to-claim" aria-labelledby="how-to-claim">
     <h2 id="how-to-claim">How to claim</h2>
     <ol>
-      <li>Visit booth</li>
-      <li>Show code</li>
-      <li>Get box</li>
+      <li>Go to the game booth when it's open</li>
+      <li>Show your My Code to the usher</li>
+      <li>Get your blind box</li>
     </ol>
   </section>
   <a class="button button-box" href="/code">My Code</a>

@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-07 · feat/home-pages · Claude Opus 5.5 / @marcjason2012
+
+- What: Builds `home.pages`. A new `app/services/blind_boxes.py` works out boxes earned, the bar's points since the last milestone, and boxes ready to claim from score every time, with every number from `game-config.yaml`. Home's Next box bar shows real progress and says All boxes earned once the player has the max. Open Box says how many boxes are ready, marks each box Ready, Claimed, or its points, and says to go to the game booth when it's open. Opening it saves nothing. Quests counts join and journal awards from the ledger, and quests whose pieces don't pay yet stay at 0. Boxes claimed is always 0 until `blind-box.handout` adds the BoxClaim table (DATA-026), and the Blind boxes ran out switch (GAME-076) is left to `blind-box.close-redemption`. PR previews add Test Player 7 past the first milestone so testers see a Ready box. The claim commit also regenerated `docs/feature-tree.md`.
+- Why: Ready piece due 2026-12-11 (PRD-054). It unlocks `blind-box.handout` and `wrapped.stat-cards`.
+- Rule IDs: GAME-070, GAME-071, GAME-073, GAME-074, GAME-077, DATA-031, UI-036, UI-051, GAME-030, GAME-040, AI-013, ENG-031, ENG-101, ENG-108, ENG-113, AI-042, AI-044, AI-047
+- Status: Done
+- PR: #90
+
 ## 2026-11-04 · feat/game-state-auto-pause · Claude Opus 5.5 / @marcjason2012
 
 - What: Builds `game-state.auto-pause`. A middleware in `app/main.py` runs `sessions.apply_auto_pause()` before every request except `/static/` and `/health` (DEC-029): once a session's start time has passed, it pauses an on game, with a `system` / `auto_pause` audit row, and the same request already sees it (ARCH-042). No timer thread or new library, and no new tick number, so a restart can't skip a start time. Migration 0012 adds `session.auto_pause_done_at`, set once the start time is handled whatever the state was, so it never repeats after a manual resume and never wakes an off game. Agreed with @marcjason2012: a start time already past when saved counts as handled, and moving one later clears it. A failed check is logged and never breaks the page. `game.auto_pause_schedule: false` turns it off. The admin Sessions page says it is only a backup (OPS-001). `foundation/05-data-model.md` 1.9.0 lists the new field (protected, needs Jonathan's approval, ENG-080, ENG-087). `tests/test_db.py`'s takeaway migration test now checks only that 0011 runs first, so later migrations don't break it. Checked at 360px in Chromium and WebKit. Preview seed: N/A, the hand test adds its own session.

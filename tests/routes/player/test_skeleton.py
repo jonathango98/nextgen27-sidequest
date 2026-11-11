@@ -9,6 +9,7 @@ from app.config import load_config
 from app.db import connect
 from app.main import create_app, templates
 from app.routes.player import quests
+from app.services import points
 from tests.conftest import seed_fake_players
 
 FAKE_PLAYER = CurrentPlayer(public_id="testpid01", score=120)  # fake data (ENG-047)
@@ -66,6 +67,13 @@ def client(tmp_path):
     conn.execute(
         "INSERT INTO session (public_id, title, ended_at)"
         " VALUES ('pub-s1', 'Example Session 1', '2027-03-05T10:00:00Z')"
+    )
+    # The join award, as at sign-up, so Quests shows Join the game as done (GAME-040).
+    points.award_join(
+        conn,
+        player_id=ids[FAKE_PLAYER.public_id],
+        amount=load_config()["points"]["join"],
+        while_paused=True,
     )
     conn.close()
     app.dependency_overrides[get_current_player] = lambda: FAKE_PLAYER
@@ -159,7 +167,11 @@ def test_ui_030_journal_links_to_new_takeaway(client):
 
 def test_game_073_open_box_says_where_to_claim(client):
     html = client.get("/box").text
-    for step in ("Visit booth", "Show code", "Get box"):
+    for step in (
+        "Go to the game booth when it's open",
+        "Show your My Code to the usher",
+        "Get your blind box",
+    ):
         assert f"<li>{step}</li>" in html
     assert 'href="/code">My Code</a>' in html
 
@@ -190,7 +202,9 @@ def test_game_070_open_box_shows_each_box_and_its_points(client):
         f"{n * cfg['milestone_points']} pts"
         for n in range(1, cfg["max_per_player"] + 1)
     ]
-    assert '<p class="page-sub">0 ready</p>' in html  # pretend until home.pages
+    # The fake score is below the first milestone, so no box is ready yet (GAME-074).
+    assert FAKE_PLAYER.score < cfg["milestone_points"]
+    assert '<p class="page-sub">0 ready</p>' in html
 
 
 def test_game_077_open_box_has_no_boxes_left_counter(client):
@@ -200,7 +214,11 @@ def test_game_077_open_box_has_no_boxes_left_counter(client):
 def test_ui_051_a_ready_box_says_ready_in_words():
     cfg = load_config()["blind_box"]
     boxes = [
-        {"number": n, "points": n * cfg["milestone_points"], "ready": n == 1}
+        {
+            "number": n,
+            "points": n * cfg["milestone_points"],
+            "state": "ready" if n == 1 else "locked",
+        }
         for n in range(1, cfg["max_per_player"] + 1)
     ]
     html = templates.get_template("player/box.html").render(boxes=boxes, ready=1)

@@ -5,7 +5,7 @@
 
 Every planned piece of work and what it needs first (ENG-105 to ENG-108), grouped by the week it is due (PRD-054). Pieces flow left to right in time: finishing one unlocks the pieces it points to. Run `/pick-task` to claim one.
 
-**Working** 30 · **In progress** 0 · **Ready** 10 · **Waiting** 10 · **Needs decision** 0
+**Working** 31 · **In progress** 0 · **Ready** 10 · **Waiting** 9 · **Needs decision** 0
 
 Colors: green Working, blue In progress, gold Ready, gray Waiting, red dashed Needs decision.
 
@@ -174,9 +174,9 @@ flowchart LR
   classDef ready fill:#fff4d6,stroke:#a87400,stroke-width:3px,color:#14151a
   classDef waiting fill:#f1f0eb,stroke:#c3c0b6,color:#545a66
   classDef decision fill:#fdeeec,stroke:#b42318,stroke-dasharray:4 3,color:#14151a
-  class app_foundation,auth_join_login,checkin_sessions,code_my_code,connections_meet,connections_scanner_camera,connections_table,game_state_auto_pause,game_state_controls,game_state_core,infra_hosting,journal_notes,journal_share_review,leaderboards_in_app,leaderboards_screen,look_base,look_screens,points_audit_log,points_ledger,points_score,ready_backups,ready_load_test,ready_logout,ready_rate_limits,ready_retention,screen_main,screens_skeleton,staff_accounts,staff_login,usher_console working
-  class admin_audit_view,admin_players,admin_setup,checkin_window,connections_answers,explore_booths,home_pages,photobooth_points,photobooth_screen,wrapped_cards ready
-  class admin_award_revoke,blind_box_close_redemption,blind_box_handout,checkin_hall,connections_verse_picker,explore_items,recap_screen,wrapped_collection,wrapped_save_image,wrapped_stat_cards waiting
+  class app_foundation,auth_join_login,checkin_sessions,code_my_code,connections_meet,connections_scanner_camera,connections_table,game_state_auto_pause,game_state_controls,game_state_core,home_pages,infra_hosting,journal_notes,journal_share_review,leaderboards_in_app,leaderboards_screen,look_base,look_screens,points_audit_log,points_ledger,points_score,ready_backups,ready_load_test,ready_logout,ready_rate_limits,ready_retention,screen_main,screens_skeleton,staff_accounts,staff_login,usher_console working
+  class admin_audit_view,admin_players,admin_setup,blind_box_handout,checkin_window,connections_answers,explore_booths,photobooth_points,photobooth_screen,wrapped_cards ready
+  class admin_award_revoke,blind_box_close_redemption,checkin_hall,connections_verse_picker,explore_items,recap_screen,wrapped_collection,wrapped_save_image,wrapped_stat_cards waiting
 ```
 
 ## Ready now
@@ -188,14 +188,6 @@ flowchart LR
     3. Connect two players from the same church and save an answer. They should get the smaller same-church points.
     4. Try to break it: log in as Test Player 3 and open that connection. You should be refused.
     5. Run `pytest -k 'game_010 or game_011 or game_012 or game_018'`. The worked examples from the rules should pass.
-- `home.pages`: Home shows the player's real score and how close they are to the next blind box. A Quests page lists every quest and how many points it gives. An Open Box page shows how many blind boxes the player can collect and how to go and get them. (L, easy, player-app, due fri dec 11)
-  - Try it:
-    1. On the PR preview, join as a brand new Test Player 1. Home should show the starting score and the progress bar without breaking.
-    2. Earn points, for example with a scan, and refresh Home. The score and the progress bar should go up.
-    3. Open Quests. Every quest should show with its points.
-    4. Tap Open Box. It should show how many boxes you can collect and clear steps for the game booth. It should never say how many boxes are left in total, and tapping it should not use up a box.
-    5. On a local run, change one points number in game-config.yaml and restart. Quests should show the new number without touching any page file.
-    6. Run `pytest -k 'game_070 or game_071'`. The worked examples from the rules should pass.
 - `checkin.window`: Check-in opens on its own a few minutes before a session starts and closes when it starts. A session with no start time gets an Open check-in button. An admin can also close check-in for any session whenever they choose. (L, medium, admin-screens, due fri dec 11)
   - Try it:
     1. On the PR preview, log in as Test Admin and give Example Session 1 a start time a few minutes away with 2 check-in minutes. The session should show check-in open 2 minutes before, and closed at the start time.
@@ -226,6 +218,13 @@ flowchart LR
     2. Look through the page and the form. There should be no spot for where an item is hidden.
     3. As Test Usher on a phone, scan Test Player 1's My Code at Example Booth A. Test Player 1's score should go up.
     4. Scan again at Example Booth A. It should be refused with no extra points. Example Booth B should still work.
+- `blind-box.handout`: An usher hands a player a blind box and the game remembers it, so the same box is never given twice. The game does not count how many boxes are left. (L, medium, admin-screens, due fri dec 18)
+  - Try it:
+    1. On the PR preview, after Test Player 1 reaches a box milestone, log in as Test Usher, scan their code and save the claim.
+    2. Test Player 1's Open Box page should show one fewer box to collect.
+    3. Try to claim more boxes than the player has earned. It should be refused.
+    4. Pause the game as Test Admin and try again. It should be refused.
+    5. Look at Test Player 1's Open Box page and the main screen. Neither should show a count of boxes left.
 - `photobooth.points`: Jonathan only (ENG-114). The photobooth kiosk scans a player's My Code before the first shot, and the player gets photobooth points after the shot, up to a limit each day. Only the photobooth's own server can ask for points, and it never learns the player's name. An usher can still record a visit for a player whose phone is dead. The kiosk and the photobooth's server are built in the photobooth app's own repos (06 section 2, Photobooth). Until they are, tests stand in for the photobooth's server. (M, hard, backend, due fri jan 15)
   - Try it:
     1. On the photobooth's superadmin page, make a test event with Side Quest switched on, the PR preview's address, and the preview's photobooth key. Open that event's booth link on an iPad. As Test Player 1 on a phone, scan My Code on the kiosk, then take the photos. Test Player 1's score should go up.

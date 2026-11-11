@@ -2,6 +2,7 @@ from playwright.sync_api import Page, expect
 
 from app.config import load_config
 from app.main import templates
+from app.services import blind_boxes
 
 BUTTONS = ("Home", "My Code", "Quests")
 
@@ -12,8 +13,7 @@ def test_arch_001_template_autoescapes_html():
         score="<script>x</script>",
         # The rest of what the Home route passes (UI-036), from game-config.yaml (AI-013).
         journal_points=cfg["points"]["journal_takeaway"],
-        box_milestone=cfg["blind_box"]["milestone_points"],
-        box_progress=0,
+        box=blind_boxes.progress(0, cfg["blind_box"]),
     )
     assert "<script>x</script>" not in html
     assert "&lt;script&gt;" in html

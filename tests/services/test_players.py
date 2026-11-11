@@ -79,9 +79,10 @@ def test_eng_113_preview_seed_skips_without_the_example_church(tmp_path, monkeyp
 @pytest.mark.parametrize(
     ("environment", "seeded"),
     # A preview gets Test Player 1, Test Player 2 for the connections.meet hand test, and the
-    # ranked example players for the leaderboards.screen hand test.
+    # ranked example players for the leaderboards.screen hand test, and one player past the
+    # first blind box for the home.pages hand test.
     [
-        ("sidequest-pr-68", 2 + len(leaderboards.PREVIEW_PLAYERS)),
+        ("sidequest-pr-68", 2 + len(leaderboards.PREVIEW_PLAYERS) + 1),
         ("staging", 0),
         ("production", 0),
         (None, 0),
