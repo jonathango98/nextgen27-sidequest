@@ -10,16 +10,19 @@
   {# UI-038: approved shared takeaways grouped by session, newest session first, as takeaway cards. #}
   {% for session in sessions %}
     <section class="takeaway-session" aria-labelledby="session-{{ loop.index }}">
-      <h2 class="session-title" id="session-{{ loop.index }}">{{ session.session }}</h2>
+      <h2 class="session-title" id="session-{{ loop.index }}">{{ session.title }}</h2>
       <ul class="takeaway-list">
-        {% for takeaway in session.takeaways %}
+        {% for takeaway in session.notes %}
           <li class="card takeaway-card">
             <p class="takeaway-text">{{ takeaway.text }}</p>
-            {# SAFE-004: first name and church only. SAFE-009: Anonymous hides the name from players. #}
-            <p class="takeaway-author">{% if takeaway.anonymous %}Anonymous{% else %}{{ takeaway.first_name }} · {{ takeaway.church }}{% endif %}</p>
+            {# SAFE-004: first name and church only. SAFE-009: an anonymous note comes with no name at all. #}
+            <p class="takeaway-author">{% if takeaway.first_name is none %}Anonymous{% else %}{{ takeaway.first_name }} · {{ takeaway.church }}{% endif %}</p>
           </li>
         {% endfor %}
       </ul>
     </section>
+  {% else %}
+    {# SAFE-007: notes show here after an organizer reads them. #}
+    <p class="card">No shared takeaways yet. When players share what they learned, it shows here.</p>
   {% endfor %}
 {% endblock %}

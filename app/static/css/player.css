@@ -337,6 +337,11 @@ h2 {
   background: var(--color-gold);
 }
 
+/* display: inline-block above would otherwise show a pill marked hidden (DEC-072) */
+.pill[hidden] {
+  display: none;
+}
+
 /* Box progress bar: always shows the numbers next to the bar (UI-051) */
 .progress {
   display: flex;
@@ -403,6 +408,21 @@ h2 {
 
 .score-hero-label {
   font-size: var(--font-size-points-label);
+}
+
+.standing {
+  /* GAME-085: a frosted pill, since gold is for points only (07 section 3). */
+  align-self: flex-start;
+  margin: 0;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-small);
+  font-weight: 700;
+  line-height: 1.4;
+  background: var(--color-surface);
+  -webkit-backdrop-filter: var(--glass-filter);
+  backdrop-filter: var(--glass-filter);
+  box-shadow: var(--shadow-glass);
 }
 
 .home-progress {
@@ -595,6 +615,48 @@ h2 {
   align-items: center;
   justify-content: space-between;
   gap: var(--space-3);
+}
+
+/* Who can read a note, with Change opening the choices in place (DEC-076). Tap-sized (UI-003). */
+.note-share > summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+.note-share > summary::-webkit-details-marker {
+  display: none;
+}
+
+/* The label on the left, then the open arrow centered on the card under it */
+.note-share .note-meta {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-1);
+  min-height: var(--tap-min);
+}
+
+.note-share[open] > summary {
+  margin-bottom: var(--space-2);
+}
+
+.note-change {
+  flex: none;
+  align-self: center;
+}
+
+.note-share[open] .note-change {
+  transform: rotate(180deg);
+}
+
+/* Admin review: the four status tabs, two by two so they fit the smallest phone (UI-002) */
+.review-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+}
+
+.review-tabs .button {
+  padding: var(--space-2);
 }
 
 /* Muted gray is fine here: the card is glass (07 section 2) */

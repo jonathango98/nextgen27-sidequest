@@ -7,19 +7,29 @@
   {# UI-030, DEC-062: a back link to Home at the top. #}
   <a class="back-link" href="/"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"></path></svg>Back to home</a>
   <h1>Journal</h1>
-  <a class="button button-write" href="/journal/new">Write a takeaway</a>
-  {# GAME-031: the player's own notes, newest session first. Fake until journal.notes. #}
-  {% for note in notes %}
+  {# GAME-030, DEC-072: what the last Submit earned. #}
+  {% if saved == "points" %}
+    <p class="card journal-saved" role="status">Saved! <span class="pill">+{{ journal_points }}</span></p>
+  {% elif saved == "extra" %}
+    <p class="card journal-saved" role="status">Saved. Points come once for each session.</p>
+  {% endif %}
+  {# GAME-108, DEC-077: while off, notes stay readable, but nothing new can be written. #}
+  {% if game_state() == "on" %}
+    <a class="button button-write" href="/journal/new">Write a takeaway</a>
+  {% else %}
+    <button class="button button-write" type="button" disabled>Write a takeaway</button>
+  {% endif %}
+  {# GAME-031: the player's own notes, newest session first, then newest note first. #}
+  {% for session in sessions %}
     <section class="takeaway-session" aria-labelledby="note-{{ loop.index }}">
-      <h2 class="session-title" id="note-{{ loop.index }}">{{ note.session }}</h2>
-      <article class="card takeaway-card">
-        <p class="takeaway-text">{{ note.text }}</p>
-        <div class="note-meta">
-          {# Who can read it, and for shared notes where the review is (SAFE-007, UI-051: in words). #}
-          <span class="note-status">{{ note.status }}</span>
-          <span class="pill">+{{ journal_points }}</span>
-        </div>
-      </article>
+      <h2 class="session-title" id="note-{{ loop.index }}">{{ session.title }}</h2>
+      {% for note in session.notes %}
+        {% with error=note.public_id == error_note %}
+          {% include "player/partials/note_card.html" %}
+        {% endwith %}
+      {% endfor %}
     </section>
+  {% else %}
+    <p class="card">No notes yet. After a session ends, write what you learned.</p>
   {% endfor %}
 {% endblock %}

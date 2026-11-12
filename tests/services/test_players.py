@@ -5,7 +5,7 @@ from app.auth import session
 from app.config import load_config
 from app.db import connect, migrate
 from app.main import create_app
-from app.services import churches, players, qr
+from app.services import churches, leaderboards, players, qr
 from tests.conftest import make_fake_pin
 
 # Fake data only (ENG-047, SAFE-030).
@@ -78,9 +78,15 @@ def test_eng_113_preview_seed_skips_without_the_example_church(tmp_path, monkeyp
 
 @pytest.mark.parametrize(
     ("environment", "seeded"),
-    # A preview gets Test Player 1, Test Player 2 for the connections.meet hand test,
-    # and Test Player 3 for the connections.answers hand test.
-    [("sidequest-pr-68", 3), ("staging", 0), ("production", 0), (None, 0)],
+    # A preview gets Test Player 1, Test Player 2 for the connections.meet hand test, and the
+    # ranked example players for the leaderboards.screen hand test, and one player past the
+    # first blind box for the home.pages hand test.
+    [
+        ("sidequest-pr-68", 2 + len(leaderboards.PREVIEW_PLAYERS) + 1),
+        ("staging", 0),
+        ("production", 0),
+        (None, 0),
+    ],
 )
 def test_arch_017_app_start_seeds_the_player_only_on_pr_previews(
     tmp_path, monkeypatch, environment, seeded

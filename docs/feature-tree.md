@@ -5,7 +5,7 @@
 
 Every planned piece of work and what it needs first (ENG-105 to ENG-108), grouped by the week it is due (PRD-054). Pieces flow left to right in time: finishing one unlocks the pieces it points to. Run `/pick-task` to claim one.
 
-**Working** 26 · **In progress** 0 · **Ready** 11 · **Waiting** 11 · **Needs decision** 1
+**Working** 32 · **In progress** 0 · **Ready** 11 · **Waiting** 7 · **Needs decision** 0
 
 Colors: green Working, blue In progress, gold Ready, gray Waiting, red dashed Needs decision.
 
@@ -69,7 +69,8 @@ flowchart LR
     ready_retention["ready.retention<br/>M · hard"]
   end
   subgraph w_2027_01_15 ["Due Fri Jan 15"]
-    screen_photobooth["screen.photobooth<br/>M · medium"]
+    photobooth_points["photobooth.points<br/>M · hard"]
+    photobooth_screen["photobooth.screen<br/>S · medium"]
     wrapped_cards["wrapped.cards<br/>L · medium"]
     wrapped_stat_cards["wrapped.stat-cards<br/>L · medium"]
     wrapped_collection["wrapped.collection<br/>M · hard"]
@@ -144,7 +145,10 @@ flowchart LR
   staff_login --> screen_main
   game_state_core --> screen_main
   game_state_controls --> screen_main
-  screen_main --> screen_photobooth
+  usher_console --> photobooth_points
+  points_ledger --> photobooth_points
+  game_state_core --> photobooth_points
+  screen_main --> photobooth_screen
   game_state_core --> wrapped_cards
   staff_login --> wrapped_cards
   points_audit_log --> wrapped_cards
@@ -170,32 +174,18 @@ flowchart LR
   classDef ready fill:#fff4d6,stroke:#a87400,stroke-width:3px,color:#14151a
   classDef waiting fill:#f1f0eb,stroke:#c3c0b6,color:#545a66
   classDef decision fill:#fdeeec,stroke:#b42318,stroke-dasharray:4 3,color:#14151a
-  class app_foundation,auth_join_login,checkin_sessions,code_my_code,connections_answers,connections_meet,connections_scanner_camera,connections_table,game_state_controls,game_state_core,infra_hosting,look_base,look_screens,points_audit_log,points_ledger,points_score,ready_backups,ready_load_test,ready_logout,ready_rate_limits,ready_retention,screen_main,screens_skeleton,staff_accounts,staff_login,usher_console working
-  class admin_audit_view,admin_players,admin_setup,checkin_window,connections_verse_picker,explore_booths,game_state_auto_pause,home_pages,journal_notes,leaderboards_screen,wrapped_cards ready
-  class admin_award_revoke,blind_box_close_redemption,blind_box_handout,checkin_hall,explore_items,journal_share_review,leaderboards_in_app,recap_screen,wrapped_collection,wrapped_save_image,wrapped_stat_cards waiting
-  class screen_photobooth decision
+  class app_foundation,auth_join_login,checkin_sessions,code_my_code,connections_answers,connections_meet,connections_scanner_camera,connections_table,game_state_auto_pause,game_state_controls,game_state_core,home_pages,infra_hosting,journal_notes,journal_share_review,leaderboards_in_app,leaderboards_screen,look_base,look_screens,points_audit_log,points_ledger,points_score,ready_backups,ready_load_test,ready_logout,ready_rate_limits,ready_retention,screen_main,screens_skeleton,staff_accounts,staff_login,usher_console working
+  class admin_audit_view,admin_players,admin_setup,blind_box_handout,checkin_window,connections_verse_picker,explore_booths,photobooth_points,photobooth_screen,recap_screen,wrapped_cards ready
+  class admin_award_revoke,blind_box_close_redemption,checkin_hall,explore_items,wrapped_collection,wrapped_save_image,wrapped_stat_cards waiting
 ```
 
 ## Ready now
 
-- `game-state.auto-pause`: An admin types in when each session starts, and the game pauses by itself at that time if it is on. It never turns on a game that is off, and never un-pauses it. (M, medium, backend, due fri dec 4)
-  - Try it:
-    1. As an admin, add a session whose start time is a minute or two from now, with the game on.
-    2. Wait for that time and refresh a player page, you should see the paused note.
-    3. Try to break it by setting the game to off before the time arrives, it should stay off and not become paused.
 - `connections.verse-picker`: When the question is about a favorite verse, players choose the book, chapter and verse from lists instead of typing. It saves as something like John 3:16. (S, medium, player-app, due fri dec 4)
   - Try it:
     1. Scan between two test players until you get the favorite verse question.
     2. Choose a book, chapter and verse from the lists, you should see it saved in the usual form.
     3. Try to break it by picking a chapter that is too high for that book, the lists should not let you.
-- `home.pages`: Home shows the player's real score and how close they are to the next blind box. A Quests page lists every quest and how many points it gives. An Open Box page shows how many blind boxes the player can collect and how to go and get them. (L, easy, player-app, due fri dec 11)
-  - Try it:
-    1. On the PR preview, join as a brand new Test Player 1. Home should show the starting score and the progress bar without breaking.
-    2. Earn points, for example with a scan, and refresh Home. The score and the progress bar should go up.
-    3. Open Quests. Every quest should show with its points.
-    4. Tap Open Box. It should show how many boxes you can collect and clear steps for the game booth. It should never say how many boxes are left in total, and tapping it should not use up a box.
-    5. On a local run, change one points number in game-config.yaml and restart. Quests should show the new number without touching any page file.
-    6. Run `pytest -k 'game_070 or game_071'`. The worked examples from the rules should pass.
 - `checkin.window`: Check-in opens on its own a few minutes before a session starts and closes when it starts. A session with no start time gets an Open check-in button. An admin can also close check-in for any session whenever they choose. (L, medium, admin-screens, due fri dec 11)
   - Try it:
     1. On the PR preview, log in as Test Admin and give Example Session 1 a start time a few minutes away with 2 check-in minutes. The session should show check-in open 2 minutes before, and closed at the start time.
@@ -226,20 +216,26 @@ flowchart LR
     2. Look through the page and the form. There should be no spot for where an item is hidden.
     3. As Test Usher on a phone, scan Test Player 1's My Code at Example Booth A. Test Player 1's score should go up.
     4. Scan again at Example Booth A. It should be refused with no extra points. Example Booth B should still work.
-- `leaderboards.screen`: Lists for the big screen: the top players, and churches ranked by a fair average so a small church can beat a big one. Players show only a first name, last initial and church. (L, medium, admin-screens, due fri dec 18)
+- `blind-box.handout`: An usher hands a player a blind box and the game remembers it, so the same box is never given twice. The game does not count how many boxes are left. (L, medium, admin-screens, due fri dec 18)
   - Try it:
-    1. On the PR preview, make a few test players in Example Church A and Example Church B with different scores.
-    2. Open the main screen link on a laptop. When the player board comes round, players should be ranked from highest score, with first name, last initial and church only.
-    3. Churches should be ranked by the average per player, not the total. Give one test player many points and check their church does not jump ahead on its own.
-    4. Switch the game off. The boards should stop and the off view should show.
-- `journal.notes`: A safe place to keep players' notes, and a way for a player to write a private note about what they learned in a session that has finished. They get points once for each session, and they can see a list of the notes they wrote themselves. (L, medium, player-app, due fri jan 8)
+    1. On the PR preview, after Test Player 1 reaches a box milestone, log in as Test Usher, scan their code and save the claim.
+    2. Test Player 1's Open Box page should show one fewer box to collect.
+    3. Try to claim more boxes than the player has earned. It should be refused.
+    4. Pause the game as Test Admin and try again. It should be refused.
+    5. Look at Test Player 1's Open Box page and the main screen. Neither should show a count of boxes left.
+- `photobooth.points`: Jonathan only (ENG-114). The photobooth kiosk scans a player's My Code before the first shot, and the player gets photobooth points after the shot, up to a limit each day. Only the photobooth's own server can ask for points, and it never learns the player's name. An usher can still record a visit for a player whose phone is dead. The kiosk and the photobooth's server are built in the photobooth app's own repos (06 section 2, Photobooth). Until they are, tests stand in for the photobooth's server. (M, hard, backend, due fri jan 15)
   - Try it:
-    1. On the PR preview, end Example Session 1 as Test Admin. Then join as Test Player 1 on a phone and open Journal. It should offer that session.
-    2. Send a note with too few words. You should see a friendly message.
-    3. Send a long enough note. You should get the points once, and the note should show in your list.
-    4. Write a second note for the same session. You should get no new points.
-    5. Pause the game and try to write a note. It should say no.
-    6. Write a note as Test Player 2 on another phone. Each phone should list only its own notes.
+    1. On the photobooth's superadmin page, make a test event with Side Quest switched on, the PR preview's address, and the preview's photobooth key. Open that event's booth link on an iPad. As Test Player 1 on a phone, scan My Code on the kiosk, then take the photos. Test Player 1's score should go up.
+    2. Scan and shoot again until the daily limit. The next scan should say the daily limit is reached, and the kiosk should still let you take photos.
+    3. As Test Admin, pause the game, then scan on the kiosk again. It should say the game is paused.
+    4. Show the kiosk a screenshot of My Code from a few minutes ago. It should be refused.
+    5. As Test Usher, find Test Player 2 by name and record a photobooth visit. The score should go up.
+- `photobooth.screen`: Jonathan only (ENG-114). The photobooth view on the main screen shows the photobooth app's own slideshow, with only the photos an admin approved for the big screen. The app never saves the photos. The approve step and the permission to show the slideshow inside Side Quest are built in the photobooth app's own repos (06 section 2, Photobooth). (S, medium, admin-screens, due fri jan 15)
+  - Try it:
+    1. On the PR preview, open the main screen link and wait for the photobooth view. It should show the test photobooth event's slideshow, with the link in the preview's `SQ_PHOTOBOOTH_SLIDESHOW_URL` variable.
+    2. On the test photobooth's admin page, approve one photo. Within a minute it should show up in the view. A photo you didn't approve should never show.
+    3. Remove the slideshow link from the preview's Railway variables. The photobooth view should say coming soon, and the other views should keep taking turns.
+    4. Look through the database and the server files. No photo should be saved anywhere.
 - `wrapped.cards`: An admin presses a button to open Wrapped, your personal story of the conference. Until then, players see a note saying when it will open. Once open, it's cards you swipe through like a little story, starting with a Welcome card. (L, medium, player-app, due fri jan 15)
   - Try it:
     1. On a phone at the PR preview, log in as Test Player 1 and open Wrapped. You should see the note about when it unlocks.
@@ -247,6 +243,13 @@ flowchart LR
     3. Log in as Test Admin and unlock Wrapped, then reload the phone. You should land on the Welcome card.
     4. Swipe left and right. You should move back and forth through the cards.
     5. Turn on Reduce Motion in the phone settings and reload. The cards should change with no sliding or zooming.
+- `recap.screen`: Big-screen views for everyone. The takeaway wall shows one takeaway at a time that a player shared and an admin approved. The Sunday recap shows how many connections were made, how many church pairs met, how many takeaways were shared, and the Bible verse people collected most, with no names. (L, medium, admin-screens, due fri jan 15)
+  - Try it:
+    1. As Test Player 1 on the PR preview, share a takeaway, then approve it as Test Admin.
+    2. Open the main screen link and wait for the takeaway view. The takeaway should show with first name and church, or Anonymous if chosen. A takeaway that is not approved should never show.
+    3. Make a few test connections where most friends' verses are the same. Open the recap. The totals should go up, and that verse should show as the most collected.
+    4. Look closely at the recap. No person's name should show anywhere.
+    5. Switch the game off and pick recap on the admin console. The recap should show in place of the offline message.
 
 ## In progress
 
@@ -254,4 +257,4 @@ flowchart LR
 
 ## Needs a decision
 
-- `screen.photobooth`: SAFE-038 (Jonathan)
+- None

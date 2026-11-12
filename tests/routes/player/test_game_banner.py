@@ -4,6 +4,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.auth.current import CurrentPlayer, get_current_player
+from app.config import load_config
 from app.db import connect
 from app.main import create_app
 from app.routes.player import join
@@ -136,7 +137,6 @@ def test_game_102_home_play_buttons_wait_while_not_on(client, state):
     _set(client, state)
     html = client.get("/").text
     assert 'href="/scan"' not in html
-    assert 'href="/journal/new"' not in html
     assert disabled_button("Meet friends").search(html)
 
 
@@ -148,6 +148,7 @@ def test_dec_066_home_stays_open_while_paused_with_reading_greyed_out(client):
     assert 'href="/summary"' not in html
     assert 'href="/box"' not in html
     assert disabled_button("Read").search(html)
+    assert disabled_button("Write").search(html)
 
 
 def test_game_108_reading_stays_open_while_off(client):
@@ -160,7 +161,7 @@ def test_game_108_reading_stays_open_while_off(client):
 def test_game_102_home_play_buttons_work_while_on(client):
     html = client.get("/").text
     assert 'href="/scan"' in html
-    assert 'href="/journal/new"' in html
+    assert 'href="/journal"' in html
 
 
 @pytest.mark.parametrize("path", [p for p in PAGES if p != "/"])
@@ -216,3 +217,31 @@ def test_ui_030_scan_keeps_one_back_link_while_off(client):
     html = client.get("/scan").text
     assert "Scanning is closed right now." in html
     assert html.count("Back to My Code") == 1
+
+
+def test_game_108_own_notes_stay_readable_while_off(client):
+    conn = connect(client.app.state.db_path)
+    session = conn.execute(
+        "INSERT INTO session (public_id, title, ended_at)"
+        " VALUES ('pub-s1', 'Example Session 1', '2027-03-05T10:00:00Z')"
+    ).lastrowid
+    player = conn.execute(
+        "SELECT id FROM player WHERE public_id = ?", (FAKE_PLAYER.public_id,)
+    ).fetchone()[0]
+    conn.execute(
+        "INSERT INTO takeaway (player_id, session_id, text) VALUES (?, ?, ?)",
+        (player, session, "Example takeaway kept private by Test Player 1."),
+    )
+    conn.close()
+    _set(client, "off")
+    home = client.get("/").text
+    # DEC-077: Write opens the notes while off, with no points pill.
+    assert 'href="/journal"' in home
+    assert f"+{load_config()['points']['journal_takeaway']}" not in home
+    html = client.get("/journal").text
+    assert "Example takeaway kept private by Test Player 1." in html
+    assert '<span class="note-status">Just me</span>' in html
+    # Nothing new or changed while off (GAME-108, DEC-076).
+    assert disabled_button("Write a takeaway").search(html)
+    assert 'href="/journal/new"' not in html
+    assert "/visibility" not in html

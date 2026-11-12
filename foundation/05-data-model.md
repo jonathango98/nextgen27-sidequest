@@ -2,8 +2,8 @@
 
 - Status: PROPOSED (developers confirm at kickoff; constraints marked LOCKED are required whatever the final schema looks like)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.5.0
-- Last updated: 2026-11-04
+- Version: 1.9.0
+- Last updated: 2026-11-10
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -64,6 +64,7 @@ This file lists the tables, their fields, and the database constraints that enfo
 | `state` | text | `on`, `paused`, or `off` (GAME-100) |
 | `wrapped_unlocked` | boolean | WRAP-002 |
 | `redemption_closed_at` | timestamp, nullable | Set when an admin closes blind box redemption on Sunday (GAME-078) |
+| `blind_boxes_out` | boolean, default false | True while an admin has marked the blind boxes ran out (GAME-076) |
 | `screen_off_view` | text | `offline` or `recap`: what the main screen shows while the game is off (UI-044). Starts as `offline` |
 | `updated_at`, `updated_by` | timestamp, staff ID | Every change is also audited |
 
@@ -81,6 +82,7 @@ This file lists the tables, their fields, and the database constraints that enfo
 | `checkin_opened_at` | timestamp, nullable | Set when an admin presses "Open check-in" on a session with no start time (GAME-027) |
 | `starts_at` | timestamp, nullable | Entered by an admin. Check-in closes and the server pauses the game then (GAME-024, GAME-107). Admin only, except the hall countdown (DATA-014) |
 | `checkin_open_minutes` | integer, nullable | Entered by an admin with the start time: check-in opens this many minutes before it (GAME-021). Required when `starts_at` is set |
+| `auto_pause_done_at` | timestamp, nullable | Set when the server handles the start time, whether or not it paused the game, so auto-pause happens once (GAME-107). A start time already past when saved counts as handled. Moving the start time later clears it |
 
 - **DATA-014** [LOCKED] The Session table holds no room names or places (SAFE-037). It holds a title, an optional start time, and how many minutes before the start check-in opens (GAME-021, GAME-107, DEC-051, DEC-057). Start times are seen only by admins, never by players. The one exception: while check-in is open, the hall screen counts down to the start time (GAME-028).
 
@@ -129,10 +131,11 @@ This file lists the tables, their fields, and the database constraints that enfo
 | Field | Type | Notes |
 |---|---|---|
 | `id` | integer | Primary key |
+| `public_id` | text | Unique, random. Used in the review and visibility URLs (DATA-003, DEC-076) |
 | `player_id`, `session_id` | integer | |
 | `text` | text | At least 15 words (GAME-030) |
 | `visibility` | text | `private`, `shared_named`, or `shared_anonymous` (GAME-031) |
-| `review_status` | text | `not_needed` (private), `pending`, `approved`, `rejected`, `hidden` |
+| `review_status` | text | `not_needed` (private), `pending`, `approved`, `rejected`, `hidden`. A shared post is never `not_needed`. A private post is `not_needed`, or keeps `rejected` or `hidden` so it can't be shared again (DEC-076) |
 | `reviewed_by`, `reviewed_at` | staff ID, timestamp | Nullable |
 
 ### Booth, BoothVisit, PhotoboothVisit, HiddenItem
@@ -141,7 +144,7 @@ This file lists the tables, their fields, and the database constraints that enfo
 |---|---|---|
 | Booth | `id`, `name` | Entered by an admin |
 | BoothVisit | `player_id`, `booth_id`, `recorded_by`, `created_at` | |
-| PhotoboothVisit | `player_id`, `event_day`, `recorded_by`, `created_at` | `event_day` is the date in the venue timezone (GAME-042) |
+| PhotoboothVisit | `player_id`, `event_day`, `recorded_by`, `ticket_id`, `created_at` | `event_day` is the date in the venue timezone (GAME-042). `recorded_by` is the usher, or empty for a kiosk visit. `ticket_id` is set only for a kiosk visit (DEC-079) |
 | HiddenItem | `id`, `item_number`, `claimed_by`, `claimed_at`, `recorded_by` | No location field, ever (SAFE-010) |
 
 ### BoxClaim
@@ -187,7 +190,7 @@ This file lists the tables, their fields, and the database constraints that enfo
 | **DATA-020** [LOCKED] | Connection: `UNIQUE (player_low_id, player_high_id)` and `CHECK (player_low_id < player_high_id)` | Each pair once, no self-connection (GAME-013, GAME-014) |
 | **DATA-021** [LOCKED] | ChurchMet: `UNIQUE (player_id, church_id)` | New church bonus once per church per player (GAME-011) |
 | **DATA-022** [LOCKED] | CheckIn: `UNIQUE (player_id, session_id)` and `UNIQUE (session_id, scan_order)` | Once per session, and a clean scan order (GAME-023, GAME-025) |
-| **DATA-023** [LOCKED] | Takeaway: `UNIQUE (player_id, session_id)` | One takeaway per session (GAME-030) |
+| **DATA-023** [REMOVED] | Was: Takeaway: `UNIQUE (player_id, session_id)` | A player can write many takeaways per session now. Points stay once per session through DATA-027 (GAME-030, DEC-072) |
 | **DATA-024** [LOCKED] | BoothVisit: `UNIQUE (player_id, booth_id)` | Once per booth (GAME-041) |
 | **DATA-025** [LOCKED] | HiddenItem: `UNIQUE (item_number)`, and `claimed_by` can be set only once | Each item claimed once in total (GAME-043) |
 | **DATA-026** [LOCKED] | BoxClaim: `UNIQUE (player_id, claim_number)` | No double claims (GAME-074) |
@@ -196,8 +199,8 @@ This file lists the tables, their fields, and the database constraints that enfo
 
 Rules that a unique constraint cannot express are checked by the points service inside the same transaction (ARCH-040):
 
-- **DATA-028** [LOCKED] Photobooth cap: count that player's PhotoboothVisit rows for that `event_day` before inserting (GAME-042).
-- **DATA-029** [LOCKED] Blind box cap and stock: `claim_number` must be at most `blind_box.max_per_player` and at most the blind boxes earned. Once `blind_box.stock_total` is set, a claim is refused when total claims already equal it (GAME-071, GAME-074, GAME-076).
+- **DATA-028** [LOCKED] Photobooth cap: count that player's PhotoboothVisit rows for that `event_day` before inserting (GAME-042). `ticket_id` is unique when set, so one kiosk ticket pays once (DEC-079).
+- **DATA-029** [LOCKED] Blind box cap: `claim_number` must be at most `blind_box.max_per_player` and at most the blind boxes earned. Stock is not counted. A claim is refused while `game_state.blind_boxes_out` is true (GAME-071, GAME-074, GAME-076, DEC-078).
 
 ## 4. Score
 

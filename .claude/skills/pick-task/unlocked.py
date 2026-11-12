@@ -5,7 +5,8 @@ Add --tree to print only READY pieces, grouped by feature and numbered.
 READY pieces are sorted by due date (PRD-054). A piece is due by its feature's due date, or
 earlier if a piece that needs it is due sooner. Pieces past due are marked LATE.
 Reads foundation/feature-tree.yaml, the README Project status, and the OPEN table in
-foundation/13-decisions.md. Prints only; changes nothing.
+foundation/13-decisions.md. Pieces of a feature with an owner are RESERVED and never READY (ENG-114).
+Prints only; changes nothing.
 """
 
 import re
@@ -51,9 +52,13 @@ def main():
     today = date.today().isoformat()
     when = lambda i: f"due {due[i]}" + (" LATE" if due[i] < today else "")
 
-    ready, waiting, decision = [], [], []
+    owners = {f["id"]: f["owner"] for f in tree["features"] if f.get("owner")}
+    ready, waiting, decision, reserved = [], [], [], []
     for pid, p in pieces.items():
         if pid in working or pid in in_progress:
+            continue
+        if p["feature"] in owners:
+            reserved.append(f"{pid}: only @{owners[p['feature']]} builds this")
             continue
         blocked_open = [r for r in p["open"] if r in open_rules]
         missing = [n for n in p["needs"] if n not in working]
@@ -109,6 +114,8 @@ def main():
     print("\n".join(f"- {w}" for w in waiting))
     print(f"\nNEEDS A DECISION ({len(decision)})")
     print("\n".join(f"- {d}" for d in decision))
+    print(f"\nRESERVED ({len(reserved)})")
+    print("\n".join(f"- {r}" for r in reserved))
 
 
 if __name__ == "__main__":

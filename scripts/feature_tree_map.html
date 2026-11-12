@@ -81,10 +81,9 @@ select { font: 500 13px var(--font-body); color: var(--ink); background: var(--p
 .weekline { position: absolute; top: 0; bottom: 0; border-left: 1px dashed var(--line); }
 .colhead { position: absolute; top: 12px; font: 500 11px/1 var(--font-body); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 svg.edges { position: absolute; inset: 0; pointer-events: none; overflow: visible; }
-svg.edges path { fill: none; stroke: var(--edge); stroke-width: 1.2; opacity: .55; transition: opacity .15s, stroke .15s; }
+svg.edges path { fill: none; stroke: var(--edge); stroke-width: 1.2; opacity: 0; transition: opacity .15s, stroke .15s; }
 svg.edges path.up { stroke: var(--focus); stroke-width: 2; opacity: 1; }
 svg.edges path.down { stroke: var(--ready); stroke-width: 2; opacity: 1; }
-svg.edges path.faded { opacity: .08; }
 
 .node { position: absolute; width: 214px; height: 52px; border-radius: 8px; border: 1.5px solid var(--line); background: var(--waiting-bg); padding: 6px 10px; cursor: pointer; display: grid; align-content: center; gap: 1px; text-align: left; color: var(--ink); font: inherit; transition: opacity .15s, box-shadow .15s, transform .15s; }
 .node .id { font: 500 12.5px/1.25 var(--font-mono); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -134,7 +133,7 @@ footer { color: var(--muted); font-size: 12.5px; }
 <div class="wrap">
   <header>
     <h1>Side Quest Feature Tree</h1>
-    <p class="sub">Every piece of planned work, left to right by the week it's due, so every feature is done by January 15. Finishing a piece unlocks the ones to its right. Click any piece to trace what it needs and what it opens up. Zoom with the buttons, Ctrl or ⌘ + scroll, or two fingers.</p>
+    <p class="sub">Every piece of planned work, left to right by the week it's due, so every feature is done by January 15. Finishing a piece unlocks the ones to its right. Click any piece to trace what it needs and what it opens up. Click it again, an empty spot, or Esc to see the whole tree. Zoom with the buttons, Ctrl or ⌘ + scroll, or two fingers.</p>
   </header>
 
   <div class="controls">
@@ -231,7 +230,7 @@ let headEls = [], mapSize = { width: 0, height: 0 };
 const nodeEls = {};
 Object.values(P).forEach(p => {
   const b = document.createElement('button');
-  b.addEventListener('click', () => select(p.id));
+  b.addEventListener('click', () => select(current === p.id ? null : p.id));
   map.appendChild(b); nodeEls[p.id] = b;
 });
 function drawNode(p) {
@@ -344,8 +343,6 @@ function paint() {
     const isDown = current && (e.from === current || down.has(e.from)) && down.has(e.to);
     e.el.classList.toggle('up', !!isUp);
     e.el.classList.toggle('down', !!isDown && !isUp);
-    const featOk = !f || P[e.from].feature === f || P[e.to].feature === f;
-    e.el.classList.toggle('faded', (current && !isUp && !isDown) || (!current && !featOk));
   });
 }
 
@@ -354,9 +351,12 @@ function linkList(ids, mark) {
   return '<div class="links">' + ids.map(i => `<button data-go="${i}" class="${mark ? (status(P[i]) === 'working' ? 'ok' : 'miss') : ''}">${i}</button>`).join('') + '</div>';
 }
 
+// no piece picked: every piece shows and no lines are drawn
 function select(id) {
   current = id; paint();
-  const p = P[id], s = status(p), d = document.getElementById('detail');
+  const d = document.getElementById('detail');
+  if (!id) { d.innerHTML = '<p class="none">Click a piece to see what it needs first and what it unlocks.</p>'; return; }
+  const p = P[id], s = status(p);
   const allDown = walk(id, i => kids[i]);
   if (p.built) {
     d.innerHTML = `<span class="status working">Working</span><h2>${p.id}</h2><p>${p.what}</p>
@@ -389,7 +389,9 @@ function select(id) {
   d.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => { select(b.dataset.go); nodeEls[b.dataset.go].scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' }); }));
 }
 
-select('points.audit-log');
+box.addEventListener('click', e => { if (current && !e.target.closest('.node')) select(null); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && current) select(null); });
+select(null);
 
 // Live status, by the same rules as statuses() in feature_tree_map.py (ENG-107, ENG-108), plus one more:
 // a piece named in an open PR's README Project status, and not Working on main, is In progress.

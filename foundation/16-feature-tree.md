@@ -2,8 +2,8 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.7.1
-- Last updated: 2026-11-04
+- Version: 1.7.2
+- Last updated: 2026-11-05
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -20,6 +20,7 @@ Every Planned feature is split into pieces in [feature-tree.yaml](feature-tree.y
 - **ENG-111** [LOCKED] Every piece is a slice: if it changes what the server does, the same PR builds the screen that shows the change, so someone can try it on a phone. A server change never waits for a later PR to become visible. Only pieces with nothing to tap (infra, data cleanup, load tests) are tried with a command instead (DEC-060).
 - **ENG-112** [LOCKED] Every piece is tried by hand before review. The PR's "How to test" lists the piece's `try_it` steps as a checklist. Before the PR leaves draft, a person (not the agent) runs every step on the PR's Railway preview, on a real phone for player pages, and ticks each one. The browser check (AI-044) still runs before commits. It does not replace the hand test (DEC-060).
 - **ENG-113** [LOCKED] PR previews arrive ready to hand-test. When a piece works, the same PR adds fake example data for it to the preview startup in `app/main.py`, next to the Example Churches and the test staff accounts (DEC-064). The seed runs only on `*-pr-<n>` environments (ARCH-017), adds only what is missing, and never changes existing rows. Names are obviously fake (SAFE-031). Passwords and PINs come from Railway variables (ENG-056). Real data and the hidden item list never appear (SAFE-030). Seeding minors' data needs the `safety-review` label (AI-043).
+- **ENG-114** [LOCKED] A feature with an `owner` is reserved: only that person builds its pieces. `/pick-task` lists them as RESERVED and never offers or claims them for anyone else. Their code lives in their own paths, which `.github/CODEOWNERS` gives to the owner, so a change there merges only with the owner's approval. The `photobooth` feature is Jonathan's: its code goes in `app/routes/photobooth/`, `app/services/photobooth.py`, `app/templates/screen/partials/photobooth.html`, and `tests/photobooth/` (DEC-079).
 
 ## 2. Core build backbone
 
@@ -62,7 +63,8 @@ The tree is the source. If this table and the tree disagree, the tree wins.
 | `leaderboards` Leaderboards and church score | January build | 2026-12-18 | 2 | `points.ledger`, `screen.main` | None |
 | `usher` Usher console | January build | 2026-12-04 | 1 | `staff.login`, `connections.scanner-camera` | None |
 | `admin` Admin console | January build | 2026-12-11 | 4 | `staff.login`, `points.audit-log`, `points.ledger`, `connections.meet` | None |
-| `screen` Main screen views | January build | 2027-01-15 | 2 | `staff.login`, `game-state.core`, `game-state.controls` | `screen.photobooth` (SAFE-038) |
+| `screen` Main screen views | January build | 2027-01-15 | 1 | `staff.login`, `game-state.core`, `game-state.controls` | None |
+| `photobooth` Photobooth link, Jonathan only | January build | 2027-01-15 | 2 | `usher.console`, `points.ledger`, `game-state.core`, `screen.main` | None |
 | `wrapped` Wrapped cards | January build | 2027-01-15 | 4 | `game-state.core`, `staff.login`, `points.audit-log`, `look.base`, `connections.meet`, `journal.notes`, `home.pages`, `connections.answers` | None |
 | `recap` Conference recap screen | January build | 2027-01-15 | 1 | `screen.main`, `connections.meet`, `journal.share-review`, `connections.answers` | None |
 | `ready` Game day readiness | January build | 2027-01-08 | 5 | `points.audit-log` | None |

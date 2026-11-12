@@ -20,6 +20,8 @@
     {# GAME-026: End session swaps only this part, picked out of the page with hx-select (API-002). #}
     <section id="sessions" class="stack" aria-labelledby="sessions-title">
       <p>The game is <strong data-state="{{ state }}">{{ labels[state] }}</strong>.</p>
+      {# GAME-107, OPS-001: auto-pause is a backup, so admins still press Pause. #}
+      {% if auto_pause %}<p class="hint" data-auto-pause>The game pauses by itself at each start time. This is only a backup: still press Pause.</p>{% endif %}
       {% if notice %}<p class="card" role="status">{{ notice }}</p>{% endif %}
       {% if error_code %}{% include "partials/error.html" %}{% endif %}
       <h2 id="sessions-title">Program</h2>

@@ -2,8 +2,8 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.2.2
-- Last updated: 2026-11-04
+- Version: 1.3.0
+- Last updated: 2026-11-05
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -17,7 +17,7 @@ Use these words the same way in code, copy, issues, and PRs.
 | Area label | A GitHub label (`area:backend` and so on) that says which part of the app an issue or PR touches | ENG-040 |
 | Audit row | A record of who did what, to which record, when, and why | ARCH-050 |
 | Auto-unlock | A locked account unlocks itself after 60 minutes | SAFE-022 |
-| Blind box | A sealed box with a mystery item, unlocked every 300 points of score. Contents are OPEN | GAME-072, GAME-068 |
+| Blind box | A sealed box with a mystery item, unlocked every 300 points of score. The game director chooses the contents | GAME-072 |
 | Booth | A staffed table that gives points once per player, for example the mission booth | GAME-041 |
 | Check-in | Scanning a session's rotating code on the hall screen before the session starts | GAME-020, GAME-021 |
 | Church list | The preloaded list of churches players pick from at sign-up | SAFE-002 |
@@ -46,6 +46,7 @@ Use these words the same way in code, copy, issues, and PRs.
 | Open Box | The app screen that shows blind boxes earned, claimed, and claimable, and how to claim | GAME-073 |
 | Pause | The game state during sessions. No earning and no claims, except join points at sign-up | GAME-102, GAME-044 |
 | Paper fallback | Ushers writing quests on paper when Wi-Fi fails, entered later by an admin | ARCH-081 |
+| Photobooth | Jonathan's own photo booth app, kept outside this repo. Its iPad kiosk scans My Code before the first shot for points, and its slideshow of admin-approved photos runs on the main screen. Side Quest stores no photos | GAME-042, SAFE-038 |
 | Player | Anyone who signed up to play | |
 | Points service | The one piece of server code that gives or removes points | ARCH-040 |
 | PROPOSED | The default to build against. May change after a playtest | README |

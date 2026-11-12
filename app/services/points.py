@@ -9,6 +9,9 @@ import sqlite3
 from app.services import audit
 from app.services.game_state import current_state, require_game_on
 
+# GAME-040: the reason on join awards. Leaderboards read it to tell active players (GAME-089).
+JOIN_REASON = "join"
+
 
 class AlreadyAwarded(Exception):
     """This record already paid this player (DATA-027). Routes map it to their own 409 code."""
@@ -102,9 +105,23 @@ def award_join(
             return None
         if state != "paused":
             require_game_on(conn)
-        return _save_award(conn, player_id, "join", amount, "player", player_id)
+        return _save_award(conn, player_id, JOIN_REASON, amount, "player", player_id)
 
     return _in_transaction(conn, write)
+
+
+def award_counts(conn: sqlite3.Connection, public_id: str) -> dict[str, int]:
+    """How many awards this player has had, per reason, for quest progress. Read only.
+
+    Admin revocations (negative amounts, GAME-004) are not counted as quests done.
+    """
+    rows = conn.execute(
+        "SELECT l.reason_code, count(*) AS n FROM point_ledger l"
+        " JOIN player p ON p.id = l.player_id"
+        " WHERE p.public_id = ? AND l.amount > 0 GROUP BY l.reason_code",
+        (public_id,),
+    ).fetchall()
+    return {row["reason_code"]: row["n"] for row in rows}
 
 
 def score(conn: sqlite3.Connection, player_id: int) -> int:

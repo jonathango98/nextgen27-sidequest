@@ -22,11 +22,99 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-11-04 · feat/connections-answers · Claude Opus 5.5 / @OwenTjandra
 
-- What: Builds `connections.answers`. Migration 0009 adds `icebreaker_answer` (one answer per person per connection, never about yourself, 1 to 200 characters). `POST /connections/{id}/answer` saves the answer the player typed for the other person and pays their points through the points service in the same transaction: `connect_same_church`, or `connect_other_church` plus `connect_new_church_bonus` the first time they meet someone from that church (saved in `church_met`). The icebreaker page shows the form, then the saved answer. Refused outside the pair (404), twice (409 `ALREADY_DONE`), blank or too long (400), and while paused or off (423). The retention cleanup deletes answers too. PR previews also seed Test Player 3 at Example Church A.
+- What: Builds `connections.answers`. Migration 0009 adds `icebreaker_answer` (one answer per person per connection, never about yourself, 1 to 200 characters). `POST /connections/{id}/answer` saves the answer the player typed for the other person and pays their points through the points service in the same transaction: `connect_same_church`, or `connect_other_church` plus `connect_new_church_bonus` the first time they meet someone from that church (saved in `church_met`). The icebreaker page shows the form, then the saved answer. Refused outside the pair (404), twice (409 `ALREADY_DONE`), blank or too long (400), and while paused or off (423). The retention cleanup deletes answers too. The hand test uses Test Player 3 at Example Church A from the leaderboards preview seed.
 - Why: Picked by Owen from the feature tree after `connections.meet` (#70). Due 2026-12-04 and unlocks 3 pieces.
 - Rule IDs: GAME-010, GAME-011, GAME-012, GAME-015, GAME-016, GAME-018, GAME-102, GAME-108, SAFE-005, SAFE-006, SAFE-014, DATA-021, DATA-027, DATA-032, API-002, API-005, API-007, API-020, AI-013, AI-041, AI-044, ENG-113, ENG-108
 - Status: Done
 - PR: #79
+
+## 2026-11-07 · feat/home-pages · Claude Opus 5.5 / @marcjason2012
+
+- What: Builds `home.pages`. A new `app/services/blind_boxes.py` works out boxes earned, the bar's points since the last milestone, and boxes ready to claim from score every time, with every number from `game-config.yaml`. Home's Next box bar shows real progress and says All boxes earned once the player has the max. Open Box says how many boxes are ready, marks each box Ready, Claimed, or its points, and says to go to the game booth when it's open. Opening it saves nothing. Quests counts join and journal awards from the ledger, and quests whose pieces don't pay yet stay at 0. Boxes claimed is always 0 until `blind-box.handout` adds the BoxClaim table (DATA-026), and the Blind boxes ran out switch (GAME-076) is left to `blind-box.close-redemption`. PR previews add Test Player 7 past the first milestone so testers see a Ready box. The claim commit also regenerated `docs/feature-tree.md`.
+- Why: Ready piece due 2026-12-11 (PRD-054). It unlocks `blind-box.handout` and `wrapped.stat-cards`.
+- Rule IDs: GAME-070, GAME-071, GAME-073, GAME-074, GAME-077, DATA-031, UI-036, UI-051, GAME-030, GAME-040, AI-013, ENG-031, ENG-101, ENG-108, ENG-113, AI-042, AI-044, AI-047
+- Status: Done
+- PR: #90
+
+## 2026-11-04 · feat/game-state-auto-pause · Claude Opus 5.5 / @marcjason2012
+
+- What: Builds `game-state.auto-pause`. A middleware in `app/main.py` runs `sessions.apply_auto_pause()` before every request except `/static/` and `/health` (DEC-029): once a session's start time has passed, it pauses an on game, with a `system` / `auto_pause` audit row, and the same request already sees it (ARCH-042). No timer thread or new library, and no new tick number, so a restart can't skip a start time. Migration 0012 adds `session.auto_pause_done_at`, set once the start time is handled whatever the state was, so it never repeats after a manual resume and never wakes an off game. Agreed with @marcjason2012: a start time already past when saved counts as handled, and moving one later clears it. A failed check is logged and never breaks the page. `game.auto_pause_schedule: false` turns it off. The admin Sessions page says it is only a backup (OPS-001). `foundation/05-data-model.md` 1.9.0 lists the new field (protected, needs Jonathan's approval, ENG-080, ENG-087). `tests/test_db.py`'s takeaway migration test now checks only that 0011 runs first, so later migrations don't break it. Checked at 360px in Chromium and WebKit. Preview seed: N/A, the hand test adds its own session.
+- Why: Picked through `/pick-task`. Due 2026-12-04. Last piece of the Game states feature, so its Planned row is removed (ENG-108).
+- Rule IDs: GAME-107, DATA-014, OPS-001, ARCH-042, ARCH-050, ARCH-013, ARCH-040, DEC-029, DEC-049, DEC-051, AI-013, AI-021, AI-042, AI-044, ENG-080, ENG-087, ENG-101, ENG-108
+- Status: Done
+- PR: #88
+
+## 2026-11-05 · docs/drop-open-decisions · Claude Opus 5.5 / @jonathango98
+
+- What: Removes five of the last six OPEN items instead of deciding them (DEC-078): PRD-011 metric targets, PRD-053 and GAME-092 prize budget and list, GAME-068 blind box contents, and GAME-069 blind box count. Each is marked REMOVED. The sixth, SAFE-038, is decided (DEC-079), so the open table in `13-decisions.md` is empty. The server no longer plans to count blind box stock. Instead an admin presses Blind boxes ran out (and Back in stock to undo): Open Box and Home's Claim box then say so and claims are refused with `OUT_OF_STOCK`. GAME-076, GAME-110, DATA-029, a GameState field, a route, the runbook, and the `blind-box.close-redemption` piece, which builds it, say so. The photobooth links to Side Quest (DEC-079). The main screen keeps its photobooth view, which will embed the photobooth app's own slideshow from `SQ_PHOTOBOOTH_SLIDESHOW_URL`, showing only photos an admin approved there (SAFE-038, UI-040). Before the first shot, the kiosk scans My Code. The photobooth's server calls two new routes, `/api/photobooth/start` and `/api/photobooth/finish`, with the `SQ_PHOTOBOOTH_KEY` secret (ARCH-039, API-004, API-008), and the points arrive after the shot, once per ticket (GAME-042, DATA-028, PhotoboothVisit `ticket_id`). The photobooth gets no name or under-18 answer. Ushers record visits only for dead phones. `photobooth.ticket_minutes` joins `game-config.yaml`, the runbook adds approving photos, and the tree gets a new `photobooth` feature, due with `screen`, holding `photobooth.points` and `photobooth.screen`. API-009 writes down the contract and what the photobooth app's own repos build. The feature has `owner: jonathango98`, so only Jonathan builds it: `/pick-task` lists its pieces as RESERVED, and CODEOWNERS gives him its code paths (ENG-114). `blind_box.stock_total` and `prizes.categories` leave `game-config.yaml`. Foundation changes need Jonathan's approval (ENG-080).
+- Why: Jonathan's call: none of the five is needed for the app to work. For the photobooth, players get points with no usher at the booth, and the big screen shows the booth's photos, with admin approval as the consent check (SAFE-024).
+- Rule IDs: PRD-011, PRD-053, GAME-068, GAME-069, GAME-072, GAME-076, GAME-110, GAME-092, SAFE-038, SAFE-024, SAFE-025, GAME-042, GAME-113, ARCH-039, API-004, API-008, API-009, DATA-028, DATA-029, UI-040, DEC-078, DEC-079, ENG-087, ENG-114, ENG-088, ENG-108
+- Status: Done
+- PR: #89
+
+## 2026-11-04 · feat/journal-share-review · Claude Opus 5.5 / @jonathango98
+
+- What: Builds `journal.share-review`. Players choose who can read each note (Just me, Shared with my name, Shared anonymously) on the Journal form, with the UI-031 note, and can change it later from each card on their Journal list. Write on Home now opens that list, with Write a takeaway on top, and it stays open while the game is off so players can read their notes (DEC-077, GAME-108). Admins open Review notes from the console: tabs for waiting, approved, rejected, and hidden with counts, the writer's name and church on every note, and Approve, Reject, Hide, or Approve again, each with an audit row. A rejected or hidden note can only go private. The Takeaways page (`/summary`) shows approved shared notes to signed-in players, newest session first. Migration 0011 rebuilds the takeaway table with a random `public_id` and lets a private note keep a reject or hide. PR previews get an ended Example Ended Session and four fake shared notes, two approved and two waiting. Foundation: GAME-031, SAFE-040, SAFE-041, the takeaway table, two routes, a try_it step, UI-036, DEC-076, and DEC-077 (needs Jonathan's approval, ENG-080).
+- Why: Next piece in the journal feature, due 2027-01-08 (PRD-054), and the last one, so the Journal row leaves Planned. It unlocks `recap.screen`. Jonathan chose the sharing rules in DEC-076.
+- Rule IDs: GAME-031, SAFE-007, SAFE-008, SAFE-009, SAFE-017, SAFE-028, SAFE-029, SAFE-040, SAFE-041, SAFE-042, UI-031, UI-036, UI-038, DATA-003, DEC-076, DEC-077, ENG-108, ENG-113, AI-042, AI-044, AI-047
+- Status: Done
+- PR: #87
+
+## 2026-11-04 · docs/dec-074-confirmed · Claude Opus 5.5 / @jonathango98
+
+- What: Logs the game director's confirmation of DEC-074 as DEC-075. GAME-085 and `leaderboard.in_app_leaderboard` are now LOCKED. The 10 places and the 50% cutoff stay PROPOSED and are listed for review after Playtest 1. Needs Jonathan's approval (ENG-080).
+- Why: DEC-074 was PROPOSED until the game director confirmed it.
+- Rule IDs: GAME-085, DEC-074, DEC-075, ENG-087
+- Status: Done
+- PR: #86
+
+## 2026-11-04 · feat/leaderboards-in-app · Claude Opus 5.5 / @jonathango98
+
+- What: Builds `leaderboards.in-app`, switched on. Home shows a frosted pill under the score with the player's own standing: "You're #N" in the top `in_app_rank_top_n` places (always, even in a small game), else "You're in the top X%" rounded up down to `in_app_percent_cutoff`, else nothing. Same order and tie rule as the main screen. Phones still show no leaderboard and no other player's score. Foundation: two new config keys and `in_app_leaderboard: true`, GAME-085 reworded, SAFE table Score row, feature tree piece text, DEC-073 and DEC-074 (needs Jonathan's approval, ENG-080). Design canvas Home board shows the pill (v99).
+- Why: Next ready piece in the feature tree, due 2026-12-18 (PRD-054). Jonathan chose own standing only, nothing for the bottom half, and turned it on for v1 (DEC-074, PROPOSED until the game director confirms).
+- Rule IDs: GAME-084, GAME-085, DEC-040, DEC-073, DEC-074, SAFE-016, SAFE-028, UI-036, UI-050, AI-013, AI-042, AI-044
+- Status: Done
+- PR: #85
+
+## 2026-11-05 · fix/journal-test-session-label · Claude Opus 5.5 / @jonathango98
+
+- What: The Journal form browser test finds the session radio by its value instead of its label, and checks that exactly one session is picked.
+- Why: In the full two-browser run, staff tests add "Example Session 1 webkitb" to the shared test database, so the label matched two radios and the WebKit run failed.
+- Rule IDs: GAME-036, AI-042
+- Status: Done
+- PR: #84
+
+## 2026-11-04 · feat/journal-notes · Claude Opus 5.5 / @jonathango98
+
+- What: Builds `journal.notes`. New `takeaway` table (migration 0010) and journal service: a player writes a private note for a session an admin has ended, words are counted on the server, and the first note per session earns `points.journal_takeaway` through the points service. Later notes for the same session save with no points. Notes are refused while paused or off. `/journal/new` offers ended sessions with a live word count, `/journal` lists only your own notes. Retention deletes takeaways. Foundation: DEC-072 allows many takeaways per session, removes DATA-023, and rewords GAME-030 (needs Jonathan's approval, ENG-080). Test fixtures now point back at their own database after app start, which also fixes 3 skeleton tests that failed when run alone.
+- Why: Next ready piece in the feature tree, due 2027-01-08 (PRD-054). Jonathan asked for more than one note per session, with points once.
+- Rule IDs: GAME-030, GAME-031, GAME-033, GAME-034, GAME-035, GAME-036, DATA-023, DATA-027, DEC-072, SAFE-007, SAFE-014, SAFE-016, AI-041, AI-042, AI-044
+- Status: Done
+- PR: #83
+
+## 2026-11-04 · feat/feature-tree-no-lines · Claude Opus 5.5 / @jonathango98
+
+- What: The feature tree map on Pages now opens with no piece picked: every piece shows at full strength and no lines are drawn. Picking a piece draws only the lines to what it needs and what it unlocks, as before. Clicking the same piece again, clicking an empty spot on the map, or pressing Esc goes back to the whole tree. Before, the page opened with `points.audit-log` picked and drew every line at once. New test `test_eng_110_map_draws_lines_only_for_the_picked_piece`.
+- Why: Jonathan asked for a default view that shows everything without the lines, and a way to deselect a piece back to it.
+- Rule IDs: ENG-110, AI-042, AI-044
+- Status: Done
+- PR: #82
+
+## 2026-11-04 · fix/55-migration-number-reuse · Claude Opus 5.5 / @jonathango98
+
+- What: Fixes issue #55. `migrate()` in `app/db.py` now reads each recorded migration's name as well as its number. Before applying anything, it checks every recorded number against the file with that number, and stops with a `DatabaseError` naming both files when they differ ("Migration 0002 is recorded as 0002_old.sql but the file is 0002_new.sql. Reset this database or fix the numbering."). Before, the runner skipped the new file without a word. No schema change: `schema_migration.name` already existed. Staging and production are unaffected because their recorded names match. New test `test_eng_050_stops_when_a_recorded_number_has_a_different_file` replays the #49 preview: it failed first with `table old already exists`, and passes now. A recorded number with no file at all is still skipped silently, which the issue does not cover.
+- Why: Picked through `/pick-task`. Issue #55: a renumbered migration on the #49 preview was skipped, so the app could start with a missing table.
+- Rule IDs: DATA-040, ENG-050, AI-042, ENG-101, ENG-108, ENG-109
+- Status: Done
+- PR: #81
+
+## 2026-11-04 · feat/leaderboards-screen · Claude Opus 5.5 / @jonathango98
+
+- What: Builds `leaderboards.screen`. New `app/services/leaderboards.py` ranks players and churches from the point ledger, storing nothing (DATA-030). Player rows read only first name, last initial, and church (GAME-086, GAME-088, SAFE-004), with under-18 players listed like everyone (SAFE-019). Church score is the shrunk average (sum + k x overall average) / (n + k) over active players, k from config (GAME-081, GAME-089). Agreed with @jonathango98 before building: a player is active when their points from anything but joining add up to more than 0, so a fully revoked award doesn't count; churches rank by the exact score, shown rounded half up, and the tie-break (GAME-084) applies only to exact ties. Ties go to the earlier latest award, then the earlier ledger row. A church needs `church_min_players` active players (GAME-082), and each board shows `main_screen_top_n` rows (GAME-083). Any unknown `church_score_denominator` or `tie_break` value stops the app at start. `/screen/players` and `/screen/churches` show the boards, and the off view still replaces them while the game is off (GAME-087). The boards follow the Mix main screen leaderboard mockups (DEC-035): "Player leaderboard" and "Church leaderboard" in a title column on the left, without the mockups' explainer lines (@jonathango98 asked to drop them), and frosted pill rows on the right with a serif rank, a dot in one of the six bloom colors per church, and the score in gold. Rows are one line each with long church names cut off, so a full board fits a 1080p screen (UI-041). Font sizes are multiples of `min_text_px_1080p`, so none falls below it. Every main screen view also gets the mockups' frame: faint bloom streaks and grain on the dark background, white corner marks, and a white serif brand. `points.JOIN_REASON` names the join reason for both services. PR previews add Test Player 3 to 5 in Example Church A and Test Player 6 in Example Church B, with example points given through `points.award` with audit rows (ENG-113, AI-041, AI-047). Test Player 1 and 2 keep only their join points, so other pieces' hand tests are unchanged. Tests: 20 service tests, 9 route tests, and browser tests at 1920x1080 and 360px in Chromium and WebKit, no console errors. The new 1080p browser test uses Playwright's fake clock to turn the screen, because the 15 second rotation timer sometimes doesn't fire in headless browsers. The existing `test_ui_041_main_screen_at_1080p_is_dark_big_and_takes_turns` still waits on the real timer and can hang in WebKit on `main` too.
+- Why: Picked through `/pick-task`. Due 2026-12-18. Unlocks `leaderboards.in-app`.
+- Rule IDs: GAME-081, GAME-082, GAME-083, GAME-084, GAME-086, GAME-087, GAME-088, GAME-089, SAFE-004, SAFE-019, DATA-030, UI-041, UI-043, AI-041, AI-042, AI-044, AI-047, ENG-101, ENG-108, ENG-113
+- Status: Done
+- PR: #80
 
 ## 2026-11-03 · feat/checkin-sessions · Claude Opus 5.5 / @marcjason2012
 

@@ -7,7 +7,7 @@ from app.auth import csrf, screen_key, session
 from app.config import load_config
 from app.db import connect
 from app.main import create_app
-from app.services import main_screen
+from app.services import main_screen, points
 from app.services.game_state import set_state
 from app.services.staff import create_account
 
@@ -16,7 +16,9 @@ FAKE_SESSION_KEY = "test-only-fake-session-key"
 FAKE_SCREEN_KEY = "test-only screen&key/1"
 ADMIN = ("test-admin-1", "test password only 1")
 USHER = ("test-usher-1", "test password only 2")
-SCREEN_CFG = load_config()["main_screen"]
+CONFIG = load_config()
+SCREEN_CFG = CONFIG["main_screen"]
+BOOTH = CONFIG["points"]["booth_visit"]
 PARTIALS = [f"/screen/{view}" for view in main_screen.VIEWS]
 
 
@@ -228,3 +230,79 @@ def test_arch_037_usher_console_never_shows_the_screen_link(client):
     html = client.get("/usher").text
     assert "/screen?k=" not in html
     assert 'id="main-screen"' not in html
+
+
+def _add_player(db_path, n, church, last_name, earned, under_18=False):
+    """Fake player (ENG-047) with join points, plus `earned` points from a booth."""
+    conn = connect(db_path)
+    try:
+        conn.execute("INSERT OR IGNORE INTO church (name) VALUES (?)", (church,))
+        player_id = conn.execute(
+            "INSERT INTO player"
+            " (public_id, first_name, last_name, church_id, is_under_18, pin_hash)"
+            " SELECT ?, ?, ?, id, ?, 'not-a-real-hash' FROM church WHERE name = ?",
+            (f"fake-{n}", f"Test{n}", last_name, int(under_18), church),
+        ).lastrowid
+        points.award_join(
+            conn,
+            player_id=player_id,
+            amount=CONFIG["points"]["join"],
+            while_paused=True,
+        )
+        points.award(
+            conn,
+            player_id=player_id,
+            reason_code="booth_visit",
+            amount=earned,
+            source_type="booth",
+            source_id=1,
+        )
+    finally:
+        conn.close()
+
+
+def test_game_086_player_board_shows_first_name_last_initial_and_church(
+    client, db_path
+):
+    _add_player(db_path, 1, "Example Church A", "Kowalski", 2 * BOOTH, under_18=True)
+    _add_player(db_path, 2, "Example Church B", "Nguyen", BOOTH)
+    html = _get(client, "/screen/players").text
+    # GAME-088: "Sam K." style, highest score first. SAFE-019: the under-18 player is listed.
+    assert html.index("Test1 K.") < html.index("Test2 N.")
+    assert "Example Church A" in html and "Example Church B" in html
+    # SAFE-004: the full last name never reaches the screen.
+    assert "Kowalski" not in html and "Nguyen" not in html
+    assert "Coming soon" not in html
+
+
+def test_game_081_church_board_shows_church_scores(client, db_path):
+    _add_player(db_path, 1, "Example Church A", "Player 1", BOOTH)
+    _add_player(db_path, 2, "Example Church B", "Player 2", 3 * BOOTH)
+    html = _get(client, "/screen/churches").text
+    assert html.index("Example Church B") < html.index("Example Church A")
+    assert "Player 1" not in html and "Test1" not in html
+
+
+@pytest.mark.parametrize("view", ["players", "churches"])
+def test_game_087_empty_board_says_no_points_yet(client, view):
+    html = _get(client, f"/screen/{view}").text
+    assert "No points yet" in html
+    assert "Coming soon" not in html
+
+
+@pytest.mark.parametrize("view", ["players", "churches"])
+def test_game_087_boards_stay_up_while_paused(client, db_path, view):
+    _add_player(db_path, 1, "Example Church A", "Player 1", BOOTH)
+    _set(db_path, "paused")
+    html = _get(client, f"/screen/{view}").text
+    assert _view(html) == view
+    assert "Example Church A" in html
+
+
+@pytest.mark.parametrize("view", ["players", "churches"])
+def test_game_087_boards_never_show_while_off(client, db_path, view):
+    _add_player(db_path, 1, "Example Church A", "Player 1", BOOTH)
+    _set(db_path, "off")
+    html = _get(client, f"/screen/{view}").text
+    assert _view(html) == "offline"
+    assert "Example Church A" not in html and "Test1" not in html

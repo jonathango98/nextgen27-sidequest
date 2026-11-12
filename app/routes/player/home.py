@@ -1,4 +1,4 @@
-"""Home page skeleton (GAME-070, UI-036). No game logic yet."""
+"""Home page: score and blind box progress (GAME-070, UI-036)."""
 
 import sqlite3
 from typing import Annotated
@@ -9,6 +9,7 @@ from app.auth import csrf
 from app.auth.current import CurrentPlayer, get_current_player
 from app.db import get_db
 from app.rendering import templates
+from app.services import blind_boxes, leaderboards
 
 router = APIRouter()
 
@@ -32,11 +33,14 @@ def home(request: Request, player: Player, conn: Db):
     context = {
         "score": player.score,
         "first_name": first_name(conn, player.public_id),
+        # GAME-085, DEC-073: own place or top percent, only if the switch is on.
+        "standing": leaderboards.own_standing(
+            conn, cfg["leaderboard"], player.public_id
+        ),
         "csrf_token": token,
         "journal_points": cfg["points"]["journal_takeaway"],
-        "box_milestone": cfg["blind_box"]["milestone_points"],
-        # Pretend number until home.pages shows the real progress (GAME-070).
-        "box_progress": 0,
+        # GAME-070, GAME-071: points since the last milestone, worked out from score.
+        "box": blind_boxes.progress(player.score, cfg["blind_box"]),
     }
     response = templates.TemplateResponse(request, "player/home.html", context)
     csrf.set_token(response, token)

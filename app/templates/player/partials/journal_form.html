@@ -1,0 +1,29 @@
+{# GAME-030 to GAME-036: write a takeaway for a session that has ended. #}
+<div id="journal-form">
+{% if choices %}
+  <form class="form journal-form" method="post" action="/journal" hx-post="/journal" hx-target="#journal-form" hx-swap="outerHTML" data-journal-form>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <div class="card form-card">
+      {% if error %}{% include "partials/error.html" %}{% endif %}
+      {# UI-053, DEC-062: the text box sits right under the page title, so the title labels it. #}
+      <textarea id="takeaway" name="text" rows="4" placeholder="Write here" aria-labelledby="journal-title journal-prompt" required>{{ text }}</textarea>
+      {# GAME-030, GAME-034: the minimum comes from game-config.yaml. journal.js counts as you type. #}
+      <p class="word-count" aria-live="polite" data-min-words="{{ min_words }}">0 / {{ min_words }} words</p>
+      {# GAME-036: only ended sessions. DEC-072: a session that already paid can take more notes. #}
+      <fieldset class="choice-list">
+        <legend class="form-title">Session</legend>
+        {% for c in choices %}
+          <label class="choice"><input type="radio" name="session" value="{{ c.public_id }}" data-paid="{{ c.paid|int }}" {% if c.public_id == picked %}checked{% endif %} required> {{ c.title }}{% if not c.paid %} <span class="pill">+{{ journal_points }}</span>{% endif %}</label>
+        {% endfor %}
+        <p class="hint">Points come once for each session.</p>
+      </fieldset>
+      {% include "player/partials/visibility_picker.html" %}
+    </div>
+    {# UI-039: Submit with its points pill, hidden when the picked session already paid. #}
+    {% set picked_paid = choices | selectattr("public_id", "equalto", picked) | map(attribute="paid") | first %}
+    <button class="button" type="submit">Submit <span class="pill" data-submit-pill{% if picked_paid %} hidden{% endif %}>+{{ journal_points }}</span></button>
+  </form>
+{% else %}
+  <p class="card">Takeaways open when a session ends. Check back after the next session.</p>
+{% endif %}
+</div>
