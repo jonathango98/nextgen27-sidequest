@@ -21,6 +21,7 @@ from app.services.retention import (
 )
 
 FAKE_PIN_HASH = "not-a-real-hash-zq7"  # fake data (ENG-047), easy to spot in raw bytes
+FAKE_ANSWER = "Example answer zq8"  # fake data (ENG-047), easy to spot in raw bytes
 FAKE_TAKEAWAY = "Example takeaway zq7: listen first and ask more questions in small group this week."
 
 # Columns that hold a player's id, with or without a foreign key (audit_log has none).
@@ -68,6 +69,12 @@ def filled(conn):
     conn.execute(
         "INSERT INTO church_met (player_id, church_id, connection_id) VALUES (?, ?, ?)",
         (players[0], churches[1], connection),
+    )
+    conn.execute(
+        "INSERT INTO icebreaker_answer"
+        " (connection_id, about_player_id, typed_by_player_id, answer_text)"
+        " VALUES (?, ?, ?, ?)",
+        (connection, players[1], players[0], FAKE_ANSWER),
     )
     conn.execute(
         "INSERT INTO point_ledger (player_id, amount, reason_code, source_type, source_id)"
@@ -153,6 +160,7 @@ def test_safe_014_cleanup_deletes_player_data_on_the_date(filled, cfg):
     removed = run(filled, retention_date(cfg), cfg)
     assert removed == {
         "audit_log": 1,
+        "icebreaker_answer": 1,
         "church_met": 1,
         "connection": 1,
         "point_ledger": 1,
@@ -163,6 +171,7 @@ def test_safe_014_cleanup_deletes_player_data_on_the_date(filled, cfg):
     for table in (
         "player",
         "connection",
+        "icebreaker_answer",
         "church_met",
         "point_ledger",
         "takeaway",
@@ -180,6 +189,7 @@ def test_safe_014_deleted_data_is_gone_from_the_raw_files(filled, db_path, cfg):
         b"Player 2",
         b"pub-1",
         FAKE_PIN_HASH.encode(),
+        FAKE_ANSWER.encode(),
         FAKE_TAKEAWAY.encode(),
     )
     assert all(s in _raw_bytes(db_path) for s in secrets)  # the check can see them

@@ -1090,3 +1090,8 @@ h2 {
 .screen-link {
   overflow-wrap: anywhere;
 }
+
+/* GAME-015: a saved answer can be one long word, so it wraps instead of spilling off the side (UI-002). */
+.answer-text {
+  overflow-wrap: anywhere;
+}

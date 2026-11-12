@@ -1,0 +1,17 @@
+{# GAME-015: each player types the answer their new friend gave. SAFE-006: only the two of them see it. #}
+<div id="icebreaker-answer" class="card stack">
+  {% if error_code %}{% include "partials/error.html" %}{% endif %}
+  {% if connection and connection.my_answer %}
+    {# GAME-016: the points were given when this was saved. #}
+    {% if earned %}<p role="status">Saved! You earned {{ earned }} points.</p>{% endif %}
+    <p class="hint">{{ connection.other_first_name }}'s answer</p>
+    <p class="answer-text">{{ connection.my_answer }}</p>
+  {% elif connection %}
+    <form class="form" method="post" action="/connections/{{ connection.id }}/answer" hx-post="/connections/{{ connection.id }}/answer" hx-target="#icebreaker-answer" hx-swap="outerHTML">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <label for="answer">{{ connection.other_first_name }}'s answer</label>
+      <input id="answer" name="answer" type="text" value="{{ answer }}" maxlength="{{ max_chars }}" autocomplete="off" required>
+      <button class="button" type="submit">Save</button>
+    </form>
+  {% endif %}
+</div>

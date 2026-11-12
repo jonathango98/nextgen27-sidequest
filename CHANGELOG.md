@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-04 · feat/connections-answers · Claude Opus 5.5 / @OwenTjandra
+
+- What: Builds `connections.answers`. Migration 0009 adds `icebreaker_answer` (one answer per person per connection, never about yourself, 1 to 200 characters). `POST /connections/{id}/answer` saves the answer the player typed for the other person and pays their points through the points service in the same transaction: `connect_same_church`, or `connect_other_church` plus `connect_new_church_bonus` the first time they meet someone from that church (saved in `church_met`). The icebreaker page shows the form, then the saved answer. Refused outside the pair (404), twice (409 `ALREADY_DONE`), blank or too long (400), and while paused or off (423). The retention cleanup deletes answers too. The hand test uses Test Player 3 at Example Church A from the leaderboards preview seed.
+- Why: Picked by Owen from the feature tree after `connections.meet` (#70). Due 2026-12-04 and unlocks 3 pieces.
+- Rule IDs: GAME-010, GAME-011, GAME-012, GAME-015, GAME-016, GAME-018, GAME-102, GAME-108, SAFE-005, SAFE-006, SAFE-014, DATA-021, DATA-027, DATA-032, API-002, API-005, API-007, API-020, AI-013, AI-041, AI-044, ENG-113, ENG-108
+- Status: Done
+- PR: #79
+
 ## 2026-11-07 · feat/home-pages · Claude Opus 5.5 / @marcjason2012
 
 - What: Builds `home.pages`. A new `app/services/blind_boxes.py` works out boxes earned, the bar's points since the last milestone, and boxes ready to claim from score every time, with every number from `game-config.yaml`. Home's Next box bar shows real progress and says All boxes earned once the player has the max. Open Box says how many boxes are ready, marks each box Ready, Claimed, or its points, and says to go to the game booth when it's open. Opening it saves nothing. Quests counts join and journal awards from the ledger, and quests whose pieces don't pay yet stay at 0. Boxes claimed is always 0 until `blind-box.handout` adds the BoxClaim table (DATA-026), and the Blind boxes ran out switch (GAME-076) is left to `blind-box.close-redemption`. PR previews add Test Player 7 past the first milestone so testers see a Ready box. The claim commit also regenerated `docs/feature-tree.md`.
