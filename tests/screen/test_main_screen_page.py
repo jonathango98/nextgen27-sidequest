@@ -83,6 +83,13 @@ def test_ui_041_main_screen_at_1080p_is_black_big_and_takes_turns(
         context.close()
 
 
+def test_ui_008_main_screen_tab_icon_is_the_k_mark(page: Page, live_server):
+    page.goto(_url(live_server))
+    href = page.locator('link[rel="icon"]').get_attribute("href")
+    assert href.startswith("/static/img/favicon-32.png")
+    assert page.request.get(f"{live_server}{href}").ok
+
+
 def test_ui_002_main_screen_fits_min_width(page: Page, live_server, tmp_path):
     errors = _errors(page)
     page.goto(_url(live_server))

@@ -93,6 +93,14 @@ def test_ui_004_display_font_is_preloaded(page: Page, live_server):
     expect(link).to_have_attribute("crossorigin", "")
 
 
+def test_ui_008_tab_icon_is_the_k_mark(page: Page, live_server):
+    page.goto(f"{live_server}/_test/frame")
+    for rel in ("icon", "apple-touch-icon"):
+        href = page.locator(f'link[rel="{rel}"]').get_attribute("href")
+        assert href.startswith("/static/img/")
+        assert page.request.get(f"{live_server}{href}").ok
+
+
 def _style(page: Page, selector: str, prop: str):
     return page.locator(selector).first.evaluate(f"(el) => getComputedStyle(el).{prop}")
 
