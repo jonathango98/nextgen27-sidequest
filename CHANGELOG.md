@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-12 · feat/kairos-look · Claude Opus 5.5 / @jonathango98
+
+- What: Builds `look.kairos`. Every screen (player, staff, main screen) switches from the Mix look to the Kairos look from the Nextgen 2027 brand kit: white, black and Pear (#C1CC52), flat, a black top bar with the K mark, self-hosted Outfit 1.100 and Inter 4.001 (Latin, trimmed weights, SIL OFL, 58 KB), one halftone texture (42 KB), pill buttons, and lowercase page titles with a period. While the game is paused, every player page turns grayscale (UI-033). The K mark on black is the browser tab and home screen icon. `tokens.css`, `player.css` and `screen.css` rewritten; templates change only the top bar, decoration, and h1 text. DEC-080 replaces the Mix look (DEC-035, DEC-036 grain), rewrites UI-004, UI-006, UI-008, UI-009, ARCH-073, removes UI-007 (church colors), and adds UI-058 (title casing). Old-look tests replaced with Kairos ones.
+- Why: Jonathan chose the Kairos design page on the design canvas over Mix, with brand fonts and brand files in the repo.
+- Rule IDs: DEC-080, UI-001, UI-004, UI-033, UI-006, UI-007, UI-008, UI-009, UI-035, UI-041, UI-042, UI-058, ARCH-073, ENG-087, AI-021, AI-042, AI-044
+- Status: Done
+- PR: #91
+
 ## 2026-11-07 · feat/home-pages · Claude Opus 5.5 / @marcjason2012
 
 - What: Builds `home.pages`. A new `app/services/blind_boxes.py` works out boxes earned, the bar's points since the last milestone, and boxes ready to claim from score every time, with every number from `game-config.yaml`. Home's Next box bar shows real progress and says All boxes earned once the player has the max. Open Box says how many boxes are ready, marks each box Ready, Claimed, or its points, and says to go to the game booth when it's open. Opening it saves nothing. Quests counts join and journal awards from the ledger, and quests whose pieces don't pay yet stay at 0. Boxes claimed is always 0 until `blind-box.handout` adds the BoxClaim table (DATA-026), and the Blind boxes ran out switch (GAME-076) is left to `blind-box.close-redemption`. PR previews add Test Player 7 past the first milestone so testers see a Ready box. The claim commit also regenerated `docs/feature-tree.md`.

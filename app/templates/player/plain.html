@@ -6,8 +6,12 @@
 </head>
 {# For pages before login: no score or bottom bar. API-004: HTMX sends the CSRF token in a header. #}
 <body class="plain" hx-headers='{"X-CSRF-Token": "{{ csrf_token }}"}'>
-  <header class="top-bar viewfinder">
-    <p class="brand">Side Quest</p>
+  {# Staff pages show the role next to the name (UI-008). Admin-only pages set role_label. #}
+  {% set role = role_label or (staff.role | capitalize if staff else none) %}
+  <header class="top-bar">
+    <div class="top-bar-halftone" aria-hidden="true"></div>
+    <p class="brand"><img src="{{ static_url('img/k-mark-white.webp') }}" alt="" height="22">Side Quest</p>
+    {% if role %}<span class="role-pill">{{ role }}</span>{% endif %}
   </header>
   <main class="content">
     {% block content %}{% endblock %}

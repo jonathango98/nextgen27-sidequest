@@ -51,7 +51,7 @@ def _px(page: Page, selector: str, prop: str) -> float:
     return float(value.removesuffix("px"))
 
 
-def test_ui_041_main_screen_at_1080p_is_dark_big_and_takes_turns(
+def test_ui_041_main_screen_at_1080p_is_black_big_and_takes_turns(
     browser: Browser, live_server, tmp_path
 ):
     context = browser.new_context(viewport=HD, ignore_https_errors=True)
@@ -59,12 +59,12 @@ def test_ui_041_main_screen_at_1080p_is_dark_big_and_takes_turns(
     errors = _errors(page)
     try:
         page.goto(_url(live_server))
-        expect(page.get_by_role("heading", name="Player leaderboard")).to_be_visible()
+        expect(page.get_by_role("heading", name="player leaderboard.")).to_be_visible()
         # UI-042: the dark screen background. UI-041: no text below the config size at 1080p.
         background = page.locator("body").evaluate(
             "e => getComputedStyle(e).backgroundColor"
         )
-        assert background == "rgb(14, 16, 21)"  # --color-screen-bg
+        assert background == "rgb(0, 0, 0)"  # --color-screen-bg
         # The first view's body is the note while the board is empty, else its first name.
         body = "#screen-view :is(.screen-note, .screen-name) >> nth=0"
         for selector in (".screen-brand", ".screen-title", body):
@@ -75,7 +75,7 @@ def test_ui_041_main_screen_at_1080p_is_dark_big_and_takes_turns(
         page.screenshot(path=tmp_path / "screen-1080.png")
         # API-031: the next view comes in by itself after one turn.
         turn_ms = (CFG["main_screen"]["rotate_seconds"] + 5) * 1000
-        expect(page.get_by_role("heading", name="Church leaderboard")).to_be_visible(
+        expect(page.get_by_role("heading", name="church leaderboard.")).to_be_visible(
             timeout=turn_ms
         )
         assert errors == []
@@ -83,10 +83,17 @@ def test_ui_041_main_screen_at_1080p_is_dark_big_and_takes_turns(
         context.close()
 
 
+def test_ui_008_main_screen_tab_icon_is_the_k_mark(page: Page, live_server):
+    page.goto(_url(live_server))
+    href = page.locator('link[rel="icon"]').get_attribute("href")
+    assert href.startswith("/static/img/favicon-32.png")
+    assert page.request.get(f"{live_server}{href}").ok
+
+
 def test_ui_002_main_screen_fits_min_width(page: Page, live_server, tmp_path):
     errors = _errors(page)
     page.goto(_url(live_server))
-    expect(page.get_by_role("heading", name="Player leaderboard")).to_be_visible()
+    expect(page.get_by_role("heading", name="player leaderboard.")).to_be_visible()
     width = CFG["ui"]["min_viewport_px"]
     assert page.evaluate("document.documentElement.scrollWidth") <= width
     page.screenshot(path=tmp_path / "screen-360.png", full_page=True)
@@ -96,7 +103,7 @@ def test_ui_002_main_screen_fits_min_width(page: Page, live_server, tmp_path):
 def test_ui_040_off_game_shows_offline(page: Page, live_server, test_db_path, tmp_path):
     _set(test_db_path, "off")
     page.goto(_url(live_server))
-    expect(page.get_by_role("heading", name="Side Quest is offline")).to_be_visible()
+    expect(page.get_by_role("heading", name="Side Quest is offline.")).to_be_visible()
     page.screenshot(path=tmp_path / "screen-off.png", full_page=True)
 
 
@@ -178,7 +185,7 @@ def _fill_boards(test_db_path):
         conn.close()
 
 
-@pytest.mark.parametrize("view", ["Player leaderboard", "Church leaderboard"])
+@pytest.mark.parametrize("view", ["player leaderboard.", "church leaderboard."])
 def test_game_083_full_board_fits_a_1080p_screen(
     browser: Browser, live_server, test_db_path, tmp_path, view
 ):
@@ -190,8 +197,8 @@ def test_game_083_full_board_fits_a_1080p_screen(
         # A fake clock moves the screen on a turn, instead of waiting on a real timer (API-031).
         page.clock.install()
         page.goto(_url(live_server))
-        expect(page.get_by_role("heading", name="Player leaderboard")).to_be_visible()
-        if view == "Church leaderboard":
+        expect(page.get_by_role("heading", name="player leaderboard.")).to_be_visible()
+        if view == "church leaderboard.":
             page.clock.run_for(CFG["main_screen"]["rotate_seconds"] * 1000)
         expect(page.get_by_role("heading", name=view)).to_be_visible()
         rows = page.locator(".screen-row")
@@ -203,7 +210,7 @@ def test_game_083_full_board_fits_a_1080p_screen(
                 box["y"] + box["height"] <= HD["height"]
             )  # the whole board fits on screen
         cells = [".screen-rank", ".screen-name", ".screen-score"]
-        if view == "Player leaderboard":
+        if view == "player leaderboard.":
             cells.append(".screen-church")
         for selector in cells:
             assert (
@@ -224,7 +231,7 @@ def test_game_086_player_board_fits_min_width(
     _fill_boards(test_db_path)
     errors = _errors(page)
     page.goto(_url(live_server))
-    expect(page.get_by_role("heading", name="Player leaderboard")).to_be_visible()
+    expect(page.get_by_role("heading", name="player leaderboard.")).to_be_visible()
     expect(page.locator(".screen-row").first).to_be_visible()
     # SAFE-004, GAME-088: first name and last initial only.
     expect(page.get_by_text("Test Board P.").first).to_be_visible()
@@ -232,3 +239,46 @@ def test_game_086_player_board_fits_min_width(
     assert page.evaluate("document.documentElement.scrollWidth") <= width
     page.screenshot(path=tmp_path / "board-360.png", full_page=True)
     assert errors == []
+
+
+def test_ui_008_main_screen_is_flat_kairos(browser: Browser, live_server, test_db_path):
+    # UI-008, DEC-080: Pear score and first place, Outfit titles, no glass, no shadows, no corner marks.
+    _fill_boards(test_db_path)
+    context = browser.new_context(viewport=HD, ignore_https_errors=True)
+    page = context.new_page()
+    errors = _errors(page)
+    try:
+        page.goto(_url(live_server))
+        expect(page.get_by_role("heading", name="player leaderboard.")).to_be_visible()
+        expect(page.locator(".screen-frame")).to_have_count(0)
+        row = page.locator(".screen-row").first
+        assert row.evaluate("e => getComputedStyle(e).boxShadow") == "none"
+        assert row.evaluate("e => getComputedStyle(e).backdropFilter") == "none"
+        accent = page.evaluate(
+            "getComputedStyle(document.documentElement)"
+            ".getPropertyValue('--color-screen-accent').trim()"
+        )
+        pear = _to_rgb(accent)
+        assert (
+            row.locator(".screen-score").evaluate("e => getComputedStyle(e).color")
+            == pear
+        )
+        assert (
+            row.locator(".screen-rank").evaluate(
+                "e => getComputedStyle(e).backgroundColor"
+            )
+            == pear
+        )
+        title_font = page.locator(".screen-title").evaluate(
+            "e => getComputedStyle(e).fontFamily"
+        )
+        assert "Outfit" in title_font
+        expect(page.locator("img.screen-kmark")).to_have_attribute("alt", "")
+        assert errors == []
+    finally:
+        context.close()
+
+
+def _to_rgb(hex_color: str) -> str:
+    h = hex_color.lstrip("#")
+    return "rgb({}, {}, {})".format(*(int(h[i : i + 2], 16) for i in (0, 2, 4)))

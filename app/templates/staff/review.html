@@ -1,10 +1,12 @@
 {% extends "player/plain.html" %}
 
+{% set role_label = "Admin" %}
+
 {% block title %}Review · Side Quest{% endblock %}
 
 {% block content %}
   <div class="stack">
-    <h1>Review</h1>
+    <h1>review.</h1>
     {# SAFE-007: shared notes wait here before players can read them. Never private notes (SAFE-029). #}
     <p class="hint">Shared notes show on All journals only after you approve them.</p>
     {# SAFE-042: the app only shows who wrote it. Follow-up happens in person. #}

@@ -1,7 +1,6 @@
-/* The main screen (UI-040 to UI-043). Dark screen tokens, read from the back of a ballroom. */
+/* The main screen (UI-040 to UI-043), the Kairos hall look (UI-008, DEC-080): black ground, white text,
+   one Pear accent, flat. Read from the back of a ballroom. */
 
-/* With a background here, the dark color stays inside the body's layer below, so the grain can
-   blend with it. */
 html {
   background: var(--color-screen-bg);
 }
@@ -12,97 +11,75 @@ html {
   --screen-unit: calc(min(100vh, 100vw * 9 / 16) / 1080);
   --screen-text: calc(var(--screen-text-min) * var(--screen-unit));
   position: relative;
-  isolation: isolate; /* keeps the background layers below behind the page, above the dark */
+  isolation: isolate; /* keeps the halftone blob behind the page, above the black */
   margin: 0;
   min-height: 100vh;
   box-sizing: border-box;
-  padding: calc(var(--screen-pad-y) * var(--screen-unit))
-    calc(var(--screen-pad-x) * var(--screen-unit));
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
   background: var(--color-screen-bg); /* UI-042 */
   color: var(--color-screen-text);
   font-family: var(--font-family);
   font-size: var(--screen-text);
-  text-align: center;
+  overflow-x: hidden;
 }
 
-/* Mix main screen mockups: faint bloom streaks, then film grain, as on the phone (UI-008), but
-   dimmed for the dark screen. Decoration only, and nothing is downloaded. */
-.screen::before,
-.screen::after {
+/* Brand halftone blob in the bottom left corner. Decoration only, nothing is downloaded twice. */
+.screen::before {
   content: "";
   position: fixed;
-  inset: 0;
   z-index: -1;
+  left: calc(var(--screen-blob-offset-x) * var(--screen-unit));
+  bottom: calc(var(--screen-blob-offset-y) * var(--screen-unit));
+  width: calc(var(--screen-blob-width) * var(--screen-unit));
+  height: calc(var(--screen-blob-width) * var(--screen-unit) / var(--screen-blob-ratio));
+  transform: rotate(var(--screen-blob-tilt));
+  background-color: var(--color-screen-accent);
+  opacity: var(--screen-blob-opacity);
+  -webkit-mask-image: var(--halftone);
+  mask-image: var(--halftone);
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
   pointer-events: none;
 }
 
-.screen::before {
-  inset: var(--bloom-overhang);
-  background: var(--bloom-streaks);
-  transform: rotate(var(--bloom-angle));
-  opacity: var(--screen-bloom-opacity);
+/* The top bar: K mark on the left, "Side Quest" on the right, a hairline underneath. */
+.screen-header {
+  flex-shrink: 0;
+  box-sizing: border-box;
+  height: calc(var(--screen-header-height) * var(--screen-unit));
+  padding: 0 calc(var(--screen-header-pad-x) * var(--screen-unit));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: calc(var(--screen-hairline-width) * var(--screen-unit)) solid var(--color-screen-hairline);
 }
 
-.screen::after {
-  background: var(--grain);
-  opacity: var(--screen-grain-opacity);
-  mix-blend-mode: overlay;
-}
-
-/* White corner marks */
-.screen-frame span {
-  position: fixed;
-  width: calc(var(--screen-frame-size) * var(--screen-unit));
-  height: calc(var(--screen-frame-size) * var(--screen-unit));
-  border: 0 solid var(--color-screen-text);
-  --screen-frame-edge: calc(var(--screen-frame-inset) * var(--screen-unit));
-  --screen-frame-width: calc(var(--screen-frame-line) * var(--screen-unit));
-}
-
-.screen-frame span:nth-child(1) {
-  top: var(--screen-frame-edge);
-  left: var(--screen-frame-edge);
-  border-top-width: var(--screen-frame-width);
-  border-left-width: var(--screen-frame-width);
-}
-
-.screen-frame span:nth-child(2) {
-  top: var(--screen-frame-edge);
-  right: var(--screen-frame-edge);
-  border-top-width: var(--screen-frame-width);
-  border-right-width: var(--screen-frame-width);
-}
-
-.screen-frame span:nth-child(3) {
-  bottom: var(--screen-frame-edge);
-  left: var(--screen-frame-edge);
-  border-bottom-width: var(--screen-frame-width);
-  border-left-width: var(--screen-frame-width);
-}
-
-.screen-frame span:nth-child(4) {
-  bottom: var(--screen-frame-edge);
-  right: var(--screen-frame-edge);
-  border-bottom-width: var(--screen-frame-width);
-  border-right-width: var(--screen-frame-width);
+.screen-kmark {
+  height: calc(var(--screen-kmark-height) * var(--screen-unit));
+  width: auto;
 }
 
 .screen-brand {
   margin: 0;
   font-family: var(--font-family-display);
   font-size: calc(var(--screen-text) * var(--screen-scale-brand));
+  font-weight: 600;
 }
 
 .screen-view {
-  width: 100%;
+  flex: 1;
+  min-height: 0;
+  box-sizing: border-box;
+  padding: calc(var(--screen-pad-y) * var(--screen-unit)) calc(var(--screen-pad-x) * var(--screen-unit));
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: var(--screen-text);
+  text-align: center;
   /* UI-043: each new view fades in slowly, so people can read it. */
   transition: opacity 1s ease;
 }
@@ -115,10 +92,11 @@ html {
 .screen-title {
   margin: 0;
   font-family: var(--font-family-display);
-  font-size: calc(var(--screen-text) * 2);
-  font-weight: 400;
-  line-height: 1.1;
-  overflow-wrap: anywhere;
+  font-size: calc(var(--screen-text) * var(--screen-scale-title));
+  font-weight: var(--font-weight-title);
+  letter-spacing: var(--title-tracking);
+  line-height: 0.95;
+  overflow-wrap: break-word;
 }
 
 .screen-note {
@@ -126,13 +104,12 @@ html {
   color: var(--color-screen-muted);
 }
 
-/* Leaderboards (GAME-083), from the Mix main screen leaderboard mockups: the title column on the
-   left, then one frosted row per player or church. */
+/* Leaderboards (GAME-083): the title column on the left, then one hairline-divided row per player
+   or church. */
 .screen-view-board {
-  flex: 1;
-  align-self: stretch;
   flex-direction: row;
   align-items: stretch;
+  justify-content: flex-start;
   gap: calc(var(--screen-column-gap) * var(--screen-unit));
   text-align: left;
 }
@@ -142,12 +119,7 @@ html {
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-}
-
-.screen-view-board .screen-title {
-  font-size: calc(var(--screen-text) * var(--screen-scale-title));
-  line-height: 1;
+  justify-content: center;
 }
 
 .screen-board {
@@ -175,32 +147,43 @@ html {
     calc(var(--screen-row-min) * var(--screen-unit))
   );
   box-sizing: border-box;
-  padding: 0 calc(var(--screen-row-pad) * var(--screen-unit));
   display: flex;
   align-items: center;
   gap: calc(var(--screen-cell-gap) * var(--screen-unit));
-  border-radius: var(--radius-pill);
-  background: var(--color-screen-glass);
-  -webkit-backdrop-filter: var(--screen-glass-filter);
-  backdrop-filter: var(--screen-glass-filter);
-  box-shadow: var(--shadow-screen-glass);
+  border-top: calc(var(--screen-hairline-width) * var(--screen-unit)) solid var(--color-screen-hairline);
+}
+
+.screen-row:first-child {
+  border-top: 0;
 }
 
 .screen-rank,
 .screen-score {
   flex-shrink: 0;
   font-family: var(--font-family-display);
+  font-weight: var(--font-weight-title);
   font-variant-numeric: tabular-nums;
 }
 
+/* First place: a Pear pill with black text. */
 .screen-rank {
   width: calc(var(--screen-rank-width) * var(--screen-unit));
+  height: calc(var(--screen-rank-height) * var(--screen-unit));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-pill);
   font-size: calc(var(--screen-text) * var(--screen-scale-rank));
+}
+
+.screen-row:first-child .screen-rank {
+  background: var(--color-screen-accent);
+  color: var(--color-on-accent);
 }
 
 .screen-score {
   font-size: calc(var(--screen-text) * var(--screen-scale-score));
-  color: var(--color-screen-gold);
+  color: var(--color-screen-accent);
 }
 
 /* One line each, and a long church name is cut off, so no row can push the board off screen. */
@@ -216,6 +199,7 @@ html {
 
 .screen-name {
   flex-shrink: 0;
+  font-family: var(--font-family-display);
   font-size: calc(var(--screen-text) * var(--screen-scale-name));
   font-weight: 600;
   line-height: 1.1;
@@ -229,7 +213,6 @@ html {
   min-width: 0;
   display: flex;
   align-items: center;
-  gap: calc(var(--screen-dot) * var(--screen-unit) / 2);
   line-height: 1.1;
   color: var(--color-screen-muted);
 }
@@ -238,37 +221,6 @@ html {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.screen-dot {
-  width: calc(var(--screen-dot) * var(--screen-unit));
-  height: calc(var(--screen-dot) * var(--screen-unit));
-  flex-shrink: 0;
-  border-radius: 50%;
-}
-
-.screen-dot-0 {
-  background: var(--color-bloom-marigold);
-}
-
-.screen-dot-1 {
-  background: var(--color-bloom-orange);
-}
-
-.screen-dot-2 {
-  background: var(--color-bloom-magenta);
-}
-
-.screen-dot-3 {
-  background: var(--color-bloom-pink);
-}
-
-.screen-dot-4 {
-  background: var(--color-bloom-leaf);
-}
-
-.screen-dot-5 {
-  background: var(--color-bloom-sky);
 }
 
 @media (prefers-reduced-motion: reduce) {

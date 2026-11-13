@@ -2,8 +2,8 @@
 #
 # Status: Active
 # Owner: Jonathan (@jonathango98)
-# Version: 2.3.0
-# Last updated: 2026-11-05
+# Version: 2.4.0
+# Last updated: 2026-11-12
 # Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 #
 # How to read this file (rules in 16-feature-tree.md, ENG-105 to ENG-112)
@@ -58,7 +58,7 @@ features:
     milestone: Core build
     due: "2026-12-04"
   - id: look
-    name: Mix look on player screens
+    name: Brand look on every screen
     milestone: January build
     due: "2026-11-27"
   - id: home
@@ -327,7 +327,7 @@ pieces:
     rules: [WRAP-012, GAME-019]
     learn: how a fixed list of choices keeps data clean enough to match
 
-  # Mix look on player screens
+  # Brand look on every screen
   - id: look.base
     feature: look
     what: The frame around every player screen in the chosen design, with the score bar on top, the buttons at the bottom, and a glowing, grainy background. Also building blocks like buttons, cards and progress bars, ready for every screen to reuse.
@@ -359,6 +359,26 @@ pieces:
     safety_review: false
     rules: [UI-036, DEC-037, UI-037, UI-038]
     learn: how to turn a mockup into a page at 360px
+  - id: look.kairos
+    feature: look
+    what: Every screen switches from the Mix look to the Kairos look from the 2027 brand kit. White pages with black text and one bright green-yellow color (Pear) for points, the current tab, and progress. A black top bar with the K logo, the brand fonts, pill-shaped buttons, and page titles in lowercase with a period. The main screen turns black with Pear points.
+    try_it:
+      - On a phone, open Join, Log in, Home, My Code, Quests, the Journal list and form, and Open Box as Test Player 1. Each should have the black top bar with the K logo and match the Kairos design page, with nothing spilling off the side.
+      - On Home, the score should sit on a Pear panel, Meet friends should be the only black button, and the current tab at the bottom should have a Pear pill.
+      - Page titles should be lowercase and end with a period, like "quests.".
+      - Log in as test-admin-1 and test-usher-1. The consoles should have the same black top bar and pill buttons.
+      - Open the main screen link from the admin console on a laptop or TV. It should be black with white text and Pear points, readable from across the room.
+      - Pause the game as test-admin-1. Every player page on the phone should turn gray, while the admin console and the main screen keep their color.
+      - Turn on slow 3G in the browser's developer tools and reload Join. Text should show right away and switch to the brand font when it arrives.
+      - Check the browser console on each page. There should be no red errors.
+    needs: [look.screens, screen.main]
+    open: []
+    area: design
+    size: L
+    level: easy
+    safety_review: false
+    rules: [UI-001, UI-004, UI-006, UI-008, UI-009, UI-058, DEC-080, ARCH-073]
+    learn: how design tokens let one CSS file change the look of every screen
 
   # Home and Quests pages
   - id: home.pages

@@ -5,7 +5,7 @@
 
 Every planned piece of work and what it needs first (ENG-105 to ENG-108), grouped by the week it is due (PRD-054). Pieces flow left to right in time: finishing one unlocks the pieces it points to. Run `/pick-task` to claim one.
 
-**Working** 31 · **In progress** 0 · **Ready** 10 · **Waiting** 9 · **Needs decision** 0
+**Working** 32 · **In progress** 0 · **Ready** 10 · **Waiting** 9 · **Needs decision** 0
 
 Colors: green Working, blue In progress, gold Ready, gray Waiting, red dashed Needs decision.
 
@@ -27,11 +27,13 @@ flowchart LR
     points_score["points.score<br/>M · medium"]
   end
   subgraph w_2026_11_27 ["Due Fri Nov 27"]
+    game_state_controls["game-state.controls<br/>M · medium"]
     look_base["look.base<br/>L · easy"]
     look_screens["look.screens<br/>L · easy"]
+    look_kairos["look.kairos<br/>L · easy"]
+    screen_main["screen.main<br/>L · medium"]
   end
   subgraph w_2026_12_04 ["Due Fri Dec 4"]
-    game_state_controls["game-state.controls<br/>M · medium"]
     game_state_auto_pause["game-state.auto-pause<br/>M · medium"]
     connections_table["connections.table<br/>S · medium"]
     connections_scanner_camera["connections.scanner-camera<br/>M · medium"]
@@ -49,7 +51,6 @@ flowchart LR
     admin_award_revoke["admin.award-revoke<br/>M · hard"]
     admin_setup["admin.setup<br/>M · medium"]
     admin_audit_view["admin.audit-view<br/>M · medium"]
-    screen_main["screen.main<br/>L · medium"]
   end
   subgraph w_2026_12_18 ["Due Fri Dec 18"]
     explore_booths["explore.booths<br/>L · medium"]
@@ -99,6 +100,8 @@ flowchart LR
   connections_answers --> connections_verse_picker
   screens_skeleton --> look_base
   look_base --> look_screens
+  look_screens --> look_kairos
+  screen_main --> look_kairos
   points_ledger --> home_pages
   staff_login --> checkin_sessions
   points_audit_log --> checkin_sessions
@@ -174,7 +177,7 @@ flowchart LR
   classDef ready fill:#fff4d6,stroke:#a87400,stroke-width:3px,color:#14151a
   classDef waiting fill:#f1f0eb,stroke:#c3c0b6,color:#545a66
   classDef decision fill:#fdeeec,stroke:#b42318,stroke-dasharray:4 3,color:#14151a
-  class app_foundation,auth_join_login,checkin_sessions,code_my_code,connections_meet,connections_scanner_camera,connections_table,game_state_auto_pause,game_state_controls,game_state_core,home_pages,infra_hosting,journal_notes,journal_share_review,leaderboards_in_app,leaderboards_screen,look_base,look_screens,points_audit_log,points_ledger,points_score,ready_backups,ready_load_test,ready_logout,ready_rate_limits,ready_retention,screen_main,screens_skeleton,staff_accounts,staff_login,usher_console working
+  class app_foundation,auth_join_login,checkin_sessions,code_my_code,connections_meet,connections_scanner_camera,connections_table,game_state_auto_pause,game_state_controls,game_state_core,home_pages,infra_hosting,journal_notes,journal_share_review,leaderboards_in_app,leaderboards_screen,look_base,look_kairos,look_screens,points_audit_log,points_ledger,points_score,ready_backups,ready_load_test,ready_logout,ready_rate_limits,ready_retention,screen_main,screens_skeleton,staff_accounts,staff_login,usher_console working
   class admin_audit_view,admin_players,admin_setup,blind_box_handout,checkin_window,connections_answers,explore_booths,photobooth_points,photobooth_screen,wrapped_cards ready
   class admin_award_revoke,blind_box_close_redemption,checkin_hall,connections_verse_picker,explore_items,recap_screen,wrapped_collection,wrapped_save_image,wrapped_stat_cards waiting
 ```

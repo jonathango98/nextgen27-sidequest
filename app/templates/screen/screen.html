@@ -4,7 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex">
-  {# The main screen has its own styles, not player.css: dark tokens, big text (UI-041, UI-042). #}
+  {# The main screen has its own styles, not player.css: black screen tokens, big text (UI-041, UI-042). #}
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ static_url('img/favicon-32.png') }}">
+  <link rel="preload" href="/static/fonts/outfit-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="{{ static_url('css/tokens.css') }}">
   <link rel="stylesheet" href="{{ static_url('css/screen.css') }}">
   {# API-006 (htmx 2.0.11): the same settings as player pages. A 5xx is never swapped in, so the
@@ -15,8 +17,11 @@
 </head>
 {# UI-041: the smallest text and row sizes from game-config.yaml, in pixels at 1920x1080. #}
 <body class="screen" style="--screen-text-min: {{ min_text }}; --screen-row-min: {{ min_row }}">
-  {# Mix main screen mockups: white corner marks. Decoration only. #}
-  <div class="screen-frame" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+  {# The Kairos top bar: K mark and brand. Decoration, so the mark has no alt text. #}
+  <header class="screen-header">
+    <img class="screen-kmark" src="{{ static_url('img/k-mark-white.webp') }}" alt="">
+    <p class="screen-brand">Side Quest</p>
+  </header>
   {% include "screen/partials/view.html" %}
 </body>
 </html>

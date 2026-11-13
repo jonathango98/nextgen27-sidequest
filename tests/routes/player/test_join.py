@@ -259,7 +259,9 @@ def test_safe_021_pin_never_sent_back(client, details, fake_pin):
     data = {"step": "pin", **details, "pin": fake_pin, "pin_again": fake_pin[:-1]}
     responses = [_post(client, data, htmx=True), _post(client, data)]
     for response in responses:
-        assert fake_pin not in response.text
+        # Static file fingerprints (?v=...) are hex and can hold any four digits by chance.
+        page = re.sub(r"\?v=\w+", "", response.text)
+        assert fake_pin not in page
 
 
 @pytest.mark.parametrize("step", ["details", "pin"])
