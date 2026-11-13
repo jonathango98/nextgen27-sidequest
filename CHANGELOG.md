@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-12 · feat/kairos-look · Claude Opus 5.5 / @jonathango98
+
+- What: Started. Switches every screen (player, staff, main screen) from the Mix look to the Kairos look from the Nextgen 2027 brand kit: white, black and Pear, self-hosted Outfit and Inter, the K mark, a halftone texture, and lowercase titles with a period.
+- Why: Jonathan chose the Kairos design page on the design canvas over Mix.
+- Rule IDs: UI-001, UI-004, UI-006, UI-007, UI-008, UI-009, DEC-035, ENG-087, AI-021, AI-044
+- Status: Started
+- PR: draft
+
 ## 2026-11-07 · feat/home-pages · Claude Opus 5.5 / @marcjason2012
 
 - What: Builds `home.pages`. A new `app/services/blind_boxes.py` works out boxes earned, the bar's points since the last milestone, and boxes ready to claim from score every time, with every number from `game-config.yaml`. Home's Next box bar shows real progress and says All boxes earned once the player has the max. Open Box says how many boxes are ready, marks each box Ready, Claimed, or its points, and says to go to the game booth when it's open. Opening it saves nothing. Quests counts join and journal awards from the ledger, and quests whose pieces don't pay yet stay at 0. Boxes claimed is always 0 until `blind-box.handout` adds the BoxClaim table (DATA-026), and the Blind boxes ran out switch (GAME-076) is left to `blind-box.close-redemption`. PR previews add Test Player 7 past the first milestone so testers see a Ready box. The claim commit also regenerated `docs/feature-tree.md`.
