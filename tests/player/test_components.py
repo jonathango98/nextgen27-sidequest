@@ -121,3 +121,13 @@ def test_ui_002_components_page_fits_and_has_no_errors(page: Page, live_server):
     width = page.evaluate("document.documentElement.scrollWidth")
     assert width <= load_config()["ui"]["min_viewport_px"]
     assert problems == []
+
+
+def test_ui_033_paused_page_is_grayscale(page: Page, live_server):
+    page.goto(f"{live_server}{PAGE}")
+    root = page.locator("html")
+    assert _style(root, "filter") == "none"
+    page.evaluate("() => document.body.classList.add('paused')")
+    assert _style(root, "filter") == "grayscale(1)"
+    # On the root only, so the sticky bottom bar keeps working (no filter on body).
+    assert _style(page.locator("body"), "filter") == "none"

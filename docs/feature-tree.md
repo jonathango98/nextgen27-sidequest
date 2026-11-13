@@ -5,7 +5,7 @@
 
 Every planned piece of work and what it needs first (ENG-105 to ENG-108), grouped by the week it is due (PRD-054). Pieces flow left to right in time: finishing one unlocks the pieces it points to. Run `/pick-task` to claim one.
 
-**Working** 31 · **In progress** 1 · **Ready** 10 · **Waiting** 9 · **Needs decision** 0
+**Working** 32 · **In progress** 0 · **Ready** 10 · **Waiting** 9 · **Needs decision** 0
 
 Colors: green Working, blue In progress, gold Ready, gray Waiting, red dashed Needs decision.
 
@@ -177,8 +177,7 @@ flowchart LR
   classDef ready fill:#fff4d6,stroke:#a87400,stroke-width:3px,color:#14151a
   classDef waiting fill:#f1f0eb,stroke:#c3c0b6,color:#545a66
   classDef decision fill:#fdeeec,stroke:#b42318,stroke-dasharray:4 3,color:#14151a
-  class app_foundation,auth_join_login,checkin_sessions,code_my_code,connections_meet,connections_scanner_camera,connections_table,game_state_auto_pause,game_state_controls,game_state_core,home_pages,infra_hosting,journal_notes,journal_share_review,leaderboards_in_app,leaderboards_screen,look_base,look_screens,points_audit_log,points_ledger,points_score,ready_backups,ready_load_test,ready_logout,ready_rate_limits,ready_retention,screen_main,screens_skeleton,staff_accounts,staff_login,usher_console working
-  class look_kairos in_progress
+  class app_foundation,auth_join_login,checkin_sessions,code_my_code,connections_meet,connections_scanner_camera,connections_table,game_state_auto_pause,game_state_controls,game_state_core,home_pages,infra_hosting,journal_notes,journal_share_review,leaderboards_in_app,leaderboards_screen,look_base,look_kairos,look_screens,points_audit_log,points_ledger,points_score,ready_backups,ready_load_test,ready_logout,ready_rate_limits,ready_retention,screen_main,screens_skeleton,staff_accounts,staff_login,usher_console working
   class admin_audit_view,admin_players,admin_setup,blind_box_handout,checkin_window,connections_answers,explore_booths,photobooth_points,photobooth_screen,wrapped_cards ready
   class admin_award_revoke,blind_box_close_redemption,checkin_hall,connections_verse_picker,explore_items,recap_screen,wrapped_collection,wrapped_save_image,wrapped_stat_cards waiting
 ```
@@ -252,7 +251,7 @@ flowchart LR
 
 ## In progress
 
-- `look.kairos`: Every screen switches from the Mix look to the Kairos look from the 2027 brand kit. White pages with black text and one bright green-yellow color (Pear) for points, the current tab, and progress. A black top bar with the K logo, the brand fonts, pill-shaped buttons, and page titles in lowercase with a period. The main screen turns black with Pear points.
+- None
 
 ## Needs a decision
 

@@ -368,6 +368,7 @@ pieces:
       - Page titles should be lowercase and end with a period, like "quests.".
       - Log in as test-admin-1 and test-usher-1. The consoles should have the same black top bar and pill buttons.
       - Open the main screen link from the admin console on a laptop or TV. It should be black with white text and Pear points, readable from across the room.
+      - Pause the game as test-admin-1. Every player page on the phone should turn gray, while the admin console and the main screen keep their color.
       - Turn on slow 3G in the browser's developer tools and reload Join. Text should show right away and switch to the brand font when it arrives.
       - Check the browser console on each page. There should be no red errors.
     needs: [look.screens, screen.main]

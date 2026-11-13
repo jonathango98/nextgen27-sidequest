@@ -22,9 +22,9 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-11-12 · feat/kairos-look · Claude Opus 5.5 / @jonathango98
 
-- What: Builds `look.kairos`. Every screen (player, staff, main screen) switches from the Mix look to the Kairos look from the Nextgen 2027 brand kit: white, black and Pear (#C1CC52), flat, a black top bar with the K mark, self-hosted Outfit 1.100 and Inter 4.001 (Latin, trimmed weights, SIL OFL, 58 KB), one halftone texture (42 KB), pill buttons, and lowercase page titles with a period. `tokens.css`, `player.css` and `screen.css` rewritten; templates change only the top bar, decoration, and h1 text. DEC-080 replaces the Mix look (DEC-035, DEC-036 grain), rewrites UI-004, UI-006, UI-008, UI-009, ARCH-073, removes UI-007 (church colors), and adds UI-058 (title casing). Old-look tests replaced with Kairos ones.
+- What: Builds `look.kairos`. Every screen (player, staff, main screen) switches from the Mix look to the Kairos look from the Nextgen 2027 brand kit: white, black and Pear (#C1CC52), flat, a black top bar with the K mark, self-hosted Outfit 1.100 and Inter 4.001 (Latin, trimmed weights, SIL OFL, 58 KB), one halftone texture (42 KB), pill buttons, and lowercase page titles with a period. While the game is paused, every player page turns grayscale (UI-033). `tokens.css`, `player.css` and `screen.css` rewritten; templates change only the top bar, decoration, and h1 text. DEC-080 replaces the Mix look (DEC-035, DEC-036 grain), rewrites UI-004, UI-006, UI-008, UI-009, ARCH-073, removes UI-007 (church colors), and adds UI-058 (title casing). Old-look tests replaced with Kairos ones.
 - Why: Jonathan chose the Kairos design page on the design canvas over Mix, with brand fonts and brand files in the repo.
-- Rule IDs: DEC-080, UI-001, UI-004, UI-006, UI-007, UI-008, UI-009, UI-035, UI-041, UI-042, UI-058, ARCH-073, ENG-087, AI-021, AI-042, AI-044
+- Rule IDs: DEC-080, UI-001, UI-004, UI-033, UI-006, UI-007, UI-008, UI-009, UI-035, UI-041, UI-042, UI-058, ARCH-073, ENG-087, AI-021, AI-042, AI-044
 - Status: Done
 - PR: #91
 

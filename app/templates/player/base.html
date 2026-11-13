@@ -4,7 +4,7 @@
   {% include "player/head.html" %}
   <title>{% block title %}Side Quest{% endblock %}</title>
 </head>
-{# UI-033: the paused look stays white and calm, with a black note under the top bar (UI-008). #}
+{# UI-033: while paused, the whole page turns grayscale (player.css), with a black note under the top bar. #}
 <body{% if game_state() == "paused" %} class="paused"{% endif %}>
   {# UI-030: same frame on every player page. Child pages set `tab` to mark the current tab. #}
   <header class="top-bar">

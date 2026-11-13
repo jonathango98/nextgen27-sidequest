@@ -95,6 +95,7 @@
   --logo-height: 22px;
 
   /* Player pages: add tokens here (UI-001) */
+  --paused-filter: grayscale(1); /* UI-033: every player page while the game is paused */
   --font-size-pin: 24px;
   --pin-spacing: 0.4em;
   --font-size-points-label: 22px;
