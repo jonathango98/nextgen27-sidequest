@@ -9,22 +9,51 @@ def _style(locator, prop):
     return locator.evaluate(f"(el) => getComputedStyle(el).{prop}")
 
 
-def test_ui_035_one_main_button_and_the_rest_frosted(page: Page, live_server):
+def _token_px(page: Page, name: str) -> float:
+    value = page.evaluate(
+        "(name) => getComputedStyle(document.documentElement).getPropertyValue(name)",
+        name,
+    )
+    return float(value.strip().removesuffix("px"))
+
+
+def test_ui_035_one_main_button_and_the_rest_outlined(page: Page, live_server):
     page.goto(f"{live_server}{PAGE}")
     main = page.locator(".button:not(.button-secondary)")
     expect(main).to_have_count(1)
-    assert "gradient" in _style(main, "backgroundImage")
+    assert _style(main, "backgroundColor") == "rgb(0, 0, 0)"
+    assert _style(main, "color") == "rgb(255, 255, 255)"
+    assert _style(main, "backgroundImage") == "none"
     secondary = page.locator(".button-secondary")
     for i in range(secondary.count()):
         button = secondary.nth(i)
+        assert _style(button, "backgroundColor") == "rgb(255, 255, 255)"
+        # 1.5px, which a 1x screen draws as 1px
+        assert float(_style(button, "borderTopWidth").removesuffix("px")) >= 1
+        assert _style(button, "borderTopColor") == "rgb(0, 0, 0)"
         assert _style(button, "backgroundImage") == "none"
-        # Frosted glass: see-through white with a blur behind it (07 section 3).
-        assert _style(button, "backgroundColor").startswith("rgba(255, 255, 255")
-        blur = button.evaluate(
-            "(el) => { const s = getComputedStyle(el);"
-            " return s.backdropFilter || s.webkitBackdropFilter; }"
-        )
-        assert "blur" in blur
+
+
+def test_ui_008_nothing_is_glass_or_shadowed(page: Page, live_server):
+    page.goto(f"{live_server}{PAGE}")
+    flat = page.evaluate(
+        """() => [...document.querySelectorAll('*')].filter((el) => {
+            const s = getComputedStyle(el);
+            return (s.boxShadow !== 'none' && !el.closest('.top-bar'))
+                || (s.backdropFilter && s.backdropFilter !== 'none')
+                || s.backgroundImage.includes('gradient');
+        }).map((el) => el.tagName)"""
+    )
+    assert flat == []
+
+
+def test_ui_008_every_button_is_a_pill(page: Page, live_server):
+    page.goto(f"{live_server}{PAGE}")
+    pill = _token_px(page, "--radius-pill")
+    buttons = page.locator(".button")
+    for i in range(buttons.count()):
+        radius = float(_style(buttons.nth(i), "borderTopLeftRadius").removesuffix("px"))
+        assert radius >= pill / 2 or radius >= 30, i
 
 
 def test_ui_003_buttons_are_big_enough_to_tap(page: Page, live_server):
@@ -35,13 +64,13 @@ def test_ui_003_buttons_are_big_enough_to_tap(page: Page, live_server):
         assert buttons.nth(i).bounding_box()["height"] >= tap_min
 
 
-def test_ui_008_buttons_use_the_serif(page: Page, live_server):
+def test_ui_008_buttons_use_the_display_font(page: Page, live_server):
     page.goto(f"{live_server}{PAGE}")
-    serif = page.evaluate(
+    display = page.evaluate(
         "getComputedStyle(document.documentElement)"
         ".getPropertyValue('--font-family-display')"
     )
-    expected = serif.strip().split(",")[0]
+    expected = display.strip().split(",")[0].strip('"')
     buttons = page.locator(".button")
     for i in range(buttons.count()):
         assert _style(buttons.nth(i), "fontFamily").startswith(expected)
@@ -68,17 +97,19 @@ def test_ui_051_progress_bar_shows_its_numbers(page: Page, live_server, fake_sco
     expect(page.locator(".progress-label")).to_contain_text(f"{progress} / {milestone}")
 
 
-def test_ui_006_points_pill_is_gold(page: Page, live_server):
+def test_ui_008_points_pill_is_pear(page: Page, live_server):
     page.goto(f"{live_server}{PAGE}")
     points = load_config()["points"]["journal_takeaway"]
     pill = page.locator(".pill")
     expect(pill).to_have_text(f"+{points}")
-    gold = page.evaluate(
+    accent = page.evaluate(
         "(() => { const probe = document.createElement('span');"
-        " probe.style.color = 'var(--color-gold)'; document.body.append(probe);"
+        " probe.style.color = 'var(--color-accent)'; document.body.append(probe);"
         " const c = getComputedStyle(probe).color; probe.remove(); return c; })()"
     )
-    assert _style(pill, "backgroundColor") == gold
+    assert _style(pill, "backgroundColor") == accent
+    # Black text on Pear, never white (UI-008).
+    assert _style(pill, "color") == "rgb(0, 0, 0)"
 
 
 def test_ui_002_components_page_fits_and_has_no_errors(page: Page, live_server):

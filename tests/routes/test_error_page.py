@@ -41,7 +41,7 @@ def test_api_021_unknown_page_is_a_friendly_not_found_page(client):
     assert response.headers["content-type"].startswith("text/html")
     assert 'data-error-code="NOT_FOUND"' in response.text
     assert "We couldn&#39;t find that." in response.text
-    assert '<p class="brand">Side Quest</p>' in response.text
+    assert 'class="brand"' in response.text
 
 
 def test_dec_061_not_found_logged_out_offers_log_in(client):

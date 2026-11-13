@@ -2,8 +2,8 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.11.0
-- Last updated: 2026-11-05
+- Version: 1.12.0
+- Last updated: 2026-11-12
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -137,7 +137,7 @@ Example payload (fake): `SQ1.P.k3x9q2mf.482913`
 - **ARCH-070** [PROPOSED] Target: 95% of requests finish in under 500 ms, measured on the production setup.
 - **ARCH-071** [LOCKED] About 300 phones join at once during the Day 1 stage intro. This moment is load tested on a PR preview or staging before Playtest 2 (DEC-066), and on the venue Wi-Fi at the mid-February walkthrough (OPS-030).
 - **ARCH-072** [PROPOSED] Load test profile: 300 sign-ups spread over 60 seconds, then 10 minutes of connection scans, My Code polling, and main screen polling (ARCH-071, DEC-049).
-- **ARCH-073** [PROPOSED] The sign-up page is as small as possible: server-rendered HTML, no web fonts, no images beyond a logo, and static files sent with long cache headers.
+- **ARCH-073** [PROPOSED] The sign-up page is as small as possible: server-rendered HTML, no web fonts beyond the two self-hosted brand fonts, no images beyond the brand marks (UI-004, DEC-080), and static files sent with long cache headers.
 - **ARCH-074** [PROPOSED] v1 uses HTMX polling for live updates (My Code refresh, the second phone in a connection, main screen views). No WebSockets. Polling intervals live in config.
 
 ## 9. When the Wi-Fi fails

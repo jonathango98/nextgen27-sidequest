@@ -1,5 +1,7 @@
 {% extends "player/plain.html" %}
 
+{% set role_label = "Admin" %}
+
 {% block title %}Sessions · Side Quest{% endblock %}
 
 {# DATA-014: title, start time, and check-in minutes only. No rooms or places (SAFE-037). #}
@@ -15,7 +17,7 @@
 {% block content %}
   {% set labels = {"on": "On", "paused": "Paused", "off": "Off"} %}
   <div class="stack">
-    <h1>Sessions</h1>
+    <h1>sessions.</h1>
 
     {# GAME-026: End session swaps only this part, picked out of the page with hx-select (API-002). #}
     <section id="sessions" class="stack" aria-labelledby="sessions-title">

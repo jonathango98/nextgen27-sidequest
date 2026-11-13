@@ -124,7 +124,7 @@ def top_bar_text(html):
 def test_ui_030_other_pages_top_bar_shows_just_the_name(client, path):
     html = client.get(path).text
     assert top_bar_text(html) == "Side Quest"
-    assert '<a href="/">Side Quest</a>' in html
+    assert re.search(r'<a href="/"><img [^>]*>Side Quest</a>', html)
 
 
 def test_ui_030_home_top_bar_has_no_score(client):
@@ -288,7 +288,7 @@ def test_dec_062_home_tile_labels(client):
 
 def test_ui_053_journal_title_labels_the_text_box(client):
     html = client.get("/journal/new").text
-    assert '<h1 id="journal-title">Journal</h1>' in html
+    assert '<h1 id="journal-title">journal.</h1>' in html
     assert 'aria-labelledby="journal-title journal-prompt"' in html
     assert 'for="takeaway"' not in html  # no visible Takeaway label (DEC-062)
 
@@ -308,6 +308,6 @@ def test_ui_030_scan_has_a_back_link_to_my_code(client):
 
 def test_dec_062_box_page_says_claim_box(client):
     html = client.get("/box").text
-    assert "<h1>Claim box</h1>" in html
+    assert "<h1>claim box.</h1>" in html
     assert "<title>Claim box · Side Quest</title>" in html
     assert "Redeem box" not in page_text(html)

@@ -8,11 +8,11 @@
 {% block content %}
   <div class="page-heading">
     {# DEC-062: Claim box, since boxes unlock at point milestones and points are never spent. #}
-    <h1>Claim box</h1>
+    <h1>claim box.</h1>
     {# GAME-074: boxes this player can claim now. GAME-077: never a "boxes left" count. #}
     <p class="page-sub">{{ ready }} ready</p>
   </div>
-  {# UI-051: a ready box says Ready in words, not only in gold. A box already handed over says Claimed. #}
+  {# UI-051: a ready box says Ready in words, not only in Pear. A box already handed over says Claimed. #}
   <ol class="box-row">
     {% for box in boxes %}
       <li class="box-tile{% if box.state == 'ready' %} box-ready{% endif %}">

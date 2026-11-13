@@ -1,71 +1,68 @@
-/* Design tokens (UI-001). Values from foundation/07-design-system.md section 2, the Mix look (UI-008, DEC-035).
+/* Design tokens (UI-001). Values from foundation/07-design-system.md section 2, the Kairos look (UI-008, DEC-080).
    Templates and other CSS use these, never raw color or size values. */
 
+/* Brand fonts, self-hosted (UI-004, DEC-080). Latin only, trimmed to the weights we use, SIL Open Font
+   License (app/static/fonts/OFL-*.txt). swap: text shows in the fallback font until the file arrives. */
+@font-face {
+  font-family: "Outfit";
+  src: url("../fonts/outfit-latin.woff2") format("woff2");
+  font-weight: 500 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("../fonts/inter-latin.woff2") format("woff2");
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
-  /* Color */
-  --color-bg: #fbf4ee;
-  --color-bg-paused: #f3f1f0;
-  --color-bloom-orange: #f6b47b; /* background streaks only */
-  --color-bloom-marigold: #f8c96d;
-  --color-bloom-pink: #f4b0c8;
-  --color-bloom-magenta: #efb5ca;
-  --color-bloom-leaf: #c4d1b5;
-  --color-bloom-sky: #c5d4eb;
-  --color-surface: rgba(255, 255, 255, 0.68); /* frosted glass, used with --blur-glass */
-  --color-surface-solid: #ffffff; /* QR panel and text fields */
-  --color-text: #1e1a1c;
-  --color-text-muted: #5b5458; /* on white or glass only */
-  --color-primary: #1e1a1c;
-  --color-gold: #ffc629; /* points pills only */
-  --color-gold-line: #a87400; /* lines and large text only, never body text */
-  --color-hairline: #eee8ea; /* decoration only */
+  /* Color: white paper, black ink, one Pear accent (UI-008) */
+  --color-bg: #ffffff;
+  --color-surface: #ffffff; /* panels, fields, the QR panel */
+  --color-text: #000000;
+  --color-text-muted: #5e5e5e; /* small text on white only, 6.48:1 */
+  --color-primary: #000000; /* the one main button, the top bar */
+  --color-on-primary: #ffffff;
+  --color-on-primary-muted: #a3a3a3; /* small text on black, 8.33:1 */
+  --color-accent: #c1cc52; /* Pear: points, the current tab, progress. Fill only, black text on it (12.03:1), never white */
+  --color-on-accent: #000000;
+  --color-line: #000000; /* outlines of secondary buttons, fields, the bottom bar */
+  --color-hairline: rgba(0, 0, 0, 0.14); /* row dividers, decoration only */
+  --color-track: rgba(0, 0, 0, 0.18); /* the empty part of a progress bar */
   --color-success: #1e7b3a;
   --color-error: #b42318;
-  --color-screen-bg: #0e1015;
+  --color-screen-bg: #000000;
   --color-screen-text: #ffffff;
-  --color-screen-muted: #b3b9c4;
-  --color-screen-gold: #f2c14e;
+  --color-screen-muted: #a3a3a3; /* 8.33:1 on black */
+  --color-screen-accent: #c1cc52; /* points and first place on the main screen */
 
-  /* Main button and current tab: a gradient from #3A3236 to the primary (07 section 2) */
-  --color-on-primary: #ffffff;
-  --gradient-primary: linear-gradient(180deg, #3a3236 0%, var(--color-primary) 60%);
-
-  /* Frosted glass edge and shadows, from the Mix mockup */
-  --shadow-glass:
-    inset 0 1px 0 rgba(255, 255, 255, 0.95), inset 0 0 0 1px rgba(255, 255, 255, 0.55),
-    0 1px 2px rgba(30, 26, 28, 0.05), 0 12px 28px -8px rgba(30, 26, 28, 0.14);
-  --shadow-primary:
-    inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 2px 4px rgba(30, 26, 28, 0.12),
-    0 16px 32px -10px rgba(30, 26, 28, 0.45);
-
-  /* Bloom streaks behind every phone page (UI-008), placed as in the Mix Home mockup. Top layer first.
-     The layer is drawn 150% of the screen (--bloom-overhang on each side) so its tilted edges stay
-     off screen, and these positions are scaled to match. */
-  --bloom-streaks:
-    radial-gradient(24% 6.7% at 78% 28.3%, var(--color-bloom-sky), transparent),
-    radial-gradient(38.7% 9.3% at 29.3% 80.7%, var(--color-bloom-leaf), transparent),
-    radial-gradient(24% 6.7% at 70.7% 62.7%, var(--color-bloom-magenta), transparent),
-    radial-gradient(42.7% 16% at 72% 64%, var(--color-bloom-pink), transparent),
-    radial-gradient(28% 6.7% at 29.3% 37.3%, var(--color-bloom-marigold), transparent),
-    radial-gradient(40.7% 12.7% at 26% 38%, var(--color-bloom-orange), transparent),
-    radial-gradient(40.7% 10.7% at 64.7% 15%, var(--color-bloom-leaf), transparent);
-  --bloom-overhang: -25%;
-  --bloom-angle: -14deg;
-
-  /* Film grain: one tiny noise texture generated here, no image file to download (DEC-036) */
-  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  --grain-opacity: 0.35;
+  /* Brand halftone texture (UI-008). One image, recolored with CSS mask + background-color.
+     Decoration only: never on forms, lists, the scanner, or the QR. */
+  --halftone: url("../img/halftone.webp");
+  --halftone-ratio: 1.036; /* width / height of the image */
+  --halftone-topbar-size: 260px;
+  --halftone-topbar-opacity: 0.45;
+  --halftone-panel-size: 420px;
+  --halftone-panel-opacity: 0.3;
 
   /* Type */
-  --font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-family-display: ui-serif, "New York", "Iowan Old Style", Georgia, serif; /* system font, not a web font (UI-004) */
+  --font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-family-display: "Outfit", "Avenir Next", Futura, system-ui, sans-serif; /* titles, numbers, buttons */
+  --font-weight-title: 700;
+  --font-weight-button: 600;
   --font-size-body: 16px;
   --font-size-small: 14px;
-  --font-size-h1: 38px;
-  --font-size-score: 34px;
-  --font-size-score-hero: 128px;
-  --font-size-brand: 22px; /* "Side Quest" in the top bar, from the Mix mockup */
-  --font-size-button: 22px; /* serif button labels, from the Mix mockup */
+  --font-size-h1: 40px; /* page titles, lowercase with a period (UI-058) */
+  --title-tracking: -0.02em;
+  --font-size-score-hero: 116px;
+  --score-hero-tracking: -0.045em;
+  --font-size-brand: 19px; /* "Side Quest" next to the K mark in the top bar */
+  --font-size-button: 22px;
+  --font-size-tab: 13px;
 
   /* Spacing */
   --space-1: 4px;
@@ -75,88 +72,87 @@
   --space-5: 24px;
   --space-6: 32px;
 
-  --radius: 26px;
-  --radius-pill: 999px;
-  --radius-tab: 18px;
-  --blur-glass: 18px;
-  --glass-filter: blur(var(--blur-glass)) saturate(1.4);
-  --tap-min: 48px; /* UI-003: must match ui.min_tap_target_px in game-config.yaml */
-  --tab-min: 60px; /* bottom bar tabs (07 section 3) */
-  --button-min: 60px; /* one-line buttons, from the Mix mockup */
+  /* Shape: flat, no blur, glass, gradients, or shadows (UI-008) */
+  --radius: 28px; /* panels */
+  --radius-card: 24px; /* tiles and cards */
+  --radius-pill: 999px; /* every button and pill */
+  --radius-field: 14px;
+  --radius-message: 12px;
+  --border: 1.5px; /* outlines of secondary buttons, fields, panels */
+  --border-field: 1.5px;
+  --focus-ring: 3px;
   --press-scale: 0.98; /* a tapped button shrinks a little */
 
-  /* Form fields, PIN fields, and messages, from the Mix Join and Log in mockups */
-  --radius-field: 16px;
-  --border-field: 1.5px;
-  --radius-message: 12px;
+  --tap-min: 48px; /* UI-003: must match ui.min_tap_target_px in game-config.yaml */
+  --tab-min: 60px; /* bottom bar tabs */
+  --tab-pill-width: 60px; /* Pear pill behind the current tab's icon */
+  --tab-pill-height: 32px;
+  --button-min: 64px;
+  --field-min: 52px;
+
+  /* Top bar: black, the white K mark and "Side Quest" */
+  --topbar-height: 56px;
+  --logo-height: 22px;
+
+  /* Player pages: add tokens here (UI-001) */
   --font-size-pin: 24px;
   --pin-spacing: 0.4em;
-
-  /* Thin black viewfinder corners at the top of the screen (UI-009) */
-  --viewfinder-size: 14px;
-  --viewfinder-line: 1.5px;
-
-  /* Home (UI-036), from the Mix Home mockup */
-  --font-size-points-label: 28px; /* "points" under the big score */
-  --font-size-greeting: 22px; /* "Hi, <first name>" over the score */
-  --score-hero-tracking: -0.03em;
-  --font-size-tile: 23px; /* Write, Read, Claim box */
-  --font-size-tile-main: 28px; /* Meet friends */
-  --tile-min: 76px;
-  --tile-main-min: 88px;
-  --progress-max: 230px;
-  --color-surface-faint: rgba(255, 255, 255, 0.32); /* the settings gear */
-
-  /* My Code (UI-037), from the Mix My Code mockup */
-  --font-size-caption: 20px; /* "Show a friend" */
+  --font-size-points-label: 22px;
+  --font-size-greeting: 17px;
+  --font-size-tile: 22px;
+  --font-size-tile-main: 24px;
+  --tile-min: 84px;
+  --tile-main-min: 72px;
+  --progress-height: 6px;
   --qr-timer-height: 8px;
-
-  /* Shared takeaways (UI-038), from the Mix Takeaways mockup */
   --font-size-takeaway: 18px;
-
-  /* Journal form, from the Mix Journal mockup */
-  --font-size-form-title: 21px; /* "Takeaway" and "Share" */
+  --font-size-form-title: 20px;
   --textarea-min: 108px;
-
-  /* Open Box, from the Mix Open Box mockup */
   --box-tile-min: 140px;
   --font-size-box-number: 44px;
-
-  /* Quests, from the Mix Quests mockup */
   --font-size-quest-title: 19px;
   --quest-row-min: 72px;
+  --font-size-caption: 20px;
+  --font-size-row-title: 19px;
+  --score-hero-line: 0.86;
+  --panel-pad: 22px;
+  --disabled-opacity: 0.4; /* a switched-off button keeps its look, just faded */
+  --halftone-topbar-right: -70px;
+  --halftone-topbar-top: -96px;
+  --halftone-topbar-tilt: -12deg;
+  --halftone-panel-right: -200px;
+  --halftone-panel-top: -170px;
+  --halftone-panel-tilt: -14deg;
+  --role-pill-border: 1.5px;
+  --menu-min-width: 200px;
 
-  /* Box progress bar: a thin black bar on a faint track, always with numbers (UI-051) */
-  --progress-height: 4px;
-  --color-track: rgba(30, 26, 28, 0.15);
-
-  /* Main screen (UI-040 to UI-043), from the Mix main screen mockups. The mockups are drawn at
-     1920x1080, so these plain numbers are mockup pixels that screen.css scales by --screen-unit. */
-  --screen-bloom-opacity: 0.32; /* the bloom streaks, faint on the dark screen */
-  --screen-grain-opacity: 0.18;
-  --color-screen-glass: rgba(255, 255, 255, 0.08); /* dark frosted rows */
-  --shadow-screen-glass:
-    inset 0 1px 0 rgba(255, 255, 255, 0.14), inset 0 0 0 1px rgba(255, 255, 255, 0.06),
-    0 20px 40px -14px rgba(0, 0, 0, 0.5);
-  --screen-glass-filter: blur(24px) saturate(1.2);
-  --screen-pad-y: 96;
-  --screen-pad-x: 120;
-  --screen-frame-inset: 40; /* white corner marks */
-  --screen-frame-size: 40;
-  --screen-frame-line: 3;
-  --screen-column-gap: 120; /* title column, then the board */
-  --screen-side-width: 620;
+  /* Main screen: add tokens here (UI-001). The mockups are drawn at 1920x1080, so these plain
+     numbers are mockup pixels that screen.css scales by --screen-unit. */
+  --color-screen-hairline: rgba(255, 255, 255, 0.18); /* dividers on black, decoration only */
+  --screen-header-height: 120;
+  --screen-header-pad-x: 72;
+  --screen-kmark-height: 56;
+  --screen-hairline-width: 1.5;
+  --screen-pad-y: 48;
+  --screen-pad-x: 72;
+  --screen-column-gap: 96; /* title column, then the board */
+  --screen-side-width: 600;
   --screen-row-height: 80;
-  --screen-row-gap: 8;
-  --screen-row-pad: 40;
+  --screen-row-gap: 0;
   --screen-cell-gap: 28;
   --screen-church-gap: 24;
-  --screen-rank-width: 56;
-  --screen-dot: 28;
+  --screen-rank-width: 72;
+  --screen-rank-height: 64;
+  --screen-blob-width: 760;
+  --screen-blob-ratio: 1.036; /* same as --halftone-ratio */
+  --screen-blob-offset-x: -260;
+  --screen-blob-offset-y: -400;
+  --screen-blob-opacity: 0.4;
+  --screen-blob-tilt: -14deg;
   /* Font sizes as multiples of main_screen.min_text_px_1080p, so none is ever below it (UI-041) */
-  --screen-scale-title: 2.7;
-  --screen-scale-brand: 1.4;
+  --screen-scale-title: 2.4; /* "leaderboard." must fit the 600 column */
+  --screen-scale-brand: 1;
   --screen-scale-name: 1.1;
-  --screen-scale-rank: 1.2;
-  --screen-scale-score: 1.3;
+  --screen-scale-rank: 1.1;
+  --screen-scale-score: 1.4;
 }

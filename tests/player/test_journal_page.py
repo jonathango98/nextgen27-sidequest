@@ -70,7 +70,7 @@ def test_game_031_journal_list_fits_and_back_goes_home(page: Page, live_server):
 def test_ui_053_journal_text_box_is_named_by_the_title(page: Page, live_server):
     page.goto(f"{live_server}/journal/new")
     box = page.get_by_role("textbox")
-    expect(box).to_have_accessible_name("Journal What did you learn?")
+    expect(box).to_have_accessible_name("journal. What did you learn?")
     expect(page.get_by_text("Takeaway", exact=True)).to_have_count(0)
 
 
@@ -129,6 +129,6 @@ def test_dec_077_home_write_opens_your_notes_then_the_form(page: Page, live_serv
     page.goto(f"{live_server}/")
     page.get_by_role("link", name="Write").click()
     expect(page).to_have_url(f"{live_server}/journal")
-    expect(page.get_by_role("heading", level=1)).to_have_text("Journal")
+    expect(page.get_by_role("heading", level=1)).to_have_text("journal.")
     page.get_by_role("link", name="Write a takeaway").click()
     expect(page).to_have_url(f"{live_server}/journal/new")

@@ -6,7 +6,7 @@
 {% block content %}
   {# UI-030, DEC-062: a back link to Home at the top. #}
   <a class="back-link" href="/"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"></path></svg>Back to home</a>
-  <h1>Takeaways</h1>
+  <h1>takeaways.</h1>
   {# UI-038: approved shared takeaways grouped by session, newest session first, as takeaway cards. #}
   {% for session in sessions %}
     <section class="takeaway-session" aria-labelledby="session-{{ loop.index }}">

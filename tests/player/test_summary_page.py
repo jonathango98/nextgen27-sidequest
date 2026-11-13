@@ -18,11 +18,15 @@ def test_ui_038_summary_cards_fit_and_wrap(page: Page, live_server):
     assert problems == []
 
 
-def test_ui_038_summary_cards_are_frosted_glass(page: Page, live_server):
+def test_ui_038_summary_cards_are_white_with_a_black_outline(page: Page, live_server):
     page.goto(f"{live_server}/summary")
     card = page.locator(".takeaway-card").first
-    color = card.evaluate("(el) => getComputedStyle(el).backgroundColor")
-    assert color.startswith("rgba(255, 255, 255")
+    assert card.evaluate("(el) => getComputedStyle(el).backgroundColor") == (
+        "rgb(255, 255, 255)"
+    )
+    assert card.evaluate("(el) => getComputedStyle(el).borderTopColor") == (
+        "rgb(0, 0, 0)"
+    )
 
 
 def test_ui_030_back_to_home_sits_above_the_title_and_goes_home(

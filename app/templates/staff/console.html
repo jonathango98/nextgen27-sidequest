@@ -5,7 +5,7 @@
 {% block content %}
   {# ARCH-035: the other tools come with their own pieces. #}
   <div class="stack">
-    <h1>{{ "Admin" if page == "admin" else "Usher" }} console</h1>
+    <h1>{{ "admin" if page == "admin" else "usher" }} console.</h1>
     <div class="card">
       <p>Logged in as <strong>{{ staff.username }}</strong> ({{ staff.role }}).</p>
     </div>

@@ -124,18 +124,19 @@ def test_ui_003_links_under_the_login_form_are_big_enough(page: Page, live_serve
     assert link.bounding_box()["height"] >= load_config()["ui"]["min_tap_target_px"]
 
 
-def test_ui_054_typing_in_a_field_shows_its_border_not_a_box(page: Page, live_server):
+def test_ui_054_typing_in_a_field_shows_a_black_outline(page: Page, live_server):
     page.goto(f"{live_server}/join")
     field = page.get_by_label("First name")
     field.click()
     style = field.evaluate(
         "(el) => { const s = getComputedStyle(el);"
-        " return {outline: s.outlineStyle, ring: s.boxShadow, border: s.borderTopColor,"
-        " text: getComputedStyle(document.body).color}; }"
+        " return {outline: s.outlineStyle, width: s.outlineWidth,"
+        " color: s.outlineColor, text: getComputedStyle(document.body).color}; }"
     )
-    assert style["outline"] == "none"
-    assert style["ring"] != "none"  # focus is still visible
-    assert style["border"] == style["text"]
+    # A visible 3px black outline (Kairos focus, UI-054).
+    assert style["outline"] == "solid"
+    assert style["width"] == "3px"
+    assert style["color"] == style["text"]
 
 
 def test_ui_032_back_from_pin_step_keeps_what_was_typed(

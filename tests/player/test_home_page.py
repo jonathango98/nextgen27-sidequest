@@ -44,18 +44,36 @@ def test_ui_036_home_actions_are_in_order(page: Page, live_server):
 def test_ui_035_meet_friends_is_the_only_black_button(page: Page, live_server):
     page.goto(f"{live_server}/")
     for name in ACTIONS:
-        image = _action(page, name).evaluate(
-            "(el) => getComputedStyle(el).backgroundImage"
+        color = _action(page, name).evaluate(
+            "(el) => getComputedStyle(el).backgroundColor"
         )
-        assert ("gradient" in image) == (name == "Meet friends"), name
+        assert (color == "rgb(0, 0, 0)") == (name == "Meet friends"), name
 
 
-def test_ui_009_home_has_viewfinder_corners(page: Page, live_server):
+def test_ui_008_home_score_sits_on_a_pear_panel(page: Page, live_server):
+    page.goto(f"{live_server}/")
+    accent = page.evaluate(
+        "(() => { const probe = document.createElement('span');"
+        " probe.style.color = 'var(--color-accent)'; document.body.append(probe);"
+        " const c = getComputedStyle(probe).color; probe.remove(); return c; })()"
+    )
+    panel = page.locator(".home-score")
+    assert panel.evaluate("(el) => getComputedStyle(el).backgroundColor") == accent
+    # The halftone blob is decoration only: drawn by CSS, never catching a tap.
+    blob = panel.evaluate("(el) => getComputedStyle(el, '::before').pointerEvents")
+    assert blob == "none"
+    standing = page.locator(".standing")
+    if standing.count():
+        color = standing.evaluate("(el) => getComputedStyle(el).backgroundColor")
+        assert color == "rgb(0, 0, 0)"
+
+
+def test_ui_008_home_has_no_viewfinder_corners(page: Page, live_server):
     page.goto(f"{live_server}/")
     corner = page.locator(".top-bar").evaluate(
         "(el) => getComputedStyle(el, '::before').borderTopStyle"
     )
-    assert corner == "solid"
+    assert corner != "solid"
 
 
 def test_ui_002_home_fits_and_has_no_errors(page: Page, live_server):

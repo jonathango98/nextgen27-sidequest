@@ -3,22 +3,21 @@
    Players and churches show the leaderboards (GAME-086, GAME-081). Coming soon until: takeaways
    and recap (recap.screen), photobooth (photobooth.screen, SAFE-038). #}
 {% set titles = {
-  "players": "Player leaderboard",
-  "churches": "Church leaderboard",
-  "takeaways": "Takeaways",
-  "photobooth": "Photobooth",
-  "offline": "Side Quest is offline",
-  "recap": "Conference recap",
+  "players": "player leaderboard.",
+  "churches": "church leaderboard.",
+  "takeaways": "takeaways.",
+  "photobooth": "photobooth.",
+  "offline": "Side Quest is offline.",
+  "recap": "conference recap.",
 } %}
 {% set board = view == "players" or view == "churches" %}
 <main id="screen-view" class="screen-view{% if board %} screen-view-board{% endif %}" data-view="{{ view }}"
       hx-get="/screen/{{ next }}?{{ param }}={{ key | urlencode }}"
       hx-trigger="every {{ rotate_seconds }}s" hx-swap="outerHTML">
   {% if board %}
-    {# Mix main screen leaderboard mockups: title column on the left, the board on the right. #}
+    {# Kairos main screen mockups: title column on the left, the board on the right. #}
     <div class="screen-side">
       <h1 class="screen-title">{{ titles[view] }}</h1>
-      <p class="screen-brand">Side Quest</p>
     </div>
     {% set rows = players if view == "players" else churches %}
     {% if rows %}
@@ -30,10 +29,10 @@
               <span class="screen-who">
                 {# GAME-088, SAFE-004: first name and last initial only, never the full last name. #}
                 <span class="screen-name">{{ row.first_name }} {{ row.last_initial }}.</span>
-                <span class="screen-church"><span class="screen-dot screen-dot-{{ row.dot }}"></span><span class="screen-clip">{{ row.church }}</span></span>
+                <span class="screen-church"><span class="screen-clip">{{ row.church }}</span></span>
               </span>
             {% else %}
-              <span class="screen-who screen-name"><span class="screen-dot screen-dot-{{ row.dot }}"></span><span class="screen-clip">{{ row.church }}</span></span>
+              <span class="screen-who screen-name"><span class="screen-clip">{{ row.church }}</span></span>
             {% endif %}
             <span class="screen-score">{{ row.score }}</span>
           </li>
@@ -43,7 +42,6 @@
       <p class="screen-note screen-board-empty">No points yet</p>
     {% endif %}
   {% else %}
-    <p class="screen-brand">Side Quest</p>
     <h1 class="screen-title">{{ titles[view] }}</h1>
     {% if view != "offline" %}<p class="screen-note">Coming soon</p>{% endif %}
   {% endif %}

@@ -6,7 +6,7 @@
   {# API-005: a full page for errors outside HTMX. UI-051: icon and words, never color alone. #}
   <div class="stack error-page">
     <svg class="error-icon" aria-hidden="true" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 7v6"></path><path d="M12 17h.01"></path></svg>
-    <h1>{{ title }}</h1>
+    <h1>{{ title | lower }}.</h1>
     <p class="card" role="alert"{% if error_code %} data-error-code="{{ error_code }}"{% endif %}>{{ message }}</p>
     {# DEC-061: Home needs a login, so a logged-out phone goes to Log in instead. #}
     {% if logged_in %}

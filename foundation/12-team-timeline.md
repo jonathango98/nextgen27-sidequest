@@ -2,8 +2,8 @@
 
 - Status: Active (dates are approximate until the event date is confirmed, PRD-022)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.4.0
-- Last updated: 2026-11-05
+- Version: 1.4.1
+- Last updated: 2026-11-12
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -68,7 +68,7 @@ The weeks follow the order pieces need each other (`16-feature-tree.md`), spread
 | 1 | November 2 to 6 | None. Start the backbone pieces (`16-feature-tree.md` section 2) |
 | 2 | November 9 to 13 | None. Backbone continues |
 | 3 | November 16 to 20 | `staff` Staff accounts and roles, `points` Points service |
-| 4 | November 23 to 27 | `look` Mix look on player screens |
+| 4 | November 23 to 27 | `look` Brand look on every screen |
 | 5 | November 30 to December 4 | `game-state` Game states and pause, `connections` Scanner and connections, `usher` Usher console |
 | 6 | December 7 to 11 | `home` Home and Quests pages, `checkin` Session check-in, `admin` Admin console |
 | 7 | December 14 to 18 | `explore` Explore, `blind-box` Blind boxes, `leaderboards` Leaderboards and church score |
