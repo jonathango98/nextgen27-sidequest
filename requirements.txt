@@ -22,7 +22,7 @@ jinja2==3.1.6
     # via side-quest (pyproject.toml)
 markupsafe==3.0.4
     # via jinja2
-opentelemetry-api==1.45.1
+opentelemetry-api==1.45.2
     # via fastapi
 pydantic==2.14.1
     # via fastapi
