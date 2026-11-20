@@ -61,6 +61,7 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
+| Icebreaker opens on both phones after a scan | `feat/icebreaker-opens-both-phones` | draft | 2026-11-19 | Claude Opus 5.5 / @jonathango98 |
 | Test staff accounts on PR previews | `chore/preview-staff-seed` | #69 | 2026-11-01 | Claude Opus 5.5 / @jonathango98 |
 
 ### Planned

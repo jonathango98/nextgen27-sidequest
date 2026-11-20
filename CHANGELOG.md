@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-19 · feat/icebreaker-opens-both-phones · Claude Opus 5.5 / @jonathango98
+
+- What: After a scan, both phones go straight to the icebreaker. The scanner's phone opens it when the scan is saved, and the scanned player's My Code opens it at its next check, instead of showing a note to tap.
+- Why: Jonathan wants both people on the same question without a tap (GAME-017, API-030).
+- Rule IDs: GAME-017, API-030, API-032, UI-034, ARCH-074
+- Status: Started
+- PR: draft
+
 ## 2026-11-04 · feat/connections-answers · Claude Opus 5.5 / @OwenTjandra
 
 - What: Builds `connections.answers`. Migration 0009 adds `icebreaker_answer` (one answer per person per connection, never about yourself, 1 to 200 characters). `POST /connections/{id}/answer` saves the answer the player typed for the other person and pays their points through the points service in the same transaction: `connect_same_church`, or `connect_other_church` plus `connect_new_church_bonus` the first time they meet someone from that church (saved in `church_met`). The icebreaker page shows the form, then the saved answer. Refused outside the pair (404), twice (409 `ALREADY_DONE`), blank or too long (400), and while paused or off (423). The retention cleanup deletes answers too. PR previews also seed Test Player 3 at Example Church A.
