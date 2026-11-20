@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-19 · docs/booth-answers · Claude Opus 5.5 / @jonathango98
+
+- What: plans booth questions. An usher picks each answer from a list when recording a booth visit (like a personality type), points and answers save together, the player sees their own on Quests, and an admin can fix one. Adds piece `explore.booth-answers` after `explore.booths`, an empty `booth_questions` setting, and the rules, data, and routes it needs. No app code.
+- Why: some booths run an activity and need a result per player (DEC-082).
+- Rule IDs: GAME-046, SAFE-045, DATA-033, GAME-041, GAME-110, GAME-112, DEC-082, ENG-087.
+- Status: Done (plan only. The piece is Waiting on `explore.booths`).
+- PR: #100
+
 ## 2026-11-19 · fix/visible-screen-height · Claude Opus 5.5 / @jonathango98
 
 - What: Player pages are now as tall as the visible screen (`100dvh`), not the screen with the browser bars hidden (`100vh`, kept as a fallback for old browsers). A test checks the page height rule.

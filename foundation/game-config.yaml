@@ -2,8 +2,8 @@
 #
 # Status: Active
 # Owner: Jonathan (@jonathango98)
-# Version: 1.10.0
-# Last updated: 2026-11-05
+# Version: 1.11.0
+# Last updated: 2026-11-19
 # Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 #
 # How to read this file
@@ -40,6 +40,16 @@ checkin:
 limits:
   photobooth_per_day: 5               # GAME-042 PROPOSED: photobooth visits that earn points, per player per day
   journal_min_words: 15               # GAME-030 PROPOSED: minimum words in a takeaway
+
+# GAME-046 PROPOSED: booth question sets. An admin picks one per booth on /admin/booths.
+# Each question has an id that never changes, the question text, and a fixed answer list (SAFE-045).
+# Shape:
+#   <set key>:
+#     - id: <question id>
+#       question: <text the usher sees>
+#       answers: [<answer>, <answer>]
+# Empty until Jonathan adds the real sets (DEC-082). Tests and previews use fake sets.
+booth_questions: {}
 
 photobooth:
   ticket_minutes: 10                  # GAME-042 PROPOSED: how long a kiosk scan of My Code stays good for the shot that follows (DEC-079)

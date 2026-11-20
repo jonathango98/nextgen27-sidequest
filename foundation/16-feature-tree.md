@@ -2,8 +2,8 @@
 
 - Status: Active
 - Owner: Jonathan (@jonathango98)
-- Version: 1.7.3
-- Last updated: 2026-11-12
+- Version: 1.8.0
+- Last updated: 2026-11-19
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -57,7 +57,7 @@ The tree is the source. If this table and the tree disagree, the tree wins.
 | `look` Brand look on every screen | January build | 2026-11-27 | 3 | Working pieces only | None |
 | `home` Home and Quests pages | January build | 2026-12-11 | 1 | `points.ledger` | None |
 | `checkin` Session check-in | January build | 2026-12-11 | 3 | `staff.login`, `points.audit-log`, `game-state.controls`, `screen.main`, `connections.scanner-camera`, `points.ledger` | None |
-| `explore` Explore | January build | 2026-12-18 | 2 | `staff.login`, `points.audit-log`, `usher.console`, `points.ledger` | None |
+| `explore` Explore | January build | 2026-12-18 | 3 | `staff.login`, `points.audit-log`, `usher.console`, `points.ledger` | None |
 | `journal` Journal and Summary page | January build | 2027-01-08 | 2 | `checkin.sessions`, `points.ledger`, `staff.login`, `points.audit-log` | None |
 | `blind-box` Blind boxes (Open Box) | January build | 2026-12-18 | 2 | `usher.console`, `home.pages`, `game-state.core`, `game-state.controls` | None |
 | `leaderboards` Leaderboards and church score | January build | 2026-12-18 | 2 | `points.ledger`, `screen.main` | None |

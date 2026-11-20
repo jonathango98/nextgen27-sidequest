@@ -2,8 +2,8 @@
 
 - Status: PROPOSED (developers confirm at kickoff)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.12.0
-- Last updated: 2026-11-05
+- Version: 1.13.0
+- Last updated: 2026-11-19
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -55,7 +55,7 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 | GET | `/staff/login` | Staff login form: username, password. For ushers and admins | ARCH-036, DEC-063 |
 | POST | `/staff/login` | Check the password and start a staff session. Ushers land on `/usher`, admins on `/admin` | ARCH-035, ARCH-036, DEC-063 |
 | GET | `/usher` | Usher console | |
-| POST | `/usher/booth` | Scan My Code for a booth visit | GAME-041 |
+| POST | `/usher/booth` | Scan My Code for a booth visit, with one answer per question if the booth has a question set | GAME-041, GAME-046 |
 | POST | `/usher/photobooth` | Record a photobooth visit for a player found by name, when their phone is dead. The kiosk scans everyone else | GAME-042, GAME-113, DEC-079 |
 | POST | `/usher/hidden-item` | Record an item number and scan My Code | GAME-043 |
 | POST | `/usher/box-claim` | Scan My Code and record a blind box handed over | GAME-073 |
@@ -78,8 +78,9 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 | POST | `/admin/players/{id}/revoke` | Manual revocation with a reason | GAME-111, GAME-114 |
 | POST | `/admin/players/{id}/reset-pin` | Unlock and reset a PIN | SAFE-023 |
 | POST | `/admin/players/{id}/church` | Fix a player's church | DATA-012 |
+| POST | `/admin/players/{id}/booth-answers` | Fix a booth answer, from that question's list | GAME-046, ARCH-050 |
 | GET, POST | `/admin/churches` | Manage the church list | SAFE-002 |
-| GET, POST | `/admin/booths` | Manage booths | GAME-041 |
+| GET, POST | `/admin/booths` | Manage booths, and pick each booth's question set | GAME-041, GAME-046 |
 | GET, POST | `/admin/hidden-items` | Manage item numbers (no locations) | SAFE-010 |
 | GET, POST | `/admin/sessions` | Manage sessions (titles, start times, check-in minutes, no rooms) | DATA-014, GAME-021, GAME-107 |
 | GET, POST | `/admin/staff` | Manage usher and admin accounts | ARCH-036 |
@@ -170,7 +171,7 @@ The photobooth side is built in the photobooth app's own repos, not here. Side Q
 | My Code | Player | `/code` | Rotating QR, big and bright | GAME-001 |
 | Scanner | Player | `/scan` | Camera view, clear result | ARCH-025 |
 | Icebreaker | Player | `/connections/{id}` | Same question on both phones | GAME-017 |
-| Quests | Player | `/quests` | What earns points and what is done | |
+| Quests | Player | `/quests` | What earns points and what is done, plus the player's own booth answers | GAME-046 |
 | Journal | Player | `/journal`, `/journal/new` | Visibility choice and the note about anonymous posts | GAME-031, SAFE-009, UI-031 |
 | Summary page | Player | `/summary` | Shared takeaways by session | SAFE-017 |
 | Open Box | Player | `/box` | Earned, claimed, claimable, "Go to the game booth when it's open" | GAME-073 |
