@@ -178,3 +178,13 @@ def test_ui_030_top_bar_stays_put_while_scrolling(page: Page, live_server):
     page.mouse.wheel(0, 2000)
     page.wait_for_function("window.scrollY > 0")
     assert page.locator(".top-bar").bounding_box()["y"] == 0
+
+
+def test_ui_002_page_height_is_the_visible_screen(page: Page, live_server):
+    # A desktop browser has no hiding toolbar, so read the rule the browser kept instead of measuring.
+    page.goto(f"{live_server}/code")
+    heights = page.evaluate(
+        """[...document.styleSheets].flatMap(s => [...s.cssRules])
+             .filter(r => r.selectorText === "body").map(r => r.style.minHeight)"""
+    )
+    assert "100dvh" in heights

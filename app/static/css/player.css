@@ -19,7 +19,10 @@ html:has(> body.paused) {
 
 body {
   margin: 0;
+  /* UI-002: dvh is the screen height with the browser's own bars showing. On an iPhone, vh counts
+     the height with them hidden, which pushed the Scan button behind the bottom bar. */
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   font-family: var(--font-family);

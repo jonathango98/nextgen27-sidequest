@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-19 · fix/visible-screen-height · Claude Opus 5.5 / @jonathango98
+
+- What: Player pages are now as tall as the visible screen (`100dvh`), not the screen with the browser bars hidden (`100vh`, kept as a fallback for old browsers). A test checks the page height rule.
+- Why: On an iPhone with Safari's address bar showing, My Code had a white gap under the QR card and the Scan button sat behind the bottom bar. Home's buttons had the same problem. Desktop test browsers have no hiding address bar, so #94's 360 by 640 test could not catch it.
+- Rule IDs: UI-002, UI-003, UI-036, UI-037, AI-044
+- Status: Done
+- PR: draft
+
 ## 2026-11-19 · feat/staff-console-layout · Claude Opus 5.5 / @jonathango98
 
 - What: The admin console is a game panel colored by state (Pear on, gray paused, black off) with Start, Pause, and Off as one segmented row, then four tiles: Review with the waiting count, Sessions, Usher, and Main screen. Main screen opens as a `:target` sheet, so it needs no route or JavaScript, and its buttons swap only the sheet's inside so it stays open. The login card, console links, and Log out move to a gear menu in the staff top bar (name, Usher view or Admin view, Log out). Sessions, Review, and Find player get a back link in the top bar instead of a button at the bottom. Sessions: Add opens in place, an ended session gets an Ended chip and no End button, only the first open session's End button is black, and End and Edit sit side by side. Review: counts sit over the names in one row of four tabs, Approve and Reject side by side, and only the safety note stays at the top. Find player: the search button sits beside the name, results are a list, and the found player is a Pear card. New tokens in `tokens.css` for the paused panel, scrim, tile height, and state text. Find player has no CSRF token, so it shows only the back link, no menu.
