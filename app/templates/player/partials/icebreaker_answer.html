@@ -9,8 +9,32 @@
   {% elif connection %}
     <form class="form" method="post" action="/connections/{{ connection.id }}/answer" hx-post="/connections/{{ connection.id }}/answer" hx-target="#icebreaker-answer" hx-swap="outerHTML">
       <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-      <label for="answer">{{ connection.other_first_name }}'s answer</label>
-      <input id="answer" name="answer" type="text" value="{{ answer }}" maxlength="{{ max_chars }}" autocomplete="off" required>
+      {% if connection.category == "verse" %}
+        {# WRAP-012: lists, not typing, so verses match exactly. verse-picker.js narrows them to the book. #}
+        <p class="hint">{{ connection.other_first_name }}'s answer</p>
+        <label for="book">Book</label>
+        <span class="select">
+        <select id="book" name="book" required>
+          <option value="">Choose a book</option>
+          {% for name in bible.VERSES %}<option>{{ name }}</option>{% endfor %}
+        </select>
+        </span>
+        <label for="chapter">Chapter</label>
+        <span class="select">
+        <select id="chapter" name="chapter" required>
+          {% for n in range(1, bible.MAX_CHAPTERS + 1) %}<option>{{ n }}</option>{% endfor %}
+        </select>
+        </span>
+        <label for="verse">Verse</label>
+        <span class="select">
+        <select id="verse" name="verse" required>
+          {% for n in range(1, bible.MAX_VERSES + 1) %}<option>{{ n }}</option>{% endfor %}
+        </select>
+        </span>
+      {% else %}
+        <label for="answer">{{ connection.other_first_name }}'s answer</label>
+        <input id="answer" name="answer" type="text" value="{{ answer }}" maxlength="{{ max_chars }}" autocomplete="off" required>
+      {% endif %}
       <button class="button" type="submit">Save</button>
     </form>
   {% endif %}

@@ -12,7 +12,7 @@ from app.auth.current import CurrentPlayer, LoginRequired, get_current_player
 from app.db import get_db
 from app.forms import read_form
 from app.rendering import templates
-from app.services import connections
+from app.services import bible, connections
 from app.services.game_state import GAME_NOT_ON_MESSAGES, GameNotOn
 
 router = APIRouter()
@@ -80,6 +80,7 @@ def icebreaker(request: Request, player: Player, conn: Db, connection_id: int):
         "connection": met,
         "csrf_token": token,
         "max_chars": connections.ANSWER_MAX_CHARS,
+        "bible": bible,
     }
     if met is None:
         context |= {"error_code": "NOT_FOUND", "message": "We couldn't find that."}
@@ -98,10 +99,15 @@ def save_answer(
 ):
     me = player_id(conn, player)
     text = form.get("answer", "")
+    if (
+        "book" in form
+    ):  # WRAP-012: the verse pickers send three fields, saved as one answer
+        text = f"{form['book']} {form.get('chapter', '')}:{form.get('verse', '')}"
     context = {
         "csrf_token": form.get("csrf_token", ""),
         "max_chars": connections.ANSWER_MAX_CHARS,
         "answer": text,
+        "bible": bible,
     }
     status = 200
     try:

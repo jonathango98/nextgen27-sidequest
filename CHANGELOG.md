@@ -22,10 +22,10 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-11-20 · feat/connections-verse-picker · Claude Opus 5.5 / @jonathango98
 
-- What: Claim `connections.verse-picker`: on the favorite verse question, players pick book, chapter, and verse from lists, saved as "John 3:16".
-- Why: Exact verse answers so Wrapped can find each player's top verse.
-- Rule IDs: WRAP-012, GAME-019, ENG-101
-- Status: Started
+- What: Favorite verse pickers (`connections.verse-picker`). On the verse icebreaker, players choose book, chapter, and verse from three lists instead of typing, and the answer saves as "John 3:16". `verse-picker.js` narrows the chapter and verse lists to the chosen book, and the server refuses any verse that doesn't exist. Verse counts are in NIV numbering in `app/services/bible_verses.json`: the public-domain KJV counts with 3 John at 15 verses, as on BibleGateway's NIV, and "Song of Songs" as the NIV book name. Tests that type a free answer now leave out the verse question, so they no longer depend on the random pick.
+- Why: Verse answers have to match exactly so Wrapped can find each player's top verse.
+- Rule IDs: WRAP-012, GAME-019, AI-040, AI-042, AI-044, ENG-101, ENG-108
+- Status: Done
 - PR: #101
 
 ## 2026-11-19 · feat/page-transitions · Claude Opus 5.5 / @jonathango98

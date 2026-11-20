@@ -14,6 +14,18 @@ from tests.conftest import make_fake_pin, seed_fake_players
 FAKE_KEY = "test-only-fake-signing-key"
 FAKE_NOW = 1_800_000_000.0  # fixed clock, not a game number
 CONFIG = load_config()
+# Most tests type a free answer, so they leave out the verse question, which has pickers.
+TYPED_CONFIG = {
+    **CONFIG,
+    "icebreaker": {
+        **CONFIG["icebreaker"],
+        "categories": [c for c in CONFIG["icebreaker"]["categories"] if c != "verse"],
+    },
+}
+VERSE_CONFIG = {
+    **CONFIG,
+    "icebreaker": {**CONFIG["icebreaker"], "categories": ["verse"]},
+}
 QR = CONFIG["qr"]
 PLAYERS = ("testpid01", "testpid02", "testpid03")
 
@@ -49,7 +61,7 @@ def _scan(conn, scanner="testpid01", scanned="testpid02", **overrides):
         "scanner_public_id": scanner,
         "payload": _code_of(scanned),
         "now": FAKE_NOW,
-        "config": CONFIG,
+        "config": TYPED_CONFIG,
     }
     return connections.scan(conn, **{**args, **overrides})
 
@@ -204,7 +216,7 @@ def test_game_019_question_is_picked_from_config_pool(conn, monkeypatch):
     monkeypatch.setattr(
         connections.random, "choice", lambda pool: picked.append(list(pool)) or pool[-1]
     )
-    met = _scan(conn)
+    met = _scan(conn, config=CONFIG)
     assert picked == [CONFIG["icebreaker"]["categories"]]
     category = CONFIG["icebreaker"]["categories"][-1]
     assert _rows(conn)[0]["question_category"] == category
@@ -368,6 +380,24 @@ def test_safe_005_blank_or_too_long_answer_is_refused(conn, ids, text):
     met = _scan(conn)
     refused = _answer_refused(lambda: _answer(conn, ids, met, "testpid01", text=text))
     assert (refused.status, refused.code) == (400, "BAD_INPUT")
+    assert _score(conn, ids, "testpid01") == 0
+
+
+def test_wrap_012_verse_saved_as_book_chapter_verse(conn, ids):
+    met = _scan(conn, config=VERSE_CONFIG)
+    _answer(conn, ids, met, "testpid01", text="John 3:16")
+    mine = connections.for_player(conn, met.id, ids["testpid01"])
+    assert (mine.category, mine.my_answer) == ("verse", "John 3:16")
+
+
+@pytest.mark.parametrize(
+    "text", ["John 22:1", "John 3:37", "Johnn 3:16", "John 03:16", "Example answer"]
+)
+def test_wrap_012_verse_that_does_not_exist_is_refused(conn, ids, text):
+    met = _scan(conn, config=VERSE_CONFIG)
+    refused = _answer_refused(lambda: _answer(conn, ids, met, "testpid01", text=text))
+    assert (refused.status, refused.code) == (400, "BAD_INPUT")
+    assert conn.execute("SELECT count(*) FROM icebreaker_answer").fetchone()[0] == 0
     assert _score(conn, ids, "testpid01") == 0
 
 
