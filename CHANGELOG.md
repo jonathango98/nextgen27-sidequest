@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-19 · feat/page-transitions · Claude Opus 5.5 / @jonathango98
+
+- What: Smooth page changes on player pages (`look.motion`). The top and bottom bars stay still, the old page fades on tap with a Pear loading line if the next page is slow, and the new page's blocks and list rows slide in one by one by direction while the Pear pill slides to the new tab. Built with CSS cross-page View Transitions and a small inline script in `player/base.html`, so staff pages, Wrapped, error pages, and the main screen don't move. Conservative prefetch fetches a page only once a finger is on its link. Added UI-059 and the motion tokens to `07-design-system.md`, DEC-081 to `13-decisions.md`, and the `look.motion` piece to `feature-tree.yaml`.
+- Why: Tab changes looked choppy. Jonathan picked the Soft slide style from a phone mockup.
+- Rule IDs: UI-059, UI-055, UI-004, UI-043, DEC-081, ENG-109, AI-044
+- Status: Done
+- PR: #98
+
 ## 2026-11-19 · docs/booth-answers · Claude Opus 5.5 / @jonathango98
 
 - What: plans booth questions. An usher picks each answer from a list when recording a booth visit (like a personality type), points and answers save together, the player sees their own on Quests, and an admin can fix one. Adds piece `explore.booth-answers` after `explore.booths`, an empty `booth_questions` setting, and the rules, data, and routes it needs. No app code.

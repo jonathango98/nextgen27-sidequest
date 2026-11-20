@@ -2,8 +2,8 @@
 
 - Status: PROPOSED (everything here may change until the designer signs off)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.10.0
-- Last updated: 2026-11-12
+- Version: 1.11.0
+- Last updated: 2026-11-19
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -68,6 +68,18 @@ Contrast ratios below were checked with the WCAG 2.1 formula.
 | `--border` | `1.5px` | Black outlines of secondary buttons, fields, and panels |
 | `--tap-min` | `48px` | Minimum tap target (UI-003) |
 
+### Motion
+
+Page changes on the phone (UI-059). Only `transform` and `opacity` move. The slide distance is `--space-5`.
+
+| Token | Value | Use |
+|---|---|---|
+| `--motion-exit` | `180ms` | The old page slides out and fades on tap |
+| `--motion-enter` | `380ms` | Each block of the new page slides in |
+| `--motion-step` | `50ms` | The gap between one block and the next |
+| `--motion-ease` | `cubic-bezier(0.2, 0.8, 0.2, 1)` | Fast start, soft stop |
+| `--motion-wait` | `400ms` | The Pear loading line shows if the next page takes longer than this |
+
 ## 3. Components
 
 | Component | Notes |
@@ -98,6 +110,7 @@ Contrast ratios below were checked with the WCAG 2.1 formula.
 - **UI-036** [PROPOSED] Home layout, top to bottom: the player's first name ("Hi, <first name>"), the big score (`--font-size-score-hero`) with "points" under it, then blind box progress ("Next box" with the numbers, UI-051). In the lower half (UI-003): Meet friends (the black main button, opens the scanner), a row split in two with Write, "A journal" under it (the player's own journal list, which has Write a takeaway on top, with its points pill while the game is on, DEC-077), and Read, "All journals" under it (shared takeaways, `/summary`), then Claim box (Open Box) (DEC-062). The top bar has a settings gear (at least 48px, UI-003) that opens a small menu. Its only item is Log out in red (`--color-error`), which asks "Log out on this phone?" first and signs out this phone only (ARCH-034, DEC-058).
 - **UI-037** [PROPOSED] My Code shows the QR panel, then a black Scan button. The scanner, the icebreaker, and the scan result all sit under the My Code tab.
 - **UI-038** [PROPOSED] The shared takeaways page (`/summary`) lists approved shared takeaways grouped by session, newest session first, as takeaway cards (section 3).
+- **UI-059** [PROPOSED] Moving between player pages is smooth (DEC-081). The top bar and the bottom bar stay still. The moment a link is tapped, the old page slides out and fades, and if the next page is slow a thin Pear line runs under the top bar. Then the new page's blocks, and each row of a list, slide in one after another: from the right when going to a later tab or deeper into a tab, from the left when going back. The Pear pill slides to the new tab. Timings are the motion tokens (section 2). It uses the browser's cross-page View Transitions where the phone has them. Phones without them still get the slide-in. Only pages built on `player/base.html` move: staff pages, Wrapped, error pages, and the main screen don't (UI-043). The phone may fetch a page early only when a finger is already on its link (conservative prefetch), so the server gets no extra page loads. Reduce motion turns all of it off (UI-055).
 - **UI-039** [PROPOSED] The Journal form's main button is "Submit" with its points pill. An outlined Cancel button under it goes back to Home without saving (UI-035, DEC-062).
 
 The design mockups show a scan going to the icebreaker first and the points result after it. GAME-016 settles it (DEC-042): each player's points land when they type their own answer, so build this order.

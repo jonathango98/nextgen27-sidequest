@@ -1,8 +1,44 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-tab="{{ tab }}">
 <head>
   {% include "player/head.html" %}
   <title>{% block title %}Side Quest{% endblock %}</title>
+  {# UI-059: smooth page changes, on player pages only. Both pages of a change must opt in. UI-055: not with reduce motion. #}
+  <style>@media (prefers-reduced-motion: no-preference) { @view-transition { navigation: auto; } }</style>
+  <script>
+    // UI-059: which way the new page slides in. Tabs go Home 0, My Code 1, Quests 2, and each path step
+    // into a tab adds 0.1, so a later tab or a deeper page comes from the right, and going back from the other side.
+    (function () {
+      var root = document.documentElement;
+      var parts = location.pathname.split("/").filter(Boolean);
+      var tabRoot = parts.length === 0 || (parts.length === 1 && parts[0] === root.dataset.tab);
+      var order = ["home", "code", "quests"].indexOf(root.dataset.tab) + (tabRoot ? 0 : parts.length / 10);
+      function remember() {
+        try { sessionStorage.setItem("sq-page", order + " " + location.pathname); } catch (e) {}
+      }
+      try {
+        var last = (sessionStorage.getItem("sq-page") || "").split(" ");
+        if (last[1] && last[1] !== location.pathname) root.dataset.dir = order < Number(last[0]) ? "back" : "fwd";
+      } catch (e) {}
+      remember();
+      // Once the slide-in is over, stop new HTMX swaps from sliding in too.
+      setTimeout(function () { delete root.dataset.dir; }, 1500);
+      // Tap feedback: fade the old page the moment a link to another page is tapped.
+      document.addEventListener("click", function (e) {
+        var a = e.target.closest && e.target.closest("a[href]");
+        if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        if (a.target || a.hasAttribute("download") || a.origin !== location.origin) return;
+        if (a.pathname === location.pathname && a.search === location.search) return;
+        root.classList.add("leaving");
+      });
+      // The back button can bring back this page as it was left, faded. Undo that.
+      addEventListener("pageshow", function (e) {
+        if (e.persisted) { root.classList.remove("leaving"); remember(); }
+      });
+    })();
+  </script>
+  {# UI-059: fetch a page early only once a finger is on its link, so the server gets no extra page loads. #}
+  <script type="speculationrules">{"prefetch": [{"where": {"href_matches": "/*"}, "eagerness": "conservative"}]}</script>
 </head>
 {# UI-033: while paused, the whole page turns grayscale (player.css), with a black note under the top bar. #}
 <body{% if game_state() == "paused" %} class="paused"{% endif %}>

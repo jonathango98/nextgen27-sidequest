@@ -1461,3 +1461,160 @@ a.menu-item {
 .session-actions .button {
   padding: var(--space-2);
 }
+
+/* Page changes (UI-059), player pages only: html[data-tab] is set by player/base.html. The bars stay
+   still, the old page slides out, and the new page's blocks and list rows slide in one by one.
+   html[data-dir] is set by the script in player/base.html only after a move inside the app. */
+@media (prefers-reduced-motion: no-preference) {
+  html[data-tab] {
+    --slide-in: var(--space-5);
+    --slide-out: calc(var(--space-5) * -1);
+  }
+
+  html[data-dir="back"] {
+    --slide-in: calc(var(--space-5) * -1);
+    --slide-out: var(--space-5);
+  }
+
+  html[data-tab] .top-bar {
+    view-transition-name: top-bar;
+  }
+
+  html[data-tab] .bottom-bar {
+    view-transition-name: bottom-bar;
+  }
+
+  /* overflow-x: clip keeps blocks sliding in from the side from making the page scroll sideways (UI-002) */
+  html[data-tab] .content {
+    view-transition-name: page;
+    overflow-x: clip;
+  }
+
+  html[data-tab] .bottom-bar a[aria-current="page"] .tab-icon {
+    view-transition-name: tab-pill;
+  }
+
+  /* Each tab's icon moves on its own, so the moving pill is only the Pear shape and the icons stay put */
+  html[data-tab] .bottom-bar a:nth-child(1) svg {
+    view-transition-name: tab-icon-1;
+  }
+
+  html[data-tab] .bottom-bar a:nth-child(2) svg {
+    view-transition-name: tab-icon-2;
+  }
+
+  html[data-tab] .bottom-bar a:nth-child(3) svg {
+    view-transition-name: tab-icon-3;
+  }
+
+  /* The bars and the sliding pill sit over the page while it moves */
+  ::view-transition-group(top-bar),
+  ::view-transition-group(bottom-bar) {
+    z-index: 1;
+  }
+
+  ::view-transition-group(tab-icon-1),
+  ::view-transition-group(tab-icon-2),
+  ::view-transition-group(tab-icon-3) {
+    z-index: 3;
+  }
+
+  ::view-transition-group(tab-pill) {
+    z-index: 2;
+    animation-duration: var(--motion-enter);
+    animation-timing-function: var(--motion-ease);
+  }
+
+  ::view-transition-group(page),
+  ::view-transition-new(page) {
+    animation: none;
+  }
+
+  ::view-transition-old(page) {
+    animation: page-out var(--motion-exit) ease-in both;
+  }
+
+  /* UI-033: the moving copies stay gray while the game is paused */
+  html:has(> body.paused)::view-transition {
+    filter: var(--paused-filter);
+  }
+
+  /* Tap feedback: the old page fades at once, and a Pear line shows if the next page is slow */
+  html[data-tab].leaving .content {
+    opacity: 0.35;
+    transition: opacity var(--motion-exit) ease-out;
+  }
+
+  html[data-tab].leaving .top-bar::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: var(--space-1);
+    background: var(--color-accent);
+    transform-origin: left;
+    animation: page-wait 3s var(--motion-ease) var(--motion-wait) both;
+  }
+
+  /* Each block, and each row of a list, arrives a step after the one above it */
+  html[data-dir] :is(.content, .quest-list, .takeaway-session) > * {
+    animation: page-in var(--motion-enter) var(--motion-ease) backwards;
+    /* Starts halfway through the old page's exit, so the two pages barely overlap */
+    animation-delay: calc(var(--motion-exit) / 2 + (var(--base, 0) + var(--n, 0)) * var(--motion-step));
+  }
+
+  html[data-dir] :is(.quest-list, .takeaway-session) {
+    --base: var(--n, 0);
+    animation: none;
+  }
+
+  /* Rows would otherwise inherit their list's own place */
+  :is(.content, .quest-list, .takeaway-session) > :first-child {
+    --n: 0;
+  }
+
+  :is(.content, .quest-list, .takeaway-session) > :nth-child(2) {
+    --n: 1;
+  }
+
+  :is(.content, .quest-list, .takeaway-session) > :nth-child(3) {
+    --n: 2;
+  }
+
+  :is(.content, .quest-list, .takeaway-session) > :nth-child(4) {
+    --n: 3;
+  }
+
+  :is(.content, .quest-list, .takeaway-session) > :nth-child(5) {
+    --n: 4;
+  }
+
+  :is(.content, .quest-list, .takeaway-session) > :nth-child(n + 6) {
+    --n: 5;
+  }
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateX(var(--slide-in));
+  }
+}
+
+@keyframes page-out {
+  to {
+    opacity: 0;
+    transform: translateX(var(--slide-out));
+  }
+}
+
+@keyframes page-wait {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(0.9);
+  }
+}
