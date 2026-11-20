@@ -379,6 +379,26 @@ pieces:
     safety_review: false
     rules: [UI-001, UI-004, UI-006, UI-008, UI-009, UI-058, DEC-080, ARCH-073]
     learn: how design tokens let one CSS file change the look of every screen
+  - id: look.motion
+    feature: look
+    what: Moving between pages feels smooth instead of jumpy. The top and bottom bars stay still, the old page slides away the moment you tap, and the new page slides in piece by piece from the side you are heading. The green-yellow pill slides to the tab you picked.
+    try_it:
+      - On a phone, log in as Test Player 1 and tap My Code, then Quests. Each new page should slide in from the right, one block at a time, while the top bar and bottom bar stay still, and the Pear pill should slide to the tapped tab.
+      - Tap Home. The page should slide in from the left. On Quests, each quest row should arrive one after another.
+      - On Home, open Read, then tap Back to home. Opening should slide in from the right, going back from the left.
+      - Tap a tab, then use the phone's back button. The page should slide in from the left, and nothing should stay faded.
+      - On a laptop, turn on slow 3G in the browser's developer tools and tap a tab. The old page should fade right away, and a thin Pear line should show under the top bar until the new page arrives.
+      - Turn on Reduce Motion in the phone settings and tap the tabs. Pages should change with no sliding.
+      - Log in as test-admin-1 and open Sessions, then go back. Staff pages should change with no sliding.
+      - Check the browser console on each page. There should be no red errors.
+    needs: [look.kairos]
+    open: []
+    area: design
+    size: M
+    level: medium
+    safety_review: false
+    rules: [UI-059, UI-055, UI-004, UI-043, DEC-081]
+    learn: how the browser's View Transitions animate between two separate pages with only CSS
 
   # Home and Quests pages
   - id: home.pages

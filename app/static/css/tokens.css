@@ -94,6 +94,13 @@
   --topbar-height: 56px;
   --logo-height: 22px;
 
+  /* Motion: page changes (UI-059). Only transform and opacity move. */
+  --motion-exit: 180ms;
+  --motion-enter: 380ms;
+  --motion-step: 50ms;
+  --motion-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --motion-wait: 400ms;
+
   /* Player pages: add tokens here (UI-001) */
   --paused-filter: grayscale(1); /* UI-033: every player page while the game is paused */
   --font-size-pin: 24px;
