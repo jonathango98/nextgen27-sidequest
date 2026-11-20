@@ -1,3 +1,4 @@
+import re
 import time
 
 import pytest
@@ -59,15 +60,14 @@ def test_arch_025_side_quest_code_is_read(scanner_page, live_server):
     assert [p for p in scanner_page.problems if "410" not in p] == []
 
 
-def test_game_017_scan_shows_who_you_met_and_their_question(scanner_page, live_server):
+def test_game_017_scan_opens_the_icebreaker(scanner_page, live_server):
     _open_with_camera(scanner_page, live_server)
     payload = qr.payload(qr.PLAYER_KIND, "testpid03", time.time(), load_config()["qr"])
     scanner_page.evaluate("code => window.sqScanner.handle(code)", payload)
+    expect(scanner_page).to_have_url(re.compile(r"/connections/\d+$"))
     # SAFE-004: first name and church only.
-    expect(scanner_page.get_by_text("You met Test!")).to_be_visible()
-    expect(scanner_page.get_by_text("Example Church A")).to_be_visible()
-    expect(scanner_page.get_by_role("link", name="Open icebreaker")).to_be_visible()
-    expect(scanner_page.get_by_role("button", name="Scan again")).to_be_visible()
+    expect(scanner_page.get_by_text("Test · Example Church A")).to_be_visible()
+    expect(scanner_page.get_by_role("heading", level=1)).not_to_be_empty()
     assert scanner_page.problems == []
 
 

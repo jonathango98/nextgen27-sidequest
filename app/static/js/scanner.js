@@ -123,15 +123,12 @@
 
   if (form) {
     form.addEventListener("htmx:afterRequest", function (event) {
+      // GAME-017: a new friend sends this phone to the icebreaker, so keep "Got it!" until it opens.
+      if (event.detail.xhr.getResponseHeader("HX-Redirect")) return;
       show(status, "");
       // No answer at all, for example no signal. A refused scan shows the server's message.
       if (!event.detail.xhr.status) show(alert, "No connection. Try again.");
       showAgain("Scan again");
-      // UI-035: after a new friend, Open icebreaker is the one main button.
-      again.classList.toggle(
-        "button-secondary",
-        !!(outcome && outcome.querySelector("[data-connection]"))
-      );
     });
   }
 

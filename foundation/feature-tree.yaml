@@ -2,8 +2,8 @@
 #
 # Status: Active
 # Owner: Jonathan (@jonathango98)
-# Version: 2.4.0
-# Last updated: 2026-11-12
+# Version: 2.4.1
+# Last updated: 2026-11-19
 # Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 #
 # How to read this file (rules in 16-feature-tree.md, ENG-105 to ENG-112)
@@ -279,12 +279,12 @@ pieces:
     learn: how a phone browser reads a QR code with the camera
   - id: connections.meet
     feature: connections
-    what: When one player scans another player's code, the game saves that they met and both phones show the same fun question to talk about, like a favorite food. The scanned player's My Code page shows a note without them tapping anything. It says no if you scan yourself, scan an old code, or scan someone you already met.
+    what: When one player scans another player's code, the game saves that they met and both phones open the same fun question to talk about, like a favorite food. The scanned player's phone opens it from My Code without them tapping anything. It says no if you scan yourself, scan an old code, or scan someone you already met.
     try_it:
       - On the PR preview, join as Test Player 1 and Test Player 2 on two phones.
-      - Open My Code on Test Player 2's phone, then scan it from Test Player 1's Scan page. Test Player 1's phone should show Test Player 2's name, church and a question.
-      - Within a few seconds, Test Player 2's phone should show a note and the very same question, without tapping anything.
-      - Scan the same code again. It should say you already met, with no new question and no second note.
+      - Open My Code on Test Player 2's phone, then scan it from Test Player 1's Scan page. Test Player 1's phone should open the icebreaker with Test Player 2's name, church and a question.
+      - Within a few seconds, Test Player 2's phone should open the very same icebreaker, without tapping anything.
+      - Scan the same code again. It should say you already met, and neither phone should move.
       - "Try to break it: scan your own code, then a screenshot of an old code. Each should be refused with a clear message."
     needs: [connections.table, connections.scanner-camera, code.my-code]
     open: [GAME-019]

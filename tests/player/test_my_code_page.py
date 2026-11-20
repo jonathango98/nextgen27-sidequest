@@ -1,4 +1,5 @@
 import os
+import re
 from pathlib import Path
 
 from playwright.sync_api import Page, expect
@@ -86,7 +87,9 @@ def test_dec_061_my_code_goes_to_login_when_logged_out(page: Page, live_server):
     expect(page).to_have_url(f"{live_server}/login", timeout=REFRESH_TIMEOUT_MS)
 
 
-def test_api_032_scanned_player_sees_note_without_tapping(page: Page, live_server):
+def test_api_032_scanned_player_opens_icebreaker_without_tapping(
+    page: Page, live_server
+):
     db_path = Path(os.environ["SQ_DB_PATH"])
     conn = connect(db_path)
     ids = dict(conn.execute("SELECT public_id, id FROM player").fetchall())
@@ -106,9 +109,11 @@ def test_api_032_scanned_player_sees_note_without_tapping(page: Page, live_serve
     )
     conn.close()
     poll_ms = load_config()["qr"]["incoming_poll_seconds"] * 1000
-    note = page.get_by_role("link", name="Test just scanned you!")
-    expect(note).to_be_visible(timeout=poll_ms + REFRESH_TIMEOUT_MS)
-    expect(note).to_contain_text("What do you do for fun?")
+    # GAME-017: the scanned phone opens the same icebreaker by itself.
+    expect(page).to_have_url(
+        re.compile(r"/connections/\d+$"), timeout=poll_ms + REFRESH_TIMEOUT_MS
+    )
+    expect(page.get_by_role("heading", level=1)).to_have_text("What do you do for fun?")
 
 
 def test_ui_037_my_code_card_has_qr_timer_and_caption(page: Page, live_server):
