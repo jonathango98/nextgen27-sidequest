@@ -1,14 +1,13 @@
 {% extends "player/plain.html" %}
 
 {% set role_label = "Admin" %}
+{% set back = ("/admin", "Admin") %}
 
 {% block title %}Review · Side Quest{% endblock %}
 
 {% block content %}
   <div class="stack">
     <h1>review.</h1>
-    {# SAFE-007: shared notes wait here before players can read them. Never private notes (SAFE-029). #}
-    <p class="hint">Shared notes show on All journals only after you approve them.</p>
     {# SAFE-042: the app only shows who wrote it. Follow-up happens in person. #}
     <p class="hint">If a note suggests someone may be at risk, follow the child safety policy in person.</p>
 
@@ -17,7 +16,7 @@
       {# Inside the swapped part, so the counts stay right after each button. #}
       <nav class="review-tabs" aria-label="Review status">
         {% for value, label in tabs.items() %}
-          <a class="button {{ '' if value == status else 'button-secondary' }}" href="/admin/review?status={{ value }}"{% if value == status %} aria-current="page"{% endif %}>{{ label }} ({{ counts[value] }})</a>
+          <a class="review-tab" href="/admin/review?status={{ value }}"{% if value == status %} aria-current="page"{% endif %}><span class="review-tab-count">{{ counts[value] }}</span>{{ label }}</a>
         {% endfor %}
       </nav>
       <h2 id="review-title">{{ tabs[status] }}</h2>
@@ -37,6 +36,7 @@
             "rejected": [("approve", "Approve", None)],
             "hidden": [("approve", "Approve again", None)],
           }[note.review_status] %}
+          <div class="button-row">
           {% for outcome, label, confirm in buttons %}
             <form method="post" action="/admin/review/{{ note.public_id }}" hx-post="/admin/review/{{ note.public_id }}" hx-target="#review" hx-select="#review" hx-swap="outerHTML"{% if confirm %} hx-confirm="{{ confirm }}"{% endif %}>
               <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
@@ -45,12 +45,11 @@
               <button class="button {{ 'button-secondary' if outcome != 'approve' else '' }}" type="submit">{{ label }}</button>
             </form>
           {% endfor %}
+          </div>
         </article>
       {% else %}
         <p class="hint">Nothing here right now.</p>
       {% endfor %}
     </section>
-
-    <a class="button button-secondary" href="/admin">Admin console</a>
   </div>
 {% endblock %}

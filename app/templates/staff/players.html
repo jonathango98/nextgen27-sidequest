@@ -1,5 +1,7 @@
 {% extends "player/plain.html" %}
 
+{% set back = ("/usher", "Usher") %}
+
 {% block title %}Find player · Side Quest{% endblock %}
 
 {% block content %}
@@ -13,25 +15,25 @@
       {% if error_code %}{% include "partials/error.html" %}{% endif %}
       {# API-007: a plain form, so it works without JavaScript. #}
       <form class="form" method="get" action="/usher/players">
-        <div class="card form-card">
-          <label for="q">Name</label>
+        <label for="q">Name</label>
+        <div class="search-row">
           <input id="q" name="q" value="{{ q }}" maxlength="{{ query_max }}" autocomplete="off" autocapitalize="words" spellcheck="false" required>
+          <button class="icon-button search-button" type="submit" aria-label="Search"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg></button>
         </div>
-        <button class="button" type="submit">Search</button>
       </form>
 
       {% if results %}
-        <nav class="stack" aria-label="Players found">
-          {% for found in results %}
-            <a class="button button-secondary" href="/usher/players?player={{ found.public_id | urlencode }}">{{ found.first_name }} {{ found.last_initial }}. · {{ found.church }}</a>
-          {% endfor %}
+        <nav aria-label="Players found">
+          <ul class="row-list">
+            {% for found in results %}
+              <li><a href="/usher/players?player={{ found.public_id | urlencode }}">{{ found.first_name }} {{ found.last_initial }}. · {{ found.church }}</a></li>
+            {% endfor %}
+          </ul>
         </nav>
         {% if more %}<p class="hint">Type more of the name to see everyone.</p>{% endif %}
       {% elif q %}
         <p class="hint">No players found.</p>
       {% endif %}
     {% endif %}
-
-    <a class="button button-secondary" href="/usher">Usher console</a>
   </div>
 {% endblock %}

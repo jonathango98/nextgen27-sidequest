@@ -18,6 +18,11 @@ ANON = "Example takeaway from Test Player 2, shared anonymously."
 PRIVATE = "Example takeaway from Test Player 1, kept private."
 
 
+def _tab(label, count):
+    """A review tab as the page writes it: the count over the name."""
+    return f'<span class="review-tab-count">{count}</span>{label}</a>'
+
+
 @pytest.fixture
 def db_path(tmp_path):
     return tmp_path / "admin-review.db"
@@ -119,7 +124,7 @@ def test_safe_007_waiting_notes_show_with_their_writer(client):
     _log_in(client, *ADMIN)
     html = client.get("/admin/review").text
     assert NAMED in html and ANON in html
-    assert "Waiting (2)" in html
+    assert _tab("Waiting", 2) in html
     # SAFE-009: admins see who wrote the anonymous note.
     assert "Test Player 2, Example Church A" in html
     assert 'Players see "Anonymous"' in html
@@ -136,7 +141,7 @@ def test_safe_029_private_notes_are_never_listed(client):
 def test_safe_007_an_unknown_tab_shows_waiting(client):
     _log_in(client, *ADMIN)
     html = client.get("/admin/review?status=private").text
-    assert 'aria-current="page">Waiting (2)' in html
+    assert f'aria-current="page">{_tab("Waiting", 2)}' in html
     assert PRIVATE not in html
 
 
@@ -242,13 +247,26 @@ def test_arch_038_review_needs_csrf(client, db_path):
     assert _status(db_path, "note-named") == "pending"
 
 
-def test_safe_007_admin_console_links_to_review(client):
+def test_safe_007_admin_console_review_tile_counts_waiting_notes(client):
     _log_in(client, *ADMIN)
-    assert 'href="/admin/review">Review notes</a>' in client.get("/admin").text
+    html = client.get("/admin").text
+    tile = html[html.index('<a class="tile" href="/admin/review">') :]
+    tile = tile[: tile.index("</a>")]
+    assert (
+        '<span class="tile-count">2<span class="visually-hidden"> waiting</span>'
+        in tile
+    )
+
+
+def test_safe_007_review_tile_hides_the_count_when_nothing_waits(client):
+    _log_in(client, *ADMIN)
+    for note in ("note-named", "note-anon"):
+        _review(client, note, "approve")
+    assert "tile-count" not in client.get("/admin").text
 
 
 def test_safe_007_tab_counts_update_with_the_swapped_list(client):
     _log_in(client, *ADMIN)
     html = _review(client, "note-named", "approve", **{"HX-Request": "true"}).text
     review = html[html.index('id="review"') :]
-    assert "Waiting (1)" in review and "Approved (1)" in review
+    assert _tab("Waiting", 1) in review and _tab("Approved", 1) in review

@@ -1,6 +1,7 @@
 {% extends "player/plain.html" %}
 
 {% set role_label = "Admin" %}
+{% set back = ("/admin", "Admin") %}
 
 {% block title %}Sessions · Side Quest{% endblock %}
 
@@ -16,60 +17,71 @@
 
 {% block content %}
   {% set labels = {"on": "On", "paused": "Paused", "off": "Off"} %}
+  {% set adding = form and not form.get("session") %}
   <div class="stack">
     <h1>sessions.</h1>
+    {# The add form opens in place under the title, with no JavaScript (API-007). It stays open after a refused add. #}
+    <details class="session-edit session-add"{% if adding %} open{% endif %}>
+      <summary class="button button-secondary">Add</summary>
+      <form class="form" method="post" action="/admin/sessions">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <div class="card form-card">
+          {{ fields("add", form.get("title", "") if adding else "", form.get("starts_at", "") if adding else "", form.get("checkin_open_minutes", "") if adding else "") }}
+        </div>
+        <button class="button" type="submit">Add session</button>
+      </form>
+    </details>
 
     {# GAME-026: End session swaps only this part, picked out of the page with hx-select (API-002). #}
     <section id="sessions" class="stack" aria-labelledby="sessions-title">
-      <p>The game is <strong data-state="{{ state }}">{{ labels[state] }}</strong>.</p>
+      <p class="state-line"><span class="state-dot state-dot-{{ state }}" aria-hidden="true"></span><span>The game is <strong data-state="{{ state }}">{{ labels[state] }}</strong>.</span></p>
       {# GAME-107, OPS-001: auto-pause is a backup, so admins still press Pause. #}
       {% if auto_pause %}<p class="hint" data-auto-pause>The game pauses by itself at each start time. This is only a backup: still press Pause.</p>{% endif %}
       {% if notice %}<p class="card" role="status">{{ notice }}</p>{% endif %}
       {% if error_code %}{% include "partials/error.html" %}{% endif %}
-      <h2 id="sessions-title">Program</h2>
+      <h2 id="sessions-title" class="visually-hidden">Program</h2>
+      {# UI-035: only the first session not ended yet gets the black End button. #}
+      {% set first_open = namespace(seen=false) %}
       {% for row in rows %}
         {% set s = row.session %}
         {% set editing = form.get("session") == s.public_id %}
         <article class="card stack" data-session="{{ s.public_id }}">
-          <h3>{{ s.title }}</h3>
+          <div class="title-row">
+            <h3>{{ s.title }}</h3>
+            {% if s.ended_at %}<span class="chip">Ended</span>{% endif %}
+          </div>
           <p class="hint">
             {% if row.start_label %}Starts {{ row.start_label }}. Check-in opens {{ s.checkin_open_minutes }} min before.{% else %}No start time.{% endif %}
           </p>
-          <p class="hint" data-ended="{{ 'yes' if s.ended_at else 'no' }}">{% if s.ended_at %}<strong>Ended.</strong> Takeaways are open.{% else %}Not ended yet.{% endif %}</p>
-          {# One form per button, so it works without JavaScript too (API-007). #}
-          <form method="post" action="/admin/sessions/{{ s.public_id }}/end" hx-post="/admin/sessions/{{ s.public_id }}/end" hx-target="#sessions" hx-select="#sessions" hx-swap="outerHTML" hx-confirm="End {{ s.title }}? A paused game turns back on, and takeaways open.">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-            <button class="button button-secondary" type="submit">End session</button>
-          </form>
-          <details class="session-edit"{% if editing %} open{% endif %}>
-            <summary class="button button-secondary">Edit</summary>
-            <form class="form" method="post" action="/admin/sessions">
-              <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-              <input type="hidden" name="session" value="{{ s.public_id }}">
-              {% if editing %}
-                {{ fields("edit-" ~ s.public_id, form.get("title", ""), form.get("starts_at", ""), form.get("checkin_open_minutes", "")) }}
-              {% else %}
-                {{ fields("edit-" ~ s.public_id, s.title, row.start_value, s.checkin_open_minutes or "") }}
-              {% endif %}
-              <button class="button button-secondary" type="submit">Save</button>
-            </form>
-          </details>
+          <p class="hint" data-ended="{{ 'yes' if s.ended_at else 'no' }}">{% if s.ended_at %}Takeaways are open.{% else %}Not ended yet.{% endif %}</p>
+          {# GAME-026: an ended session has nothing left to end. One form per button, so it works without JavaScript too (API-007). #}
+          {# End and Edit sit side by side. An open Edit form takes the whole row. #}
+          <div class="session-actions">
+            {% if not s.ended_at %}
+              <form method="post" action="/admin/sessions/{{ s.public_id }}/end" hx-post="/admin/sessions/{{ s.public_id }}/end" hx-target="#sessions" hx-select="#sessions" hx-swap="outerHTML" hx-confirm="End {{ s.title }}? A paused game turns back on, and takeaways open.">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <button class="button{{ ' button-secondary' if first_open.seen }}" type="submit">End session</button>
+              </form>
+              {% set first_open.seen = true %}
+            {% endif %}
+            <details class="session-edit"{% if editing %} open{% endif %}>
+              <summary class="button button-secondary">Edit</summary>
+              <form class="form" method="post" action="/admin/sessions">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <input type="hidden" name="session" value="{{ s.public_id }}">
+                {% if editing %}
+                  {{ fields("edit-" ~ s.public_id, form.get("title", ""), form.get("starts_at", ""), form.get("checkin_open_minutes", "")) }}
+                {% else %}
+                  {{ fields("edit-" ~ s.public_id, s.title, row.start_value, s.checkin_open_minutes or "") }}
+                {% endif %}
+                <button class="button button-secondary" type="submit">Save</button>
+              </form>
+            </details>
+          </div>
         </article>
       {% else %}
         <p class="hint">No sessions yet.</p>
       {% endfor %}
     </section>
-
-    <h2>Add a session</h2>
-    <form class="form" method="post" action="/admin/sessions">
-      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-      {% set adding = form and not form.get("session") %}
-      <div class="card form-card">
-        {{ fields("add", form.get("title", "") if adding else "", form.get("starts_at", "") if adding else "", form.get("checkin_open_minutes", "") if adding else "") }}
-      </div>
-      <button class="button" type="submit">Add session</button>
-    </form>
-
-    <a class="button button-secondary" href="/admin">Admin console</a>
   </div>
 {% endblock %}

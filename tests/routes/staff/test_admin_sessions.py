@@ -281,3 +281,28 @@ def test_arch_038_session_forms_need_csrf(client, db_path):
     assert client.post(f"/admin/sessions/{row['public_id']}/end").status_code == 400
     assert len(_sessions(db_path)) == 1
     assert _state(db_path) == "paused"
+
+
+def test_game_026_an_ended_session_has_no_end_button(client, db_path):
+    _log_in(client, *ADMIN)
+    row = _added(client, db_path)
+    _post(client, f"/admin/sessions/{row['public_id']}/end")
+    html = client.get("/admin/sessions").text
+    assert "/end" not in html
+    assert '<span class="chip">Ended</span>' in html
+
+
+def test_ui_035_only_the_first_open_session_has_the_black_end_button(client, db_path):
+    _log_in(client, *ADMIN)
+    _added(client, db_path)
+    _added(client, db_path, {**FORM, "title": "Example Session 2"})
+    html = client.get("/admin/sessions").text
+    buttons = re.findall(r'<button class="([^"]+)" type="submit">End session', html)
+    assert buttons == ["button", "button button-secondary"]
+
+
+def test_api_005_refused_add_reopens_the_add_form(client, db_path):
+    _log_in(client, *ADMIN)
+    response = _post(client, "/admin/sessions", {**FORM, "title": ""})
+    assert response.status_code == 400
+    assert '<details class="session-edit session-add" open>' in response.text

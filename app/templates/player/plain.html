@@ -10,8 +10,35 @@
   {% set role = role_label or (staff.role | capitalize if staff else none) %}
   <header class="top-bar">
     <div class="top-bar-halftone" aria-hidden="true"></div>
-    <p class="brand"><img src="{{ static_url('img/k-mark-white.webp') }}" alt="" height="22">Side Quest</p>
-    {% if role %}<span class="role-pill">{{ role }}</span>{% endif %}
+    {# Staff sub-pages set `back` to (link, label): the way home sits in the top bar, not at the bottom. #}
+    {% if back %}
+      <a href="{{ back[0] }}"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"></path></svg>{{ back[1] }}</a>
+    {% else %}
+      <p class="brand"><img src="{{ static_url('img/k-mark-white.webp') }}" alt="" height="22">Side Quest</p>
+    {% endif %}
+    {# Log out needs the CSRF token (ARCH-038), so pages without one show only the back link. #}
+    {% if (staff or back) and csrf_token %}
+      <div class="top-bar-actions">
+        {% if role and not back %}<span class="role-pill">{{ role }}</span>{% endif %}
+        {# UI-036: the staff menu. <details> opens without JavaScript (API-007). #}
+        <details class="menu">
+          <summary class="icon-button" aria-label="Menu">
+            <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          </summary>
+          <div class="menu-panel">
+            {% if staff %}<p class="menu-label">{{ staff.username }}</p>{% endif %}
+            {# DEC-063: admins switch between the two consoles here. #}
+            {% if staff and staff.role == "admin" %}
+              {% if page == "admin" %}<a class="menu-item" href="/usher">Usher view</a>{% else %}<a class="menu-item" href="/admin">Admin view</a>{% endif %}
+            {% endif %}
+            <form method="post" action="/logout">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+              <button class="menu-item" type="submit">Log out</button>
+            </form>
+          </div>
+        </details>
+      </div>
+    {% endif %}
   </header>
   <main class="content">
     {% block content %}{% endblock %}

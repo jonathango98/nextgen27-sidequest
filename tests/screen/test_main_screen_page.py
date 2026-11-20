@@ -133,7 +133,11 @@ def test_ui_044_admin_panel_at_min_width(
     page.wait_for_url(f"{live_server}/admin")
     panel = page.locator("#main-screen")
     try:
-        expect(panel.get_by_role("link")).to_have_attribute(
+        # The sheet stays shut until the Main screen tile opens it.
+        expect(panel).to_be_hidden()
+        page.get_by_role("link", name="Main screen").click()
+        expect(panel).to_be_visible()
+        expect(panel.locator(".screen-link")).to_have_attribute(
             "href", f"{live_server}/screen?{screen_key.PARAM}={FAKE_SCREEN_KEY}"
         )
         expect(panel.locator("strong")).to_have_text("the offline message")
@@ -147,6 +151,9 @@ def test_ui_044_admin_panel_at_min_width(
         expect(page.locator("#main-screen strong")).to_have_text("the recap")
         assert page.evaluate("window.noReload") is True
         expect(page.get_by_role("button", name="Recap")).to_be_disabled()
+        expect(panel).to_be_visible()  # the swap keeps the sheet open
+        panel.get_by_role("link", name="Done").click()
+        expect(panel).to_be_hidden()
         assert errors == []
     finally:
         conn = connect(test_db_path)

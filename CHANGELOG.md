@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-19 · feat/staff-console-layout · Claude Opus 5.5 / @jonathango98
+
+- What: The admin console is a game panel colored by state (Pear on, gray paused, black off) with Start, Pause, and Off as one segmented row, then four tiles: Review with the waiting count, Sessions, Usher, and Main screen. Main screen opens as a `:target` sheet, so it needs no route or JavaScript, and its buttons swap only the sheet's inside so it stays open. The login card, console links, and Log out move to a gear menu in the staff top bar (name, Usher view or Admin view, Log out). Sessions, Review, and Find player get a back link in the top bar instead of a button at the bottom. Sessions: Add opens in place, an ended session gets an Ended chip and no End button, only the first open session's End button is black, and End and Edit sit side by side. Review: counts sit over the names in one row of four tabs, Approve and Reject side by side, and only the safety note stays at the top. Find player: the search button sits beside the name, results are a list, and the found player is a Pear card. New tokens in `tokens.css` for the paused panel, scrim, tile height, and state text. Find player has no CSRF token, so it shows only the back link, no menu.
+- Why: Jonathan found the staff pages long and hard to scan. Matches the "Staff redesign" boards on the design canvas, which he approved.
+- Rule IDs: GAME-026, GAME-101, GAME-108, GAME-110, GAME-112, SAFE-007, ARCH-037, DEC-063, UI-001, UI-008, UI-035, UI-036, API-007, AI-044
+- Status: Done
+- PR: #96
+
 ## 2026-11-20 · docs/close-pr-69-status · Claude Opus 5.5 / @jonathango98
 
 - What: Moved "Test staff accounts on PR previews" out of In progress in the README, and added what it does to the Behind the scenes row in Working. No code changes.
