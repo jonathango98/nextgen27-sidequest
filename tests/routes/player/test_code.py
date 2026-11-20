@@ -30,9 +30,11 @@ def window_start(cfg):
 @pytest.fixture
 def client(monkeypatch, tmp_path, window_start):
     monkeypatch.setenv(qr.KEY_ENV, FAKE_KEY)
+    # Startup reads SQ_DB_PATH (ARCH-010), so the seeded file must be the one it opens.
+    db_path = tmp_path / "code.db"
+    monkeypatch.setenv("SQ_DB_PATH", str(db_path))
+    seed_fake_players(db_path, FAKE_PLAYER.public_id)
     app = create_app()
-    app.state.db_path = tmp_path / "code.db"
-    seed_fake_players(app.state.db_path, FAKE_PLAYER.public_id)
     app.dependency_overrides[get_current_player] = lambda: FAKE_PLAYER
     app.dependency_overrides[code.current_time] = lambda: window_start
     # Start the app, so pages can read the game state for the paused note (UI-033).
@@ -69,7 +71,7 @@ def test_game_001_my_code_is_never_cached(client, path):
 
 def test_ui_030_my_code_page_uses_player_frame(client):
     html = client.get("/code").text
-    assert '<a href="/">Side Quest</a>' in html
+    assert link_to("/", "Side Quest").search(html)
     assert 'class="score"' not in html
     assert "/static/js/htmx.min.js" in html
 
