@@ -143,3 +143,44 @@ def test_data_004_connection_created_at_is_utc(conn, pair):
         "SELECT created_at FROM connection WHERE id = ?", (row_id,)
     ).fetchone()[0]
     assert re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z", created)
+
+
+def _answer(conn, connection_id, about, typed_by, text="Example answer"):
+    return conn.execute(
+        "INSERT INTO icebreaker_answer"
+        " (connection_id, about_player_id, typed_by_player_id, answer_text)"
+        " VALUES (?, ?, ?, ?)",
+        (connection_id, about, typed_by, text),
+    ).lastrowid
+
+
+def test_data_032_one_answer_per_person_per_connection(conn, pair):
+    low, high = pair
+    met = _connect(conn, low, high)
+    _answer(conn, met, about=high, typed_by=low)
+    with pytest.raises(sqlite3.IntegrityError, match="UNIQUE"):
+        _answer(conn, met, about=high, typed_by=low, text="Another answer")
+    # GAME-015: the other person types their own answer for the same connection.
+    _answer(conn, met, about=low, typed_by=high)
+    assert conn.execute("SELECT count(*) FROM icebreaker_answer").fetchone()[0] == 2
+
+
+def test_game_015_nobody_types_an_answer_about_themselves(conn, pair):
+    low, high = pair
+    met = _connect(conn, low, high)
+    with pytest.raises(sqlite3.IntegrityError, match="CHECK"):
+        _answer(conn, met, about=low, typed_by=low)
+
+
+@pytest.mark.parametrize("text", ["", "   ", "x" * 201])
+def test_safe_005_answer_is_never_blank_or_longer_than_200(conn, pair, text):
+    low, high = pair
+    met = _connect(conn, low, high)
+    with pytest.raises(sqlite3.IntegrityError, match="CHECK"):
+        _answer(conn, met, about=high, typed_by=low, text=text)
+
+
+def test_data_001_answer_needs_a_real_connection(conn, pair):
+    low, high = pair
+    with pytest.raises(sqlite3.IntegrityError, match="FOREIGN KEY"):
+        _answer(conn, 9999, about=high, typed_by=low)

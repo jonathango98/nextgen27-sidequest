@@ -23,6 +23,7 @@ from app.services.audit import record
 # Every table holding player-linked data, children before the tables they point to.
 DELETE_TABLES = (
     "audit_log",
+    "icebreaker_answer",
     "church_met",
     "connection",
     "point_ledger",

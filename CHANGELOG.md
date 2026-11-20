@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-04 · feat/connections-answers · Claude Opus 5.5 / @OwenTjandra
+
+- What: Builds `connections.answers`. Migration 0009 adds `icebreaker_answer` (one answer per person per connection, never about yourself, 1 to 200 characters). `POST /connections/{id}/answer` saves the answer the player typed for the other person and pays their points through the points service in the same transaction: `connect_same_church`, or `connect_other_church` plus `connect_new_church_bonus` the first time they meet someone from that church (saved in `church_met`). The icebreaker page shows the form, then the saved answer. Refused outside the pair (404), twice (409 `ALREADY_DONE`), blank or too long (400), and while paused or off (423). The retention cleanup deletes answers too. PR previews also seed Test Player 3 at Example Church A.
+- Why: Picked by Owen from the feature tree after `connections.meet` (#70). Due 2026-12-04 and unlocks 3 pieces.
+- Rule IDs: GAME-010, GAME-011, GAME-012, GAME-015, GAME-016, GAME-018, GAME-102, GAME-108, SAFE-005, SAFE-006, SAFE-014, DATA-021, DATA-027, DATA-032, API-002, API-005, API-007, API-020, AI-013, AI-041, AI-044, ENG-113, ENG-108
+- Status: Done
+- PR: #79
+
 ## 2026-11-12 · feat/kairos-look · Claude Opus 5.5 / @jonathango98
 
 - What: Builds `look.kairos`. Every screen (player, staff, main screen) switches from the Mix look to the Kairos look from the Nextgen 2027 brand kit: white, black and Pear (#C1CC52), flat, a black top bar with the K mark, self-hosted Outfit 1.100 and Inter 4.001 (Latin, trimmed weights, SIL OFL, 58 KB), one halftone texture (42 KB), pill buttons, and lowercase page titles with a period. While the game is paused, every player page turns grayscale (UI-033). The K mark on black is the browser tab and home screen icon. `tokens.css`, `player.css` and `screen.css` rewritten; templates change only the top bar, decoration, and h1 text. DEC-080 replaces the Mix look (DEC-035, DEC-036 grain), rewrites UI-004, UI-006, UI-008, UI-009, ARCH-073, removes UI-007 (church colors), and adds UI-058 (title casing). Old-look tests replaced with Kairos ones.

@@ -157,8 +157,10 @@ def test_game_017_connection_id_must_be_a_number(client):
     assert client.get("/connections/abc").status_code != 200
 
 
-def test_game_015_icebreaker_answer_is_switched_off(client):
-    assert "<fieldset disabled>" in client.get("/connections/1").text
+def test_game_015_icebreaker_answer_form_is_switched_on(client):
+    html = client.get("/connections/1").text
+    assert 'hx-post="/connections/1/answer"' in html
+    assert "disabled" not in html
 
 
 def test_ui_030_journal_links_to_new_takeaway(client):
