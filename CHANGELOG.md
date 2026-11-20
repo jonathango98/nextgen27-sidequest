@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: some booths run an activity and need a result per player (DEC-082).
 - Rule IDs: GAME-046, SAFE-045, DATA-033, GAME-041, GAME-110, GAME-112, DEC-082, ENG-087.
 - Status: Done (plan only. The piece is Waiting on `explore.booths`).
-- PR: draft
+- PR: #100
 
 ## 2026-11-19 · fix/visible-screen-height · Claude Opus 5.5 / @jonathango98
 
