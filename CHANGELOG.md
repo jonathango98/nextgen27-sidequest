@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-19 · fix/home-code-fit-screen · Claude Opus 5.5 / @jonathango98
+
+- What: Every button on Home and My Code fits on a 360 by 640 screen without scrolling, and the top bar stays at the top of every player page while the page scrolls.
+- Why: Jonathan wants players to see every button at a glance. My Code was 753px tall and Home 687px on short screens.
+- Rule IDs: UI-002, UI-003, UI-030, UI-036, UI-037
+- Status: Started
+- PR: draft
+
 ## 2026-11-19 · feat/icebreaker-opens-both-phones · Claude Opus 5.5 / @jonathango98
 
 - What: After a scan, both phones go straight to the icebreaker. `POST /scan` answers with `HX-Redirect` to `/connections/{id}` (the scan result card is gone), and `/code/incoming` sends the scanned phone to the first new scan's icebreaker instead of showing a note to tap. If several people scan someone before the next check, only the first opens. The `connections.meet` try_it wording in `foundation/feature-tree.yaml` follows (2.4.1, needs Jonathan's approval).
