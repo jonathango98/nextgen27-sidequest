@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Exact verse answers so Wrapped can find each player's top verse.
 - Rule IDs: WRAP-012, GAME-019, ENG-101
 - Status: Started
-- PR: draft
+- PR: #101
 
 ## 2026-11-19 · feat/page-transitions · Claude Opus 5.5 / @jonathango98
 

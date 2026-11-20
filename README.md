@@ -61,7 +61,7 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| `connections.verse-picker` Players pick a favorite verse from lists | `feat/connections-verse-picker` | draft | 2026-11-20 | Claude Opus 5.5 / @jonathango98 |
+| `connections.verse-picker` Players pick a favorite verse from lists | `feat/connections-verse-picker` | #101 | 2026-11-20 | Claude Opus 5.5 / @jonathango98 |
 
 ### Planned
 
