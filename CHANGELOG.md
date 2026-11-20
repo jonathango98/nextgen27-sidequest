@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-20 · feat/connections-verse-picker · Claude Opus 5.5 / @jonathango98
+
+- What: Claim `connections.verse-picker`: on the favorite verse question, players pick book, chapter, and verse from lists, saved as "John 3:16".
+- Why: Exact verse answers so Wrapped can find each player's top verse.
+- Rule IDs: WRAP-012, GAME-019, ENG-101
+- Status: Started
+- PR: draft
+
 ## 2026-11-19 · feat/page-transitions · Claude Opus 5.5 / @jonathango98
 
 - What: Smooth page changes on player pages (`look.motion`). The top and bottom bars stay still, the old page fades on tap with a Pear loading line if the next page is slow, and the new page's blocks and list rows slide in one by one by direction while the Pear pill slides to the new tab. Built with CSS cross-page View Transitions and a small inline script in `player/base.html`, so staff pages, Wrapped, error pages, and the main screen don't move. Conservative prefetch fetches a page only once a finger is on its link. Added UI-059 and the motion tokens to `07-design-system.md`, DEC-081 to `13-decisions.md`, and the `look.motion` piece to `feature-tree.yaml`.

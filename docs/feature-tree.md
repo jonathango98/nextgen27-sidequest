@@ -5,7 +5,7 @@
 
 Every planned piece of work and what it needs first (ENG-105 to ENG-108), grouped by the week it is due (PRD-054). Pieces flow left to right in time: finishing one unlocks the pieces it points to. Run `/pick-task` to claim one.
 
-**Working** 34 · **In progress** 0 · **Ready** 11 · **Waiting** 8 · **Needs decision** 0
+**Working** 34 · **In progress** 1 · **Ready** 10 · **Waiting** 8 · **Needs decision** 0
 
 Colors: green Working, blue In progress, gold Ready, gray Waiting, red dashed Needs decision.
 
@@ -182,17 +182,13 @@ flowchart LR
   classDef waiting fill:#f1f0eb,stroke:#c3c0b6,color:#545a66
   classDef decision fill:#fdeeec,stroke:#b42318,stroke-dasharray:4 3,color:#14151a
   class app_foundation,auth_join_login,checkin_sessions,code_my_code,connections_answers,connections_meet,connections_scanner_camera,connections_table,game_state_auto_pause,game_state_controls,game_state_core,home_pages,infra_hosting,journal_notes,journal_share_review,leaderboards_in_app,leaderboards_screen,look_base,look_kairos,look_motion,look_screens,points_audit_log,points_ledger,points_score,ready_backups,ready_load_test,ready_logout,ready_rate_limits,ready_retention,screen_main,screens_skeleton,staff_accounts,staff_login,usher_console working
-  class admin_audit_view,admin_players,admin_setup,blind_box_handout,checkin_window,connections_verse_picker,explore_booths,photobooth_points,photobooth_screen,recap_screen,wrapped_cards ready
+  class connections_verse_picker in_progress
+  class admin_audit_view,admin_players,admin_setup,blind_box_handout,checkin_window,explore_booths,photobooth_points,photobooth_screen,recap_screen,wrapped_cards ready
   class admin_award_revoke,blind_box_close_redemption,checkin_hall,explore_booth_answers,explore_items,wrapped_collection,wrapped_save_image,wrapped_stat_cards waiting
 ```
 
 ## Ready now
 
-- `connections.verse-picker`: When the question is about a favorite verse, players choose the book, chapter and verse from lists instead of typing. It saves as something like John 3:16. (S, medium, player-app, due fri dec 4)
-  - Try it:
-    1. Scan between two test players until you get the favorite verse question.
-    2. Choose a book, chapter and verse from the lists, you should see it saved in the usual form.
-    3. Try to break it by picking a chapter that is too high for that book, the lists should not let you.
 - `checkin.window`: Check-in opens on its own a few minutes before a session starts and closes when it starts. A session with no start time gets an Open check-in button. An admin can also close check-in for any session whenever they choose. (L, medium, admin-screens, due fri dec 11)
   - Try it:
     1. On the PR preview, log in as Test Admin and give Example Session 1 a start time a few minutes away with 2 check-in minutes. The session should show check-in open 2 minutes before, and closed at the start time.
@@ -260,7 +256,7 @@ flowchart LR
 
 ## In progress
 
-- None
+- `connections.verse-picker`: When the question is about a favorite verse, players choose the book, chapter and verse from lists instead of typing. It saves as something like John 3:16.
 
 ## Needs a decision
 
