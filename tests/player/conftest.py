@@ -27,6 +27,9 @@ FAKE_KEY = "test-only-fake-signing-key"
 FAKE_SESSION_KEY = "test-only-fake-session-key"  # never a real key (SAFE-030)
 FAKE_START = 1_800_000_000  # fixed clock, not a game number
 VIEWPORT_HEIGHT = 740
+SHORT_PHONE_HEIGHT = (
+    640  # the shortest screen Home and My Code fit, a test size, not a game number
+)
 COMPONENTS = Path(__file__).with_name("components.html")
 
 
@@ -174,3 +177,15 @@ def live_server(tmp_path_factory):
         del os.environ[session.KEY_ENV]
     else:
         os.environ[session.KEY_ENV] = old_session_key
+
+
+def fits_without_scrolling(page, path, buttons):
+    """Opens `path` on a short phone and checks every button shows above the bottom bar."""
+    width = load_config()["ui"]["min_viewport_px"]  # UI-002
+    page.set_viewport_size({"width": width, "height": SHORT_PHONE_HEIGHT})
+    page.goto(path)
+    assert page.evaluate("document.documentElement.scrollHeight") <= SHORT_PHONE_HEIGHT
+    bar_top = page.get_by_role("navigation", name="Main").bounding_box()["y"]
+    for button in buttons:
+        box = button.bounding_box()
+        assert box["y"] + box["height"] <= bar_top, button
