@@ -2,7 +2,7 @@
 #
 # Status: Active
 # Owner: Jonathan (@jonathango98)
-# Version: 2.4.1
+# Version: 2.5.0
 # Last updated: 2026-11-19
 # Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 #
@@ -505,6 +505,24 @@ pieces:
     safety_review: true
     rules: [GAME-110, DATA-024, DATA-025, SAFE-010, GAME-041]
     learn: how to keep secret game data out of the database, and how a constraint enforces once per booth
+  - id: explore.booth-answers
+    feature: explore
+    what: Some booths ask about the player, like their personality type from a test at the booth. When the usher records the visit, they pick each answer from a list, and the points and answers save together. The player sees their own answers, and an admin can fix a wrong one.
+    try_it:
+      - On the PR preview, log in as Test Admin, open the booths, and give Example Booth A the example question set. Leave Example Booth B with none.
+      - As Test Usher on a phone, scan Test Player 1's My Code at Example Booth A. Every question should show a list to pick from, and Save should stay off until each one has an answer.
+      - Pick the answers and Save. Test Player 1's score should go up.
+      - As Test Player 1 on a phone, open Quests. Your answers from Example Booth A should be there.
+      - As Test Usher, scan Test Player 2 at Example Booth B. It should save with no questions.
+      - As Test Admin, find Test Player 1 and change one booth answer. The new answer should show on Test Player 1's Quests, and the audit log should have a row for the change.
+    needs: [explore.booths]
+    open: []
+    area: admin-screens
+    size: M
+    level: medium
+    safety_review: true
+    rules: [GAME-046, GAME-041, SAFE-045, DATA-033, GAME-110, GAME-112, ARCH-050]
+    learn: how a fixed answer list from the settings file is checked by the server before it saves
   - id: explore.items
     feature: explore
     what: An usher records that a player turned in a hidden item, which only the first player can do.

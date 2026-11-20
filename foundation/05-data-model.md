@@ -2,8 +2,8 @@
 
 - Status: PROPOSED (developers confirm at kickoff; constraints marked LOCKED are required whatever the final schema looks like)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.9.0
-- Last updated: 2026-11-10
+- Version: 1.10.0
+- Last updated: 2026-11-19
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -138,12 +138,13 @@ This file lists the tables, their fields, and the database constraints that enfo
 | `review_status` | text | `not_needed` (private), `pending`, `approved`, `rejected`, `hidden`. A shared post is never `not_needed`. A private post is `not_needed`, or keeps `rejected` or `hidden` so it can't be shared again (DEC-076) |
 | `reviewed_by`, `reviewed_at` | staff ID, timestamp | Nullable |
 
-### Booth, BoothVisit, PhotoboothVisit, HiddenItem
+### Booth, BoothVisit, BoothAnswer, PhotoboothVisit, HiddenItem
 
 | Table | Key fields | Notes |
 |---|---|---|
-| Booth | `id`, `name` | Entered by an admin |
+| Booth | `id`, `name`, `question_set` | Entered by an admin. `question_set` is a key in `booth_questions` in `game-config.yaml`, or empty for no questions (GAME-046) |
 | BoothVisit | `player_id`, `booth_id`, `recorded_by`, `created_at` | |
+| BoothAnswer | `booth_visit_id`, `question_id`, `answer`, `updated_by`, `updated_at` | One row per question, saved with the visit. `answer` is the answer text as it was in the list. `updated_by` is the usher, or the admin who fixed it (GAME-046) |
 | PhotoboothVisit | `player_id`, `event_day`, `recorded_by`, `ticket_id`, `created_at` | `event_day` is the date in the venue timezone (GAME-042). `recorded_by` is the usher, or empty for a kiosk visit. `ticket_id` is set only for a kiosk visit (DEC-079) |
 | HiddenItem | `id`, `item_number`, `claimed_by`, `claimed_at`, `recorded_by` | No location field, ever (SAFE-010) |
 
@@ -195,6 +196,7 @@ This file lists the tables, their fields, and the database constraints that enfo
 | **DATA-025** [LOCKED] | HiddenItem: `UNIQUE (item_number)`, and `claimed_by` can be set only once | Each item claimed once in total (GAME-043) |
 | **DATA-026** [LOCKED] | BoxClaim: `UNIQUE (player_id, claim_number)` | No double claims (GAME-074) |
 | **DATA-027** [LOCKED] | PointLedger: `UNIQUE (player_id, reason_code, source_type, source_id)` for system awards | The same record never pays twice |
+| **DATA-033** [PROPOSED] | BoothAnswer: `UNIQUE (booth_visit_id, question_id)` | One answer per question per visit (GAME-046) |
 | **DATA-032** [PROPOSED] | IcebreakerAnswer: `UNIQUE (connection_id, typed_by_player_id)` | One answer per person per connection, so points pay once (GAME-015, GAME-016, DEC-053) |
 
 Rules that a unique constraint cannot express are checked by the points service inside the same transaction (ARCH-040):

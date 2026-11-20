@@ -2,8 +2,8 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.5.0
-- Last updated: 2026-11-05
+- Version: 1.6.0
+- Last updated: 2026-11-19
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -54,6 +54,7 @@ Legend: Yes = can see. No = cannot see. Own = only their own record.
 | Shared named takeaway, after approval | Own | Yes (with first name and church) | No | Yes | Yes (takeaway wall) |
 | Shared anonymous takeaway, after approval | Own | Yes (as "Anonymous") | No | Yes (with author) | Yes (as "Anonymous") |
 | Check-ins, booth visits, hidden items | Own | No | Yes (the ones they record) | Yes | No |
+| Booth answers (GAME-046) | Own | No | Only while recording them | Yes | No |
 | Login attempts and lockout | No | No | No | Yes | No |
 | Audit log | No | No | No | Yes | No |
 
@@ -73,6 +74,7 @@ Legend: Yes = can see. No = cannot see. Own = only their own record.
 - **SAFE-021** [LOCKED] The PIN is 4 digits. It is stored only as a slow hash (ARCH-030). It is never shown, logged, or sent back to the phone. Config: `auth.pin_digits`.
 - **SAFE-022** [PROPOSED] After 5 wrong PIN tries in a row, the account locks. A locked account unlocks itself after 60 minutes, during and after the event (DEC-053). This allows about 120 guesses a day against one account, so over the year Wrapped is open a known account's PIN could be guessed. Needs safety review. Config: `auth.pin_max_attempts`, `auth.auto_unlock_minutes`.
 - **SAFE-023** [LOCKED] Only an admin can reset a locked PIN. This replaces the Blueprint's "until an usher resets it" (decision DEC-004). An account can also unlock itself after a wait (SAFE-022), which keeps the same PIN. Config: `auth.pin_reset_role`.
+- **SAFE-045** [PROPOSED] Booth questions (GAME-046) have fixed answer lists, never free text. They never ask about health, family, faith struggles, contact details, or anything a player, including an under-18 player, might not want an usher to know. Jonathan checks each new set before it goes into `game-config.yaml`.
 - **SAFE-044** [PROPOSED] Before resetting a PIN, the admin checks the person's name badge in person. The player then sets a new PIN on their phone.
 
 ## 6. Other rules

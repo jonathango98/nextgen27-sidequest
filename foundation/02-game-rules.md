@@ -2,8 +2,8 @@
 
 - Status: Active (each rule has its own status)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.9.0
-- Last updated: 2026-11-05
+- Version: 1.10.0
+- Last updated: 2026-11-19
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -112,6 +112,7 @@ Tier size: 10 scans per tier. Config: `checkin.tier_size`.
 - **GAME-043** [PROPOSED] Numbered hidden items are placed in conference areas only (SAFE-010). A player who finds one brings it to the game booth. An usher records the item number and scans the player's My Code. The player earns 15 points. Each item can be claimed once in total, by the first player who turns it in. The booth keeps the item. Config: `points.hidden_item`.
 - **GAME-044** [PROPOSED] Join points are given at sign-up even while the game is paused, so players see their first points during the Day 1 stage intro. This is the only earning allowed while paused (GAME-102, DEC-043). Config: `join.points_while_paused`.
 - **GAME-045** [PROPOSED] The game booth does not count as a booth for GAME-041 (DEC-040).
+- **GAME-046** [PROPOSED] A booth can ask questions about the player, for example their personality type from a test at the booth. Each question has a fixed list of answers. The question sets live in `game-config.yaml`, and an admin picks a booth's set (or none) on the booth list. When an usher records a visit at a booth with a set, they pick one answer per question from a dropdown, and Save stays off until every question has an answer. The visit, its GAME-041 points, and the answers save together, so there are no points without answers. The server accepts only answers from that question's list. The player sees their own answers on Quests. Ushers see them only while recording, and can't change them after Save. An admin can fix a wrong answer, which writes an audit row (ARCH-050). Booths without a set work as GAME-041 alone (DEC-082). Config: `booth_questions`.
 
 ## 6. Blind boxes
 
@@ -181,9 +182,9 @@ Example Church B has 1 player with 300 points. Its church score is (300 + 5 × 9
 
 ## 10. Admin and usher powers
 
-- **GAME-110** [LOCKED] Admins can: pause and resume the game, set the game to off, end a session (GAME-026), review shared takeaways, award and revoke points by hand, reset a locked PIN (SAFE-023), fix a player's church, manage the church list, booths, hidden item numbers, sessions, and usher accounts, close blind box redemption on Sunday (GAME-078), mark blind boxes ran out or back in stock (GAME-076), and unlock Wrapped (WRAP-002).
+- **GAME-110** [LOCKED] Admins can: pause and resume the game, set the game to off, end a session (GAME-026), review shared takeaways, award and revoke points by hand, reset a locked PIN (SAFE-023), fix a player's church, manage the church list, booths, hidden item numbers, fix a booth answer (GAME-046), sessions, and usher accounts, close blind box redemption on Sunday (GAME-078), mark blind boxes ran out or back in stock (GAME-076), and unlock Wrapped (WRAP-002).
 - **GAME-111** [LOCKED] Every manual award or revocation needs a written reason and writes an audit row (ARCH-050). Revocation is the only action that lowers a score (GAME-004).
-- **GAME-112** [LOCKED] Ushers can: scan My Code for booth visits, photobooth visits, hidden item turn-ins, and blind box claims, and look up a player by name to help them. Ushers cannot give arbitrary points. Only admins can (GAME-110).
+- **GAME-112** [LOCKED] Ushers can: scan My Code for booth visits (with the booth's answers, GAME-046), photobooth visits, hidden item turn-ins, and blind box claims, and look up a player by name to help them. Ushers cannot give arbitrary points. Only admins can (GAME-110).
 - **GAME-113** [PROPOSED] If a player's phone is dead, an usher looks the player up by name and records the same quest (booth, photobooth, hidden item, blind box claim) without a scan. The usher's account is saved on the record.
 - **GAME-114** [PROPOSED] An admin cannot revoke more points than the player has. Score never goes below 0.
 
