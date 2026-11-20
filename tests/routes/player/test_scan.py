@@ -111,19 +111,20 @@ def test_dec_061_scan_logged_out_goes_to_login():
     assert response.headers["hx-redirect"] == "/login"
 
 
-def test_game_014_scan_shows_who_you_met_and_their_question(db):
+def test_game_017_scan_opens_the_icebreaker(db):
     c, _ = db
     response = _post_scan(c, "testpid02")
-    assert response.status_code == 200
-    assert "<html" not in response.text  # API-002: only the fragment
-    assert "You met Test!" in response.text
-    assert "Example Church A" in response.text
-    assert re.search(r'href="/connections/\d+">Open icebreaker</a>', response.text)
+    assert response.status_code == 204
+    assert re.fullmatch(r"/connections/\d+", response.headers["hx-redirect"])
+    page = c.get(response.headers["hx-redirect"]).text
+    assert "Test · Example Church A" in page
 
 
-def test_safe_004_scan_result_never_shows_last_name(db):
+def test_safe_004_icebreaker_never_shows_last_name(db):
     c, _ = db
-    assert "Player 2" not in _post_scan(c, "testpid02").text
+    assert (
+        "Player 2" not in c.get(_post_scan(c, "testpid02").headers["hx-redirect"]).text
+    )
 
 
 @pytest.mark.parametrize(
@@ -169,17 +170,19 @@ def test_api_020_scan_while_game_not_on_is_423(db, state, code):
 
 
 def _connection_id(response):
-    return int(re.search(r'data-connection="(\d+)"', response.text).group(1))
+    return int(response.headers["hx-redirect"].rsplit("/", 1)[1])
+
+
+def _question(html):
+    return re.search(r"<h1>(.+?)</h1>", html).group(1)
 
 
 def test_game_017_icebreaker_shows_the_pairs_question_to_both(db):
     c, _ = db
-    met = _post_scan(c, "testpid02")
-    question = re.search(r"<h2>(.+?)</h2>", met.text).group(1)
-    path = f"/connections/{_connection_id(met)}"
-    assert f"<h1>{question}</h1>" in c.get(path).text
+    path = f"/connections/{_connection_id(_post_scan(c, 'testpid02'))}"
+    question = _question(c.get(path).text)
     _as(c, "testpid02")
-    assert f"<h1>{question}</h1>" in c.get(path).text
+    assert _question(c.get(path).text) == question
 
 
 def test_safe_006_icebreaker_hidden_from_everyone_else(db):
@@ -295,38 +298,42 @@ def test_api_007_answer_works_without_javascript(db):
     assert "Saved! You earned" in response.text
 
 
-def test_api_032_incoming_is_204_until_someone_scans(db):
+def _poll(c):
+    return re.search(r'hx-get="(/code/incoming[^"]+)"', c.get("/code").text).group(1)
+
+
+def test_api_032_incoming_opens_the_icebreaker_once_someone_scans(db):
     c, _ = db
     _as(c, "testpid02")
-    html = c.get("/code").text
-    poll = (
-        re.search(r'hx-get="(/code/incoming[^"]+)"', html)
-        .group(1)
-        .replace("&amp;", "&")
-    )
-    assert c.get(poll).status_code == 204
+    poll = _poll(c)
+    nothing = c.get(poll)
+    assert nothing.status_code == 204
+    assert "hx-redirect" not in nothing.headers
     _as(c, FAKE_PLAYER.public_id)
-    _post_scan(c, "testpid02")  # Test Player 1 scans Test Player 2
+    met = _post_scan(c, "testpid02")  # Test Player 1 scans Test Player 2
     _as(c, "testpid02")
     response = c.get(poll)
-    assert response.status_code == 200
-    assert "Test just scanned you!" in response.text
+    assert response.headers["hx-redirect"] == met.headers["hx-redirect"]
     assert response.headers["cache-control"] == "no-store"
-    # The next check asks only for newer scans, so the note stays put.
-    newer = re.search(r'hx-get="(/code/incoming[^"]+)"', response.text).group(1)
-    assert c.get(newer.replace("&amp;", "&")).status_code == 204
+
+
+def test_api_032_incoming_opens_the_first_of_several_scans(db):
+    c, _ = db
+    _as(c, "testpid02")
+    poll = _poll(c)
+    _as(c, FAKE_PLAYER.public_id)
+    first = _post_scan(c, "testpid02")
+    _as(c, "testpid03")
+    _post_scan(c, "testpid02")
+    _as(c, "testpid02")
+    assert c.get(poll).headers["hx-redirect"] == first.headers["hx-redirect"]
 
 
 def test_api_032_incoming_ignores_scans_you_made(db):
     c, _ = db
-    html = c.get("/code").text
-    poll = (
-        re.search(r'hx-get="(/code/incoming[^"]+)"', html)
-        .group(1)
-        .replace("&amp;", "&")
-    )
+    poll = _poll(c)
     _post_scan(c, "testpid02")
-    assert c.get(poll).status_code == 204
+    assert "hx-redirect" not in c.get(poll).headers
 
 
 def test_api_030_incoming_polls_at_config_interval(db):

@@ -5,7 +5,7 @@ import sqlite3
 import time
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, Request, Response
 
 from app.auth import csrf
 from app.auth.current import CurrentPlayer, LoginRequired, get_current_player
@@ -67,9 +67,8 @@ def scan_submit(request: Request, player: Player, conn: Db, form: Form, now: Now
             {"error_code": refused.code, "message": refused.message},
             status_code=refused.status,
         )
-    return templates.TemplateResponse(
-        request, "player/partials/scan_result.html", {"connection": met}
-    )
+    # GAME-017: straight to the icebreaker, which shows the friend's name, church, and question.
+    return Response(status_code=204, headers={"HX-Redirect": f"/connections/{met.id}"})
 
 
 @router.get("/connections/{connection_id}")

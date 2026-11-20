@@ -22,11 +22,11 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-11-19 · feat/icebreaker-opens-both-phones · Claude Opus 5.5 / @jonathango98
 
-- What: After a scan, both phones go straight to the icebreaker. The scanner's phone opens it when the scan is saved, and the scanned player's My Code opens it at its next check, instead of showing a note to tap.
+- What: After a scan, both phones go straight to the icebreaker. `POST /scan` answers with `HX-Redirect` to `/connections/{id}` (the scan result card is gone), and `/code/incoming` sends the scanned phone to the first new scan's icebreaker instead of showing a note to tap. If several people scan someone before the next check, only the first opens. The `connections.meet` try_it wording in `foundation/feature-tree.yaml` follows (2.4.1, needs Jonathan's approval).
 - Why: Jonathan wants both people on the same question without a tap (GAME-017, API-030).
-- Rule IDs: GAME-017, API-030, API-032, UI-034, ARCH-074
-- Status: Started
-- PR: draft
+- Rule IDs: GAME-017, API-030, API-032, UI-034, ARCH-074, ENG-080, ENG-087
+- Status: Done
+- PR: #93
 
 ## 2026-11-04 · feat/connections-answers · Claude Opus 5.5 / @OwenTjandra
 

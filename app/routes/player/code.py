@@ -1,4 +1,5 @@
-"""My Code page, its refreshing QR, and the note when someone scans it (GAME-001, API-030, API-032)."""
+"""My Code page, its refreshing QR, and opening the icebreaker when someone scans it
+(GAME-001, API-030, API-032)."""
 
 import sqlite3
 import time
@@ -55,22 +56,18 @@ def _qr_context(request: Request, player: CurrentPlayer, now: float) -> dict:
     }
 
 
-def _incoming_context(request: Request, since: int, after: int, notes: list) -> dict:
+def _incoming_context(request: Request, since: int) -> dict:
     return {
         "since": since,
-        "after": after,
-        "notes": notes,
         "poll_seconds": request.app.state.config["qr"]["incoming_poll_seconds"],
     }
 
 
 @router.get("/code")
 def my_code(request: Request, player: Player, conn: Db, now: Now):
-    # API-032: only scans after the page opened get a note.
+    # API-032: only scans after the page opened count.
     latest = connections.latest_id(conn, player_id(conn, player))
-    context = _qr_context(request, player, now) | _incoming_context(
-        request, latest, latest, []
-    )
+    context = _qr_context(request, player, now) | _incoming_context(request, latest)
     return templates.TemplateResponse(
         request, "player/code.html", context, headers=NO_STORE
     )
@@ -92,19 +89,13 @@ def my_code_qr(request: Request, player: Player, now: Now, conn: Db):
 
 
 @router.get("/code/incoming")
-def my_code_incoming(
-    request: Request, player: Player, conn: Db, since: int = 0, after: int = 0
-):
-    # API-032: 204 when nobody new scanned this code, so the page keeps what it shows.
-    # Otherwise every note since the page opened, and the newest id to check after.
-    me = player_id(conn, player)
-    notes = connections.incoming(conn, me, since)
-    newest = max((note.id for note in notes), default=0)
-    if newest <= after:
+def my_code_incoming(player: Player, conn: Db, since: int = 0):
+    # API-032: 204 while nobody new scanned this code. Otherwise open the first new scan's
+    # icebreaker (GAME-017). Later scans in the same wait are not shown.
+    notes = connections.incoming(conn, player_id(conn, player), since)
+    if not notes:
         return Response(status_code=204, headers=NO_STORE)
-    return templates.TemplateResponse(
-        request,
-        "player/partials/code_incoming.html",
-        _incoming_context(request, since, newest, notes),
-        headers=NO_STORE,
+    return Response(
+        status_code=204,
+        headers=NO_STORE | {"HX-Redirect": f"/connections/{notes[0].id}"},
     )
