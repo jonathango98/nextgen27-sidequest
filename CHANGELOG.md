@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-19 · feat/staff-console-layout · Claude Opus 5.5 / @jonathango98
+
+- What: Started. Rearrange the admin and usher consoles and the staff sub-pages (sessions, review, find player) to match the "Staff redesign" boards on the design canvas.
+- Why: Jonathan finds the staff pages long and hard to scan: too much scrolling, a clunky game switch, a login card that wastes space, and tools that all look the same.
+- Rule IDs: GAME-110, GAME-112, UI-008, UI-036, ENG-101
+- Status: Started
+- PR: draft
+
 ## 2026-11-20 · docs/close-pr-69-status · Claude Opus 5.5 / @jonathango98
 
 - What: Moved "Test staff accounts on PR previews" out of In progress in the README, and added what it does to the Behind the scenes row in Working. No code changes.

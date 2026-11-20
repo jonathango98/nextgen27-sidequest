@@ -61,6 +61,7 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
+| Staff console layout: game panel, tiles, gear menu, back links | `feat/staff-console-layout` | draft | 2026-11-19 | Claude Opus 5.5 / @jonathango98 |
 
 ### Planned
 
