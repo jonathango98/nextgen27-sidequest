@@ -383,6 +383,26 @@ def test_safe_005_blank_or_too_long_answer_is_refused(conn, ids, text):
     assert _score(conn, ids, "testpid01") == 0
 
 
+def _pill(conn, ids, met, public_id):
+    return connections.save_points(conn, met.id, ids[public_id], POINTS)
+
+
+def test_game_010_game_011_save_pill_shows_what_save_pays(conn, ids):
+    _move_to_church_b(conn, "testpid02", "testpid03")
+    first = _scan(conn)  # A meets B, the first person from Church B
+    pill = _pill(conn, ids, first, "testpid01")
+    assert pill == POINTS["connect_other_church"] + POINTS["connect_new_church_bonus"]
+    assert _answer(conn, ids, first, "testpid01") == pill
+    second = _scan(conn, scanned="testpid03")  # Church B again: no bonus
+    pill = _pill(conn, ids, second, "testpid01")
+    assert pill == POINTS["connect_other_church"]
+    assert _answer(conn, ids, second, "testpid01") == pill
+
+
+def test_game_012_save_pill_for_same_church(conn, ids):
+    assert _pill(conn, ids, _scan(conn), "testpid01") == POINTS["connect_same_church"]
+
+
 def test_wrap_012_verse_saved_as_book_chapter_verse(conn, ids):
     met = _scan(conn, config=VERSE_CONFIG)
     _answer(conn, ids, met, "testpid01", text="John 3:16")

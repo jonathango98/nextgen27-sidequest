@@ -115,6 +115,7 @@
   --qr-timer-height: 8px;
   --font-size-takeaway: 18px;
   --font-size-form-title: 20px;
+  --font-size-answer-title: 22px; /* "Their answer" on the icebreaker */
   --textarea-min: 108px;
   --box-tile-min: 140px;
   --font-size-box-number: 44px;

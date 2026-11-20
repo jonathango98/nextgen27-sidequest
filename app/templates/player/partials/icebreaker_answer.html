@@ -1,41 +1,50 @@
 {# GAME-015: each player types the answer their new friend gave. SAFE-006: only the two of them see it. #}
-<div id="icebreaker-answer" class="card stack">
+<div id="icebreaker-answer" class="icebreaker-answer">
   {% if error_code %}{% include "partials/error.html" %}{% endif %}
   {% if connection and connection.my_answer %}
     {# GAME-016: the points were given when this was saved. #}
     {% if earned %}<p role="status">Saved! You earned {{ earned }} points.</p>{% endif %}
-    <p class="hint">{{ connection.other_first_name }}'s answer</p>
+    <h2 class="answer-title">Their answer</h2>
     <p class="answer-text">{{ connection.my_answer }}</p>
   {% elif connection %}
     <form class="form" method="post" action="/connections/{{ connection.id }}/answer" hx-post="/connections/{{ connection.id }}/answer" hx-target="#icebreaker-answer" hx-swap="outerHTML">
       <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
       {% if connection.category == "verse" %}
         {# WRAP-012: lists, not typing, so verses match exactly. verse-picker.js narrows them to the book. #}
-        <p class="hint">{{ connection.other_first_name }}'s answer</p>
-        <label for="book">Book</label>
-        <span class="select">
-        <select id="book" name="book" required>
-          <option value="">Choose a book</option>
-          {% for name in bible.VERSES %}<option>{{ name }}</option>{% endfor %}
-        </select>
-        </span>
-        <label for="chapter">Chapter</label>
-        <span class="select">
-        <select id="chapter" name="chapter" required>
-          {% for n in range(1, bible.MAX_CHAPTERS + 1) %}<option>{{ n }}</option>{% endfor %}
-        </select>
-        </span>
-        <label for="verse">Verse</label>
-        <span class="select">
-        <select id="verse" name="verse" required>
-          {% for n in range(1, bible.MAX_VERSES + 1) %}<option>{{ n }}</option>{% endfor %}
-        </select>
-        </span>
+        <fieldset>
+          <legend class="answer-title">Their answer</legend>
+          <label for="book">Book</label>
+          <span class="select">
+          <select id="book" name="book" required>
+            <option value="">Pick a book</option>
+            {% for name in bible.VERSES %}<option>{{ name }}</option>{% endfor %}
+          </select>
+          </span>
+          <div class="verse-numbers">
+            <div>
+              <label for="chapter">Chapter</label>
+              <span class="select">
+              <select id="chapter" name="chapter" required>
+                {% for n in range(1, bible.MAX_CHAPTERS + 1) %}<option>{{ n }}</option>{% endfor %}
+              </select>
+              </span>
+            </div>
+            <div>
+              <label for="verse">Verse</label>
+              <span class="select">
+              <select id="verse" name="verse" required>
+                {% for n in range(1, bible.MAX_VERSES + 1) %}<option>{{ n }}</option>{% endfor %}
+              </select>
+              </span>
+            </div>
+          </div>
+        </fieldset>
       {% else %}
-        <label for="answer">{{ connection.other_first_name }}'s answer</label>
+        <label for="answer" class="answer-title">Their answer</label>
         <input id="answer" name="answer" type="text" value="{{ answer }}" maxlength="{{ max_chars }}" autocomplete="off" required>
       {% endif %}
-      <button class="button" type="submit">Save</button>
+      {# GAME-010 to GAME-012: what saving pays now. The server decides again on save (AI-040). #}
+      <button class="button" type="submit">Save <span class="pill">+{{ save_points }}</span></button>
     </form>
   {% endif %}
 </div>

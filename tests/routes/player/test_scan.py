@@ -223,7 +223,7 @@ def test_game_015_icebreaker_shows_your_saved_answer_instead_of_the_form(db):
     met_id = _connection_id(_post_scan(c, "testpid02"))
     form = c.get(f"/connections/{met_id}").text
     assert f'hx-post="/connections/{met_id}/answer"' in form
-    assert "Test's answer" in form
+    assert "Their answer" in form
     _post_answer(c, met_id)
     page = c.get(f"/connections/{met_id}").text
     assert "Example answer" in page
@@ -389,3 +389,13 @@ def test_wrap_012_chapter_too_high_is_refused_and_keeps_the_pickers(db):
     assert response.status_code == 400
     assert "Pick a book, chapter, and verse from the lists." in response.text
     assert 'name="book"' in response.text
+
+
+def test_game_016_save_button_shows_its_points(db):
+    c, _ = db
+    met_id = _connection_id(_post_scan(c, "testpid02"))
+    points = load_config()["points"]["connect_same_church"]  # AI-013
+    assert (
+        f'Save <span class="pill">+{points}</span>'
+        in c.get(f"/connections/{met_id}").text
+    )

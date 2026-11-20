@@ -180,6 +180,30 @@ def _awards(conn, pair, me: int, points_cfg: dict) -> list[tuple[str, int]]:
     return awards
 
 
+def save_points(
+    conn: sqlite3.Connection, connection_id: int, player_id: int, points_cfg: dict
+) -> int:
+    """What Save would pay this player now, for the pill on the button (GAME-010 to GAME-012).
+
+    Reads only. save_answer works out the real award when it saves (AI-040).
+    """
+    row = conn.execute(
+        "SELECT c.is_same_church, EXISTS (SELECT 1 FROM church_met AS m"
+        "   WHERE m.player_id = :me AND m.church_id = other.church_id) AS met_church"
+        " FROM connection AS c"
+        " JOIN player AS other ON other.id = CASE WHEN c.player_low_id = :me"
+        "   THEN c.player_high_id ELSE c.player_low_id END"
+        " WHERE c.id = :id AND :me IN (c.player_low_id, c.player_high_id)",
+        {"id": connection_id, "me": player_id},
+    ).fetchone()
+    if row is None:
+        return 0
+    if row["is_same_church"]:
+        return points_cfg["connect_same_church"]
+    bonus = 0 if row["met_church"] else points_cfg["connect_new_church_bonus"]
+    return points_cfg["connect_other_church"] + bonus
+
+
 def save_answer(
     conn: sqlite3.Connection,
     *,

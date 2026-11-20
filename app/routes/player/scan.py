@@ -73,7 +73,8 @@ def scan_submit(request: Request, player: Player, conn: Db, form: Form, now: Now
 
 @router.get("/connections/{connection_id}")
 def icebreaker(request: Request, player: Player, conn: Db, connection_id: int):
-    met = connections.for_player(conn, connection_id, player_id(conn, player))
+    me = player_id(conn, player)
+    met = connections.for_player(conn, connection_id, me)
     token = csrf.token_for(request)
     # SAFE-006: someone outside the pair gets the same 404 as a missing id.
     context = {
@@ -84,6 +85,10 @@ def icebreaker(request: Request, player: Player, conn: Db, connection_id: int):
     }
     if met is None:
         context |= {"error_code": "NOT_FOUND", "message": "We couldn't find that."}
+    else:
+        context["save_points"] = connections.save_points(
+            conn, met.id, me, request.app.state.config["points"]
+        )
     response = templates.TemplateResponse(
         request, "player/icebreaker.html", context, status_code=200 if met else 404
     )
@@ -129,6 +134,9 @@ def save_answer(
             "message": GAME_NOT_ON_MESSAGES[paused.error_code],
         }
     context["connection"] = connections.for_player(conn, connection_id, me)
+    context["save_points"] = connections.save_points(
+        conn, connection_id, me, request.app.state.config["points"]
+    )
     # API-002: HTMX swaps only the answer card. Without JavaScript, the whole page (API-007).
     name = (
         "player/partials/icebreaker_answer.html"

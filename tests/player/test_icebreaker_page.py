@@ -56,21 +56,21 @@ def test_game_016_save_answer_on_the_icebreaker(page: Page, live_server):
     errors = []
     page.on("console", lambda m: m.type == "error" and errors.append(m.text))
     page.goto(f"{live_server}/connections/{_fresh_connection()}")
-    page.get_by_label("Test's answer").fill("Example answer")
+    page.get_by_label("Their answer").fill("Example answer")
     page.get_by_role("button", name="Save").click()
     points = load_config()["points"]["connect_same_church"]  # AI-013
     expect(page.get_by_role("status")).to_have_text(
         f"Saved! You earned {points} points."
     )
     expect(page.get_by_text("Example answer")).to_be_visible()
-    expect(page.get_by_label("Test's answer")).to_have_count(0)
+    expect(page.get_by_label("Their answer")).to_have_count(0)
     assert not errors, errors
 
 
 def test_ui_002_long_answer_wraps_without_sideways_scroll(page: Page, live_server):
     page.goto(f"{live_server}/connections/{_fresh_connection()}")
-    max_chars = int(page.get_by_label("Test's answer").get_attribute("maxlength"))
-    page.get_by_label("Test's answer").fill("x" * max_chars)  # one long word
+    max_chars = int(page.get_by_label("Their answer").get_attribute("maxlength"))
+    page.get_by_label("Their answer").fill("x" * max_chars)  # one long word
     page.get_by_role("button", name="Save").click()
     expect(page.get_by_role("status")).to_be_visible()
     width = page.evaluate("document.documentElement.scrollWidth")

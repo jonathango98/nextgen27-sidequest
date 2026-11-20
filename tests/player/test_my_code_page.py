@@ -114,7 +114,7 @@ def test_api_032_scanned_player_opens_icebreaker_without_tapping(
     expect(page).to_have_url(
         re.compile(r"/connections/\d+$"), timeout=poll_ms + REFRESH_TIMEOUT_MS
     )
-    expect(page.get_by_role("heading", level=1)).to_have_text("What do you do for fun?")
+    expect(page.get_by_role("heading", level=1)).to_have_text("what do you do for fun?")
 
 
 def test_ui_037_my_code_card_has_qr_timer_and_caption(page: Page, live_server):
