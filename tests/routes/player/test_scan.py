@@ -70,6 +70,9 @@ def db(monkeypatch, tmp_path):
     monkeypatch.setenv(qr.KEY_ENV, FAKE_KEY)
     app = create_app()
     app.state.db_path = tmp_path / "scan.db"
+    # Typed answers below. The verse question has pickers and its own tests (WRAP-012).
+    categories = app.state.config["icebreaker"]["categories"]
+    categories[:] = [c for c in categories if c != "verse"]
     ids = seed_fake_players(
         app.state.db_path, FAKE_PLAYER.public_id, "testpid02", "testpid03"
     )
@@ -220,7 +223,7 @@ def test_game_015_icebreaker_shows_your_saved_answer_instead_of_the_form(db):
     met_id = _connection_id(_post_scan(c, "testpid02"))
     form = c.get(f"/connections/{met_id}").text
     assert f'hx-post="/connections/{met_id}/answer"' in form
-    assert "Test's answer" in form
+    assert "Their answer" in form
     _post_answer(c, met_id)
     page = c.get(f"/connections/{met_id}").text
     assert "Example answer" in page
@@ -348,3 +351,51 @@ def test_dec_061_incoming_logged_out_goes_to_login():
     )
     assert response.status_code == 204
     assert response.headers["hx-redirect"] == "/login"
+
+
+def _verse_pair(c):
+    c.app.state.config["icebreaker"]["categories"][:] = ["verse"]
+    return _connection_id(_post_scan(c, "testpid02"))
+
+
+def _post_verse(c, connection_id, book, chapter, verse):
+    data = {"book": book, "chapter": chapter, "verse": verse}
+    data["csrf_token"] = c.cookies.get(csrf.COOKIE)
+    headers = {"HX-Request": "true"}
+    return c.post(f"/connections/{connection_id}/answer", data=data, headers=headers)
+
+
+def test_wrap_012_verse_question_shows_pickers_not_a_text_box(db):
+    c, _ = db
+    page = c.get(f"/connections/{_verse_pair(c)}").text
+    for name in ("book", "chapter", "verse"):
+        assert f'<select id="{name}" name="{name}"' in page
+    assert 'name="answer"' not in page
+    assert 'id="bible-verses"' in page and "verse-picker.js" in page
+
+
+def test_wrap_012_picked_verse_is_saved_as_book_chapter_verse(db):
+    c, _ = db
+    met_id = _verse_pair(c)
+    response = _post_verse(c, met_id, "Song of Songs", "2", "4")
+    assert response.status_code == 200
+    assert "Song of Songs 2:4" in response.text
+    assert "Song of Songs 2:4" in c.get(f"/connections/{met_id}").text
+
+
+def test_wrap_012_chapter_too_high_is_refused_and_keeps_the_pickers(db):
+    c, _ = db
+    response = _post_verse(c, _verse_pair(c), "John", "22", "1")  # John has 21
+    assert response.status_code == 400
+    assert "Pick a book, chapter, and verse from the lists." in response.text
+    assert 'name="book"' in response.text
+
+
+def test_game_016_save_button_shows_its_points(db):
+    c, _ = db
+    met_id = _connection_id(_post_scan(c, "testpid02"))
+    points = load_config()["points"]["connect_same_church"]  # AI-013
+    assert (
+        f'Save <span class="pill">+{points}</span>'
+        in c.get(f"/connections/{met_id}").text
+    )

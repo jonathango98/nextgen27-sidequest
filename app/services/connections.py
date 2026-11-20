@@ -8,7 +8,7 @@ import random
 import sqlite3
 from dataclasses import dataclass
 
-from app.services import churches, players, points
+from app.services import bible, churches, players, points
 from app.services.game_state import require_game_on
 from app.services.players import NOT_FOUND, ScanRefused
 
@@ -35,6 +35,7 @@ ANSWER_MAX_CHARS = 200
 EMPTY_ANSWER = (400, "BAD_INPUT", "Type their answer first.")
 LONG_ANSWER = (400, "BAD_INPUT", f"Keep it to {ANSWER_MAX_CHARS} characters.")
 ALREADY_ANSWERED = (409, "ALREADY_DONE", "You already saved this answer.")
+BAD_VERSE = (400, "BAD_INPUT", "Pick a book, chapter, and verse from the lists.")
 
 # ENG-113: the hand test scans between two phones, so a preview also gets Test Player 2,
 # from another church. No pair is saved, so the first scan on the preview is a new one.
@@ -48,6 +49,7 @@ class AnswerRefused(ScanRefused):
 @dataclass(frozen=True)
 class Connection:
     id: int
+    category: str  # GAME-019: a key from icebreaker.categories, like "verse"
     question: str
     other_first_name: str  # SAFE-004: other players see first name and church only
     other_church: str
@@ -136,6 +138,7 @@ def for_player(
         return None
     return Connection(
         id=row["id"],
+        category=row["question_category"],
         question=QUESTIONS[row["question_category"]],
         other_first_name=row["first_name"],
         other_church=row["church"],
@@ -177,6 +180,30 @@ def _awards(conn, pair, me: int, points_cfg: dict) -> list[tuple[str, int]]:
     return awards
 
 
+def save_points(
+    conn: sqlite3.Connection, connection_id: int, player_id: int, points_cfg: dict
+) -> int:
+    """What Save would pay this player now, for the pill on the button (GAME-010 to GAME-012).
+
+    Reads only. save_answer works out the real award when it saves (AI-040).
+    """
+    row = conn.execute(
+        "SELECT c.is_same_church, EXISTS (SELECT 1 FROM church_met AS m"
+        "   WHERE m.player_id = :me AND m.church_id = other.church_id) AS met_church"
+        " FROM connection AS c"
+        " JOIN player AS other ON other.id = CASE WHEN c.player_low_id = :me"
+        "   THEN c.player_high_id ELSE c.player_low_id END"
+        " WHERE c.id = :id AND :me IN (c.player_low_id, c.player_high_id)",
+        {"id": connection_id, "me": player_id},
+    ).fetchone()
+    if row is None:
+        return 0
+    if row["is_same_church"]:
+        return points_cfg["connect_same_church"]
+    bonus = 0 if row["met_church"] else points_cfg["connect_new_church_bonus"]
+    return points_cfg["connect_other_church"] + bonus
+
+
 def save_answer(
     conn: sqlite3.Connection,
     *,
@@ -202,7 +229,7 @@ def save_answer(
         # ARCH-042: read the state inside the transaction that saves the answer.
         require_game_on(conn)
         pair = conn.execute(
-            "SELECT c.id, c.is_same_church, other.id AS other_id,"
+            "SELECT c.id, c.is_same_church, c.question_category, other.id AS other_id,"
             " other.church_id AS other_church_id"
             " FROM connection AS c"
             " JOIN player AS other ON other.id = CASE WHEN c.player_low_id = :me"
@@ -214,6 +241,9 @@ def save_answer(
             raise AnswerRefused(
                 *NOT_FOUND
             )  # SAFE-006: outside the pair, same as missing
+        # WRAP-012, AI-040: a verse is saved only as a real "Book chapter:verse".
+        if pair["question_category"] == "verse" and not bible.is_reference(text):
+            raise AnswerRefused(*BAD_VERSE)
         # GAME-015: each person types the other person's answer.
         answer_id = _insert_answer(conn, pair["id"], pair["other_id"], player_id, text)
         earned = 0
