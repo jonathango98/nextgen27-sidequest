@@ -383,12 +383,9 @@ def preview_conn(tmp_path, monkeypatch):
     conn.close()
 
 
-def test_eng_113_preview_seeds_players_from_another_and_the_same_church(preview_conn):
+def test_eng_113_preview_seeds_a_second_player_from_another_church(preview_conn):
     players.seed_preview(preview_conn, CONFIG)
-    assert connections.seed_preview(preview_conn, CONFIG) == [
-        "Test Player 2",
-        "Test Player 3",
-    ]
+    assert connections.seed_preview(preview_conn, CONFIG) == ["Test Player 2"]
     rows = preview_conn.execute(
         "SELECT p.last_name, p.is_under_18, c.name AS church"
         " FROM player p JOIN church c ON c.id = p.church_id ORDER BY p.id"
@@ -396,9 +393,8 @@ def test_eng_113_preview_seeds_players_from_another_and_the_same_church(preview_
     assert [(r["last_name"], r["church"]) for r in rows] == [
         ("Player 1", churches.EXAMPLE_CHURCHES[0]),
         ("Player 2", churches.EXAMPLE_CHURCHES[1]),
-        ("Player 3", churches.EXAMPLE_CHURCHES[0]),
     ]
-    assert [r["is_under_18"] for r in rows] == [0, 0, 0]  # AI-047: never a minor
+    assert [r["is_under_18"] for r in rows] == [0, 0]  # AI-047: never a minor
 
 
 def test_eng_113_preview_seeds_no_pair_so_the_first_scan_is_new(preview_conn):
@@ -410,4 +406,4 @@ def test_eng_113_preview_seeds_no_pair_so_the_first_scan_is_new(preview_conn):
 def test_eng_113_preview_seed_adds_only_what_is_missing(preview_conn):
     connections.seed_preview(preview_conn, CONFIG)
     assert connections.seed_preview(preview_conn, CONFIG) == []
-    assert preview_conn.execute("SELECT count(*) FROM player").fetchone()[0] == 2
+    assert preview_conn.execute("SELECT count(*) FROM player").fetchone()[0] == 1
