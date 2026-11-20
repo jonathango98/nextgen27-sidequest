@@ -171,3 +171,10 @@ def test_ui_030_top_bar_links_home(page: Page, live_server):
     expect(link).to_have_attribute("href", "/")
     tap_min = load_config()["ui"]["min_tap_target_px"]
     assert link.bounding_box()["height"] >= tap_min
+
+
+def test_ui_030_top_bar_stays_put_while_scrolling(page: Page, live_server):
+    page.goto(f"{live_server}/quests")
+    page.mouse.wheel(0, 2000)
+    page.wait_for_function("window.scrollY > 0")
+    assert page.locator(".top-bar").bounding_box()["y"] == 0

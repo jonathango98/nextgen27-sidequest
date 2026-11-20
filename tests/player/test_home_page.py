@@ -1,6 +1,7 @@
 from playwright.sync_api import Page, expect
 
 from app.config import load_config
+from tests.player.conftest import fits_without_scrolling
 
 ACTIONS = ("Meet friends", "Write", "Read", "Claim box")
 
@@ -84,3 +85,9 @@ def test_ui_002_home_fits_and_has_no_errors(page: Page, live_server):
     width = page.evaluate("document.documentElement.scrollWidth")
     assert width <= load_config()["ui"]["min_viewport_px"]
     assert problems == []
+
+
+def test_ui_036_home_buttons_fit_a_short_phone(page: Page, live_server):
+    fits_without_scrolling(
+        page, f"{live_server}/", [_action(page, name) for name in ACTIONS]
+    )
