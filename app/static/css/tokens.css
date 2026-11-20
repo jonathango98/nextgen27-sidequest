@@ -156,4 +156,11 @@
   --screen-scale-name: 1.1;
   --screen-scale-rank: 1.1;
   --screen-scale-score: 1.4;
+  /* Staff pages (GAME-110, GAME-112): the game panel, tiles, and the main screen sheet */
+  --color-panel-muted: #ededed; /* paused game panel and chips: black text stays 16:1 */
+  --color-scrim: rgba(0, 0, 0, 0.45);
+  --staff-tile-min: 108px;
+  --font-size-staff-state: 36px;
+  --state-dot-size: 12px;
+  --sr-size: 1px;
 }

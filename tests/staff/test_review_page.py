@@ -68,7 +68,7 @@ def test_safe_040_admin_approves_and_rejects_at_min_width(
     page.get_by_label("Password").fill(FAKE_PASSWORD)
     page.get_by_role("button", name="Log in").click()
     page.wait_for_url(f"{live_server}/admin")
-    page.get_by_role("link", name="Review notes").click()
+    page.get_by_role("link", name="Review").click()
     page.wait_for_url(f"{live_server}/admin/review")
     _fits(page)
     page.screenshot(path=tmp_path / "review-waiting.png", full_page=True)

@@ -683,15 +683,40 @@ h2 {
   transform: rotate(180deg);
 }
 
-/* Admin review: the four status tabs, two by two so they fit the smallest phone (UI-002) */
+/* Admin review: the four status tabs in one row, the count over the name (UI-002) */
 .review-tabs {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-2);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-1);
+  padding: var(--space-1);
+  border: var(--border) solid var(--color-line);
+  border-radius: var(--radius-card);
 }
 
-.review-tabs .button {
-  padding: var(--space-2);
+.review-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  min-height: var(--tab-min);
+  border-radius: var(--radius-message);
+  font-size: var(--font-size-tab);
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--color-text);
+}
+
+.review-tab[aria-current="page"] {
+  color: var(--color-on-primary);
+  background: var(--color-primary);
+}
+
+.review-tab-count {
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-tile);
+  font-weight: var(--font-weight-title);
+  line-height: 1;
 }
 
 /* Muted gray is fine on white (07 section 2) */
@@ -1123,4 +1148,313 @@ h2 {
 /* GAME-015: a saved answer can be one long word, so it wraps instead of spilling off the side (UI-002). */
 .answer-text {
   overflow-wrap: anywhere;
+}
+
+/* Staff pages (GAME-110, GAME-112) */
+
+/* A title only screen readers hear, when the page already shows what it is */
+.visually-hidden {
+  position: absolute;
+  width: var(--sr-size);
+  height: var(--sr-size);
+  margin: calc(-1 * var(--sr-size));
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* The role pill and the menu sit together on the right of the top bar */
+.top-bar-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.menu-label {
+  margin: 0;
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--font-size-small);
+  color: var(--color-text-muted);
+}
+
+a.menu-item {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+/* Admin game panel: its color says the state before anyone reads it (GAME-101) */
+.game-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--panel-pad) var(--space-4) var(--space-4);
+  border-radius: var(--radius);
+}
+
+.game-panel h2 {
+  margin: 0;
+  font-size: var(--font-size-staff-state);
+  font-weight: var(--font-weight-title);
+  line-height: 1;
+  letter-spacing: var(--title-tracking);
+}
+
+.game-panel-on {
+  color: var(--color-on-accent);
+  background: var(--color-accent);
+}
+
+.game-panel-paused {
+  color: var(--color-text);
+  background: var(--color-panel-muted);
+}
+
+.game-panel-off {
+  color: var(--color-on-primary);
+  background: var(--color-primary);
+}
+
+.game-panel-off :focus-visible {
+  outline-color: var(--color-accent);
+}
+
+/* A row of choices in one pill. The current one is filled (UI-035) */
+.segmented {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: var(--space-1);
+  padding: var(--space-1);
+  border: var(--border) solid currentColor;
+  border-radius: var(--radius-pill);
+}
+
+.segmented form {
+  display: flex;
+  margin: 0;
+}
+
+.segment {
+  flex: 1;
+  min-height: var(--tap-min);
+  border: 0;
+  border-radius: var(--radius-pill);
+  font: inherit;
+  font-weight: 600;
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+}
+
+.segment[aria-current] {
+  font-weight: 700;
+  color: var(--color-on-primary);
+  background: var(--color-primary);
+  cursor: default;
+}
+
+.game-panel-off .segment[aria-current] {
+  color: var(--color-primary);
+  background: var(--color-on-primary);
+}
+
+/* Admin tools as big tiles, two by two (UI-003) */
+.tile-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+.tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: var(--staff-tile-min);
+  padding: var(--space-3) var(--space-4);
+  border: var(--border) solid var(--color-line);
+  border-radius: var(--radius-card);
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.tile:active {
+  transform: scale(var(--press-scale));
+}
+
+.tile-label {
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-tile);
+  font-weight: var(--font-weight-button);
+  line-height: 1.2;
+}
+
+.tile-count {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-small);
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--color-on-accent);
+  background: var(--color-accent);
+}
+
+/* The main screen sheet: hidden until its tile's link targets it (ARCH-037) */
+.sheet {
+  display: none;
+}
+
+.sheet:target {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  background: var(--color-scrim);
+}
+
+.sheet-panel {
+  padding: var(--space-5) var(--space-4) calc(var(--space-5) + env(safe-area-inset-bottom));
+  border-radius: var(--radius) var(--radius) 0 0;
+  background: var(--color-surface);
+}
+
+.sheet-panel h2 {
+  font-weight: var(--font-weight-title);
+  letter-spacing: var(--title-tracking);
+}
+
+.sheet-panel p {
+  margin: 0;
+}
+
+/* Sessions: the game state as a dot, and an Ended chip beside each title */
+.state-line {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+}
+
+.state-dot {
+  width: var(--state-dot-size);
+  height: var(--state-dot-size);
+  border: var(--border) solid var(--color-line);
+  border-radius: 50%;
+}
+
+.state-dot-on {
+  background: var(--color-accent);
+}
+
+.state-dot-paused {
+  background: var(--color-panel-muted);
+}
+
+.state-dot-off {
+  background: var(--color-primary);
+}
+
+.title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.title-row h3 {
+  margin: 0;
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-row-title);
+}
+
+.chip {
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-small);
+  font-weight: 700;
+  line-height: 1.4;
+  background: var(--color-panel-muted);
+}
+
+/* Review: the buttons for a note sit side by side */
+.button-row {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.button-row form {
+  flex: 1;
+}
+
+.button-row .button {
+  padding: var(--space-2);
+}
+
+/* Find player: the search button sits beside the name */
+.search-row {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.search-row input {
+  flex: 1;
+  min-width: 0;
+}
+
+.search-button {
+  flex-shrink: 0;
+  width: var(--field-min);
+  height: var(--field-min);
+  border: 0;
+  color: var(--color-on-primary);
+  background: var(--color-primary);
+}
+
+.row-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row-list li + li {
+  border-top: var(--border) solid var(--color-hairline);
+}
+
+.row-list a {
+  display: flex;
+  align-items: center;
+  min-height: var(--tab-min);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* The player an usher found: a Pear card (SAFE-028: name and church only) */
+.player-card {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+}
+
+/* Sessions: End and Edit side by side, an open Edit form below them on its own row */
+.session-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.session-actions > * {
+  flex: 1;
+}
+
+.session-actions > .session-edit[open] {
+  flex-basis: 100%;
+}
+
+.session-actions .button {
+  padding: var(--space-2);
 }

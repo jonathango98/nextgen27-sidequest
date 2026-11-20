@@ -16,7 +16,7 @@ from app.auth.staff import CurrentStaff, require_role
 from app.db import get_db
 from app.forms import read_form
 from app.rendering import templates
-from app.services import game_state, main_screen
+from app.services import game_state, journal, main_screen
 
 PANEL = "staff/partials/game_state.html"
 SCREEN_PANEL = "staff/partials/main_screen.html"
@@ -51,6 +51,8 @@ def _console(
         # ARCH-037: admins only. The usher console never gets the main screen link.
         context["screen_link"] = screen_link(request)
         context["off_view"] = main_screen.off_view(conn)
+        # SAFE-007: the Review tile shows how many shared notes are waiting.
+        context["waiting"] = journal.review_counts(conn)["pending"]
     if error:
         context |= {"error_code": "BAD_INPUT", "message": error}
     # API-002: HTMX gets only the panel it posted from, a normal browser gets the whole console.

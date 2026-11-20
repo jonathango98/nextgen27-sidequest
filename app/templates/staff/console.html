@@ -3,13 +3,10 @@
 {% block title %}{{ "Admin" if page == "admin" else "Usher" }} console · Side Quest{% endblock %}
 
 {% block content %}
-  {# ARCH-035: the other tools come with their own pieces. #}
+  {# ARCH-035: the other tools come with their own pieces. Name, role switch, and Log out live in the top bar menu. #}
   <div class="stack">
-    <h1>{{ "admin" if page == "admin" else "usher" }} console.</h1>
-    <div class="card">
-      <p>Logged in as <strong>{{ staff.username }}</strong> ({{ staff.role }}).</p>
-    </div>
     {% if page == "usher" %}
+      <h1>usher console.</h1>
       {# GAME-112: the same scanner players use (07 section 3). The server checks every code (ARCH-026). #}
       <div class="scanner" data-scanner data-start-on-tap data-format="{{ qr_format }}"
            data-wasm="/static/js/vendor/zxing-wasm-3.1.3-reader.wasm">
@@ -29,18 +26,34 @@
       {# ARCH-004: barcode-detector 3.2.2 (ZXing 3.1.3), served from our own server, not a CDN. #}
       <script src="/static/js/vendor/barcode-detector-3.2.2.ponyfill.js" defer></script>
       <script src="/static/js/scanner.js" defer></script>
+    {% else %}
+      {# The game panel says the state, so the page title is for screen readers only. #}
+      <h1 class="visually-hidden">admin console.</h1>
+      {% include "staff/partials/game_state.html" %}
+      {# GAME-110: the live tools as big tiles. Setup tools join as their pieces are built. #}
+      <nav class="tile-grid" aria-label="Admin tools">
+        {# SAFE-007: shared notes wait for an admin. #}
+        <a class="tile" href="/admin/review">
+          <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+          {% if waiting %}<span class="tile-count">{{ waiting }}<span class="visually-hidden"> waiting</span></span>{% endif %}
+          <span class="tile-label">Review</span>
+        </a>
+        <a class="tile" href="/admin/sessions">
+          <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4M8 2v4M3 10h18"></path></svg>
+          <span class="tile-label">Sessions</span>
+        </a>
+        {# DEC-063: admins can open usher pages too. #}
+        <a class="tile" href="/usher">
+          <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2M4 12h16"></path></svg>
+          <span class="tile-label">Usher</span>
+        </a>
+        {# The main screen panel opens as a sheet on the same page (:target), so it needs no route or JavaScript (API-007). #}
+        <a class="tile" href="#main-screen">
+          <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"></rect><path d="M8 21h8M12 17v4"></path></svg>
+          <span class="tile-label">Main screen</span>
+        </a>
+      </nav>
+      {% include "staff/partials/main_screen.html" %}
     {% endif %}
-    {% if page == "admin" %}{% include "staff/partials/game_state.html" %}{% endif %}
-    {% if page == "admin" %}{% include "staff/partials/main_screen.html" %}{% endif %}
-    {% if page == "admin" %}<a class="button button-secondary" href="/admin/sessions">Sessions</a>{% endif %}
-    {# SAFE-007: shared notes wait for an admin. #}
-    {% if page == "admin" %}<a class="button button-secondary" href="/admin/review">Review notes</a>{% endif %}
-    {# DEC-063: admins can open usher pages too. #}
-    {% if page == "admin" %}<a class="button button-secondary" href="/usher">Usher console</a>{% endif %}
-    {% if page == "usher" and staff.role == "admin" %}<a class="button button-secondary" href="/admin">Admin console</a>{% endif %}
-    <form method="post" action="/logout">
-      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-      <button class="button button-secondary" type="submit">Log out</button>
-    </form>
   </div>
 {% endblock %}

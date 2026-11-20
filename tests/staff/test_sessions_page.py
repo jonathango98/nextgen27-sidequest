@@ -51,6 +51,7 @@ def test_game_026_admin_adds_edits_and_ends_a_session_at_min_width(
         page.screenshot(path=tmp_path / "sessions-empty.png", full_page=True)
 
         # Add, with a start time and check-in minutes (DATA-014, GAME-021).
+        page.get_by_text("Add", exact=True).click()
         page.locator("#add-title").fill(title)
         page.locator("#add-starts-at").fill("2027-03-06T09:30")
         page.locator("#add-minutes").fill("15")
@@ -73,7 +74,8 @@ def test_game_026_admin_adds_edits_and_ends_a_session_at_min_width(
         card = page.locator("article", has=page.get_by_role("heading", name=title))
         expect(card).to_be_visible()
 
-        # A refused form says why, in text (UI-051).
+        # A refused form says why, in text (UI-051), and the add form stays open.
+        page.get_by_text("Add", exact=True).click()
         page.locator("#add-title").fill("Example Session 9")
         page.locator("#add-starts-at").fill("2027-03-06T13:00")
         page.get_by_role("button", name="Add session").click()
@@ -91,17 +93,13 @@ def test_game_026_admin_adds_edits_and_ends_a_session_at_min_width(
         card.get_by_role("button", name="End session").click()
         expect(page.get_by_role("status")).to_contain_text("The game is on again")
         expect(page.locator("[data-state]")).to_have_text("On")
-        expect(card).to_contain_text("Ended.")
+        expect(card.locator(".chip")).to_have_text("Ended")
         assert page.evaluate("window.noReload === true")  # HTMX swapped the list
         _fits(page)
         page.screenshot(path=tmp_path / "sessions-ended.png", full_page=True)
 
-        # Pressing it again changes nothing and says so.
-        page.once("dialog", lambda dialog: dialog.accept())
-        card.get_by_role("button", name="End session").click()
-        expect(page.get_by_role("status")).to_contain_text("Nothing changed.")
-        expect(page.locator("[data-state]")).to_have_text("On")
-        page.screenshot(path=tmp_path / "sessions-ended-again.png", full_page=True)
+        # An ended session has nothing left to end (GAME-026).
+        expect(card.get_by_role("button", name="End session")).to_have_count(0)
     finally:
         _set(test_db_path, "on")
 

@@ -163,3 +163,32 @@ def test_dec_063_logout_ends_the_staff_session(client):
     assert f'{staff_session.COOKIE}=""' in response.headers["set-cookie"]
     client.cookies.delete(staff_session.COOKIE)
     assert _sent_to_login(client.get("/admin"))
+
+
+def test_dec_063_admin_menu_switches_between_consoles(client):
+    _log_in(client, *ADMIN)
+    assert 'href="/usher">Usher view</a>' in client.get("/admin").text
+    assert 'href="/admin">Admin view</a>' in client.get("/usher").text
+
+
+def test_game_112_usher_menu_has_no_admin_view(client):
+    _log_in(client, *USHER)
+    html = client.get("/usher").text
+    assert "Admin view" not in html
+    assert '<button class="menu-item" type="submit">Log out</button>' in html
+    assert f'<p class="menu-label">{USHER[0]}</p>' in html
+
+
+@pytest.mark.parametrize(
+    ("path", "back"),
+    [
+        ("/admin/sessions", 'href="/admin">'),
+        ("/admin/review", 'href="/admin">'),
+        ("/usher/players", 'href="/usher">'),
+    ],
+)
+def test_ui_008_staff_sub_pages_have_a_back_link_in_the_top_bar(client, path, back):
+    _log_in(client, *ADMIN)
+    html = client.get(path).text
+    top_bar = html[html.index('<header class="top-bar">') : html.index("</header>")]
+    assert back in top_bar

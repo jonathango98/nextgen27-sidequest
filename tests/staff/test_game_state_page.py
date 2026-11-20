@@ -41,7 +41,7 @@ def test_game_101_admin_switches_the_game_at_min_width(
     page.wait_for_url(f"{live_server}/admin")
     panel = page.locator("#game-state")
     try:
-        expect(panel.locator("strong")).to_have_text("On")
+        expect(panel.locator("[data-state]")).to_have_text("on")
         expect(page.get_by_role("button", name="Start")).to_be_disabled()
         _fits(page)
         page.screenshot(path=tmp_path / "admin-on.png", full_page=True)
@@ -49,7 +49,8 @@ def test_game_101_admin_switches_the_game_at_min_width(
         # Pause swaps the panel in place: the marker set before the click survives (no reload).
         page.evaluate("window.noReload = true")
         page.get_by_role("button", name="Pause").click()
-        expect(panel.locator("strong")).to_have_text("Paused")
+        expect(panel.locator("[data-state]")).to_have_text("paused")
+        expect(panel).to_have_class("game-panel game-panel-paused")
         expect(page.get_by_role("button", name="Pause")).to_be_disabled()
         assert page.evaluate("window.noReload === true")
         _fits(page)
@@ -76,7 +77,7 @@ def test_game_101_admin_switches_the_game_at_min_width(
         # Start brings the game back, and the note is gone on the next page.
         page.goto(f"{live_server}/admin")
         page.get_by_role("button", name="Start").click()
-        expect(panel.locator("strong")).to_have_text("On")
+        expect(panel.locator("[data-state]")).to_have_text("on")
         page.goto(f"{live_server}/")
         expect(page.locator(".game-banner")).to_have_count(0)
         expect(page.get_by_role("link", name="Meet friends")).to_be_visible()
@@ -85,7 +86,7 @@ def test_game_101_admin_switches_the_game_at_min_width(
         page.goto(f"{live_server}/admin")
         page.once("dialog", lambda dialog: dialog.accept())
         page.get_by_role("button", name="Off").click()
-        expect(panel.locator("strong")).to_have_text("Off")
+        expect(panel.locator("[data-state]")).to_have_text("off")
         page.goto(f"{live_server}/join")
         expect(page.get_by_text("Sign-up is closed right now.")).to_be_visible()
         expect(page.get_by_label("First name")).to_have_count(0)

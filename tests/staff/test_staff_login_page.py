@@ -55,13 +55,16 @@ def test_arch_035_staff_login_at_min_width(
     page.get_by_label("Password").fill(FAKE_PASSWORD)
     page.get_by_role("button", name="Log in").click()
     page.wait_for_url(f"{live_server}/admin")
-    expect(page.get_by_role("heading", name="Admin console")).to_be_visible()
+    expect(page.get_by_role("heading", name="admin console.")).to_be_attached()
     _fits(page)
-    page.get_by_role("link", name="Usher console").click()
+    # The top bar menu switches consoles (DEC-063) and logs out.
+    page.get_by_label("Menu").click()
+    page.get_by_role("link", name="Usher view").click()
     page.wait_for_url(f"{live_server}/usher")
-    expect(page.get_by_role("heading", name="Usher console")).to_be_visible()
+    expect(page.get_by_role("heading", name="usher console.")).to_be_visible()
 
     # Log out goes back to the staff login.
+    page.get_by_label("Menu").click()
     page.get_by_role("button", name="Log out").click()
     page.wait_for_url(f"{live_server}/staff/login")
 
