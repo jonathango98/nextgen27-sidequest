@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: On an iPhone with Safari's address bar showing, My Code had a white gap under the QR card and the Scan button sat behind the bottom bar. Home's buttons had the same problem. Desktop test browsers have no hiding address bar, so #94's 360 by 640 test could not catch it.
 - Rule IDs: UI-002, UI-003, UI-036, UI-037, AI-044
 - Status: Done
-- PR: draft
+- PR: #99
 
 ## 2026-11-19 · feat/staff-console-layout · Claude Opus 5.5 / @jonathango98
 
