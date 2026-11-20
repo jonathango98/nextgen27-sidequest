@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-20 · docs/close-pr-69-status · Claude Opus 5.5 / @jonathango98
+
+- What: Moved "Test staff accounts on PR previews" out of In progress in the README, and added what it does to the Behind the scenes row in Working. No code changes.
+- Why: PR #69 merged on 2026-11-02, but its row was never moved, so the status page still showed it as in progress.
+- Rule IDs: ENG-100, ENG-102, AI-070
+- Status: Done
+- PR: draft
+
 ## 2026-11-19 · fix/home-code-fit-screen · Claude Opus 5.5 / @jonathango98
 
 - What: Every button on Home and My Code fits on a 360 by 640 screen without scrolling, and the top bar is `position: sticky` on every page. On short screens the Home score is capped at `13dvh` and the QR panel at `36dvh`. Home's standing pill moves beside "points", the Write and Read tiles match the other buttons' height, a few gaps shrink, and the brightness tip is one line ("Turn brightness up so it scans fast."). New browser tests check both pages at 360 by 640 and that the top bar stays put on Quests.
