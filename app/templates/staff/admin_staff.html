@@ -1,0 +1,63 @@
+{% extends "player/plain.html" %}
+
+{% set role_label = "Admin" %}
+{% set back = ("/admin", "Admin") %}
+
+{% block title %}Staff · Side Quest{% endblock %}
+
+{% block content %}
+  {% set adding = form.get("action") == "add" %}
+  {% set role = form.get("role", "usher") if adding else "usher" %}
+  <div class="stack">
+    <h1>staff.</h1>
+    {# ARCH-036: one personal account per usher or admin, made by an admin. The main screen needs no account (ARCH-037). #}
+    <details class="session-edit session-add"{% if adding %} open{% endif %}>
+      <summary class="button button-secondary">Add</summary>
+      <form class="form" method="post" action="/admin/staff">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <input type="hidden" name="action" value="add">
+        <div class="card form-card">
+          <label for="add-username">Username</label>
+          <input id="add-username" name="username" value="{{ form.get('username', '') if adding else '' }}" maxlength="{{ username_max }}" autocomplete="off" autocapitalize="none" spellcheck="false" required>
+          <label for="add-password">Password</label>
+          <input id="add-password" name="password" type="password" autocomplete="new-password" required>
+          <fieldset>
+            <legend>Role</legend>
+            <label class="choice"><input type="radio" name="role" value="usher" {% if role == "usher" %}checked{% endif %} required> Usher</label>
+            <label class="choice"><input type="radio" name="role" value="admin" {% if role == "admin" %}checked{% endif %}> Admin</label>
+          </fieldset>
+          <p class="hint">Give the password to them in person. They log in at the staff login page.</p>
+        </div>
+        <button class="button" type="submit">Add account</button>
+      </form>
+    </details>
+
+    {# Switch off and on swap only this part, picked out of the page with hx-select (API-002). #}
+    <section id="accounts" class="stack" aria-labelledby="accounts-title">
+      {% if notice %}<p class="card" role="status">{{ notice }}</p>{% endif %}
+      {% if error_code %}{% include "partials/error.html" %}{% endif %}
+      <h2 id="accounts-title" class="visually-hidden">Accounts</h2>
+      {% for a in accounts %}
+        <article class="card stack" data-account="{{ a.id }}">
+          <div class="title-row">
+            <h3>{{ a.username }}</h3>
+            <span class="chip">{{ "Admin" if a.role == "admin" else "Usher" }}</span>
+            {% if not a.is_active %}<span class="chip">Off</span>{% endif %}
+          </div>
+          {% if a.id == me %}
+            <p class="hint">This is you.</p>
+          {% else %}
+            {# OPS-042: one form per button, so it works without JavaScript too (API-007). #}
+            {% set action = "switch_off" if a.is_active else "switch_on" %}
+            <form method="post" action="/admin/staff" hx-post="/admin/staff" hx-target="#accounts" hx-select="#accounts" hx-swap="outerHTML"{% if a.is_active %} hx-confirm="Switch off {{ a.username }}? They are logged out and can't log in until you switch them on."{% endif %}>
+              <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+              <input type="hidden" name="action" value="{{ action }}">
+              <input type="hidden" name="account" value="{{ a.id }}">
+              <button class="button button-secondary" type="submit">{{ "Switch off" if a.is_active else "Switch on" }}</button>
+            </form>
+          {% endif %}
+        </article>
+      {% endfor %}
+    </section>
+  </div>
+{% endblock %}

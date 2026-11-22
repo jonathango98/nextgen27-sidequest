@@ -184,6 +184,7 @@ def test_game_112_usher_menu_has_no_admin_view(client):
     [
         ("/admin/sessions", 'href="/admin">'),
         ("/admin/review", 'href="/admin">'),
+        ("/admin/staff", 'href="/admin">'),
         ("/usher/players", 'href="/usher">'),
     ],
 )
