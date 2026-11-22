@@ -221,3 +221,11 @@ def test_safe_022_login_error_says_when_an_account_locks(
     assert f"After {cfg_auth['pin_max_attempts']} wrong tries in a row" in wrong
     assert f"locks for {cfg_auth['auto_unlock_minutes']} minutes" in wrong
     assert "left" not in wrong
+
+
+@pytest.mark.parametrize("path", ["/", "/join", "/login"])
+def test_arch_034_cookie_without_account_shows_the_form(client, path):
+    stale = f"testgone01.{session.sign('session', 'testgone01')}"
+    client.cookies.set(session.COOKIE, stale)
+    # Follows redirects, so a loop between the three pages fails here.
+    assert client.get(path).status_code == 200

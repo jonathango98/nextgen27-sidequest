@@ -36,3 +36,11 @@ def get_current_player(request: Request) -> CurrentPlayer:
         )
     finally:
         conn.close()
+
+
+def is_logged_in(request: Request) -> bool:
+    try:
+        get_current_player(request)
+    except LoginRequired:
+        return False
+    return True
