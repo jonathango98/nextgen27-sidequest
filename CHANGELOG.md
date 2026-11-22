@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-21 · docs/restore-security · Claude Opus 5.5 / @jonathango98
+
+- What: Started. Safer restore steps in `docs/backups.md`.
+- Why: Jonathan asked for one PR with the restore security fixes.
+- Rule IDs: ARCH-034, ARCH-053, AI-043
+- Status: Started
+- PR: draft
+
 ## 2026-11-21 · fix/login-loop · Claude Opus 5.5 / @jonathango98
 
 - What: Stop the redirect loop between Home, Log in, and Join when a phone's login cookie is for an account that is no longer in the database. `/join` and `/login` now skip to Home only when the account exists, the same check Home makes, through a new `is_logged_in()`.
