@@ -7,13 +7,19 @@ from app.db import connect, migrate
 from app.main import create_app
 from app.services.churches import (
     EXAMPLE_CHURCHES,
+    NAME_MAX_CHARS,
     ChurchListError,
+    ChurchNotFound,
+    add_church,
     is_preview,
+    list_all,
     load,
     main,
     parse,
+    rename_church,
     seed_examples,
 )
+from app.services.staff import create_account
 
 # Fake data only (ENG-047).
 CSV = "name\nExample Church A\n  Example Church B  \n\n"
@@ -125,3 +131,74 @@ def test_arch_017_app_start_seeds_only_pr_previews(
     with TestClient(create_app()):
         pass
     assert _names(connect(db)) == expected
+
+
+# admin.setup: an admin adds and renames churches (SAFE-002, GAME-110, ARCH-050).
+
+
+@pytest.fixture
+def admin_id(conn):
+    return create_account(conn, "test-admin-1", "test password only 1", "admin")
+
+
+def _audit_rows(conn):
+    return [
+        (r["actor_type"], r["actor_id"], r["action"], r["target_type"], r["target_id"])
+        for r in conn.execute("SELECT * FROM audit_log ORDER BY id")
+    ]
+
+
+def test_safe_002_admin_adds_a_church_with_an_audit_row(conn, admin_id):
+    church_id = add_church(conn, "  Example   Church D ", admin_id)
+    assert [(c.id, c.name) for c in list_all(conn)] == [(church_id, "Example Church D")]
+    assert _audit_rows(conn) == [("admin", admin_id, "church_add", "church", church_id)]
+
+
+@pytest.mark.parametrize(
+    "name",
+    ["", "   ", "x" * (NAME_MAX_CHARS + 1), "example church a", "Example  Church A"],
+)
+def test_safe_002_add_refuses_an_empty_long_or_look_alike_name(conn, admin_id, name):
+    load(conn, ["Example Church A"])
+    with pytest.raises(ChurchListError):
+        add_church(conn, name, admin_id)
+    assert _names(conn) == ["Example Church A"]
+    assert _audit_rows(conn) == []
+
+
+def test_game_018_rename_keeps_the_church_id(conn, admin_id):
+    church_id = add_church(conn, "Example Church D", admin_id)
+    assert rename_church(conn, church_id, "Example Church E", admin_id) is True
+    assert [(c.id, c.name) for c in list_all(conn)] == [(church_id, "Example Church E")]
+    assert _audit_rows(conn)[-1] == (
+        "admin",
+        admin_id,
+        "church_rename",
+        "church",
+        church_id,
+    )
+
+
+def test_safe_002_rename_can_fix_only_the_case(conn, admin_id):
+    church_id = add_church(conn, "Example church d", admin_id)
+    assert rename_church(conn, church_id, "Example Church D", admin_id) is True
+    assert _names(conn) == ["Example Church D"]
+
+
+def test_safe_002_rename_to_the_same_name_writes_nothing(conn, admin_id):
+    church_id = add_church(conn, "Example Church D", admin_id)
+    assert rename_church(conn, church_id, " Example Church D ", admin_id) is False
+    assert [r[2] for r in _audit_rows(conn)] == ["church_add"]
+
+
+def test_safe_002_rename_refuses_another_churchs_name(conn, admin_id):
+    load(conn, ["Example Church A"])
+    church_id = add_church(conn, "Example Church D", admin_id)
+    with pytest.raises(ChurchListError, match="already in the list"):
+        rename_church(conn, church_id, "EXAMPLE CHURCH A", admin_id)
+    assert _names(conn) == ["Example Church A", "Example Church D"]
+
+
+def test_safe_002_renaming_a_missing_church_is_not_found(conn, admin_id):
+    with pytest.raises(ChurchNotFound):
+        rename_church(conn, 999, "Example Church D", admin_id)

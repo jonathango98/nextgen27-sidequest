@@ -1,0 +1,52 @@
+{% extends "player/plain.html" %}
+
+{% set role_label = "Admin" %}
+{% set back = ("/admin", "Admin") %}
+
+{% block title %}Churches · Side Quest{% endblock %}
+
+{% block content %}
+  {% set adding = form and not form.get("church") %}
+  <div class="stack">
+    <h1>churches.</h1>
+    {# SAFE-002: players pick their church from this list at sign-up. The add form opens in place, with no JavaScript (API-007). #}
+    <details class="session-edit session-add"{% if adding %} open{% endif %}>
+      <summary class="button button-secondary">Add</summary>
+      <form class="form" method="post" action="/admin/churches">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <div class="card form-card">
+          <label for="add-name">Church name</label>
+          <input id="add-name" name="name" value="{{ form.get('name', '') if adding else '' }}" maxlength="{{ name_max }}" autocomplete="off" required>
+          <p class="hint">It shows in the sign-up list right away.</p>
+        </div>
+        <button class="button" type="submit">Add church</button>
+      </form>
+    </details>
+
+    <section id="churches" class="stack" aria-labelledby="churches-title">
+      {% if error_code %}{% include "partials/error.html" %}{% endif %}
+      <h2 id="churches-title" class="visually-hidden">Church list</h2>
+      {% for c in churches %}
+        {% set editing = form.get("church") == c.id|string %}
+        <article class="card stack" data-church="{{ c.id }}">
+          <div class="title-row">
+            <h3>{{ c.name }}</h3>
+          </div>
+          {# GAME-018: renaming keeps the church, so its players and points stay with it. #}
+          <details class="session-edit"{% if editing %} open{% endif %}>
+            <summary class="button button-secondary">Rename</summary>
+            <form class="form" method="post" action="/admin/churches">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+              <input type="hidden" name="church" value="{{ c.id }}">
+              <label for="rename-{{ c.id }}">New name</label>
+              <input id="rename-{{ c.id }}" name="name" value="{{ form.get('name', '') if editing else c.name }}" maxlength="{{ name_max }}" autocomplete="off" required>
+              <button class="button button-secondary" type="submit">Save</button>
+            </form>
+          </details>
+        </article>
+      {% else %}
+        <p class="hint">No churches yet.</p>
+      {% endfor %}
+    </section>
+  </div>
+{% endblock %}
