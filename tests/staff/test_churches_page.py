@@ -71,6 +71,28 @@ def test_safe_002_admin_adds_and_renames_a_church_at_min_width(
     expect(page.locator("option", has_text=renamed)).to_have_count(1)
     expect(page.locator("option", has_text=church)).to_have_count(0)
 
+    # GAME-110: Hide asks first, HTMX swaps the list, and the church leaves the sign-up list.
+    page.goto(f"{live_server}/admin/churches")
+    card = page.locator("article", has=page.get_by_role("heading", name=renamed))
+    page.evaluate("window.noReload = true")
+    page.once("dialog", lambda dialog: dialog.accept())
+    card.get_by_role("button", name="Hide").click()
+    expect(page.get_by_role("status")).to_contain_text(f"{renamed} is hidden")
+    expect(card.locator(".chip", has_text="Hidden")).to_be_visible()
+    assert page.evaluate("window.noReload === true")
+    _fits(page)
+    # A full-page screenshot draws the pinned top bar where the scroll left it, so start at the top.
+    page.evaluate("window.scrollTo(0, 0)")
+    page.screenshot(path=tmp_path / "churches-hidden.png", full_page=True)
+    page.goto(f"{live_server}/join")
+    expect(page.locator("option", has_text=renamed)).to_have_count(0)
+
+    page.goto(f"{live_server}/admin/churches")
+    card.get_by_role("button", name="Show").click()
+    expect(page.get_by_role("status")).to_contain_text(f"{renamed} is back")
+    page.goto(f"{live_server}/join")
+    expect(page.locator("option", has_text=renamed)).to_have_count(1)
+
     # The browser logs the 400 from the refused form this test asks for on purpose. Anything else
     # is a real console error (ENG-045).
     assert [e for e in errors if "status of 400 " not in e] == []

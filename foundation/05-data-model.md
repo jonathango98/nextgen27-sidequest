@@ -2,8 +2,8 @@
 
 - Status: PROPOSED (developers confirm at kickoff; constraints marked LOCKED are required whatever the final schema looks like)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.10.0
-- Last updated: 2026-11-19
+- Version: 1.11.0
+- Last updated: 2026-11-21
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -26,6 +26,7 @@ This file lists the tables, their fields, and the database constraints that enfo
 | `id` | integer | Primary key |
 | `name` | text | Unique. Loaded by an admin before the event (SAFE-002) |
 | `region` | text, nullable | Unused. Regions were dropped (DATA-010) |
+| `is_hidden` | boolean | An admin hid it from the sign-up list (GAME-110). Nothing is deleted: its players keep their church, points, and login |
 
 ### Player
 

@@ -229,3 +229,27 @@ def test_arch_034_cookie_without_account_shows_the_form(client, path):
     client.cookies.set(session.COOKIE, stale)
     # Follows redirects, so a loop between the three pages fails here.
     assert client.get(path).status_code == 200
+
+
+def _hide(db_path, name):
+    conn = connect(db_path)
+    conn.execute("UPDATE church SET is_hidden = 1 WHERE name = ?", (name,))
+    conn.close()
+
+
+def test_game_110_player_of_a_hidden_church_can_still_log_in(
+    client, db_path, church_ids, fake_pin
+):
+    _hide(db_path, CHURCHES[0])
+    assert f">{CHURCHES[0]}</option>" in client.get("/login").text
+    response = _login(client, church_ids, fake_pin)
+    assert response.status_code == 303
+
+
+def test_game_110_hidden_church_with_no_players_is_not_in_the_login_list(
+    client, db_path
+):
+    _hide(db_path, CHURCHES[1])
+    page = client.get("/login").text
+    assert f">{CHURCHES[1]}</option>" not in page
+    assert f">{CHURCHES[0]}</option>" in page

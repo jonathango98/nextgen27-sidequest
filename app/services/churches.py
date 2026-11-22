@@ -42,6 +42,7 @@ class ChurchNotFound(Exception):
 class Church:
     id: int
     name: str
+    is_hidden: bool = False
 
 
 def _key(name: str) -> str:
@@ -94,8 +95,11 @@ def load(conn: sqlite3.Connection, names: list[str]) -> list[str]:
 
 
 def list_all(conn: sqlite3.Connection) -> list[Church]:
-    rows = conn.execute("SELECT id, name FROM church ORDER BY name COLLATE NOCASE")
-    return [Church(r["id"], r["name"]) for r in rows]
+    """Every church, shown ones first, then by name."""
+    rows = conn.execute(
+        "SELECT id, name, is_hidden FROM church ORDER BY is_hidden, name COLLATE NOCASE"
+    )
+    return [Church(r["id"], r["name"], bool(r["is_hidden"])) for r in rows]
 
 
 def _clean_name(name: str) -> str:
@@ -165,6 +169,34 @@ def rename_church(
         _refuse_look_alike(conn, name, church_id)
         conn.execute("UPDATE church SET name = ? WHERE id = ?", (name, church_id))
         _audit(conn, admin_id, "church_rename", church_id)
+    except BaseException:
+        conn.execute("ROLLBACK")
+        raise
+    conn.execute("COMMIT")
+    return True
+
+
+def set_hidden(
+    conn: sqlite3.Connection, church_id: int, hidden: bool, admin_id: int
+) -> bool:
+    """Hide a church from the sign-up list, or show it again. Returns whether anything changed.
+
+    Nothing is deleted: players who already joined it keep their church, points, and login.
+    """
+    conn.execute("BEGIN IMMEDIATE")
+    try:
+        row = conn.execute(
+            "SELECT is_hidden FROM church WHERE id = ?", (church_id,)
+        ).fetchone()
+        if row is None:
+            raise ChurchNotFound
+        if bool(row["is_hidden"]) == hidden:
+            conn.execute("ROLLBACK")
+            return False
+        conn.execute(
+            "UPDATE church SET is_hidden = ? WHERE id = ?", (int(hidden), church_id)
+        )
+        _audit(conn, admin_id, "church_hide" if hidden else "church_show", church_id)
     except BaseException:
         conn.execute("ROLLBACK")
         raise

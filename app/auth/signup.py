@@ -58,7 +58,20 @@ def clean_name(value: str) -> str:
 
 
 def churches(conn: sqlite3.Connection) -> list[sqlite3.Row]:
-    return conn.execute("SELECT id, name FROM church ORDER BY name").fetchall()
+    """The sign-up list. A church an admin hid is left out (GAME-110)."""
+    return conn.execute(
+        "SELECT id, name FROM church WHERE is_hidden = 0 ORDER BY name"
+    ).fetchall()
+
+
+def login_churches(conn: sqlite3.Connection) -> list[sqlite3.Row]:
+    """The log in list: the sign-up list, plus any hidden church that already has players,
+    so they can still log in."""
+    return conn.execute(
+        "SELECT id, name FROM church AS c WHERE c.is_hidden = 0"
+        " OR EXISTS (SELECT 1 FROM player AS p WHERE p.church_id = c.id)"
+        " ORDER BY name"
+    ).fetchall()
 
 
 def check_details(conn: sqlite3.Connection, form: dict[str, str]) -> Details:
@@ -75,7 +88,7 @@ def check_details(conn: sqlite3.Connection, form: dict[str, str]) -> Details:
     row = None
     if church.isascii() and church.isdigit():
         row = conn.execute(
-            "SELECT id FROM church WHERE id = ?", (int(church),)
+            "SELECT id FROM church WHERE id = ? AND is_hidden = 0", (int(church),)
         ).fetchone()
     if row is None:
         raise _bad_input("Please pick your church.")

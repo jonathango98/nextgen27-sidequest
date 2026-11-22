@@ -178,3 +178,53 @@ def test_arch_038_church_form_needs_csrf(client, db_path):
 def test_game_110_admin_console_links_to_churches(client):
     _log_in(client, *ADMIN)
     assert 'href="/admin/churches"' in client.get("/admin").text
+
+
+def test_game_110_hidden_church_leaves_sign_up_and_comes_back(client, db_path):
+    _log_in(client, *ADMIN)
+    church_id = _church_id(db_path, "Example Church A")
+    response = _post(client, {"action": "hide", "church": str(church_id)})
+    assert response.status_code == 200
+    assert "Example Church A is hidden from the sign-up list" in response.text
+    assert ">Example Church A</option>" not in client.get("/join").text
+
+    response = _post(client, {"action": "show", "church": str(church_id)})
+    assert "Example Church A is back in the sign-up list." in response.text
+    assert ">Example Church A</option>" in client.get("/join").text
+    actions = [
+        r["action"] for r in _db(db_path, "SELECT action FROM audit_log ORDER BY id")
+    ]
+    assert actions == ["church_hide", "church_show"]
+
+
+def test_game_110_htmx_hide_swaps_only_the_church_list(client, db_path):
+    _log_in(client, *ADMIN)
+    church_id = _church_id(db_path, "Example Church A")
+    response = client.post(
+        "/admin/churches",
+        data={
+            "action": "hide",
+            "church": str(church_id),
+            "csrf_token": client.cookies[csrf.COOKIE],
+        },
+        headers={"HX-Request": "true"},
+    )
+    assert response.status_code == 200
+    assert 'id="churches"' in response.text
+    assert "Hidden" in response.text
+
+
+@pytest.mark.parametrize("church", ["999", "", "abc"])
+def test_game_110_hiding_an_unknown_church_is_not_found(client, db_path, church):
+    _log_in(client, *ADMIN)
+    response = _post(client, {"action": "hide", "church": church})
+    assert response.status_code == 404
+    assert 'data-error-code="NOT_FOUND"' in response.text
+
+
+def test_arch_035_usher_cannot_hide_a_church(client, db_path):
+    _log_in(client, *USHER)
+    church_id = _church_id(db_path, "Example Church A")
+    response = _post(client, {"action": "hide", "church": str(church_id)})
+    assert response.status_code == 403
+    assert _db(db_path, "SELECT is_hidden FROM church")[0]["is_hidden"] == 0

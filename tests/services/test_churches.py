@@ -1,4 +1,5 @@
 import io
+import sqlite3
 
 import pytest
 from fastapi.testclient import TestClient
@@ -18,6 +19,7 @@ from app.services.churches import (
     parse,
     rename_church,
     seed_examples,
+    set_hidden,
 )
 from app.services.staff import create_account
 
@@ -202,3 +204,49 @@ def test_safe_002_rename_refuses_another_churchs_name(conn, admin_id):
 def test_safe_002_renaming_a_missing_church_is_not_found(conn, admin_id):
     with pytest.raises(ChurchNotFound):
         rename_church(conn, 999, "Example Church D", admin_id)
+
+
+def test_game_110_admin_hides_and_shows_a_church_with_audit_rows(conn, admin_id):
+    church_id = add_church(conn, "Example Church D", admin_id)
+    assert set_hidden(conn, church_id, True, admin_id) is True
+    assert [c.is_hidden for c in list_all(conn)] == [True]
+    assert set_hidden(conn, church_id, False, admin_id) is True
+    assert [c.is_hidden for c in list_all(conn)] == [False]
+    assert [r[2:] for r in _audit_rows(conn)] == [
+        ("church_add", "church", church_id),
+        ("church_hide", "church", church_id),
+        ("church_show", "church", church_id),
+    ]
+
+
+def test_game_110_hiding_twice_writes_nothing(conn, admin_id):
+    church_id = add_church(conn, "Example Church D", admin_id)
+    set_hidden(conn, church_id, True, admin_id)
+    assert set_hidden(conn, church_id, True, admin_id) is False
+    assert [r[2] for r in _audit_rows(conn)] == ["church_add", "church_hide"]
+
+
+def test_game_110_hiding_a_missing_church_is_not_found(conn, admin_id):
+    with pytest.raises(ChurchNotFound):
+        set_hidden(conn, 999, True, admin_id)
+
+
+def test_game_110_list_shows_hidden_churches_last(conn, admin_id):
+    a = add_church(conn, "Example Church A", admin_id)
+    add_church(conn, "Example Church B", admin_id)
+    set_hidden(conn, a, True, admin_id)
+    assert [(c.name, c.is_hidden) for c in list_all(conn)] == [
+        ("Example Church B", False),
+        ("Example Church A", True),
+    ]
+
+
+def test_game_110_database_refuses_other_hidden_values(conn):
+    load(conn, ["Example Church A"])
+    with pytest.raises(sqlite3.IntegrityError):
+        conn.execute("UPDATE church SET is_hidden = 2")
+
+
+def test_game_110_a_new_church_starts_shown(conn):
+    load(conn, ["Example Church A"])
+    assert conn.execute("SELECT is_hidden FROM church").fetchone()[0] == 0
