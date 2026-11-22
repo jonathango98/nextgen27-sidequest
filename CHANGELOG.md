@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-21 · feat/admin-setup · Claude Opus 5.5 / @OwenTjandra
+
+- What: Builds `admin.setup`. New `/admin/staff` page: an admin adds an usher or admin account with a password, and switches an account off or back on. A switched-off account is logged out on its next page and can't log in. An admin can't switch off their own account. New `/admin/churches` page: an admin adds a church, fixes its name (look-alike names refused, the id stays so players and points stay), or hides it from the sign-up list. Migration 0013 adds `church.is_hidden`. Sign-up leaves hidden churches out and refuses them on the server. The log in list keeps a hidden church that has players, so they can still log in. Both pages have a tile on the admin console, are admin only, and write an audit row with IDs only for every change. No screen accounts: the main screen uses a link key (ARCH-037). Passwords only need to be non-empty, since no rule sets a minimum. `foundation/05-data-model.md` 1.11.0 lists the new field (protected, needs Jonathan's approval, ENG-080, ENG-087). Preview seed: N/A, previews already have Test Admin, Test Usher, and Example Churches A to C, so the hand test uses Example Church D. Checked at 360px in Chromium and WebKit.
+- Why: Picked through `/pick-task`. Due 2026-12-11 (PRD-054).
+- Rule IDs: ARCH-035, ARCH-036, ARCH-037, ARCH-050, ARCH-051, GAME-018, GAME-110, SAFE-002, OPS-042, DATA-003, API-001, API-002, API-007, AI-013, AI-042, AI-044, ENG-080, ENG-087, ENG-101, ENG-108
+- Status: Done
+- PR: #104
+
 ## 2026-11-21 · docs/restore-security · Claude Opus 5.5 / @jonathango98
 
 - What: Safer restore steps in `docs/backups.md`. Every restore changes `SQ_SESSION_KEY` in the same Deploy, so logins from before it stop working. The check command now names production's service (`nextgen27-sidequest`, not `web`) and reads the database path from `SQ_DB_PATH`.

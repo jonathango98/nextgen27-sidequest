@@ -34,7 +34,7 @@ def _render(
     context = {
         "csrf_token": token,
         "form": form,
-        "churches": signup.churches(conn),
+        "churches": signup.login_churches(conn),
         "name_max": signup.NAME_MAX_CHARS,
         "pin_digits": request.app.state.config["auth"]["pin_digits"],
     }

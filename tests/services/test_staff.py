@@ -9,10 +9,15 @@ from app.main import create_app
 from app.services.staff import (
     FIRST_ADMIN_PASSWORD_ENV,
     PREVIEW_ACCOUNTS,
+    USERNAME_MAX_CHARS,
     StaffAccountError,
+    StaffAccountNotFound,
+    add_account,
     create_account,
+    list_accounts,
     main,
     seed_preview,
+    set_active,
 )
 
 # Fake data only (ENG-047).
@@ -187,3 +192,145 @@ def test_arch_017_app_start_seeds_staff_only_on_pr_previews(
     with TestClient(create_app()):
         pass
     assert {row["username"] for row in _accounts(db)} == expected
+
+
+# admin.setup: an admin adds accounts and switches them off (ARCH-036, GAME-110, ARCH-050).
+
+
+@pytest.fixture
+def admin_id(conn):
+    return create_account(conn, "test-admin-1", FAKE_PASSWORD, "admin")
+
+
+def _audit_rows(conn):
+    return [
+        dict(r)
+        for r in conn.execute(
+            "SELECT actor_type, actor_id, action, target_type, target_id, reason"
+            " FROM audit_log ORDER BY id"
+        )
+    ]
+
+
+def _is_active(conn, account_id):
+    return conn.execute(
+        "SELECT is_active FROM staff_account WHERE id = ?", (account_id,)
+    ).fetchone()[0]
+
+
+def test_arch_036_admin_adds_an_account_with_an_audit_row(conn, admin_id):
+    account_id = add_account(conn, " Test Usher ", FAKE_PASSWORD, "usher", admin_id)
+    row = conn.execute(
+        "SELECT * FROM staff_account WHERE id = ?", (account_id,)
+    ).fetchone()
+    assert (row["username"], row["role"], row["is_active"]) == (
+        "Test Usher",
+        "usher",
+        1,
+    )
+    assert verify_password(FAKE_PASSWORD, row["password_hash"])
+    assert _audit_rows(conn) == [
+        {
+            "actor_type": "admin",
+            "actor_id": admin_id,
+            "action": "staff_add",
+            "target_type": "staff_account",
+            "target_id": account_id,
+            "reason": None,
+        }
+    ]
+
+
+def test_arch_051_staff_audit_row_has_no_username_or_password(conn, admin_id):
+    add_account(conn, "Test Usher", FAKE_PASSWORD, "usher", admin_id)
+    text = repr(_audit_rows(conn))
+    assert "Test Usher" not in text
+    assert FAKE_PASSWORD not in text
+
+
+@pytest.mark.parametrize("role", ["usher", "admin"])
+def test_arch_035_admin_adds_an_usher_or_an_admin(conn, admin_id, role):
+    account_id = add_account(conn, "Test Staff 2", FAKE_PASSWORD, role, admin_id)
+    assert (
+        conn.execute(
+            "SELECT role FROM staff_account WHERE id = ?", (account_id,)
+        ).fetchone()[0]
+        == role
+    )
+
+
+@pytest.mark.parametrize(
+    ("username", "password", "role"),
+    [
+        ("", FAKE_PASSWORD, "usher"),
+        ("   ", FAKE_PASSWORD, "usher"),
+        ("Test Usher", "", "usher"),
+        ("Test Usher", FAKE_PASSWORD, "screen"),
+        ("x" * (USERNAME_MAX_CHARS + 1), FAKE_PASSWORD, "usher"),
+    ],
+)
+def test_arch_036_add_refuses_a_bad_form_and_saves_nothing(
+    conn, admin_id, username, password, role
+):
+    with pytest.raises(StaffAccountError):
+        add_account(conn, username, password, role, admin_id)
+    assert len(list_accounts(conn)) == 1
+    assert _audit_rows(conn) == []
+
+
+def test_arch_036_add_refuses_a_taken_username_ignoring_case(conn, admin_id):
+    add_account(conn, "Test Usher", FAKE_PASSWORD, "usher", admin_id)
+    with pytest.raises(StaffAccountError, match="already an account"):
+        add_account(conn, "test usher", "other password", "admin", admin_id)
+    assert len(list_accounts(conn)) == 2
+    assert [r["action"] for r in _audit_rows(conn)] == ["staff_add"]
+
+
+def test_ops_042_admin_switches_an_account_off_and_on(conn, admin_id):
+    usher_id = add_account(conn, "Test Usher", FAKE_PASSWORD, "usher", admin_id)
+    assert set_active(conn, usher_id, False, admin_id) is True
+    assert _is_active(conn, usher_id) == 0
+    assert set_active(conn, usher_id, True, admin_id) is True
+    assert _is_active(conn, usher_id) == 1
+    rows = _audit_rows(conn)
+    assert [(r["action"], r["target_id"]) for r in rows] == [
+        ("staff_add", usher_id),
+        ("staff_switch_off", usher_id),
+        ("staff_switch_on", usher_id),
+    ]
+
+
+def test_ops_042_switching_to_the_same_state_writes_nothing(conn, admin_id):
+    usher_id = add_account(conn, "Test Usher", FAKE_PASSWORD, "usher", admin_id)
+    set_active(conn, usher_id, False, admin_id)
+    assert set_active(conn, usher_id, False, admin_id) is False
+    assert [r["action"] for r in _audit_rows(conn)] == ["staff_add", "staff_switch_off"]
+
+
+def test_arch_036_admin_cannot_switch_off_their_own_account(conn, admin_id):
+    with pytest.raises(StaffAccountError, match="your own account"):
+        set_active(conn, admin_id, False, admin_id)
+    assert _is_active(conn, admin_id) == 1
+    assert _audit_rows(conn) == []
+
+
+def test_arch_036_admin_can_switch_off_another_admin(conn, admin_id):
+    other = add_account(conn, "Test Admin 2", FAKE_PASSWORD, "admin", admin_id)
+    assert set_active(conn, other, False, admin_id) is True
+    assert _is_active(conn, other) == 0
+
+
+def test_arch_036_switching_a_missing_account_is_not_found(conn, admin_id):
+    with pytest.raises(StaffAccountNotFound):
+        set_active(conn, admin_id + 99, False, admin_id)
+
+
+def test_arch_036_list_shows_switched_on_accounts_first(conn, admin_id):
+    usher_id = add_account(conn, "Test Usher", FAKE_PASSWORD, "usher", admin_id)
+    add_account(conn, "Test Usher 2", FAKE_PASSWORD, "usher", admin_id)
+    set_active(conn, usher_id, False, admin_id)
+    assert [(a.username, a.role, a.is_active) for a in list_accounts(conn)] == [
+        ("test-admin-1", "admin", True),
+        ("Test Usher 2", "usher", True),
+        ("Test Usher", "usher", False),
+    ]

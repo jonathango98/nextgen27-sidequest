@@ -1,0 +1,66 @@
+{% extends "player/plain.html" %}
+
+{% set role_label = "Admin" %}
+{% set back = ("/admin", "Admin") %}
+
+{% block title %}Churches · Side Quest{% endblock %}
+
+{% block content %}
+  {% set adding = form and not form.get("church") %}
+  <div class="stack">
+    <h1>churches.</h1>
+    {# SAFE-002: players pick their church from this list at sign-up. The add form opens in place, with no JavaScript (API-007). #}
+    <details class="session-edit session-add"{% if adding %} open{% endif %}>
+      <summary class="button button-secondary">Add</summary>
+      <form class="form" method="post" action="/admin/churches">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <div class="card form-card">
+          <label for="add-name">Church name</label>
+          <input id="add-name" name="name" value="{{ form.get('name', '') if adding else '' }}" maxlength="{{ name_max }}" autocomplete="off" required>
+          <p class="hint">It shows in the sign-up list right away.</p>
+        </div>
+        <button class="button" type="submit">Add church</button>
+      </form>
+    </details>
+
+    {# Hide and Show swap only this part, picked out of the page with hx-select (API-002). #}
+    <section id="churches" class="stack" aria-labelledby="churches-title">
+      {% if notice %}<p class="card" role="status">{{ notice }}</p>{% endif %}
+      {% if error_code %}{% include "partials/error.html" %}{% endif %}
+      <h2 id="churches-title" class="visually-hidden">Church list</h2>
+      {% for c in churches %}
+        {% set editing = form.get("church") == c.id|string %}
+        <article class="card stack" data-church="{{ c.id }}">
+          <div class="title-row">
+            <h3>{{ c.name }}</h3>
+            {% if c.is_hidden %}<span class="chip">Hidden</span>{% endif %}
+          </div>
+          {% if c.is_hidden %}<p class="hint">Not in the sign-up list. Players who already joined it can still log in.</p>{% endif %}
+          {# Hide and Rename sit side by side. An open Rename form takes the whole row. #}
+          <div class="session-actions">
+            {# GAME-110: hiding deletes nothing. One form per button, so it works without JavaScript too (API-007). #}
+            <form method="post" action="/admin/churches" hx-post="/admin/churches" hx-target="#churches" hx-select="#churches" hx-swap="outerHTML"{% if not c.is_hidden %} hx-confirm="Hide {{ c.name }} from the sign-up list? Players who already joined it keep it."{% endif %}>
+              <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+              <input type="hidden" name="action" value="{{ 'show' if c.is_hidden else 'hide' }}">
+              <input type="hidden" name="church" value="{{ c.id }}">
+              <button class="button button-secondary" type="submit">{{ "Show" if c.is_hidden else "Hide" }}</button>
+            </form>
+            {# GAME-018: renaming keeps the church, so its players and points stay with it. #}
+            <details class="session-edit"{% if editing %} open{% endif %}>
+              <summary class="button button-secondary">Rename</summary>
+              <form class="form" method="post" action="/admin/churches">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <input type="hidden" name="church" value="{{ c.id }}">
+                <label for="rename-{{ c.id }}">New name</label>
+                <input id="rename-{{ c.id }}" name="name" value="{{ form.get('name', '') if editing else c.name }}" maxlength="{{ name_max }}" autocomplete="off" required>
+                <button class="button button-secondary" type="submit">Save</button>
+              </form>
+            </details>
+          </div>
+        </article>
+      {% else %}
+        <p class="hint">No churches yet.</p>
+      {% endfor %}
+    </section>
+  </div>
+{% endblock %}

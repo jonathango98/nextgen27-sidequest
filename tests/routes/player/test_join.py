@@ -490,3 +490,25 @@ def test_ui_036_home_says_hi_by_first_name(client, details, fake_pin):
     # SAFE-004: the first name only, never the last name.
     greeting = re.search(r'<p class="greeting">([^<]*)</p>', html).group(1)
     assert details["last_name"] not in greeting
+
+
+def _hide(db_path, name):
+    conn = connect(db_path)
+    conn.execute("UPDATE church SET is_hidden = 1 WHERE name = ?", (name,))
+    conn.close()
+
+
+def test_game_110_hidden_church_is_not_in_the_sign_up_list(client, db_path):
+    _hide(db_path, CHURCHES[0])
+    page = client.get("/join").text
+    assert f">{CHURCHES[0]}</option>" not in page
+    assert f">{CHURCHES[1]}</option>" in page
+
+
+def test_game_110_sign_up_with_a_hidden_church_is_refused(client, details, db_path):
+    # The server checks too, not just the missing option.
+    _hide(db_path, CHURCHES[0])
+    response = _post(client, {"step": "details", **details}, htmx=True)
+    assert response.status_code == 400
+    assert _error_code(response) == "BAD_INPUT"
+    assert _players(db_path) == []
