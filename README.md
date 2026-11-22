@@ -61,7 +61,7 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| `admin.setup` Admins add and switch off staff accounts, and add, rename or hide churches | `feat/admin-setup` | draft | 2026-11-21 | Claude Opus 5.5 / @OwenTjandra |
+| `admin.setup` Admins add and switch off staff accounts, and add, rename or hide churches | `feat/admin-setup` | #104 | 2026-11-21 | Claude Opus 5.5 / @OwenTjandra |
 
 ### Planned
 

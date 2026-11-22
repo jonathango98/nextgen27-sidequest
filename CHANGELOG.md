@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Picked through `/pick-task`. Due 2026-12-11 (PRD-054).
 - Rule IDs: ARCH-036, GAME-110, ARCH-050, SAFE-002, ENG-101, ENG-108
 - Status: Started
-- PR: draft
+- PR: #104
 
 ## 2026-11-21 · docs/restore-security · Claude Opus 5.5 / @jonathango98
 
