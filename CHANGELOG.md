@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-21 · feat/admin-setup · Claude Opus 5.5 / @OwenTjandra
+
+- What: Started `admin.setup`. An admin page to add a new usher or screen account and switch one off, and to add, rename or hide churches in the sign-up list. Every change writes an audit row.
+- Why: Picked through `/pick-task`. Due 2026-12-11 (PRD-054).
+- Rule IDs: ARCH-036, GAME-110, ARCH-050, SAFE-002, ENG-101, ENG-108
+- Status: Started
+- PR: draft
+
 ## 2026-11-21 · docs/restore-security · Claude Opus 5.5 / @jonathango98
 
 - What: Safer restore steps in `docs/backups.md`. Every restore changes `SQ_SESSION_KEY` in the same Deploy, so logins from before it stop working. The check command now names production's service (`nextgen27-sidequest`, not `web`) and reads the database path from `SQ_DB_PATH`.
