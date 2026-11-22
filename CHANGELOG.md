@@ -22,11 +22,11 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-11-21 · docs/restore-security · Claude Opus 5.5 / @jonathango98
 
-- What: Started. Safer restore steps in `docs/backups.md`.
+- What: Safer restore steps in `docs/backups.md`. Every restore changes `SQ_SESSION_KEY` in the same Deploy, so logins from before it stop working. The check command now names production's service (`nextgen27-sidequest`, not `web`) and reads the database path from `SQ_DB_PATH`.
 - Why: Jonathan asked for one PR with the restore security fixes.
 - Rule IDs: ARCH-034, ARCH-053, AI-043
-- Status: Started
-- PR: draft
+- Status: Done
+- PR: #103
 
 ## 2026-11-21 · fix/login-loop · Claude Opus 5.5 / @jonathango98
 
