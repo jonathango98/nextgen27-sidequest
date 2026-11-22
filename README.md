@@ -61,6 +61,7 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
+| Fix: a login left on a phone whose account is gone loops between Home and Log in | `fix/login-loop` | draft | 2026-11-21 | Claude Opus 5.5 / @jonathango98 |
 
 ### Planned
 

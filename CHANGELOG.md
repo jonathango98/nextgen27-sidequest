@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-21 · fix/login-loop · Claude Opus 5.5 / @jonathango98
+
+- What: Started. Stop the redirect loop between Home, Log in, and Join when a phone's login cookie is for an account that is no longer in the database.
+- Why: Jonathan was locked out of staging by the loop. The same would happen on production after a restore or the retention cleanup.
+- Rule IDs: ARCH-034, DEC-061, AI-042, AI-043, AI-044
+- Status: Started
+- PR: draft
+
 ## 2026-11-20 · feat/connections-verse-picker · Claude Opus 5.5 / @jonathango98
 
 - What: Favorite verse pickers (`connections.verse-picker`). On the verse icebreaker, players choose book, chapter, and verse from three lists instead of typing, and the answer saves as "John 3:16". `verse-picker.js` narrows the chapter and verse lists to the chosen book, and the server refuses any verse that doesn't exist. Verse counts are in NIV numbering in `app/services/bible_verses.json`: the public-domain KJV counts with 3 John at 15 verses, as on BibleGateway's NIV, and "Song of Songs" as the NIV book name. Tests that type a free answer now leave out the verse question, so they no longer depend on the random pick. The icebreaker now matches the Kairos design board: "With <first name> · <church>", a lowercase question title, a lock icon on "Just you two", and a "Their answer" form at the bottom of the screen with Book on top, Chapter and Verse side by side, and Save showing a points pill for what saving pays now. On 2026-11-21: the picked verse's words show live above "Their answer" in italics, in the ASV (1901, public domain, bundled in `app/services/bible_asv.json`), through `GET /bible/verse` (DEC-083, protected docs 06 and 13). The page scrolls as they load, so the pickers stay where they were. A chapter or verse thousands of digits long is now refused instead of breaking the server's number parsing.
