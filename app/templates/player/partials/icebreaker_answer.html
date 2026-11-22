@@ -10,6 +10,8 @@
     <form class="form" method="post" action="/connections/{{ connection.id }}/answer" hx-post="/connections/{{ connection.id }}/answer" hx-target="#icebreaker-answer" hx-swap="outerHTML">
       <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
       {% if connection.category == "verse" %}
+        {# DEC-083: target, swap, and include are set here, or the form's would be inherited. Never include the CSRF token in this GET. #}
+        <div class="verse-text" aria-live="polite" hx-get="/bible/verse" hx-trigger="verse-picked" hx-include="#book, #chapter, #verse" hx-target="this" hx-swap="innerHTML" hx-sync="this:queue last"></div>
         {# WRAP-012: lists, not typing, so verses match exactly. verse-picker.js narrows them to the book. #}
         <fieldset>
           <legend class="answer-title">Their answer</legend>

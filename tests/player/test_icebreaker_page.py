@@ -6,7 +6,7 @@ from playwright.sync_api import Page, expect
 from app.config import load_config
 from app.db import connect
 from tests.conftest import seed_fake_players
-from tests.player.conftest import FAKE_PLAYER
+from tests.player.conftest import FAKE_PLAYER, SHORT_PHONE_HEIGHT
 
 # Test Player 5 is only used here, so saving an answer never changes another test's page.
 # The helper names players by position, so the list keeps Players 1 to 4 as they are.
@@ -98,3 +98,66 @@ def test_wrap_012_verse_lists_fit_the_chosen_book(page: Page, live_server):
     width = page.evaluate("document.documentElement.scrollWidth")
     assert width <= load_config()["ui"]["min_viewport_px"]
     assert not errors, errors
+
+
+def test_dec_083_picked_verse_words_show_above_their_answer(page: Page, live_server):
+    errors, lookups = [], []
+    page.on("console", lambda m: m.type == "error" and errors.append(m.text))
+    page.on("request", lambda r: "/bible/verse" in r.url and lookups.append(r.url))
+    page.goto(f"{live_server}/connections/{_fresh_connection(VERSE_FRIEND, 'verse')}")
+    book = page.get_by_label("Book", exact=True)
+    chapter = page.get_by_label("Chapter", exact=True)
+    verse = page.get_by_label("Verse", exact=True)
+    save = page.get_by_role("button", name="Save")
+    words = page.locator(".verse-text")
+
+    book.select_option("John")
+    chapter.select_option("3")
+    verse.select_option("16")
+    expect(words).to_contain_text("For God so loved the world")
+    box = words.bounding_box()
+    title = page.locator("legend", has_text="Their answer").bounding_box()
+    assert box["y"] + box["height"] <= title["y"]
+    expect(words.locator("p")).to_have_css("font-style", "italic")
+
+    book.select_option("Esther")  # the longest verse is Esther 8:9
+    chapter.select_option("8")
+    verse.select_option("9")
+    expect(words).to_contain_text("in the third month")
+    width = page.evaluate("document.documentElement.scrollWidth")
+    assert width <= load_config()["ui"]["min_viewport_px"]
+
+    book.select_option("3 John")  # keeps verse 9, in the only chapter
+    expect(words).to_contain_text("Diotrephes")
+    assert "chapter=1&verse=9" in lookups[-1]  # asked after the lists narrowed
+    verse.select_option("15")
+    expect(words).to_have_text("")
+    assert all("csrf" not in url for url in lookups), lookups
+
+    verse.select_option("4")
+    expect(words).to_contain_text("walking in the truth")
+    book.select_option("")  # back to "Pick a book"
+    expect(words).to_have_text("")
+    expect(save).to_be_visible()
+    assert not errors, errors
+
+
+def test_dec_083_pickers_hold_still_while_the_words_load(page: Page, live_server):
+    width = load_config()["ui"]["min_viewport_px"]
+    page.set_viewport_size({"width": width, "height": SHORT_PHONE_HEIGHT})
+    page.goto(f"{live_server}/connections/{_fresh_connection(VERSE_FRIEND, 'verse')}")
+    page.wait_for_timeout(500)  # the page slide (UI-059) moves the blocks first
+    words = page.locator(".verse-text")
+
+    def pick(label, option, shown):
+        select = page.get_by_label(label, exact=True)
+        select.scroll_into_view_if_needed()
+        before = select.bounding_box()["y"]
+        select.select_option(option)
+        expect(words).to_contain_text(shown)
+        assert abs(select.bounding_box()["y"] - before) <= 1, (label, option)
+
+    pick("Book", "Esther", "Ahasuerus")
+    pick("Chapter", "8", "Haman")
+    pick("Verse", "9", "in the third month")  # the longest verse
+    pick("Verse", "1", "Haman")  # and back to a short one

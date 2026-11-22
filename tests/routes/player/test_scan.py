@@ -399,3 +399,52 @@ def test_game_016_save_button_shows_its_points(db):
         f'Save <span class="pill">+{points}</span>'
         in c.get(f"/connections/{met_id}").text
     )
+
+
+def _get_verse(c, book, chapter, verse):
+    params = {"book": book, "chapter": chapter, "verse": verse}
+    return c.get("/bible/verse", params=params, headers={"HX-Request": "true"})
+
+
+def test_dec_083_verse_route_returns_only_the_words(db):
+    c, _ = db
+    response = _get_verse(c, "John", "3", "16")
+    assert response.status_code == 200
+    assert "<p>For God so loved the world" in response.text
+    assert "eternal life.</p>" in response.text  # the words alone, no label
+    assert "<html" not in response.text
+
+
+@pytest.mark.parametrize(
+    "pick", [("3 John", "1", "15"), ("<script>", "1", "1"), ("", "", "")]
+)
+def test_dec_083_verse_route_is_empty_without_words(db, pick):
+    c, _ = db
+    response = _get_verse(c, *pick)
+    assert response.status_code == 200
+    assert response.text.strip() == ""
+
+
+def test_game_102_verse_words_wait_while_paused(db):
+    c, _ = db
+    conn = connect(c.app.state.db_path)
+    set_state(conn, "paused")
+    conn.close()
+    response = _get_verse(c, "John", "3", "16")
+    assert response.status_code == 423
+    assert 'data-error-code="PAUSED"' in response.text
+
+
+def test_game_108_verse_words_still_show_while_off(db):
+    c, _ = db
+    conn = connect(c.app.state.db_path)
+    set_state(conn, "off")
+    conn.close()
+    assert _get_verse(c, "John", "3", "16").status_code == 200
+
+
+def test_dec_061_verse_words_logged_out_go_to_login():
+    c = TestClient(create_app(), base_url="https://testserver")
+    response = _get_verse(c, "John", "3", "16")
+    assert response.status_code == 204
+    assert response.headers["hx-redirect"] == "/login"

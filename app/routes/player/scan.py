@@ -1,5 +1,6 @@
 """Scanner page (ARCH-025, UI-037), saving a scan (GAME-014), and the icebreaker (GAME-017),
-where each player saves the answer they typed for the other (GAME-015, GAME-016)."""
+where each player saves the answer they typed for the other (GAME-015, GAME-016),
+with the words of a picked verse (DEC-083)."""
 
 import sqlite3
 import time
@@ -13,7 +14,7 @@ from app.db import get_db
 from app.forms import read_form
 from app.rendering import templates
 from app.services import bible, connections
-from app.services.game_state import GAME_NOT_ON_MESSAGES, GameNotOn
+from app.services.game_state import GAME_NOT_ON_MESSAGES, GameNotOn, current_state
 
 router = APIRouter()
 
@@ -94,6 +95,26 @@ def icebreaker(request: Request, player: Player, conn: Db, connection_id: int):
     )
     csrf.set_token(response, token)
     return response
+
+
+@router.get("/bible/verse")
+def verse_text(
+    request: Request,
+    player: Player,
+    conn: Db,
+    book: str = "",
+    chapter: str = "",
+    verse: str = "",
+):
+    # GAME-102, DEC-068: the icebreaker waits while paused, so this part of it does too.
+    if current_state(conn) == "paused":
+        raise GameNotOn("PAUSED")
+    # DEC-083, API-002: only the fragment shown above "Their answer", empty when there are no words.
+    return templates.TemplateResponse(
+        request,
+        "player/partials/verse_text.html",
+        {"text": bible.asv_text(book, chapter, verse)},
+    )
 
 
 @router.post(

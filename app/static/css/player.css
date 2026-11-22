@@ -1188,6 +1188,17 @@ h2 {
   font-weight: var(--font-weight-button);
 }
 
+/* The picked verse's words, above "Their answer" (DEC-083) */
+.verse-text p {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+/* Not the paused message, which lands in the same place */
+.verse-text p:not([role="alert"]) {
+  font-style: italic;
+}
+
 /* Chapter and Verse side by side under Book */
 .verse-numbers {
   display: grid;

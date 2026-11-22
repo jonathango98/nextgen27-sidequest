@@ -15,7 +15,7 @@
     {% include "player/partials/icebreaker_answer.html" %}
     {% if connection.category == "verse" and not connection.my_answer %}
       <script type="application/json" id="bible-verses">{{ bible.VERSES|tojson }}</script>
-      <script src="/static/js/verse-picker.js" defer></script>
+      <script src="{{ static_url('js/verse-picker.js') }}" defer></script>
     {% endif %}
   {% else %}
     <h1>icebreaker.</h1>
