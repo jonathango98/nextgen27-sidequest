@@ -1,5 +1,6 @@
 """Scanner page (ARCH-025, UI-037), saving a scan (GAME-014), and the icebreaker (GAME-017),
-where each player saves the answer they typed for the other (GAME-015, GAME-016)."""
+where each player saves the answer they typed for the other (GAME-015, GAME-016),
+with the words of a picked verse (DEC-083)."""
 
 import sqlite3
 import time
@@ -12,8 +13,8 @@ from app.auth.current import CurrentPlayer, LoginRequired, get_current_player
 from app.db import get_db
 from app.forms import read_form
 from app.rendering import templates
-from app.services import connections
-from app.services.game_state import GAME_NOT_ON_MESSAGES, GameNotOn
+from app.services import bible, connections
+from app.services.game_state import GAME_NOT_ON_MESSAGES, GameNotOn, current_state
 
 router = APIRouter()
 
@@ -73,21 +74,47 @@ def scan_submit(request: Request, player: Player, conn: Db, form: Form, now: Now
 
 @router.get("/connections/{connection_id}")
 def icebreaker(request: Request, player: Player, conn: Db, connection_id: int):
-    met = connections.for_player(conn, connection_id, player_id(conn, player))
+    me = player_id(conn, player)
+    met = connections.for_player(conn, connection_id, me)
     token = csrf.token_for(request)
     # SAFE-006: someone outside the pair gets the same 404 as a missing id.
     context = {
         "connection": met,
         "csrf_token": token,
         "max_chars": connections.ANSWER_MAX_CHARS,
+        "bible": bible,
     }
     if met is None:
         context |= {"error_code": "NOT_FOUND", "message": "We couldn't find that."}
+    else:
+        context["save_points"] = connections.save_points(
+            conn, met.id, me, request.app.state.config["points"]
+        )
     response = templates.TemplateResponse(
         request, "player/icebreaker.html", context, status_code=200 if met else 404
     )
     csrf.set_token(response, token)
     return response
+
+
+@router.get("/bible/verse")
+def verse_text(
+    request: Request,
+    player: Player,
+    conn: Db,
+    book: str = "",
+    chapter: str = "",
+    verse: str = "",
+):
+    # GAME-102, DEC-068: the icebreaker waits while paused, so this part of it does too.
+    if current_state(conn) == "paused":
+        raise GameNotOn("PAUSED")
+    # DEC-083, API-002: only the fragment shown above "Their answer", empty when there are no words.
+    return templates.TemplateResponse(
+        request,
+        "player/partials/verse_text.html",
+        {"text": bible.asv_text(book, chapter, verse)},
+    )
 
 
 @router.post(
@@ -98,10 +125,15 @@ def save_answer(
 ):
     me = player_id(conn, player)
     text = form.get("answer", "")
+    if (
+        "book" in form
+    ):  # WRAP-012: the verse pickers send three fields, saved as one answer
+        text = f"{form['book']} {form.get('chapter', '')}:{form.get('verse', '')}"
     context = {
         "csrf_token": form.get("csrf_token", ""),
         "max_chars": connections.ANSWER_MAX_CHARS,
         "answer": text,
+        "bible": bible,
     }
     status = 200
     try:
@@ -123,6 +155,9 @@ def save_answer(
             "message": GAME_NOT_ON_MESSAGES[paused.error_code],
         }
     context["connection"] = connections.for_player(conn, connection_id, me)
+    context["save_points"] = connections.save_points(
+        conn, connection_id, me, request.app.state.config["points"]
+    )
     # API-002: HTMX swaps only the answer card. Without JavaScript, the whole page (API-007).
     name = (
         "player/partials/icebreaker_answer.html"

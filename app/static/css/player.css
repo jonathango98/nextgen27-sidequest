@@ -1153,6 +1153,66 @@ h2 {
   overflow-wrap: anywhere;
 }
 
+/* Icebreaker (Kairos board): who and the question on top, the answer at the bottom (UI-003) */
+.content.icebreaker-page {
+  display: flex;
+  flex-direction: column;
+}
+
+.icebreaker-with {
+  margin-bottom: var(--space-3);
+  font-size: var(--font-size-body);
+}
+
+.icebreaker-page h1 {
+  margin-bottom: var(--space-3);
+}
+
+.just-you-two {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  font-weight: 600;
+}
+
+.icebreaker-answer {
+  margin-top: auto;
+  padding-top: var(--space-5);
+}
+
+.icebreaker-answer .answer-title {
+  margin: 0 0 var(--space-1);
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-answer-title);
+  font-weight: var(--font-weight-button);
+}
+
+/* The picked verse's words, above "Their answer" (DEC-083) */
+.verse-text p {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+/* Not the paused message, which lands in the same place */
+.verse-text p:not([role="alert"]) {
+  font-style: italic;
+}
+
+/* Chapter and Verse side by side under Book */
+.verse-numbers {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.verse-numbers > div {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
 /* Staff pages (GAME-110, GAME-112) */
 
 /* A title only screen readers hear, when the page already shows what it is */

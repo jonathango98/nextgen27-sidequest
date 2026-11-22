@@ -2,8 +2,8 @@
 
 - Status: PROPOSED (developers confirm at kickoff)
 - Owner: Jonathan (@jonathango98)
-- Version: 1.13.0
-- Last updated: 2026-11-19
+- Version: 1.14.0
+- Last updated: 2026-11-21
 
 > Protected file. Changes go in a PR that Jonathan approves (ENG-080).
 
@@ -39,6 +39,7 @@ This file lists every route, how HTMX is used, the error codes, and every screen
 | POST | `/scan` | Submit a scanned payload (My Code or session check-in) | GAME-014, GAME-020 |
 | GET | `/connections/{id}` | Icebreaker question for this pair | GAME-017 |
 | POST | `/connections/{id}/answer` | Save an icebreaker answer | GAME-015 |
+| GET | `/bible/verse?book=&chapter=&verse=` | Partial: the picked verse's words in the ASV, shown above "Their answer". Empty when there are none. Refused while paused | GAME-019, GAME-102, DEC-083 |
 | GET | `/quests` | Quest list with progress | |
 | GET | `/journal` | My takeaways | |
 | GET | `/journal/new` | Takeaway form for an ended session | GAME-036 |
