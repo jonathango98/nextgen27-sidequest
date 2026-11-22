@@ -7,7 +7,8 @@ from fastapi import APIRouter, Depends, Request
 from fastapi.responses import RedirectResponse, Response
 
 from app.auth import csrf, rate_limit, signup
-from app.auth.session import session_public_id, set_session
+from app.auth.current import is_logged_in
+from app.auth.session import set_session
 from app.db import get_db
 from app.forms import read_form
 from app.rendering import templates
@@ -61,7 +62,7 @@ def _render(
 
 @router.get("/join")
 def join_page(request: Request, conn: Db):
-    if session_public_id(request):
+    if is_logged_in(request):
         return RedirectResponse(AFTER_JOIN, status_code=303)
     if current_state(conn) == "off":
         return templates.TemplateResponse(

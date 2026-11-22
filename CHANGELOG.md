@@ -22,11 +22,11 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-11-21 · fix/login-loop · Claude Opus 5.5 / @jonathango98
 
-- What: Started. Stop the redirect loop between Home, Log in, and Join when a phone's login cookie is for an account that is no longer in the database.
+- What: Stop the redirect loop between Home, Log in, and Join when a phone's login cookie is for an account that is no longer in the database. `/join` and `/login` now skip to Home only when the account exists, the same check Home makes, through a new `is_logged_in()`.
 - Why: Jonathan was locked out of staging by the loop. The same would happen on production after a restore or the retention cleanup.
 - Rule IDs: ARCH-034, DEC-061, AI-042, AI-043, AI-044
-- Status: Started
-- PR: draft
+- Status: Done
+- PR: #102
 
 ## 2026-11-20 · feat/connections-verse-picker · Claude Opus 5.5 / @jonathango98
 
