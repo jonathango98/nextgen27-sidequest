@@ -5,6 +5,7 @@ There is no update or delete here on purpose. Only the retention cleanup removes
 
 import re
 import sqlite3
+from dataclasses import dataclass
 
 ACTOR_TYPES = frozenset({"system", "player", "usher", "admin", "screen"})
 CODE = re.compile(r"^[a-z0-9_]{1,64}$")
@@ -51,3 +52,81 @@ def record(
         " VALUES (?, ?, ?, ?, ?, ?)",
         (actor_type, actor_id, action, target_type, target_id, reason),
     ).lastrowid
+
+
+# Not a game number: how many rows one page of the admin log shows (ARCH-050).
+PAGE_ROWS = 100
+_ACTOR_LABELS = {"system": "System", "screen": "Main screen"}
+
+# GAME-112 style names: first name, last initial, and church. Only IDs are stored (ARCH-051),
+# so names are looked up when the page loads.
+_RECENT = (
+    "SELECT a.id, a.actor_type, a.actor_id, a.action, a.target_type, a.target_id, a.reason,"
+    " a.created_at, s.username,"
+    " ap.first_name AS actor_first, substr(ap.last_name, 1, 1) AS actor_initial,"
+    " ac.name AS actor_church,"
+    " tp.first_name AS target_first, substr(tp.last_name, 1, 1) AS target_initial,"
+    " tc.name AS target_church"
+    " FROM audit_log a"
+    " LEFT JOIN staff_account s ON a.actor_type IN ('usher', 'admin') AND s.id = a.actor_id"
+    " LEFT JOIN player ap ON a.actor_type = 'player' AND ap.id = a.actor_id"
+    " LEFT JOIN church ac ON ac.id = ap.church_id"
+    " LEFT JOIN player tp ON a.target_type = 'player' AND tp.id = a.target_id"
+    " LEFT JOIN church tc ON tc.id = tp.church_id"
+    " WHERE ? IS NULL OR a.id < ?"
+    " ORDER BY a.id DESC LIMIT ?"
+)
+
+
+@dataclass(frozen=True)
+class Entry:
+    id: int
+    created_at: str
+    who: str
+    action: str
+    target: str
+    reason: str | None
+
+
+def person(first: str | None, initial: str | None, church: str | None) -> str | None:
+    return f"{first} {initial.upper()}., {church}" if first else None
+
+
+def _who(row: sqlite3.Row) -> str:
+    kind, actor_id = row["actor_type"], row["actor_id"]
+    if kind in _ACTOR_LABELS:
+        return _ACTOR_LABELS[kind]
+    if kind == "player":
+        name = person(row["actor_first"], row["actor_initial"], row["actor_church"])
+        return name or f"player {actor_id}"
+    return f"{row['username'] or actor_id} ({kind})"
+
+
+def _target(row: sqlite3.Row) -> str:
+    if row["target_type"] is None:
+        return ""
+    if row["target_type"] == "player":
+        name = person(row["target_first"], row["target_initial"], row["target_church"])
+        if name:
+            return name
+    return f"{row['target_type'].replace('_', ' ')} {row['target_id']}"
+
+
+def recent(
+    conn: sqlite3.Connection, before: int | None = None
+) -> tuple[list[Entry], int | None]:
+    """One page of the log, newest first, and the id to pass as `before` for older rows."""
+    rows = conn.execute(_RECENT, (before, before, PAGE_ROWS + 1)).fetchall()
+    entries = [
+        Entry(
+            id=r["id"],
+            created_at=r["created_at"],
+            who=_who(r),
+            action=r["action"].replace("_", " "),
+            target=_target(r),
+            reason=r["reason"],
+        )
+        for r in rows[:PAGE_ROWS]
+    ]
+    older = entries[-1].id if len(rows) > PAGE_ROWS else None
+    return entries, older

@@ -22,10 +22,10 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ## 2026-11-25 · feat/admin-audit-view · Claude Opus 5.5 / @jonathango98
 
-- What: Claim `admin.audit-view`: an admin page to read the audit log and spot odd activity that might be cheating.
-- Why: Next piece due 2026-12-11 in the feature tree (ENG-101).
-- Rule IDs: ARCH-050, ARCH-062, ENG-101, ENG-102
-- Status: Started
+- What: Builds `admin.audit-view`. A Log tile on the admin console opens `GET /admin/audit`: the audit log, newest first, 100 rows a page with an Older link, each row showing the action, its target, who did it, when in venue time (with seconds), and the reason. Only IDs are stored (ARCH-051), so names are looked up when the page loads: staff by username and role, players by first name, last initial, and church. A full last name never shows. Its Activity tab, `GET /admin/activity`, lists the 20 players with the most connections, with the minutes from their first to their latest, fastest first on a tie. There is no threshold: an admin looks for a big count over few minutes and checks in person (OPS-006). Agreed with @jonathango98 before building: both routes in this piece (1a), rank with no config threshold (2a), names like the usher view (3a), and a fifth console tile (4b). PR previews add 4 fake connections among Test Players 3 to 6, with no points, so the Activity tab has rows. Test Players 1 and 2 stay unconnected for other pieces' hand tests (ENG-113, AI-047). Tests: 14 route tests, 2 more back link cases, and a browser test at 360px in Chromium and WebKit, no console errors.
+- Why: Picked through `/pick-task`. Due 2026-12-11. Admins need to see who did what, and spot fake connections before prizes are given (GAME-090).
+- Rule IDs: ARCH-050, ARCH-051, ARCH-062, GAME-105, GAME-112, OPS-006, SAFE-004, UI-008, AI-042, AI-044, AI-047, ENG-101, ENG-108, ENG-113
+- Status: Done
 - PR: #105
 
 ## 2026-11-21 · docs/restore-security · Claude Opus 5.5 / @jonathango98

@@ -8,7 +8,7 @@ import random
 import sqlite3
 from dataclasses import dataclass
 
-from app.services import bible, churches, players, points
+from app.services import audit, bible, churches, players, points
 from app.services.game_state import require_game_on
 from app.services.players import NOT_FOUND, ScanRefused
 
@@ -290,3 +290,69 @@ def seed_preview(conn: sqlite3.Connection, config: dict) -> list[str]:
     return players.seed_preview_player(
         conn, config, PREVIEW_FRIEND, churches.EXAMPLE_CHURCHES[1]
     )
+
+
+# Not a game number: how many players the unusual activity view lists (ARCH-062).
+ACTIVITY_ROWS = 20
+
+
+@dataclass(frozen=True)
+class Busy:
+    name: str
+    connections: int
+    minutes: int  # from their first connection to their latest
+
+
+def most_connected(conn: sqlite3.Connection) -> list[Busy]:
+    """Players with the most connections, fastest first on a tie (ARCH-062).
+
+    No threshold: an admin looks for a big count over few minutes and checks in person (OPS-006).
+    """
+    rows = conn.execute(
+        "SELECT p.first_name, substr(p.last_name, 1, 1) AS last_initial, c.name AS church,"
+        " count(*) AS n, round((julianday(max(x.created_at)) - julianday(min(x.created_at)))"
+        " * 1440) AS minutes"
+        " FROM (SELECT player_low_id AS pid, created_at FROM connection"
+        " UNION ALL SELECT player_high_id, created_at FROM connection) x"
+        " JOIN player p ON p.id = x.pid JOIN church c ON c.id = p.church_id"
+        " GROUP BY x.pid ORDER BY n DESC, minutes, x.pid LIMIT ?",
+        (ACTIVITY_ROWS,),
+    ).fetchall()
+    return [
+        Busy(
+            audit.person(r["first_name"], r["last_initial"], r["church"]),
+            r["n"],
+            int(r["minutes"]),
+        )
+        for r in rows
+    ]
+
+
+# ENG-113: fake connections among the leaderboard's preview players, so the activity view has rows.
+# Test Players 1 and 2 stay unconnected, so they can still try a scan by hand.
+PREVIEW_PAIRS = (
+    ("Player 6", "Player 3"),
+    ("Player 6", "Player 4"),
+    ("Player 6", "Player 5"),
+    ("Player 3", "Player 4"),
+)
+
+
+def seed_preview_activity(conn: sqlite3.Connection) -> int:
+    added = 0
+    for scanner, scanned in PREVIEW_PAIRS:
+        ids = [
+            conn.execute(
+                "SELECT id FROM player WHERE first_name = 'Test' AND last_name = ?",
+                (last,),
+            ).fetchone()
+            for last in (scanner, scanned)
+        ]
+        if None in ids:
+            continue  # no preview PIN set, so the players weren't made
+        try:
+            _save(conn, ids[0]["id"], ids[1]["id"], "food")
+            added += 1
+        except ScanRefused:
+            pass  # already there from an earlier start
+    return added
