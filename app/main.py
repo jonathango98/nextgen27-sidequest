@@ -35,6 +35,7 @@ from app.routes.player import (
     wrapped,
 )
 from app.routes.screen import views as screen_views
+from app.routes.staff import audit as staff_audit
 from app.routes.staff import console as staff_console
 from app.routes.staff import login as staff_login
 from app.routes.staff import review as staff_review
@@ -72,6 +73,7 @@ async def lifespan(app: FastAPI):
             connections.seed_preview(conn, app.state.config)
             sessions.seed_preview(conn)
             leaderboards.seed_preview(conn, app.state.config)
+            connections.seed_preview_activity(conn)
             blind_boxes.seed_preview(conn, app.state.config)
             journal_service.seed_preview(conn, sessions.PREVIEW_ENDED_SESSION)
     finally:
@@ -139,6 +141,7 @@ def create_app() -> FastAPI:
     app.include_router(screen_views.router)
     app.include_router(staff_sessions.router)
     app.include_router(staff_review.router)
+    app.include_router(staff_audit.router)
     # Screen skeleton (UI-030): plain pages, no game logic yet.
     for module in (home, scan, quests, journal, box, wrapped):
         app.include_router(module.router)

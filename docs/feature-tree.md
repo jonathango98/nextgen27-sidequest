@@ -5,7 +5,7 @@
 
 Every planned piece of work and what it needs first (ENG-105 to ENG-108), grouped by the week it is due (PRD-054). Pieces flow left to right in time: finishing one unlocks the pieces it points to. Run `/pick-task` to claim one.
 
-**Working** 35 · **In progress** 0 · **Ready** 10 · **Waiting** 8 · **Needs decision** 0
+**Working** 36 · **In progress** 0 · **Ready** 9 · **Waiting** 8 · **Needs decision** 0
 
 Colors: green Working, blue In progress, gold Ready, gray Waiting, red dashed Needs decision.
 
@@ -181,8 +181,8 @@ flowchart LR
   classDef ready fill:#fff4d6,stroke:#a87400,stroke-width:3px,color:#14151a
   classDef waiting fill:#f1f0eb,stroke:#c3c0b6,color:#545a66
   classDef decision fill:#fdeeec,stroke:#b42318,stroke-dasharray:4 3,color:#14151a
-  class app_foundation,auth_join_login,checkin_sessions,code_my_code,connections_answers,connections_meet,connections_scanner_camera,connections_table,connections_verse_picker,game_state_auto_pause,game_state_controls,game_state_core,home_pages,infra_hosting,journal_notes,journal_share_review,leaderboards_in_app,leaderboards_screen,look_base,look_kairos,look_motion,look_screens,points_audit_log,points_ledger,points_score,ready_backups,ready_load_test,ready_logout,ready_rate_limits,ready_retention,screen_main,screens_skeleton,staff_accounts,staff_login,usher_console working
-  class admin_audit_view,admin_players,admin_setup,blind_box_handout,checkin_window,explore_booths,photobooth_points,photobooth_screen,recap_screen,wrapped_cards ready
+  class admin_audit_view,app_foundation,auth_join_login,checkin_sessions,code_my_code,connections_answers,connections_meet,connections_scanner_camera,connections_table,connections_verse_picker,game_state_auto_pause,game_state_controls,game_state_core,home_pages,infra_hosting,journal_notes,journal_share_review,leaderboards_in_app,leaderboards_screen,look_base,look_kairos,look_motion,look_screens,points_audit_log,points_ledger,points_score,ready_backups,ready_load_test,ready_logout,ready_rate_limits,ready_retention,screen_main,screens_skeleton,staff_accounts,staff_login,usher_console working
+  class admin_players,admin_setup,blind_box_handout,checkin_window,explore_booths,photobooth_points,photobooth_screen,recap_screen,wrapped_cards ready
   class admin_award_revoke,blind_box_close_redemption,checkin_hall,explore_booth_answers,explore_items,wrapped_collection,wrapped_save_image,wrapped_stat_cards waiting
 ```
 
@@ -207,11 +207,6 @@ flowchart LR
     2. Switch Test Usher off and try again. The login should be refused.
     3. Add Example Church C, then open the sign-up page in a private tab. It should be in the list. Rename it and check the new name shows.
     4. Try to break it: open these pages as Test Usher. You should be turned away.
-- `admin.audit-view`: A page where admins can read the game's notebook of important events and spot odd activity that might be cheating. (M, medium, admin-screens, due fri dec 11)
-  - Try it:
-    1. Do a few actions such as a PIN reset and a points award, then log in as Test Admin and open the log page.
-    2. You should see each action with who did it and when.
-    3. Try the page as Test Usher or Test Player 1, which should be refused.
 - `explore.booths`: Lists of the booths and the hidden item numbers that admins fill in before the event. It never saves where the items are hidden. An usher records that a player visited a booth, and the player gets points, once for each booth. (L, medium, admin-screens, due fri dec 18)
   - Try it:
     1. On the PR preview, log in as Test Admin and add Example Booth A, Example Booth B and a hidden item number. Both lists should show them.
