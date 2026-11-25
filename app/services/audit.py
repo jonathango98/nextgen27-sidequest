@@ -71,7 +71,10 @@ _RECENT = (
     " LEFT JOIN staff_account s ON a.actor_type IN ('usher', 'admin') AND s.id = a.actor_id"
     " LEFT JOIN player ap ON a.actor_type = 'player' AND ap.id = a.actor_id"
     " LEFT JOIN church ac ON ac.id = ap.church_id"
-    " LEFT JOIN player tp ON a.target_type = 'player' AND tp.id = a.target_id"
+    # A points row's target is its ledger row, so show the player who got the points.
+    " LEFT JOIN point_ledger pl ON a.target_type = 'point_ledger' AND pl.id = a.target_id"
+    " LEFT JOIN player tp ON tp.id = CASE a.target_type"
+    " WHEN 'player' THEN a.target_id WHEN 'point_ledger' THEN pl.player_id END"
     " LEFT JOIN church tc ON tc.id = tp.church_id"
     " WHERE ? IS NULL OR a.id < ?"
     " ORDER BY a.id DESC LIMIT ?"
@@ -105,10 +108,9 @@ def _who(row: sqlite3.Row) -> str:
 def _target(row: sqlite3.Row) -> str:
     if row["target_type"] is None:
         return ""
-    if row["target_type"] == "player":
-        name = person(row["target_first"], row["target_initial"], row["target_church"])
-        if name:
-            return name
+    name = person(row["target_first"], row["target_initial"], row["target_church"])
+    if name:
+        return name
     return f"{row['target_type'].replace('_', ' ')} {row['target_id']}"
 
 

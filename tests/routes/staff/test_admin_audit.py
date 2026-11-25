@@ -115,6 +115,27 @@ def test_arch_051_log_page_never_shows_a_full_last_name(client, conn):
     assert "Lastname" not in html
 
 
+def test_arch_050_points_rows_show_who_got_the_points(client, conn):
+    (player,) = _players(conn, "Player 1")
+    ledger = conn.execute(
+        "INSERT INTO point_ledger (player_id, amount, reason_code, source_type, source_id)"
+        " VALUES (?, 5, 'join', 'player', ?)",
+        (player, player),
+    ).lastrowid
+    audit.record(
+        conn,
+        actor_type="system",
+        actor_id=None,
+        action="points_award",
+        target_type="point_ledger",
+        target_id=ledger,
+    )
+    _log_in(client, *ADMIN)
+    html = client.get("/admin/audit").text
+    assert "<strong>points award</strong> · Test P., Example Church A" in html
+    assert "point ledger" not in html
+
+
 def test_arch_050_older_link_shows_the_next_page(client, conn):
     for _ in range(audit.PAGE_ROWS + 1):
         audit.record(conn, actor_type="system", actor_id=None, action="pause")
