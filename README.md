@@ -61,7 +61,7 @@ Has an open branch. Newest first: add your row at the top in the first commit on
 
 | Feature | Branch | PR | Started | By |
 |---|---|---|---|---|
-| `admin.audit-view` Admins read the audit log to spot cheating | feat/admin-audit-view | draft | 2026-11-25 | Claude Opus 5.5 / @jonathango98 |
+| `admin.audit-view` Admins read the audit log to spot cheating | feat/admin-audit-view | #105 | 2026-11-25 | Claude Opus 5.5 / @jonathango98 |
 
 ### Planned
 

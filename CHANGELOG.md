@@ -26,7 +26,7 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 - Why: Next piece due 2026-12-11 in the feature tree (ENG-101).
 - Rule IDs: ARCH-050, ARCH-062, ENG-101, ENG-102
 - Status: Started
-- PR: draft
+- PR: #105
 
 ## 2026-11-21 · docs/restore-security · Claude Opus 5.5 / @jonathango98
 
