@@ -20,6 +20,14 @@ Humans working without an AI agent sign as `Human / @<github-handle>`.
 
 ---
 
+## 2026-11-25 · feat/admin-audit-view · Claude Opus 5.5 / @jonathango98
+
+- What: Claim `admin.audit-view`: an admin page to read the audit log and spot odd activity that might be cheating.
+- Why: Next piece due 2026-12-11 in the feature tree (ENG-101).
+- Rule IDs: ARCH-050, ARCH-062, ENG-101, ENG-102
+- Status: Started
+- PR: draft
+
 ## 2026-11-21 · docs/restore-security · Claude Opus 5.5 / @jonathango98
 
 - What: Safer restore steps in `docs/backups.md`. Every restore changes `SQ_SESSION_KEY` in the same Deploy, so logins from before it stop working. The check command now names production's service (`nextgen27-sidequest`, not `web`) and reads the database path from `SQ_DB_PATH`.
